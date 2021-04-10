@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+    <link rel="stylesheet" href="./assets/fontawesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+</head>
+<body>
+    <nav>
+      <ul>
+        <li class="grow"></li>
+        <li class="controls" id="close-btn"><i class="fas fa-times"></i></li>
+      </ul>
+    </nav>
+    <div class="grow main">
+		<div class="maintext">
+			v3.1.2
+
+            <br><br>
+
+            mmmm bnuy
+		</div>
+    </div>
+    <script>
+		const remote = require('electron').remote;
+
+		function init() { 
+			document.getElementById("close-btn").addEventListener("click", function (e) {
+			  const window = remote.getCurrentWindow();
+			  window.close();
+			}); 
+		}; 
+
+		document.onreadystatechange = function () { if (document.readyState == "complete") init(); };
+    </script>
+  </body>
+</body>
+</html>
