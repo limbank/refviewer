@@ -1,29 +1,35 @@
 {
-  "name": "refviewer",
-  "version": "3.0.0",
-  "description": "A simple image viewer",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron ."
-  },
-  "repository": "",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
-  "devDependencies": {
-    "electron": "^6.0.10"
-  },
-  "dependencies": {
-    "jimp": "^0.9.3",
-    "node-vibrant": "^3.1.5",
-    "psd": "^3.2.0",
-    "screenshot-desktop": "^1.12.3",
-    "utif": "^3.1.0"
-  }
+    "name": "svelte-app",
+    "version": "1.0.0",
+    "private": true,
+    "main": "main.js",
+    "scripts": {
+        "build:svelte": "rollup -c",
+        "dev:svelte": "rollup -c -w",
+        "start:svelte": "sirv public --no-clear",
+        "dev:electron": "electron .",
+        "dev": "concurrently \"npm run dev:electron\" \"npm run dev:svelte\"",
+        "start": "concurrently \"npm run dev:electron\" \"npm run start:svelte\""
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^17.0.0",
+        "@rollup/plugin-node-resolve": "^11.0.0",
+        "concurrently": "^6.2.0",
+        "electron": "^13.1.7",
+        "electron-reloader": "^1.2.1",
+        "postcss": "^8.3.5",
+        "postcss-import": "^14.0.2",
+        "rollup": "^2.3.4",
+        "rollup-plugin-css-only": "^3.1.0",
+        "rollup-plugin-livereload": "^2.0.0",
+        "rollup-plugin-svelte": "^7.0.0",
+        "rollup-plugin-terser": "^7.0.0",
+        "sass": "^1.35.2",
+        "sirv-cli": "^1.0.0",
+        "svelte": "^3.0.0",
+        "svelte-preprocess": "^4.7.4"
+    },
+    "dependencies": {
+        "svelte-file-dropzone": "^0.0.15"
+    }
 }
