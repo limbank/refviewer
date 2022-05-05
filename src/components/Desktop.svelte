@@ -7,7 +7,8 @@
 
 <style lang="scss">
 	.desktop {
-		background: #2F2E33;
+		/*#2F2E33*/
+		background: rgba(47, 46, 51, 1);
 		flex-grow: 1;
 		border-radius: 3px;
 		display: flex;

@@ -1,5 +1,9 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+
 	const { ipcRenderer } = require('electron');
+
+	const dispatch = createEventDispatcher();
 
 	export let fileSelected = false;
 	let pinned = false;
@@ -14,8 +18,8 @@
 		<button class="control control-menu">
 	    	<i class="fas fa-bars"></i>
 		</button>
-		{ #if fileSelected }
-			<button class="control control-clear">
+		{#if fileSelected}
+			<button class="control control-clear" on:click={e => { dispatch('clear'); }}>
 		    	<i class="fas fa-trash"></i>
 			</button>
 		{/if}

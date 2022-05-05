@@ -1,4 +1,5 @@
 const { app, BrowserWindow,ipcMain } = require("electron");
+const imageDataURI = require('image-data-uri');
 
 let mainWindow;
 
@@ -16,8 +17,8 @@ if (!gotTheLock) {
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 238,
-        height: 238,
+        width: 550,
+        height: 400,
         minWidth: 238,
         minHeight: 238,
         frame: false,
@@ -29,7 +30,7 @@ function createWindow() {
         icon: "public/favicon.png",
     });
 
-    /*550, 400*/
+    /*550, 400*/ /*238*/
 
     mainWindow.loadFile("public/index.html");
 
@@ -68,7 +69,44 @@ app.on("activate", function () {
     if (mainWindow === null) createWindow();
 });
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-  console.log(arg) // prints "ping"
-  event.reply('asynchronous-reply', 'pong')
+class fileProcessor {
+    handleDefault(path, event) {
+        event.reply('deliver', path);
+    }
+    handleImage(path, event) {
+        imageDataURI.encodeFromFile(path)
+        .then(
+            (response) => {
+                event.reply('deliver', response);
+            });
+    }
+    process(file, event) {
+        let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
+
+        switch(ext) {
+            case "png": 
+                this.handleImage(file, event);
+                break;
+            case "jpeg": 
+                this.handleImage(file, event);
+                break;
+            case "jpg": 
+                this.handleImage(file, event);
+                break;
+            case "bmp": 
+                this.handleImage(file, event);
+                break;
+            default:
+                this.handleDefault(file, event);
+                break;
+        }
+    }
+}
+
+const fp = new fileProcessor();
+
+ipcMain.on('file', (event, arg) => {
+    //file processor
+
+    let file = fp.process(arg, event);
 });
