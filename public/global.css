@@ -5,8 +5,7 @@ html, body {
 }
 
 body {
-	border-radius: 10px;
 	overflow: hidden;
 	background: transparent;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: 'Open Sans';
 }

@@ -6,6 +6,7 @@
 	const dispatch = createEventDispatcher();
 
 	export let fileSelected = false;
+	export let settings = false;
 	let pinned = false;
 
 	ipcRenderer.on('pin', (event, arg) => {
@@ -15,9 +16,21 @@
 
 <div class="titlebar">
 	<div class="titlebar-group">
-		<button class="control control-menu">
-	    	<i class="fas fa-bars"></i>
+		<button class="control control-menu" on:click={e => {
+			settings = !settings;
+			dispatch('settings', settings);
+		}}>
+			{#if settings}
+    			<i class="fas fa-times"></i>
+			{:else}
+    			<i class="fas fa-bars"></i>
+			{/if}
 		</button>
+		<!--
+		<button class="control control-screenshot">
+	    	<i class="fas fa-crosshairs"></i>
+		</button>
+		-->
 		{#if fileSelected}
 			<button class="control control-clear" on:click={e => { dispatch('clear'); }}>
 		    	<i class="fas fa-trash"></i>
@@ -25,7 +38,7 @@
 		{/if}
 	</div>
 	<div class="titlebar-group">
-		<span class="version">v. 4.0.0</span>
+		<span class="version">v. 4.0.4</span>
 		<button class="control control-pin" class:pinned on:click={e => { ipcRenderer.send('window', 'pin'); }}>
 	    	<i class="fas fa-thumbtack"></i>
 		</button>

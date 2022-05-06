@@ -1,31 +1,32 @@
 <script>
+	export let fileSelected = false;
 </script>
 
 <div class="toolbox">
-	<button class="control control-screenshot">
-    	<i class="fas fa-crosshairs"></i>
-	</button>
-	<button class="control control-">
-    	<i class="far fa-save"></i>
-	</button>
-	<button class="control control-">
-    	<i class="far fa-clipboard"></i>
-	</button>
-	<button class="control control-">
-    	<i class="fas fa-sync-alt"></i>
-	</button>
-	<button class="control control-">
-    	<i class="fas fa-redo"></i>
-	</button>
-	<button class="control control-">
-    	<i class="fas fa-eye-dropper"></i>
-	</button>
-	<button class="control control-">
-    	<i class="fas fa-fill"></i>
-	</button>
-	<button class="control control-">
-    	<i class="fas fa-palette"></i>
-	</button>
+	{#if fileSelected}
+		<button class="control control-">
+	    	<i class="far fa-clipboard"></i>
+		</button>
+		<!--
+		<button class="control control-">
+	    	<i class="far fa-save"></i>
+		</button>
+		<button class="control control-">
+	    	<i class="fas fa-sync-alt"></i>
+		</button>
+		<button class="control control-">
+	    	<i class="fas fa-redo"></i>
+		</button>
+		<button class="control control-">
+	    	<i class="fas fa-eye-dropper"></i>
+		</button>
+		<button class="control control-">
+	    	<i class="fas fa-fill"></i>
+		</button>
+		<button class="control control-">
+	    	<i class="fas fa-palette"></i>
+		</button>-->
+	{/if}
 </div>
 
 <style lang="scss">

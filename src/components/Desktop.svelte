@@ -13,5 +13,6 @@
 		border-radius: 3px;
 		display: flex;
 		overflow: hidden;
+		position: relative;
 	}
 </style>

@@ -2,6 +2,7 @@
 	import Titlebar from './components/Titlebar.svelte';
 	import Desktop from './components/Desktop.svelte';
 	import Toolbox from './components/Toolbox.svelte';
+	import Settings from './components/Settings.svelte';
 
 	import { Canvas, Layer, t } from "svelte-canvas";
 	import Dropzone from "svelte-file-dropzone";
@@ -12,8 +13,24 @@
 	let width;
 	let height;
 	let zoomed = false;
+	let settings = false;
 
-	$: render = (context) => {};
+	let img = new Image(); 
+
+  	$: render = ({ context }) => {
+	    context.drawImage(img, 0, 0);
+
+	    // just grab a DOM element
+		var element = document.querySelector('.canvas-container');
+
+		// And pass it to panzoom
+		var instance = panzoom(element);
+		instance.on('zoom', function(e) {
+			let data = instance.getTransform();
+			if (data.scale >= 10) zoomed = true;
+			else zoomed = false;
+		});
+  	};
 
 	function handleFilesSelect(e) {
 	    const { acceptedFiles } = e.detail;
@@ -21,30 +38,13 @@
 	    ipcRenderer.send('file', acceptedFiles[0].path);
 	}
 
-	let img = new Image(); 
-
 	img.onload = function(){
 	  	width = img.width;
 	  	height = img.height;
-
-	  	$: render = ({ context }) => {
-		    context.drawImage(img, 0, 0);
-
-		    // just grab a DOM element
-			var element = document.querySelector('.canvas-container');
-
-			// And pass it to panzoom
-			var instance = panzoom(element);
-			instance.on('zoom', function(e) {
-				let data = instance.getTransform();
-				if (data.scale >= 10) zoomed = true;
-				else zoomed = false;
-			});
-	  	};
 	};
 
 	ipcRenderer.on('deliver', (event, arg) => {
-		console.log("loading file!", arg);
+		console.log("loading file!");
 		img.src = arg;
 		file = arg;
 	});
@@ -71,10 +71,18 @@
 <main>
 	<Titlebar
 		fileSelected={file}
+		settings={settings}
 		on:clear={e => { file = false; }}
+		on:settings={e => { settings = e.detail; }}
 	/>
-	<Toolbox />
+	<Toolbox
+		fileSelected={file}
+	/>
 	<Desktop>
+		{#if settings}
+			<Settings />
+		{/if}
+		
 		{#if file}
 			<div class="canvas-container" class:pixelated={zoomed}>
 			    <Canvas width={width} height={height}>
@@ -112,6 +120,8 @@
 		right: 0;
 		bottom: 0;
 		z-index: 1;
+		border-radius: 5px;
+		overflow: hidden;
 		pointer-events: none;
 
 		&-bg {
@@ -156,6 +166,7 @@
 		right: 0;
 		bottom: 0;
 		border-radius: 5px;
+		overflow: hidden;
 		display: flex;
 		padding: 30px 5px 5px;
 	}
