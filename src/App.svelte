@@ -60,7 +60,37 @@
 
 		Also enable copy paste.
 	*/
+	let allSettings = {};
+
+	function handlePaste(event) {
+		let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
+
+		let blob = null;
+		for (let i = 0; i < items.length; i++) {
+			if (items[i].type.indexOf("image") === 0) blob = items[i].getAsFile();
+			else{
+				//afaik you can't really paste PSD here
+			}
+		}
+		if (blob == null) return;
+
+		/*
+			Electron doesn't want us sending blob objects via ipc
+			so we'll handle it in-house instead.
+
+		*/
+
+		var a = new FileReader();
+        a.onload = function(e) {
+        	if (file) return;
+			img.src = e.target.result;
+			file = e.target.result;
+        }
+        a.readAsDataURL(blob);
+	}
 </script>
+
+<svelte:window on:paste={handlePaste}/>
 
 <div class="backdrop">
 	<div class="backdrop-bg backdrop-top"></div>
@@ -76,13 +106,14 @@
 		on:settings={e => { settings = e.detail; }}
 	/>
 	<Toolbox
+		settings={settings}
 		fileSelected={file}
 	/>
 	<Desktop>
 		{#if settings}
 			<Settings />
 		{/if}
-		
+
 		{#if file}
 			<div class="canvas-container" class:pixelated={zoomed}>
 			    <Canvas width={width} height={height}>

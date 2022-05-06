@@ -10,7 +10,7 @@
 	let pinned = false;
 
 	ipcRenderer.on('pin', (event, arg) => {
-	  pinned = arg;
+  		pinned = arg;
 	});
 </script>
 
@@ -26,19 +26,21 @@
     			<i class="fas fa-bars"></i>
 			{/if}
 		</button>
-		<!--
-		<button class="control control-screenshot">
-	    	<i class="fas fa-crosshairs"></i>
-		</button>
-		-->
-		{#if fileSelected}
-			<button class="control control-clear" on:click={e => { dispatch('clear'); }}>
-		    	<i class="fas fa-trash"></i>
+		{#if !settings}
+			<!--
+			<button class="control control-screenshot">
+		    	<i class="fas fa-crosshairs"></i>
 			</button>
+			-->
+			{#if fileSelected}
+				<button class="control control-clear" on:click={e => { dispatch('clear'); }}>
+			    	<i class="fas fa-trash"></i>
+				</button>
+			{/if}
 		{/if}
 	</div>
 	<div class="titlebar-group">
-		<span class="version">v. 4.0.4</span>
+		<span class="version">v. 4.0.5</span>
 		<button class="control control-pin" class:pinned on:click={e => { ipcRenderer.send('window', 'pin'); }}>
 	    	<i class="fas fa-thumbtack"></i>
 		</button>

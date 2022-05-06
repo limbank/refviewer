@@ -103,10 +103,23 @@ class fileProcessor {
     }
 }
 
-const fp = new fileProcessor();
-
 ipcMain.on('file', (event, arg) => {
     //file processor
 
     let file = fp.process(arg, event);
+});
+
+const fp = new fileProcessor();
+let settings = {
+    "devmode" : true,
+    "theme" : false
+};
+
+ipcMain.on('settings:get', (event, arg) => {
+    //file processor
+
+    if (arg == 'all') event.reply('settings:all', settings);
+    else {
+
+    }
 });

@@ -1,10 +1,29 @@
 <script>
 	export let fileSelected = false;
+	export let settings = false;
+
+	function copyImage() {
+		var xhr = new XMLHttpRequest();
+		xhr.onload = () => {
+			try{
+				var response =  xhr.response.slice(0,  xhr.response.size, "image/png");
+				const item = new ClipboardItem({ "image/png": response });
+				navigator.clipboard.write([item]);
+				this.notify("Image copied!");
+			}
+			catch(e){ console.log(e); }
+		};
+		xhr.open('GET', fileSelected);
+		xhr.responseType = 'blob';
+		xhr.send();
+
+		//NOTIFY THE USER!!
+	}
 </script>
 
 <div class="toolbox">
-	{#if fileSelected}
-		<button class="control control-">
+	{#if fileSelected && !settings}
+		<button class="control" on:click={copyImage}>
 	    	<i class="far fa-clipboard"></i>
 		</button>
 		<!--
