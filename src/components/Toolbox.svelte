@@ -2,7 +2,7 @@
 	const { ipcRenderer } = require('electron');
 
 	export let fileSelected = false;
-	export let settings = false;
+	export let settingsOpen = false;
 
 	function copyImage() {
 		var xhr = new XMLHttpRequest();
@@ -24,12 +24,12 @@
 </script>
 
 <div class="toolbox">
-	{#if fileSelected && !settings}
-		<button class="control" on:click={copyImage}>
-	    	<i class="far fa-clipboard"></i>
-		</button>
+	{#if fileSelected && !settingsOpen}
 		<button class="control" on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}>
 	    	<i class="far fa-save"></i>
+		</button>
+		<button class="control" on:click={copyImage}>
+	    	<i class="far fa-clipboard"></i>
 		</button>
 		<!--
 		<button class="control control-">

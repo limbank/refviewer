@@ -1,6 +1,91 @@
 const { app, BrowserWindow, ipcMain, dialog  } = require("electron");
+
+const os = require('os');
+const path = require('path');
+
 const imageDataURI = require('image-data-uri');
-const fs = require('fs');
+const fs = require('fs-extra');
+
+class settingsProcessor {
+    constructor(data) {
+        this.home = data.home;
+        this.filename = data.filename;
+        this.file = path.join(this.home, this.filename);
+        this.settings = {};
+
+        fs.ensureFile(this.file, err => {
+            this.readSettings(data.ready);
+        });
+    }
+    readSettings(callback) {
+        fs.readJson(this.file, (err, packageObj) => {
+            let returnData = {};
+
+            if (!err) {
+                this.settings = packageObj;
+                returnData = packageObj;
+            }
+
+            if (callback && typeof callback == "function") callback(returnData);
+        });
+    }
+    writeSettings(settings = {}, callback) {
+        this.settings = settings;
+
+        fs.writeJson(this.file, settings, err => {
+            if (err) return console.error(err);
+
+            if (callback && typeof callback == "function") callback();
+        });
+    }
+}
+
+class fileProcessor {
+    handleDefault(path, event) {
+        event.reply('deliver', path);
+    }
+    handleImage(path, event) {
+        imageDataURI.encodeFromFile(path)
+        .then(
+            (response) => {
+                event.reply('deliver', response);
+            });
+    }
+    process(file, event) {
+        let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
+
+        switch(ext) {
+            case "png": 
+                this.handleImage(file, event);
+                break;
+            case "jpeg": 
+                this.handleImage(file, event);
+                break;
+            case "jpg": 
+                this.handleImage(file, event);
+                break;
+            case "bmp": 
+                this.handleImage(file, event);
+                break;
+            default:
+                this.handleDefault(file, event);
+                break;
+        }
+    }
+}
+
+let sp = new settingsProcessor({
+    home: path.join(os.homedir(), '.refviewer'),
+    filename: 'config.json'
+});
+
+ipcMain.on('settings:write', (event, arg) => {
+    //console.log("GOT SETTINGS!!", arg);
+
+    sp.writeSettings(arg);
+});
+
+const fp = new fileProcessor();
 
 let mainWindow;
 
@@ -37,6 +122,16 @@ function createWindow() {
 
     mainWindow.on("closed", function () {
         mainWindow = null;
+    });
+
+    mainWindow.webContents.on('did-finish-load', () => {
+        sp = new settingsProcessor({
+            home: path.join(os.homedir(), '.refviewer'),
+            filename: 'config.json',
+            ready: () => {
+                mainWindow.webContents.send('settings', sp.settings);
+            }
+        });
     });
 
     ipcMain.on('window', (event, arg) => {
@@ -92,48 +187,16 @@ app.on("activate", function () {
     if (mainWindow === null) createWindow();
 });
 
-class fileProcessor {
-    handleDefault(path, event) {
-        event.reply('deliver', path);
-    }
-    handleImage(path, event) {
-        imageDataURI.encodeFromFile(path)
-        .then(
-            (response) => {
-                event.reply('deliver', response);
-            });
-    }
-    process(file, event) {
-        let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
-
-        switch(ext) {
-            case "png": 
-                this.handleImage(file, event);
-                break;
-            case "jpeg": 
-                this.handleImage(file, event);
-                break;
-            case "jpg": 
-                this.handleImage(file, event);
-                break;
-            case "bmp": 
-                this.handleImage(file, event);
-                break;
-            default:
-                this.handleDefault(file, event);
-                break;
-        }
-    }
-}
+//path.join(home, "config.json")
+//home = ;
 
 ipcMain.on('file', (event, arg) => {
     //file processor
 
     let file = fp.process(arg, event);
 });
-
-const fp = new fileProcessor();
-let settings = {
+/*
+let sg = {
     "devmode" : true,
     "theme" : false
 };
@@ -141,8 +204,9 @@ let settings = {
 ipcMain.on('settings:get', (event, arg) => {
     //file processor
 
-    if (arg == 'all') event.reply('settings:all', settings);
+    if (arg == 'all') event.reply('settings:all', sg);
     else {
 
     }
 });
+*/

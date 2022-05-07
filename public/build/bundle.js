@@ -585,7 +585,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-bars");
-    			add_location(i, file$6, 25, 7, 583);
+    			add_location(i, file$6, 25, 7, 607);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -606,7 +606,7 @@ var app = (function () {
     	return block;
     }
 
-    // (23:3) {#if settings}
+    // (23:3) {#if settingsOpen}
     function create_if_block_2$1(ctx) {
     	let i;
 
@@ -614,7 +614,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$6, 23, 7, 534);
+    			add_location(i, file$6, 23, 7, 558);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -628,14 +628,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(23:3) {#if settings}",
+    		source: "(23:3) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (29:2) {#if !settings}
+    // (29:2) {#if !settingsOpen}
     function create_if_block$3(ctx) {
     	let if_block_anchor;
     	let if_block = /*fileSelected*/ ctx[1] && create_if_block_1$2(ctx);
@@ -673,7 +673,7 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(29:2) {#if !settings}",
+    		source: "(29:2) {#if !settingsOpen}",
     		ctx
     	});
 
@@ -692,9 +692,9 @@ var app = (function () {
     			button = element("button");
     			i = element("i");
     			attr_dev(i, "class", "fas fa-trash");
-    			add_location(i, file$6, 36, 8, 889);
+    			add_location(i, file$6, 36, 8, 917);
     			attr_dev(button, "class", "control control-clear svelte-17o2zni");
-    			add_location(button, file$6, 35, 4, 802);
+    			add_location(button, file$6, 35, 4, 830);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -748,13 +748,13 @@ var app = (function () {
     	let dispose;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*settings*/ ctx[0]) return create_if_block_2$1;
+    		if (/*settingsOpen*/ ctx[0]) return create_if_block_2$1;
     		return create_else_block$1;
     	}
 
     	let current_block_type = select_block_type(ctx);
     	let if_block0 = current_block_type(ctx);
-    	let if_block1 = !/*settings*/ ctx[0] && create_if_block$3(ctx);
+    	let if_block1 = !/*settingsOpen*/ ctx[0] && create_if_block$3(ctx);
 
     	const block = {
     		c: function create() {
@@ -767,7 +767,7 @@ var app = (function () {
     			t1 = space();
     			div1 = element("div");
     			span = element("span");
-    			span.textContent = "v. 4.0.5";
+    			span.textContent = "v. 4.0.6";
     			t3 = space();
     			button1 = element("button");
     			i0 = element("i");
@@ -781,32 +781,32 @@ var app = (function () {
     			button4 = element("button");
     			i3 = element("i");
     			attr_dev(button0, "class", "control control-menu svelte-17o2zni");
-    			add_location(button0, file$6, 18, 2, 384);
+    			add_location(button0, file$6, 18, 2, 388);
     			attr_dev(div0, "class", "titlebar-group svelte-17o2zni");
-    			add_location(div0, file$6, 17, 1, 352);
+    			add_location(div0, file$6, 17, 1, 356);
     			attr_dev(span, "class", "version svelte-17o2zni");
-    			add_location(span, file$6, 42, 2, 995);
+    			add_location(span, file$6, 42, 2, 1023);
     			attr_dev(i0, "class", "fas fa-thumbtack svelte-17o2zni");
-    			add_location(i0, file$6, 44, 6, 1148);
+    			add_location(i0, file$6, 44, 6, 1176);
     			attr_dev(button1, "class", "control control-pin svelte-17o2zni");
     			toggle_class(button1, "pinned", /*pinned*/ ctx[2]);
-    			add_location(button1, file$6, 43, 2, 1036);
+    			add_location(button1, file$6, 43, 2, 1064);
     			attr_dev(i1, "class", "fas fa-minus");
-    			add_location(i1, file$6, 47, 6, 1306);
+    			add_location(i1, file$6, 47, 6, 1334);
     			attr_dev(button2, "class", "control control-minimize svelte-17o2zni");
-    			add_location(button2, file$6, 46, 2, 1197);
+    			add_location(button2, file$6, 46, 2, 1225);
     			attr_dev(i2, "class", "fas fa-plus");
-    			add_location(i2, file$6, 50, 6, 1459);
+    			add_location(i2, file$6, 50, 6, 1487);
     			attr_dev(button3, "class", "control control-restore svelte-17o2zni");
-    			add_location(button3, file$6, 49, 2, 1351);
+    			add_location(button3, file$6, 49, 2, 1379);
     			attr_dev(i3, "class", "fas fa-times");
-    			add_location(i3, file$6, 53, 6, 1606);
+    			add_location(i3, file$6, 53, 6, 1634);
     			attr_dev(button4, "class", "control control-close svelte-17o2zni");
-    			add_location(button4, file$6, 52, 2, 1503);
+    			add_location(button4, file$6, 52, 2, 1531);
     			attr_dev(div1, "class", "titlebar-group svelte-17o2zni");
-    			add_location(div1, file$6, 41, 1, 963);
+    			add_location(div1, file$6, 41, 1, 991);
     			attr_dev(div2, "class", "titlebar svelte-17o2zni");
-    			add_location(div2, file$6, 16, 0, 327);
+    			add_location(div2, file$6, 16, 0, 331);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -857,7 +857,7 @@ var app = (function () {
     				}
     			}
 
-    			if (!/*settings*/ ctx[0]) {
+    			if (!/*settingsOpen*/ ctx[0]) {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
@@ -896,28 +896,28 @@ var app = (function () {
     	return block;
     }
 
-    function instance$7($$self, $$props, $$invalidate) {
+    function instance$6($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Titlebar", slots, []);
     	const { ipcRenderer } = require("electron");
     	const dispatch = createEventDispatcher();
     	let { fileSelected = false } = $$props;
-    	let { settings = false } = $$props;
+    	let { settingsOpen = false } = $$props;
     	let pinned = false;
 
     	ipcRenderer.on("pin", (event, arg) => {
     		$$invalidate(2, pinned = arg);
     	});
 
-    	const writable_props = ["fileSelected", "settings"];
+    	const writable_props = ["fileSelected", "settingsOpen"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Titlebar> was created with unknown prop '${key}'`);
     	});
 
     	const click_handler = e => {
-    		$$invalidate(0, settings = !settings);
-    		dispatch("settings", settings);
+    		$$invalidate(0, settingsOpen = !settingsOpen);
+    		dispatch("settingsOpen", settingsOpen);
     	};
 
     	const click_handler_1 = e => {
@@ -942,7 +942,7 @@ var app = (function () {
 
     	$$self.$$set = $$props => {
     		if ("fileSelected" in $$props) $$invalidate(1, fileSelected = $$props.fileSelected);
-    		if ("settings" in $$props) $$invalidate(0, settings = $$props.settings);
+    		if ("settingsOpen" in $$props) $$invalidate(0, settingsOpen = $$props.settingsOpen);
     	};
 
     	$$self.$capture_state = () => ({
@@ -950,13 +950,13 @@ var app = (function () {
     		ipcRenderer,
     		dispatch,
     		fileSelected,
-    		settings,
+    		settingsOpen,
     		pinned
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("fileSelected" in $$props) $$invalidate(1, fileSelected = $$props.fileSelected);
-    		if ("settings" in $$props) $$invalidate(0, settings = $$props.settings);
+    		if ("settingsOpen" in $$props) $$invalidate(0, settingsOpen = $$props.settingsOpen);
     		if ("pinned" in $$props) $$invalidate(2, pinned = $$props.pinned);
     	};
 
@@ -965,7 +965,7 @@ var app = (function () {
     	}
 
     	return [
-    		settings,
+    		settingsOpen,
     		fileSelected,
     		pinned,
     		ipcRenderer,
@@ -982,7 +982,7 @@ var app = (function () {
     class Titlebar extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { fileSelected: 1, settings: 0 });
+    		init(this, options, instance$6, create_fragment$7, safe_not_equal, { fileSelected: 1, settingsOpen: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1000,11 +1000,11 @@ var app = (function () {
     		throw new Error("<Titlebar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get settings() {
+    	get settingsOpen() {
     		throw new Error("<Titlebar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set settings(value) {
+    	set settingsOpen(value) {
     		throw new Error("<Titlebar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -1071,7 +1071,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$6($$self, $$props, $$invalidate) {
+    function instance$5($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Desktop", slots, ['default']);
     	const writable_props = [];
@@ -1090,7 +1090,7 @@ var app = (function () {
     class Desktop extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {});
+    		init(this, options, instance$5, create_fragment$6, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1103,10 +1103,10 @@ var app = (function () {
 
     /* src\components\Toolbox.svelte generated by Svelte v3.38.3 */
 
-    const { console: console_1$2 } = globals;
+    const { console: console_1$1 } = globals;
     const file$4 = "src\\components\\Toolbox.svelte";
 
-    // (27:1) {#if fileSelected && !settings}
+    // (27:1) {#if fileSelected && !settingsOpen}
     function create_if_block$2(ctx) {
     	let button0;
     	let i0;
@@ -1123,14 +1123,14 @@ var app = (function () {
     			t = space();
     			button1 = element("button");
     			i1 = element("i");
-    			attr_dev(i0, "class", "far fa-clipboard");
-    			add_location(i0, file$4, 28, 6, 713);
+    			attr_dev(i0, "class", "far fa-save");
+    			add_location(i0, file$4, 28, 6, 765);
     			attr_dev(button0, "class", "control svelte-1b6psrh");
-    			add_location(button0, file$4, 27, 2, 660);
-    			attr_dev(i1, "class", "far fa-save");
-    			add_location(i1, file$4, 31, 6, 859);
+    			add_location(button0, file$4, 27, 2, 668);
+    			attr_dev(i1, "class", "far fa-clipboard");
+    			add_location(i1, file$4, 31, 6, 862);
     			attr_dev(button1, "class", "control svelte-1b6psrh");
-    			add_location(button1, file$4, 30, 2, 762);
+    			add_location(button1, file$4, 30, 2, 809);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button0, anchor);
@@ -1141,8 +1141,8 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*copyImage*/ ctx[3], false, false, false),
-    					listen_dev(button1, "click", /*click_handler*/ ctx[4], false, false, false)
+    					listen_dev(button0, "click", /*click_handler*/ ctx[4], false, false, false),
+    					listen_dev(button1, "click", /*copyImage*/ ctx[3], false, false, false)
     				];
 
     				mounted = true;
@@ -1162,7 +1162,7 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(27:1) {#if fileSelected && !settings}",
+    		source: "(27:1) {#if fileSelected && !settingsOpen}",
     		ctx
     	});
 
@@ -1171,14 +1171,14 @@ var app = (function () {
 
     function create_fragment$5(ctx) {
     	let div;
-    	let if_block = /*fileSelected*/ ctx[0] && !/*settings*/ ctx[1] && create_if_block$2(ctx);
+    	let if_block = /*fileSelected*/ ctx[0] && !/*settingsOpen*/ ctx[1] && create_if_block$2(ctx);
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-1b6psrh");
-    			add_location(div, file$4, 25, 0, 601);
+    			add_location(div, file$4, 25, 0, 605);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1188,7 +1188,7 @@ var app = (function () {
     			if (if_block) if_block.m(div, null);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*fileSelected*/ ctx[0] && !/*settings*/ ctx[1]) {
+    			if (/*fileSelected*/ ctx[0] && !/*settingsOpen*/ ctx[1]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -1220,12 +1220,12 @@ var app = (function () {
     	return block;
     }
 
-    function instance$5($$self, $$props, $$invalidate) {
+    function instance$4($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Toolbox", slots, []);
     	const { ipcRenderer } = require("electron");
     	let { fileSelected = false } = $$props;
-    	let { settings = false } = $$props;
+    	let { settingsOpen = false } = $$props;
 
     	function copyImage() {
     		var xhr = new XMLHttpRequest();
@@ -1246,10 +1246,10 @@ var app = (function () {
     		xhr.send();
     	} //NOTIFY THE USER!!
 
-    	const writable_props = ["fileSelected", "settings"];
+    	const writable_props = ["fileSelected", "settingsOpen"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn(`<Toolbox> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<Toolbox> was created with unknown prop '${key}'`);
     	});
 
     	const click_handler = e => {
@@ -1258,32 +1258,32 @@ var app = (function () {
 
     	$$self.$$set = $$props => {
     		if ("fileSelected" in $$props) $$invalidate(0, fileSelected = $$props.fileSelected);
-    		if ("settings" in $$props) $$invalidate(1, settings = $$props.settings);
+    		if ("settingsOpen" in $$props) $$invalidate(1, settingsOpen = $$props.settingsOpen);
     	};
 
     	$$self.$capture_state = () => ({
     		ipcRenderer,
     		fileSelected,
-    		settings,
+    		settingsOpen,
     		copyImage
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("fileSelected" in $$props) $$invalidate(0, fileSelected = $$props.fileSelected);
-    		if ("settings" in $$props) $$invalidate(1, settings = $$props.settings);
+    		if ("settingsOpen" in $$props) $$invalidate(1, settingsOpen = $$props.settingsOpen);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [fileSelected, settings, ipcRenderer, copyImage, click_handler];
+    	return [fileSelected, settingsOpen, ipcRenderer, copyImage, click_handler];
     }
 
     class Toolbox extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { fileSelected: 0, settings: 1 });
+    		init(this, options, instance$4, create_fragment$5, safe_not_equal, { fileSelected: 0, settingsOpen: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1301,21 +1301,20 @@ var app = (function () {
     		throw new Error("<Toolbox>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get settings() {
+    	get settingsOpen() {
     		throw new Error("<Toolbox>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set settings(value) {
+    	set settingsOpen(value) {
     		throw new Error("<Toolbox>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
     /* src\components\Settings.svelte generated by Svelte v3.38.3 */
 
-    const { console: console_1$1 } = globals;
     const file$3 = "src\\components\\Settings.svelte";
 
-    // (123:31) 
+    // (126:31) 
     function create_if_block_2(ctx) {
     	let div2;
     	let div0;
@@ -1326,16 +1325,16 @@ var app = (function () {
     		c: function create() {
     			div2 = element("div");
     			div0 = element("div");
-    			div0.textContent = "v. 4.0.5";
+    			div0.textContent = "v. 4.0.6";
     			t1 = space();
     			div1 = element("div");
     			div1.textContent = "source.dog © 2018-2022";
     			attr_dev(div0, "class", "settings-container-text svelte-13bbpr8");
-    			add_location(div0, file$3, 124, 4, 3159);
+    			add_location(div0, file$3, 127, 4, 3280);
     			attr_dev(div1, "class", "settings-container-text svelte-13bbpr8");
-    			add_location(div1, file$3, 127, 4, 3229);
+    			add_location(div1, file$3, 130, 4, 3350);
     			attr_dev(div2, "class", "settings-container-inner svelte-13bbpr8");
-    			add_location(div2, file$3, 123, 3, 3115);
+    			add_location(div2, file$3, 126, 3, 3236);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -1353,14 +1352,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(123:31) ",
+    		source: "(126:31) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (41:34) 
+    // (44:34) 
     function create_if_block_1$1(ctx) {
     	let div26;
     	let div3;
@@ -1496,94 +1495,94 @@ var app = (function () {
     			t25 = space();
     			span4 = element("span");
     			attr_dev(div0, "class", "setting-title svelte-13bbpr8");
-    			add_location(div0, file$3, 44, 6, 992);
+    			add_location(div0, file$3, 47, 6, 1015);
     			attr_dev(div1, "class", "setting-control svelte-13bbpr8");
-    			add_location(div1, file$3, 47, 6, 1060);
+    			add_location(div1, file$3, 50, 6, 1083);
     			attr_dev(div2, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div2, file$3, 43, 5, 957);
+    			add_location(div2, file$3, 46, 5, 980);
     			attr_dev(div3, "class", "setting svelte-13bbpr8");
-    			add_location(div3, file$3, 42, 4, 929);
+    			add_location(div3, file$3, 45, 4, 952);
     			attr_dev(div4, "class", "setting-title svelte-13bbpr8");
-    			add_location(div4, file$3, 52, 6, 1189);
+    			add_location(div4, file$3, 55, 6, 1212);
     			attr_dev(input0, "type", "checkbox");
     			attr_dev(input0, "class", "svelte-13bbpr8");
-    			add_location(input0, file$3, 57, 8, 1332);
+    			add_location(input0, file$3, 60, 8, 1355);
     			attr_dev(span0, "class", "slider svelte-13bbpr8");
-    			add_location(span0, file$3, 58, 8, 1365);
+    			add_location(span0, file$3, 61, 8, 1422);
     			attr_dev(label0, "class", "switch svelte-13bbpr8");
-    			add_location(label0, file$3, 56, 7, 1300);
+    			add_location(label0, file$3, 59, 7, 1323);
     			attr_dev(div5, "class", "setting-control svelte-13bbpr8");
-    			add_location(div5, file$3, 55, 6, 1262);
+    			add_location(div5, file$3, 58, 6, 1285);
     			attr_dev(div6, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div6, file$3, 51, 5, 1154);
+    			add_location(div6, file$3, 54, 5, 1177);
     			attr_dev(div7, "class", "setting-description svelte-13bbpr8");
-    			add_location(div7, file$3, 62, 5, 1444);
+    			add_location(div7, file$3, 65, 5, 1501);
     			attr_dev(div8, "class", "setting svelte-13bbpr8");
-    			add_location(div8, file$3, 50, 4, 1126);
+    			add_location(div8, file$3, 53, 4, 1149);
     			attr_dev(div9, "class", "setting-title svelte-13bbpr8");
-    			add_location(div9, file$3, 68, 6, 1637);
+    			add_location(div9, file$3, 71, 6, 1694);
     			attr_dev(input1, "type", "checkbox");
     			attr_dev(input1, "class", "svelte-13bbpr8");
-    			add_location(input1, file$3, 73, 8, 1783);
+    			add_location(input1, file$3, 76, 8, 1840);
     			attr_dev(span1, "class", "slider svelte-13bbpr8");
-    			add_location(span1, file$3, 74, 8, 1816);
+    			add_location(span1, file$3, 77, 8, 1904);
     			attr_dev(label1, "class", "switch svelte-13bbpr8");
-    			add_location(label1, file$3, 72, 7, 1751);
+    			add_location(label1, file$3, 75, 7, 1808);
     			attr_dev(div10, "class", "setting-control svelte-13bbpr8");
-    			add_location(div10, file$3, 71, 6, 1713);
+    			add_location(div10, file$3, 74, 6, 1770);
     			attr_dev(div11, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div11, file$3, 67, 5, 1602);
+    			add_location(div11, file$3, 70, 5, 1659);
     			attr_dev(div12, "class", "setting-description svelte-13bbpr8");
-    			add_location(div12, file$3, 78, 5, 1895);
+    			add_location(div12, file$3, 81, 5, 1983);
     			attr_dev(div13, "class", "setting svelte-13bbpr8");
-    			add_location(div13, file$3, 66, 4, 1574);
+    			add_location(div13, file$3, 69, 4, 1631);
     			attr_dev(div14, "class", "setting-title svelte-13bbpr8");
-    			add_location(div14, file$3, 84, 6, 2084);
+    			add_location(div14, file$3, 87, 6, 2172);
     			attr_dev(input2, "type", "checkbox");
     			attr_dev(input2, "class", "svelte-13bbpr8");
-    			add_location(input2, file$3, 89, 8, 2224);
+    			add_location(input2, file$3, 92, 8, 2312);
     			attr_dev(span2, "class", "slider svelte-13bbpr8");
-    			add_location(span2, file$3, 90, 8, 2287);
+    			add_location(span2, file$3, 93, 8, 2375);
     			attr_dev(label2, "class", "switch svelte-13bbpr8");
-    			add_location(label2, file$3, 88, 7, 2192);
+    			add_location(label2, file$3, 91, 7, 2280);
     			attr_dev(div15, "class", "setting-control svelte-13bbpr8");
-    			add_location(div15, file$3, 87, 6, 2154);
+    			add_location(div15, file$3, 90, 6, 2242);
     			attr_dev(div16, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div16, file$3, 83, 5, 2049);
+    			add_location(div16, file$3, 86, 5, 2137);
     			attr_dev(div17, "class", "setting svelte-13bbpr8");
-    			add_location(div17, file$3, 82, 4, 2021);
+    			add_location(div17, file$3, 85, 4, 2109);
     			attr_dev(div18, "class", "setting-title svelte-13bbpr8");
-    			add_location(div18, file$3, 97, 6, 2440);
+    			add_location(div18, file$3, 100, 6, 2528);
     			attr_dev(input3, "type", "checkbox");
     			attr_dev(input3, "class", "svelte-13bbpr8");
-    			add_location(input3, file$3, 102, 8, 2589);
+    			add_location(input3, file$3, 105, 8, 2677);
     			attr_dev(span3, "class", "slider svelte-13bbpr8");
-    			add_location(span3, file$3, 103, 8, 2622);
+    			add_location(span3, file$3, 106, 8, 2743);
     			attr_dev(label3, "class", "switch svelte-13bbpr8");
-    			add_location(label3, file$3, 101, 7, 2557);
+    			add_location(label3, file$3, 104, 7, 2645);
     			attr_dev(div19, "class", "setting-control svelte-13bbpr8");
-    			add_location(div19, file$3, 100, 6, 2519);
+    			add_location(div19, file$3, 103, 6, 2607);
     			attr_dev(div20, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div20, file$3, 96, 5, 2405);
+    			add_location(div20, file$3, 99, 5, 2493);
     			attr_dev(div21, "class", "setting svelte-13bbpr8");
-    			add_location(div21, file$3, 95, 4, 2377);
+    			add_location(div21, file$3, 98, 4, 2465);
     			attr_dev(div22, "class", "setting-title svelte-13bbpr8");
-    			add_location(div22, file$3, 110, 6, 2775);
+    			add_location(div22, file$3, 113, 6, 2896);
     			attr_dev(input4, "type", "checkbox");
     			attr_dev(input4, "class", "svelte-13bbpr8");
-    			add_location(input4, file$3, 115, 8, 2917);
+    			add_location(input4, file$3, 118, 8, 3038);
     			attr_dev(span4, "class", "slider svelte-13bbpr8");
-    			add_location(span4, file$3, 116, 8, 2982);
+    			add_location(span4, file$3, 119, 8, 3103);
     			attr_dev(label4, "class", "switch svelte-13bbpr8");
-    			add_location(label4, file$3, 114, 7, 2885);
+    			add_location(label4, file$3, 117, 7, 3006);
     			attr_dev(div23, "class", "setting-control svelte-13bbpr8");
-    			add_location(div23, file$3, 113, 6, 2847);
+    			add_location(div23, file$3, 116, 6, 2968);
     			attr_dev(div24, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div24, file$3, 109, 5, 2740);
+    			add_location(div24, file$3, 112, 5, 2861);
     			attr_dev(div25, "class", "setting svelte-13bbpr8");
-    			add_location(div25, file$3, 108, 4, 2712);
+    			add_location(div25, file$3, 111, 4, 2833);
     			attr_dev(div26, "class", "settings-container-inner svelte-13bbpr8");
-    			add_location(div26, file$3, 41, 3, 885);
+    			add_location(div26, file$3, 44, 3, 908);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div26, anchor);
@@ -1600,6 +1599,7 @@ var app = (function () {
     			append_dev(div6, div5);
     			append_dev(div5, label0);
     			append_dev(label0, input0);
+    			input0.checked = /*settings*/ ctx[0].overwrite;
     			append_dev(label0, t5);
     			append_dev(label0, span0);
     			append_dev(div8, t6);
@@ -1612,6 +1612,7 @@ var app = (function () {
     			append_dev(div11, div10);
     			append_dev(div10, label1);
     			append_dev(label1, input1);
+    			input1.checked = /*settings*/ ctx[0].select;
     			append_dev(label1, t11);
     			append_dev(label1, span1);
     			append_dev(div13, t12);
@@ -1624,7 +1625,7 @@ var app = (function () {
     			append_dev(div16, div15);
     			append_dev(div15, label2);
     			append_dev(label2, input2);
-    			input2.checked = /*settings*/ ctx[1].theme;
+    			input2.checked = /*settings*/ ctx[0].theme;
     			append_dev(label2, t17);
     			append_dev(label2, span2);
     			append_dev(div26, t18);
@@ -1635,6 +1636,7 @@ var app = (function () {
     			append_dev(div20, div19);
     			append_dev(div19, label3);
     			append_dev(label3, input3);
+    			input3.checked = /*settings*/ ctx[0].autosave;
     			append_dev(label3, t21);
     			append_dev(label3, span3);
     			append_dev(div26, t22);
@@ -1645,26 +1647,41 @@ var app = (function () {
     			append_dev(div24, div23);
     			append_dev(div23, label4);
     			append_dev(label4, input4);
-    			input4.checked = /*settings*/ ctx[1].devmode;
+    			input4.checked = /*settings*/ ctx[0].devmode;
     			append_dev(label4, t25);
     			append_dev(label4, span4);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input2, "change", /*input2_change_handler*/ ctx[5]),
-    					listen_dev(input4, "change", /*input4_change_handler*/ ctx[6])
+    					listen_dev(input0, "change", /*input0_change_handler*/ ctx[6]),
+    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[7]),
+    					listen_dev(input2, "change", /*input2_change_handler*/ ctx[8]),
+    					listen_dev(input3, "change", /*input3_change_handler*/ ctx[9]),
+    					listen_dev(input4, "change", /*input4_change_handler*/ ctx[10])
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*settings*/ 2) {
-    				input2.checked = /*settings*/ ctx[1].theme;
+    			if (dirty & /*settings*/ 1) {
+    				input0.checked = /*settings*/ ctx[0].overwrite;
     			}
 
-    			if (dirty & /*settings*/ 2) {
-    				input4.checked = /*settings*/ ctx[1].devmode;
+    			if (dirty & /*settings*/ 1) {
+    				input1.checked = /*settings*/ ctx[0].select;
+    			}
+
+    			if (dirty & /*settings*/ 1) {
+    				input2.checked = /*settings*/ ctx[0].theme;
+    			}
+
+    			if (dirty & /*settings*/ 1) {
+    				input3.checked = /*settings*/ ctx[0].autosave;
+    			}
+
+    			if (dirty & /*settings*/ 1) {
+    				input4.checked = /*settings*/ ctx[0].devmode;
     			}
     		},
     		d: function destroy(detaching) {
@@ -1678,14 +1695,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(41:34) ",
+    		source: "(44:34) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (39:2) {#if setWindow=="recent"}
+    // (42:2) {#if setWindow=="recent"}
     function create_if_block$1(ctx) {
     	let t;
 
@@ -1706,7 +1723,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(39:2) {#if setWindow==\\\"recent\\\"}",
+    		source: "(42:2) {#if setWindow==\\\"recent\\\"}",
     		ctx
     	});
 
@@ -1728,9 +1745,9 @@ var app = (function () {
     	let dispose;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*setWindow*/ ctx[0] == "recent") return create_if_block$1;
-    		if (/*setWindow*/ ctx[0] == "settings") return create_if_block_1$1;
-    		if (/*setWindow*/ ctx[0] == "about") return create_if_block_2;
+    		if (/*setWindow*/ ctx[1] == "recent") return create_if_block$1;
+    		if (/*setWindow*/ ctx[1] == "settings") return create_if_block_1$1;
+    		if (/*setWindow*/ ctx[1] == "about") return create_if_block_2;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -1753,22 +1770,22 @@ var app = (function () {
     			div1 = element("div");
     			if (if_block) if_block.c();
     			attr_dev(li0, "class", "svelte-13bbpr8");
-    			toggle_class(li0, "active", /*setWindow*/ ctx[0] == "recent");
-    			add_location(li0, file$3, 17, 3, 385);
+    			toggle_class(li0, "active", /*setWindow*/ ctx[1] == "recent");
+    			add_location(li0, file$3, 20, 3, 408);
     			attr_dev(li1, "class", "svelte-13bbpr8");
-    			toggle_class(li1, "active", /*setWindow*/ ctx[0] == "settings");
-    			add_location(li1, file$3, 23, 3, 506);
+    			toggle_class(li1, "active", /*setWindow*/ ctx[1] == "settings");
+    			add_location(li1, file$3, 26, 3, 529);
     			attr_dev(li2, "class", "svelte-13bbpr8");
-    			toggle_class(li2, "active", /*setWindow*/ ctx[0] == "about");
-    			add_location(li2, file$3, 29, 3, 633);
+    			toggle_class(li2, "active", /*setWindow*/ ctx[1] == "about");
+    			add_location(li2, file$3, 32, 3, 656);
     			attr_dev(ul, "class", "settings-container-menu svelte-13bbpr8");
-    			add_location(ul, file$3, 16, 2, 344);
+    			add_location(ul, file$3, 19, 2, 367);
     			attr_dev(div0, "class", "settings-container-sidebar svelte-13bbpr8");
-    			add_location(div0, file$3, 15, 1, 300);
+    			add_location(div0, file$3, 18, 1, 323);
     			attr_dev(div1, "class", "settings-container-main svelte-13bbpr8");
-    			add_location(div1, file$3, 37, 1, 767);
+    			add_location(div1, file$3, 40, 1, 790);
     			attr_dev(div2, "class", "settings-container svelte-13bbpr8");
-    			add_location(div2, file$3, 14, 0, 265);
+    			add_location(div2, file$3, 17, 0, 288);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1788,25 +1805,25 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(li0, "click", /*click_handler*/ ctx[2], false, false, false),
-    					listen_dev(li1, "click", /*click_handler_1*/ ctx[3], false, false, false),
-    					listen_dev(li2, "click", /*click_handler_2*/ ctx[4], false, false, false)
+    					listen_dev(li0, "click", /*click_handler*/ ctx[3], false, false, false),
+    					listen_dev(li1, "click", /*click_handler_1*/ ctx[4], false, false, false),
+    					listen_dev(li2, "click", /*click_handler_2*/ ctx[5], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*setWindow*/ 1) {
-    				toggle_class(li0, "active", /*setWindow*/ ctx[0] == "recent");
+    			if (dirty & /*setWindow*/ 2) {
+    				toggle_class(li0, "active", /*setWindow*/ ctx[1] == "recent");
     			}
 
-    			if (dirty & /*setWindow*/ 1) {
-    				toggle_class(li1, "active", /*setWindow*/ ctx[0] == "settings");
+    			if (dirty & /*setWindow*/ 2) {
+    				toggle_class(li1, "active", /*setWindow*/ ctx[1] == "settings");
     			}
 
-    			if (dirty & /*setWindow*/ 1) {
-    				toggle_class(li2, "active", /*setWindow*/ ctx[0] == "about");
+    			if (dirty & /*setWindow*/ 2) {
+    				toggle_class(li2, "active", /*setWindow*/ ctx[1] == "about");
     			}
 
     			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
@@ -1846,65 +1863,103 @@ var app = (function () {
     	return block;
     }
 
-    function instance$4($$self, $$props, $$invalidate) {
+    function instance$3($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Settings", slots, []);
     	const { ipcRenderer } = require("electron");
     	let setWindow = "recent";
-    	let settings = {};
-    	ipcRenderer.send("settings:get", "all");
-
-    	ipcRenderer.on("settings:all", (event, arg) => {
-    		$$invalidate(1, settings = arg);
-    		console.log(arg);
-    	});
-
-    	const writable_props = [];
+    	let { settings = {} } = $$props;
+    	let timeout;
+    	const writable_props = ["settings"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<Settings> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Settings> was created with unknown prop '${key}'`);
     	});
 
     	const click_handler = e => {
-    		$$invalidate(0, setWindow = "recent");
+    		$$invalidate(1, setWindow = "recent");
     	};
 
     	const click_handler_1 = e => {
-    		$$invalidate(0, setWindow = "settings");
+    		$$invalidate(1, setWindow = "settings");
     	};
 
     	const click_handler_2 = e => {
-    		$$invalidate(0, setWindow = "about");
+    		$$invalidate(1, setWindow = "about");
     	};
+
+    	function input0_change_handler() {
+    		settings.overwrite = this.checked;
+    		$$invalidate(0, settings);
+    	}
+
+    	function input1_change_handler() {
+    		settings.select = this.checked;
+    		$$invalidate(0, settings);
+    	}
 
     	function input2_change_handler() {
     		settings.theme = this.checked;
-    		$$invalidate(1, settings);
+    		$$invalidate(0, settings);
+    	}
+
+    	function input3_change_handler() {
+    		settings.autosave = this.checked;
+    		$$invalidate(0, settings);
     	}
 
     	function input4_change_handler() {
     		settings.devmode = this.checked;
-    		$$invalidate(1, settings);
+    		$$invalidate(0, settings);
     	}
 
-    	$$self.$capture_state = () => ({ ipcRenderer, setWindow, settings });
+    	$$self.$$set = $$props => {
+    		if ("settings" in $$props) $$invalidate(0, settings = $$props.settings);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		ipcRenderer,
+    		setWindow,
+    		settings,
+    		timeout
+    	});
 
     	$$self.$inject_state = $$props => {
-    		if ("setWindow" in $$props) $$invalidate(0, setWindow = $$props.setWindow);
-    		if ("settings" in $$props) $$invalidate(1, settings = $$props.settings);
+    		if ("setWindow" in $$props) $$invalidate(1, setWindow = $$props.setWindow);
+    		if ("settings" in $$props) $$invalidate(0, settings = $$props.settings);
+    		if ("timeout" in $$props) $$invalidate(2, timeout = $$props.timeout);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*timeout, settings*/ 5) {
+    			{
+    				clearTimeout(timeout);
+
+    				$$invalidate(2, timeout = setTimeout(
+    					() => {
+    						ipcRenderer.send("settings:write", settings);
+    					},
+    					500
+    				));
+    			}
+    		}
+    	};
+
     	return [
-    		setWindow,
     		settings,
+    		setWindow,
+    		timeout,
     		click_handler,
     		click_handler_1,
     		click_handler_2,
+    		input0_change_handler,
+    		input1_change_handler,
     		input2_change_handler,
+    		input3_change_handler,
     		input4_change_handler
     	];
     }
@@ -1912,7 +1967,7 @@ var app = (function () {
     class Settings extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {});
+    		init(this, options, instance$3, create_fragment$4, safe_not_equal, { settings: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1921,12 +1976,20 @@ var app = (function () {
     			id: create_fragment$4.name
     		});
     	}
+
+    	get settings() {
+    		throw new Error("<Settings>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set settings(value) {
+    		throw new Error("<Settings>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     // Adapted from https://github.com/hperrin/svelte-material-ui/blob/master/packages/common/forwardEvents.js
 
     // prettier-ignore
-    const events = [
+    const events$1 = [
         'focus', 'blur',
         'fullscreenchange', 'fullscreenerror', 'scroll',
         'cut', 'copy', 'paste',
@@ -1944,7 +2007,7 @@ var app = (function () {
       const component = get_current_component();
 
       return node => {
-        const destructors = events.map(event =>
+        const destructors = events$1.map(event =>
           listen(node, event, e => bubble(component, e))
         );
 
@@ -2133,7 +2196,7 @@ var app = (function () {
 
     const KEY = {};
 
-    function instance$3($$self, $$props, $$invalidate) {
+    function instance$2($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Canvas", slots, ['default']);
 
@@ -2306,7 +2369,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$3, create_fragment$3, safe_not_equal, {
+    		init(this, options, instance$2, create_fragment$3, safe_not_equal, {
     			width: 1,
     			height: 2,
     			pixelRatio: 0,
@@ -2429,7 +2492,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$1($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Layer", slots, []);
     	const { register, unregister, redraw } = getContext(KEY);
@@ -2493,7 +2556,7 @@ var app = (function () {
     class Layer extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, { setup: 1, render: 2 });
+    		init(this, options, instance$1, create_fragment$2, safe_not_equal, { setup: 1, render: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -3230,7 +3293,7 @@ var app = (function () {
     	event.stopPropagation();
     }
 
-    function instance$1($$self, $$props, $$invalidate) {
+    function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Dropzone", slots, ['default']);
     	let { accept } = $$props; // string or string[]
@@ -3677,7 +3740,7 @@ var app = (function () {
     		init(
     			this,
     			options,
-    			instance$1,
+    			instance,
     			create_fragment$1,
     			safe_not_equal,
     			{
@@ -3827,16 +3890,794 @@ var app = (function () {
     	}
     }
 
+    /**
+    * Panzoom for panning and zooming elements using CSS transforms
+    * Copyright Timmy Willison and other contributors
+    * https://github.com/timmywil/panzoom/blob/main/MIT-License.txt
+    */
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    /* eslint-disable no-var */
+    if (typeof window !== 'undefined') {
+      // Support: IE11 only
+      if (window.NodeList && !NodeList.prototype.forEach) {
+        NodeList.prototype.forEach = Array.prototype.forEach;
+      }
+      // Support: IE11 only
+      // CustomEvent is an object instead of a constructor
+      if (typeof window.CustomEvent !== 'function') {
+        window.CustomEvent = function CustomEvent(event, params) {
+          params = params || { bubbles: false, cancelable: false, detail: null };
+          var evt = document.createEvent('CustomEvent');
+          evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+          return evt
+        };
+      }
+    }
+
+    /**
+     * Utilites for working with multiple pointer events
+     */
+    function findEventIndex(pointers, event) {
+        var i = pointers.length;
+        while (i--) {
+            if (pointers[i].pointerId === event.pointerId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    function addPointer(pointers, event) {
+        var i;
+        // Add touches if applicable
+        if (event.touches) {
+            i = 0;
+            for (var _i = 0, _a = event.touches; _i < _a.length; _i++) {
+                var touch = _a[_i];
+                touch.pointerId = i++;
+                addPointer(pointers, touch);
+            }
+            return;
+        }
+        i = findEventIndex(pointers, event);
+        // Update if already present
+        if (i > -1) {
+            pointers.splice(i, 1);
+        }
+        pointers.push(event);
+    }
+    function removePointer(pointers, event) {
+        // Add touches if applicable
+        if (event.touches) {
+            // Remove all touches
+            while (pointers.length) {
+                pointers.pop();
+            }
+            return;
+        }
+        var i = findEventIndex(pointers, event);
+        if (i > -1) {
+            pointers.splice(i, 1);
+        }
+    }
+    /**
+     * Calculates a center point between
+     * the given pointer events, for panning
+     * with multiple pointers.
+     */
+    function getMiddle(pointers) {
+        // Copy to avoid changing by reference
+        pointers = pointers.slice(0);
+        var event1 = pointers.pop();
+        var event2;
+        while ((event2 = pointers.pop())) {
+            event1 = {
+                clientX: (event2.clientX - event1.clientX) / 2 + event1.clientX,
+                clientY: (event2.clientY - event1.clientY) / 2 + event1.clientY
+            };
+        }
+        return event1;
+    }
+    /**
+     * Calculates the distance between two points
+     * for pinch zooming.
+     * Limits to the first 2
+     */
+    function getDistance(pointers) {
+        if (pointers.length < 2) {
+            return 0;
+        }
+        var event1 = pointers[0];
+        var event2 = pointers[1];
+        return Math.sqrt(Math.pow(Math.abs(event2.clientX - event1.clientX), 2) +
+            Math.pow(Math.abs(event2.clientY - event1.clientY), 2));
+    }
+
+    var events = {
+        down: 'mousedown',
+        move: 'mousemove',
+        up: 'mouseup mouseleave'
+    };
+    if (typeof window !== 'undefined') {
+        if (typeof window.PointerEvent === 'function') {
+            events = {
+                down: 'pointerdown',
+                move: 'pointermove',
+                up: 'pointerup pointerleave pointercancel'
+            };
+        }
+        else if (typeof window.TouchEvent === 'function') {
+            events = {
+                down: 'touchstart',
+                move: 'touchmove',
+                up: 'touchend touchcancel'
+            };
+        }
+    }
+    function onPointer(event, elem, handler, eventOpts) {
+        events[event].split(' ').forEach(function (name) {
+            elem.addEventListener(name, handler, eventOpts);
+        });
+    }
+    function destroyPointer(event, elem, handler) {
+        events[event].split(' ').forEach(function (name) {
+            elem.removeEventListener(name, handler);
+        });
+    }
+
+    var isIE = typeof document !== 'undefined' && !!document.documentMode;
+    /**
+     * Lazy creation of a CSS style declaration
+     */
+    var divStyle;
+    function createStyle() {
+        if (divStyle) {
+            return divStyle;
+        }
+        return (divStyle = document.createElement('div').style);
+    }
+    /**
+     * Proper prefixing for cross-browser compatibility
+     */
+    var prefixes = ['webkit', 'moz', 'ms'];
+    var prefixCache = {};
+    function getPrefixedName(name) {
+        if (prefixCache[name]) {
+            return prefixCache[name];
+        }
+        var divStyle = createStyle();
+        if (name in divStyle) {
+            return (prefixCache[name] = name);
+        }
+        var capName = name[0].toUpperCase() + name.slice(1);
+        var i = prefixes.length;
+        while (i--) {
+            var prefixedName = "" + prefixes[i] + capName;
+            if (prefixedName in divStyle) {
+                return (prefixCache[name] = prefixedName);
+            }
+        }
+    }
+    /**
+     * Gets a style value expected to be a number
+     */
+    function getCSSNum(name, style) {
+        return parseFloat(style[getPrefixedName(name)]) || 0;
+    }
+    function getBoxStyle(elem, name, style) {
+        if (style === void 0) { style = window.getComputedStyle(elem); }
+        // Support: FF 68+
+        // Firefox requires specificity for border
+        var suffix = name === 'border' ? 'Width' : '';
+        return {
+            left: getCSSNum(name + "Left" + suffix, style),
+            right: getCSSNum(name + "Right" + suffix, style),
+            top: getCSSNum(name + "Top" + suffix, style),
+            bottom: getCSSNum(name + "Bottom" + suffix, style)
+        };
+    }
+    /**
+     * Set a style using the properly prefixed name
+     */
+    function setStyle(elem, name, value) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        elem.style[getPrefixedName(name)] = value;
+    }
+    /**
+     * Constructs the transition from panzoom options
+     * and takes care of prefixing the transition and transform
+     */
+    function setTransition(elem, options) {
+        var transform = getPrefixedName('transform');
+        setStyle(elem, 'transition', transform + " " + options.duration + "ms " + options.easing);
+    }
+    /**
+     * Set the transform using the proper prefix
+     *
+     * Override the transform setter.
+     * This is exposed mostly so the user could
+     * set other parts of a transform
+     * aside from scale and translate.
+     * Default is defined in src/css.ts.
+     *
+     * ```js
+     * // This example always sets a rotation
+     * // when setting the scale and translation
+     * const panzoom = Panzoom(elem, {
+     *   setTransform: (elem, { scale, x, y }) => {
+     *     panzoom.setStyle('transform', `rotate(0.5turn) scale(${scale}) translate(${x}px, ${y}px)`)
+     *   }
+     * })
+     * ```
+     */
+    function setTransform(elem, _a, _options) {
+        var x = _a.x, y = _a.y, scale = _a.scale, isSVG = _a.isSVG;
+        setStyle(elem, 'transform', "scale(" + scale + ") translate(" + x + "px, " + y + "px)");
+        if (isSVG && isIE) {
+            var matrixValue = window.getComputedStyle(elem).getPropertyValue('transform');
+            elem.setAttribute('transform', matrixValue);
+        }
+    }
+    /**
+     * Dimensions used in containment and focal point zooming
+     */
+    function getDimensions(elem) {
+        var parent = elem.parentNode;
+        var style = window.getComputedStyle(elem);
+        var parentStyle = window.getComputedStyle(parent);
+        var rectElem = elem.getBoundingClientRect();
+        var rectParent = parent.getBoundingClientRect();
+        return {
+            elem: {
+                style: style,
+                width: rectElem.width,
+                height: rectElem.height,
+                top: rectElem.top,
+                bottom: rectElem.bottom,
+                left: rectElem.left,
+                right: rectElem.right,
+                margin: getBoxStyle(elem, 'margin', style),
+                border: getBoxStyle(elem, 'border', style)
+            },
+            parent: {
+                style: parentStyle,
+                width: rectParent.width,
+                height: rectParent.height,
+                top: rectParent.top,
+                bottom: rectParent.bottom,
+                left: rectParent.left,
+                right: rectParent.right,
+                padding: getBoxStyle(parent, 'padding', parentStyle),
+                border: getBoxStyle(parent, 'border', parentStyle)
+            }
+        };
+    }
+
+    /**
+     * Determine if an element is attached to the DOM
+     * Panzoom requires this so events work properly
+     */
+    function isAttached(elem) {
+        var doc = elem.ownerDocument;
+        var parent = elem.parentNode;
+        return (doc &&
+            parent &&
+            doc.nodeType === 9 &&
+            parent.nodeType === 1 &&
+            doc.documentElement.contains(parent));
+    }
+
+    function getClass(elem) {
+        return (elem.getAttribute('class') || '').trim();
+    }
+    function hasClass(elem, className) {
+        return elem.nodeType === 1 && (" " + getClass(elem) + " ").indexOf(" " + className + " ") > -1;
+    }
+    function isExcluded(elem, options) {
+        for (var cur = elem; cur != null; cur = cur.parentNode) {
+            if (hasClass(cur, options.excludeClass) || options.exclude.indexOf(cur) > -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determine if an element is SVG by checking the namespace
+     * Exception: the <svg> element itself should be treated like HTML
+     */
+    var rsvg = /^http:[\w\.\/]+svg$/;
+    function isSVGElement(elem) {
+        return rsvg.test(elem.namespaceURI) && elem.nodeName.toLowerCase() !== 'svg';
+    }
+
+    function shallowClone(obj) {
+        var clone = {};
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                clone[key] = obj[key];
+            }
+        }
+        return clone;
+    }
+
+    var defaultOptions = {
+        animate: false,
+        canvas: false,
+        cursor: 'move',
+        disablePan: false,
+        disableZoom: false,
+        disableXAxis: false,
+        disableYAxis: false,
+        duration: 200,
+        easing: 'ease-in-out',
+        exclude: [],
+        excludeClass: 'panzoom-exclude',
+        handleStartEvent: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        maxScale: 4,
+        minScale: 0.125,
+        overflow: 'hidden',
+        panOnlyWhenZoomed: false,
+        relative: false,
+        setTransform: setTransform,
+        startX: 0,
+        startY: 0,
+        startScale: 1,
+        step: 0.3,
+        touchAction: 'none'
+    };
+    function Panzoom(elem, options) {
+        if (!elem) {
+            throw new Error('Panzoom requires an element as an argument');
+        }
+        if (elem.nodeType !== 1) {
+            throw new Error('Panzoom requires an element with a nodeType of 1');
+        }
+        if (!isAttached(elem)) {
+            throw new Error('Panzoom should be called on elements that have been attached to the DOM');
+        }
+        options = __assign(__assign({}, defaultOptions), options);
+        var isSVG = isSVGElement(elem);
+        var parent = elem.parentNode;
+        // Set parent styles
+        parent.style.overflow = options.overflow;
+        parent.style.userSelect = 'none';
+        // This is important for mobile to
+        // prevent scrolling while panning
+        parent.style.touchAction = options.touchAction;
+        (options.canvas ? parent : elem).style.cursor = options.cursor;
+        // Set element styles
+        elem.style.userSelect = 'none';
+        elem.style.touchAction = options.touchAction;
+        // The default for HTML is '50% 50%'
+        // The default for SVG is '0 0'
+        // SVG can't be changed in IE
+        setStyle(elem, 'transformOrigin', typeof options.origin === 'string' ? options.origin : isSVG ? '0 0' : '50% 50%');
+        function resetStyle() {
+            parent.style.overflow = '';
+            parent.style.userSelect = '';
+            parent.style.touchAction = '';
+            parent.style.cursor = '';
+            elem.style.cursor = '';
+            elem.style.userSelect = '';
+            elem.style.touchAction = '';
+            setStyle(elem, 'transformOrigin', '');
+        }
+        function setOptions(opts) {
+            if (opts === void 0) { opts = {}; }
+            for (var key in opts) {
+                if (opts.hasOwnProperty(key)) {
+                    options[key] = opts[key];
+                }
+            }
+            // Handle option side-effects
+            if (opts.hasOwnProperty('cursor') || opts.hasOwnProperty('canvas')) {
+                parent.style.cursor = elem.style.cursor = '';
+                (options.canvas ? parent : elem).style.cursor = options.cursor;
+            }
+            if (opts.hasOwnProperty('overflow')) {
+                parent.style.overflow = opts.overflow;
+            }
+            if (opts.hasOwnProperty('touchAction')) {
+                parent.style.touchAction = opts.touchAction;
+                elem.style.touchAction = opts.touchAction;
+            }
+        }
+        var x = 0;
+        var y = 0;
+        var scale = 1;
+        var isPanning = false;
+        zoom(options.startScale, { animate: false, force: true });
+        // Wait for scale to update
+        // for accurate dimensions
+        // to constrain initial values
+        setTimeout(function () {
+            pan(options.startX, options.startY, { animate: false, force: true });
+        });
+        function trigger(eventName, detail, opts) {
+            if (opts.silent) {
+                return;
+            }
+            var event = new CustomEvent(eventName, { detail: detail });
+            elem.dispatchEvent(event);
+        }
+        function setTransformWithEvent(eventName, opts, originalEvent) {
+            var value = { x: x, y: y, scale: scale, isSVG: isSVG, originalEvent: originalEvent };
+            requestAnimationFrame(function () {
+                if (typeof opts.animate === 'boolean') {
+                    if (opts.animate) {
+                        setTransition(elem, opts);
+                    }
+                    else {
+                        setStyle(elem, 'transition', 'none');
+                    }
+                }
+                opts.setTransform(elem, value, opts);
+                trigger(eventName, value, opts);
+                trigger('panzoomchange', value, opts);
+            });
+            return value;
+        }
+        function constrainXY(toX, toY, toScale, panOptions) {
+            var opts = __assign(__assign({}, options), panOptions);
+            var result = { x: x, y: y, opts: opts };
+            if (!opts.force && (opts.disablePan || (opts.panOnlyWhenZoomed && scale === opts.startScale))) {
+                return result;
+            }
+            toX = parseFloat(toX);
+            toY = parseFloat(toY);
+            if (!opts.disableXAxis) {
+                result.x = (opts.relative ? x : 0) + toX;
+            }
+            if (!opts.disableYAxis) {
+                result.y = (opts.relative ? y : 0) + toY;
+            }
+            if (opts.contain) {
+                var dims = getDimensions(elem);
+                var realWidth = dims.elem.width / scale;
+                var realHeight = dims.elem.height / scale;
+                var scaledWidth = realWidth * toScale;
+                var scaledHeight = realHeight * toScale;
+                var diffHorizontal = (scaledWidth - realWidth) / 2;
+                var diffVertical = (scaledHeight - realHeight) / 2;
+                if (opts.contain === 'inside') {
+                    var minX = (-dims.elem.margin.left - dims.parent.padding.left + diffHorizontal) / toScale;
+                    var maxX = (dims.parent.width -
+                        scaledWidth -
+                        dims.parent.padding.left -
+                        dims.elem.margin.left -
+                        dims.parent.border.left -
+                        dims.parent.border.right +
+                        diffHorizontal) /
+                        toScale;
+                    result.x = Math.max(Math.min(result.x, maxX), minX);
+                    var minY = (-dims.elem.margin.top - dims.parent.padding.top + diffVertical) / toScale;
+                    var maxY = (dims.parent.height -
+                        scaledHeight -
+                        dims.parent.padding.top -
+                        dims.elem.margin.top -
+                        dims.parent.border.top -
+                        dims.parent.border.bottom +
+                        diffVertical) /
+                        toScale;
+                    result.y = Math.max(Math.min(result.y, maxY), minY);
+                }
+                else if (opts.contain === 'outside') {
+                    var minX = (-(scaledWidth - dims.parent.width) -
+                        dims.parent.padding.left -
+                        dims.parent.border.left -
+                        dims.parent.border.right +
+                        diffHorizontal) /
+                        toScale;
+                    var maxX = (diffHorizontal - dims.parent.padding.left) / toScale;
+                    result.x = Math.max(Math.min(result.x, maxX), minX);
+                    var minY = (-(scaledHeight - dims.parent.height) -
+                        dims.parent.padding.top -
+                        dims.parent.border.top -
+                        dims.parent.border.bottom +
+                        diffVertical) /
+                        toScale;
+                    var maxY = (diffVertical - dims.parent.padding.top) / toScale;
+                    result.y = Math.max(Math.min(result.y, maxY), minY);
+                }
+            }
+            if (opts.roundPixels) {
+                result.x = Math.round(result.x);
+                result.y = Math.round(result.y);
+            }
+            return result;
+        }
+        function constrainScale(toScale, zoomOptions) {
+            var opts = __assign(__assign({}, options), zoomOptions);
+            var result = { scale: scale, opts: opts };
+            if (!opts.force && opts.disableZoom) {
+                return result;
+            }
+            var minScale = options.minScale;
+            var maxScale = options.maxScale;
+            if (opts.contain) {
+                var dims = getDimensions(elem);
+                var elemWidth = dims.elem.width / scale;
+                var elemHeight = dims.elem.height / scale;
+                if (elemWidth > 1 && elemHeight > 1) {
+                    var parentWidth = dims.parent.width - dims.parent.border.left - dims.parent.border.right;
+                    var parentHeight = dims.parent.height - dims.parent.border.top - dims.parent.border.bottom;
+                    var elemScaledWidth = parentWidth / elemWidth;
+                    var elemScaledHeight = parentHeight / elemHeight;
+                    if (options.contain === 'inside') {
+                        maxScale = Math.min(maxScale, elemScaledWidth, elemScaledHeight);
+                    }
+                    else if (options.contain === 'outside') {
+                        minScale = Math.max(minScale, elemScaledWidth, elemScaledHeight);
+                    }
+                }
+            }
+            result.scale = Math.min(Math.max(toScale, minScale), maxScale);
+            return result;
+        }
+        function pan(toX, toY, panOptions, originalEvent) {
+            var result = constrainXY(toX, toY, scale, panOptions);
+            // Only try to set if the result is somehow different
+            if (x !== result.x || y !== result.y) {
+                x = result.x;
+                y = result.y;
+                return setTransformWithEvent('panzoompan', result.opts, originalEvent);
+            }
+            return { x: x, y: y, scale: scale, isSVG: isSVG, originalEvent: originalEvent };
+        }
+        function zoom(toScale, zoomOptions, originalEvent) {
+            var result = constrainScale(toScale, zoomOptions);
+            var opts = result.opts;
+            if (!opts.force && opts.disableZoom) {
+                return;
+            }
+            toScale = result.scale;
+            var toX = x;
+            var toY = y;
+            if (opts.focal) {
+                // The difference between the point after the scale and the point before the scale
+                // plus the current translation after the scale
+                // neutralized to no scale (as the transform scale will apply to the translation)
+                var focal = opts.focal;
+                toX = (focal.x / toScale - focal.x / scale + x * toScale) / toScale;
+                toY = (focal.y / toScale - focal.y / scale + y * toScale) / toScale;
+            }
+            var panResult = constrainXY(toX, toY, toScale, { relative: false, force: true });
+            x = panResult.x;
+            y = panResult.y;
+            scale = toScale;
+            return setTransformWithEvent('panzoomzoom', opts, originalEvent);
+        }
+        function zoomInOut(isIn, zoomOptions) {
+            var opts = __assign(__assign(__assign({}, options), { animate: true }), zoomOptions);
+            return zoom(scale * Math.exp((isIn ? 1 : -1) * opts.step), opts);
+        }
+        function zoomIn(zoomOptions) {
+            return zoomInOut(true, zoomOptions);
+        }
+        function zoomOut(zoomOptions) {
+            return zoomInOut(false, zoomOptions);
+        }
+        function zoomToPoint(toScale, point, zoomOptions, originalEvent) {
+            var dims = getDimensions(elem);
+            // Instead of thinking of operating on the panzoom element,
+            // think of operating on the area inside the panzoom
+            // element's parent
+            // Subtract padding and border
+            var effectiveArea = {
+                width: dims.parent.width -
+                    dims.parent.padding.left -
+                    dims.parent.padding.right -
+                    dims.parent.border.left -
+                    dims.parent.border.right,
+                height: dims.parent.height -
+                    dims.parent.padding.top -
+                    dims.parent.padding.bottom -
+                    dims.parent.border.top -
+                    dims.parent.border.bottom
+            };
+            // Adjust the clientX/clientY to ignore the area
+            // outside the effective area
+            var clientX = point.clientX -
+                dims.parent.left -
+                dims.parent.padding.left -
+                dims.parent.border.left -
+                dims.elem.margin.left;
+            var clientY = point.clientY -
+                dims.parent.top -
+                dims.parent.padding.top -
+                dims.parent.border.top -
+                dims.elem.margin.top;
+            // Adjust the clientX/clientY for HTML elements,
+            // because they have a transform-origin of 50% 50%
+            if (!isSVG) {
+                clientX -= dims.elem.width / scale / 2;
+                clientY -= dims.elem.height / scale / 2;
+            }
+            // Convert the mouse point from it's position over the
+            // effective area before the scale to the position
+            // over the effective area after the scale.
+            var focal = {
+                x: (clientX / effectiveArea.width) * (effectiveArea.width * toScale),
+                y: (clientY / effectiveArea.height) * (effectiveArea.height * toScale)
+            };
+            return zoom(toScale, __assign(__assign({ animate: false }, zoomOptions), { focal: focal }), originalEvent);
+        }
+        function zoomWithWheel(event, zoomOptions) {
+            // Need to prevent the default here
+            // or it conflicts with regular page scroll
+            event.preventDefault();
+            var opts = __assign(__assign(__assign({}, options), zoomOptions), { animate: false });
+            // Normalize to deltaX in case shift modifier is used on Mac
+            var delta = event.deltaY === 0 && event.deltaX ? event.deltaX : event.deltaY;
+            var wheel = delta < 0 ? 1 : -1;
+            var toScale = constrainScale(scale * Math.exp((wheel * opts.step) / 3), opts).scale;
+            return zoomToPoint(toScale, event, opts);
+        }
+        function reset(resetOptions) {
+            var opts = __assign(__assign(__assign({}, options), { animate: true, force: true }), resetOptions);
+            scale = constrainScale(opts.startScale, opts).scale;
+            var panResult = constrainXY(opts.startX, opts.startY, scale, opts);
+            x = panResult.x;
+            y = panResult.y;
+            return setTransformWithEvent('panzoomreset', opts);
+        }
+        var origX;
+        var origY;
+        var startClientX;
+        var startClientY;
+        var startScale;
+        var startDistance;
+        var pointers = [];
+        function handleDown(event) {
+            // Don't handle this event if the target is excluded
+            if (isExcluded(event.target, options)) {
+                return;
+            }
+            addPointer(pointers, event);
+            isPanning = true;
+            options.handleStartEvent(event);
+            origX = x;
+            origY = y;
+            trigger('panzoomstart', { x: x, y: y, scale: scale, isSVG: isSVG, originalEvent: event }, options);
+            // This works whether there are multiple
+            // pointers or not
+            var point = getMiddle(pointers);
+            startClientX = point.clientX;
+            startClientY = point.clientY;
+            startScale = scale;
+            startDistance = getDistance(pointers);
+        }
+        function move(event) {
+            if (!isPanning ||
+                origX === undefined ||
+                origY === undefined ||
+                startClientX === undefined ||
+                startClientY === undefined) {
+                return;
+            }
+            addPointer(pointers, event);
+            var current = getMiddle(pointers);
+            if (pointers.length > 1) {
+                // A startDistance of 0 means
+                // that there weren't 2 pointers
+                // handled on start
+                if (startDistance === 0) {
+                    startDistance = getDistance(pointers);
+                }
+                // Use the distance between the first 2 pointers
+                // to determine the current scale
+                var diff = getDistance(pointers) - startDistance;
+                var toScale = constrainScale((diff * options.step) / 80 + startScale).scale;
+                zoomToPoint(toScale, current);
+            }
+            else {
+                // Panning during pinch zoom can cause issues
+                // because the zoom has not always rendered in time
+                // for accurate calculations
+                // See https://github.com/timmywil/panzoom/issues/512
+                pan(origX + (current.clientX - startClientX) / scale, origY + (current.clientY - startClientY) / scale, {
+                    animate: false
+                }, event);
+            }
+        }
+        function handleUp(event) {
+            // Don't call panzoomend when panning with 2 touches
+            // until both touches end
+            if (pointers.length === 1) {
+                trigger('panzoomend', { x: x, y: y, scale: scale, isSVG: isSVG, originalEvent: event }, options);
+            }
+            // Note: don't remove all pointers
+            // Can restart without having to reinitiate all of them
+            // Remove the pointer regardless of the isPanning state
+            removePointer(pointers, event);
+            if (!isPanning) {
+                return;
+            }
+            isPanning = false;
+            origX = origY = startClientX = startClientY = undefined;
+        }
+        var bound = false;
+        function bind() {
+            if (bound) {
+                return;
+            }
+            bound = true;
+            onPointer('down', options.canvas ? parent : elem, handleDown);
+            onPointer('move', document, move, { passive: true });
+            onPointer('up', document, handleUp, { passive: true });
+        }
+        function destroy() {
+            bound = false;
+            destroyPointer('down', options.canvas ? parent : elem, handleDown);
+            destroyPointer('move', document, move);
+            destroyPointer('up', document, handleUp);
+        }
+        if (!options.noBind) {
+            bind();
+        }
+        return {
+            bind: bind,
+            destroy: destroy,
+            eventNames: events,
+            getPan: function () { return ({ x: x, y: y }); },
+            getScale: function () { return scale; },
+            getOptions: function () { return shallowClone(options); },
+            pan: pan,
+            reset: reset,
+            resetStyle: resetStyle,
+            setOptions: setOptions,
+            setStyle: function (name, value) { return setStyle(elem, name, value); },
+            zoom: zoom,
+            zoomIn: zoomIn,
+            zoomOut: zoomOut,
+            zoomToPoint: zoomToPoint,
+            zoomWithWheel: zoomWithWheel
+        };
+    }
+    Panzoom.defaultOptions = defaultOptions;
+
     /* src\App.svelte generated by Svelte v3.38.3 */
 
     const { console: console_1 } = globals;
     const file_1 = "src\\App.svelte";
 
-    // (113:2) {#if settings}
+    // (153:2) {#if settingsOpen}
     function create_if_block_1(ctx) {
     	let settings_1;
     	let current;
-    	settings_1 = new Settings({ $$inline: true });
+
+    	settings_1 = new Settings({
+    			props: { settings: /*settings*/ ctx[4] },
+    			$$inline: true
+    		});
 
     	const block = {
     		c: function create() {
@@ -3845,6 +4686,11 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			mount_component(settings_1, target, anchor);
     			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const settings_1_changes = {};
+    			if (dirty & /*settings*/ 16) settings_1_changes.settings = /*settings*/ ctx[4];
+    			settings_1.$set(settings_1_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -3864,14 +4710,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(113:2) {#if settings}",
+    		source: "(153:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (123:2) {:else}
+    // (167:2) {:else}
     function create_else_block(ctx) {
     	let dropzone;
     	let current;
@@ -3888,7 +4734,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	dropzone.$on("drop", /*handleFilesSelect*/ ctx[6]);
+    	dropzone.$on("drop", /*handleFilesSelect*/ ctx[8]);
 
     	const block = {
     		c: function create() {
@@ -3901,7 +4747,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const dropzone_changes = {};
 
-    			if (dirty & /*$$scope*/ 8192) {
+    			if (dirty & /*$$scope*/ 32768) {
     				dropzone_changes.$$scope = { dirty, ctx };
     			}
 
@@ -3925,16 +4771,17 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(123:2) {:else}",
+    		source: "(167:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (117:2) {#if file}
+    // (159:2) {#if file}
     function create_if_block(ctx) {
-    	let div;
+    	let div1;
+    	let div0;
     	let canvas;
     	let current;
 
@@ -3950,15 +4797,19 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
     			create_component(canvas.$$.fragment);
-    			attr_dev(div, "class", "canvas-container svelte-l0m3nh");
-    			toggle_class(div, "pixelated", /*zoomed*/ ctx[3]);
-    			add_location(div, file_1, 117, 3, 2756);
+    			attr_dev(div0, "class", "canvas-container-inner svelte-ter9kq");
+    			add_location(div0, file_1, 160, 4, 3619);
+    			attr_dev(div1, "class", "canvas-container svelte-ter9kq");
+    			toggle_class(div1, "pixelated", /*zoomed*/ ctx[3]);
+    			add_location(div1, file_1, 159, 3, 3558);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			mount_component(canvas, div, null);
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			mount_component(canvas, div0, null);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -3966,14 +4817,14 @@ var app = (function () {
     			if (dirty & /*width*/ 2) canvas_changes.width = /*width*/ ctx[1];
     			if (dirty & /*height*/ 4) canvas_changes.height = /*height*/ ctx[2];
 
-    			if (dirty & /*$$scope, render*/ 8224) {
+    			if (dirty & /*$$scope, render*/ 32896) {
     				canvas_changes.$$scope = { dirty, ctx };
     			}
 
     			canvas.$set(canvas_changes);
 
     			if (dirty & /*zoomed*/ 8) {
-    				toggle_class(div, "pixelated", /*zoomed*/ ctx[3]);
+    				toggle_class(div1, "pixelated", /*zoomed*/ ctx[3]);
     			}
     		},
     		i: function intro(local) {
@@ -3986,7 +4837,7 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div1);
     			destroy_component(canvas);
     		}
     	};
@@ -3995,14 +4846,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(117:2) {#if file}",
+    		source: "(159:2) {#if file}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (124:3) <Dropzone       on:drop={handleFilesSelect}       disableDefaultStyles="true"      multiple="false"      containerClasses="drop"      containerStyles="flex-grow:1;"     >
+    // (168:3) <Dropzone       on:drop={handleFilesSelect}       disableDefaultStyles="true"      multiple="false"      containerClasses="drop"      containerStyles="flex-grow:1;"     >
     function create_default_slot_2(ctx) {
     	let div3;
     	let div2;
@@ -4026,16 +4877,16 @@ var app = (function () {
     			br = element("br");
     			t2 = text("click to select");
     			attr_dev(i, "class", "fas fa-upload");
-    			add_location(i, file_1, 133, 7, 3222);
-    			attr_dev(div0, "class", "dropzone-inner-icon svelte-l0m3nh");
-    			add_location(div0, file_1, 132, 6, 3180);
-    			add_location(br, file_1, 136, 21, 3329);
-    			attr_dev(div1, "class", "dropzone-inner-text svelte-l0m3nh");
-    			add_location(div1, file_1, 135, 6, 3273);
-    			attr_dev(div2, "class", "dropzone-inner svelte-l0m3nh");
-    			add_location(div2, file_1, 131, 5, 3144);
-    			attr_dev(div3, "class", "dropzone-inner-wrapper svelte-l0m3nh");
-    			add_location(div3, file_1, 130, 4, 3101);
+    			add_location(i, file_1, 177, 7, 4081);
+    			attr_dev(div0, "class", "dropzone-inner-icon svelte-ter9kq");
+    			add_location(div0, file_1, 176, 6, 4039);
+    			add_location(br, file_1, 180, 21, 4188);
+    			attr_dev(div1, "class", "dropzone-inner-text svelte-ter9kq");
+    			add_location(div1, file_1, 179, 6, 4132);
+    			attr_dev(div2, "class", "dropzone-inner svelte-ter9kq");
+    			add_location(div2, file_1, 175, 5, 4003);
+    			attr_dev(div3, "class", "dropzone-inner-wrapper svelte-ter9kq");
+    			add_location(div3, file_1, 174, 4, 3960);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div3, anchor);
@@ -4057,20 +4908,20 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(124:3) <Dropzone       on:drop={handleFilesSelect}       disableDefaultStyles=\\\"true\\\"      multiple=\\\"false\\\"      containerClasses=\\\"drop\\\"      containerStyles=\\\"flex-grow:1;\\\"     >",
+    		source: "(168:3) <Dropzone       on:drop={handleFilesSelect}       disableDefaultStyles=\\\"true\\\"      multiple=\\\"false\\\"      containerClasses=\\\"drop\\\"      containerStyles=\\\"flex-grow:1;\\\"     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (119:7) <Canvas width={width} height={height}>
+    // (162:8) <Canvas width={width} height={height}>
     function create_default_slot_1(ctx) {
     	let layer;
     	let current;
 
     	layer = new Layer({
-    			props: { render: /*render*/ ctx[5] },
+    			props: { render: /*render*/ ctx[7] },
     			$$inline: true
     		});
 
@@ -4084,7 +4935,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const layer_changes = {};
-    			if (dirty & /*render*/ 32) layer_changes.render = /*render*/ ctx[5];
+    			if (dirty & /*render*/ 128) layer_changes.render = /*render*/ ctx[7];
     			layer.$set(layer_changes);
     		},
     		i: function intro(local) {
@@ -4105,21 +4956,21 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(119:7) <Canvas width={width} height={height}>",
+    		source: "(162:8) <Canvas width={width} height={height}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (112:1) <Desktop>
+    // (152:1) <Desktop>
     function create_default_slot(ctx) {
     	let t_1;
     	let current_block_type_index;
     	let if_block1;
     	let if_block1_anchor;
     	let current;
-    	let if_block0 = /*settings*/ ctx[4] && create_if_block_1(ctx);
+    	let if_block0 = /*settingsOpen*/ ctx[5] && create_if_block_1(ctx);
     	const if_block_creators = [create_if_block, create_else_block];
     	const if_blocks = [];
 
@@ -4146,9 +4997,11 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (/*settings*/ ctx[4]) {
+    			if (/*settingsOpen*/ ctx[5]) {
     				if (if_block0) {
-    					if (dirty & /*settings*/ 16) {
+    					if_block0.p(ctx, dirty);
+
+    					if (dirty & /*settingsOpen*/ 32) {
     						transition_in(if_block0, 1);
     					}
     				} else {
@@ -4216,7 +5069,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(112:1) <Desktop>",
+    		source: "(152:1) <Desktop>",
     		ctx
     	});
 
@@ -4246,17 +5099,17 @@ var app = (function () {
     	titlebar = new Titlebar({
     			props: {
     				fileSelected: /*file*/ ctx[0],
-    				settings: /*settings*/ ctx[4]
+    				settingsOpen: /*settingsOpen*/ ctx[5]
     			},
     			$$inline: true
     		});
 
-    	titlebar.$on("clear", /*clear_handler*/ ctx[9]);
-    	titlebar.$on("settings", /*settings_handler*/ ctx[10]);
+    	titlebar.$on("clear", /*clear_handler*/ ctx[11]);
+    	titlebar.$on("settingsOpen", /*settingsOpen_handler*/ ctx[12]);
 
     	toolbox = new Toolbox({
     			props: {
-    				settings: /*settings*/ ctx[4],
+    				settingsOpen: /*settingsOpen*/ ctx[5],
     				fileSelected: /*file*/ ctx[0]
     			},
     			$$inline: true
@@ -4287,18 +5140,18 @@ var app = (function () {
     			create_component(toolbox.$$.fragment);
     			t5 = space();
     			create_component(desktop.$$.fragment);
-    			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-l0m3nh");
-    			add_location(div0, file_1, 95, 1, 2263);
-    			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-l0m3nh");
-    			add_location(div1, file_1, 96, 1, 2310);
-    			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-l0m3nh");
-    			add_location(div2, file_1, 97, 1, 2359);
-    			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-l0m3nh");
-    			add_location(div3, file_1, 98, 1, 2409);
-    			attr_dev(div4, "class", "backdrop svelte-l0m3nh");
-    			add_location(div4, file_1, 94, 0, 2238);
-    			attr_dev(main, "class", "svelte-l0m3nh");
-    			add_location(main, file_1, 100, 0, 2464);
+    			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-ter9kq");
+    			add_location(div0, file_1, 125, 1, 2857);
+    			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-ter9kq");
+    			add_location(div1, file_1, 126, 1, 2904);
+    			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-ter9kq");
+    			add_location(div2, file_1, 127, 1, 2953);
+    			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-ter9kq");
+    			add_location(div3, file_1, 128, 1, 3003);
+    			attr_dev(div4, "class", "backdrop svelte-ter9kq");
+    			add_location(div4, file_1, 124, 0, 2832);
+    			attr_dev(main, "class", "svelte-ter9kq");
+    			add_location(main, file_1, 130, 0, 3058);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4322,22 +5175,22 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(window, "paste", /*handlePaste*/ ctx[7], false, false, false);
+    				dispose = listen_dev(window, "paste", /*handlePaste*/ ctx[9], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
     			const titlebar_changes = {};
     			if (dirty & /*file*/ 1) titlebar_changes.fileSelected = /*file*/ ctx[0];
-    			if (dirty & /*settings*/ 16) titlebar_changes.settings = /*settings*/ ctx[4];
+    			if (dirty & /*settingsOpen*/ 32) titlebar_changes.settingsOpen = /*settingsOpen*/ ctx[5];
     			titlebar.$set(titlebar_changes);
     			const toolbox_changes = {};
-    			if (dirty & /*settings*/ 16) toolbox_changes.settings = /*settings*/ ctx[4];
+    			if (dirty & /*settingsOpen*/ 32) toolbox_changes.settingsOpen = /*settingsOpen*/ ctx[5];
     			if (dirty & /*file*/ 1) toolbox_changes.fileSelected = /*file*/ ctx[0];
     			toolbox.$set(toolbox_changes);
     			const desktop_changes = {};
 
-    			if (dirty & /*$$scope, zoomed, width, height, render, file, settings*/ 8255) {
+    			if (dirty & /*$$scope, zoomed, width, height, render, file, settings, settingsOpen*/ 32959) {
     				desktop_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4379,7 +5232,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance($$self, $$props, $$invalidate) {
+    function instance_1($$self, $$props, $$invalidate) {
     	let render;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
@@ -4389,7 +5242,34 @@ var app = (function () {
     	let height;
     	let zoomed = false;
     	let settings = false;
+    	let settingsOpen = false;
+
+    	ipcRenderer.on("settings", (event, arg) => {
+    		$$invalidate(4, settings = arg);
+    	});
+
     	let img = new Image();
+    	var instance;
+
+    	function initPan(element) {
+    		try {
+    			console.log("test");
+    			instance.destroy();
+    		} catch(e) {
+    			console.log("errrrr", e);
+    		}
+
+    		// And pass it to panzoom
+    		$$invalidate(6, instance = Panzoom(element, { maxScale: 10000 }));
+
+    		element.parentElement.addEventListener("wheel", instance.zoomWithWheel);
+
+    		element.addEventListener("panzoomchange", event => {
+    			if (event.detail.scale >= 10) $$invalidate(3, zoomed = true); else $$invalidate(3, zoomed = false);
+    		});
+    	}
+
+    	
 
     	function handleFilesSelect(e) {
     		const { acceptedFiles } = e.detail;
@@ -4403,7 +5283,7 @@ var app = (function () {
 
     	ipcRenderer.on("deliver", (event, arg) => {
     		console.log("loading file!");
-    		$$invalidate(8, img.src = arg, img);
+    		$$invalidate(10, img.src = arg, img);
     		$$invalidate(0, file = arg);
     	});
 
@@ -4418,8 +5298,6 @@ var app = (function () {
 
     	Also enable copy paste.
     */
-    	let allSettings = {};
-
     	function handlePaste(event) {
     		let items = (event.clipboardData || event.originalEvent.clipboardData).items;
     		let blob = null;
@@ -4439,7 +5317,7 @@ var app = (function () {
 
     		a.onload = function (e) {
     			if (file) return;
-    			$$invalidate(8, img.src = e.target.result, img);
+    			$$invalidate(10, img.src = e.target.result, img);
     			$$invalidate(0, file = e.target.result);
     		};
 
@@ -4454,10 +5332,17 @@ var app = (function () {
 
     	const clear_handler = e => {
     		$$invalidate(0, file = false);
+
+    		try {
+    			console.log("destroying");
+    			instance.destroy();
+    		} catch(e) {
+    			console.log("err", e);
+    		}
     	};
 
-    	const settings_handler = e => {
-    		$$invalidate(4, settings = e.detail);
+    	const settingsOpen_handler = e => {
+    		$$invalidate(5, settingsOpen = e.detail);
     	};
 
     	$$self.$capture_state = () => ({
@@ -4469,15 +5354,18 @@ var app = (function () {
     		Layer,
     		t,
     		Dropzone,
+    		Panzoom,
     		ipcRenderer,
     		file,
     		width,
     		height,
     		zoomed,
     		settings,
+    		settingsOpen,
     		img,
+    		instance,
+    		initPan,
     		handleFilesSelect,
-    		allSettings,
     		handlePaste,
     		render
     	});
@@ -4488,9 +5376,10 @@ var app = (function () {
     		if ("height" in $$props) $$invalidate(2, height = $$props.height);
     		if ("zoomed" in $$props) $$invalidate(3, zoomed = $$props.zoomed);
     		if ("settings" in $$props) $$invalidate(4, settings = $$props.settings);
-    		if ("img" in $$props) $$invalidate(8, img = $$props.img);
-    		if ("allSettings" in $$props) allSettings = $$props.allSettings;
-    		if ("render" in $$props) $$invalidate(5, render = $$props.render);
+    		if ("settingsOpen" in $$props) $$invalidate(5, settingsOpen = $$props.settingsOpen);
+    		if ("img" in $$props) $$invalidate(10, img = $$props.img);
+    		if ("instance" in $$props) $$invalidate(6, instance = $$props.instance);
+    		if ("render" in $$props) $$invalidate(7, render = $$props.render);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -4498,21 +5387,20 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*img*/ 256) {
-    			$$invalidate(5, render = ({ context }) => {
+    		if ($$self.$$.dirty & /*img*/ 1024) {
+    			$$invalidate(7, render = ({ context }) => {
     				context.drawImage(img, 0, 0);
 
     				// just grab a DOM element
-    				var element = document.querySelector(".canvas-container");
+    				let element = document.querySelector(".canvas-container-inner");
 
-    				// And pass it to panzoom
-    				var instance = panzoom(element);
-
-    				instance.on("zoom", function (e) {
-    					let data = instance.getTransform();
-    					if (data.scale >= 10) $$invalidate(3, zoomed = true); else $$invalidate(3, zoomed = false);
-    				});
-    			});
+    				initPan(element);
+    			}); /*
+    instance.on('zoom', function(e) {
+    	let data = instance.getTransform();
+    	if (data.scale >= 10) zoomed = true;
+    	else zoomed = false;
+    });*/
     		}
     	};
 
@@ -4522,19 +5410,21 @@ var app = (function () {
     		height,
     		zoomed,
     		settings,
+    		settingsOpen,
+    		instance,
     		render,
     		handleFilesSelect,
     		handlePaste,
     		img,
     		clear_handler,
-    		settings_handler
+    		settingsOpen_handler
     	];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, {});
+    		init(this, options, instance_1, create_fragment, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,

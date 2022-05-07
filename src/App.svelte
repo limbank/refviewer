@@ -7,29 +7,59 @@
 	import { Canvas, Layer, t } from "svelte-canvas";
 	import Dropzone from "svelte-file-dropzone";
 
+	import Panzoom from '@panzoom/panzoom';
+
 	const { ipcRenderer } = require('electron');
 
 	let file = false;
 	let width;
 	let height;
 	let zoomed = false;
-	let settings = false;
+	let settings = {};
+	let settingsOpen = false;
+
+	ipcRenderer.on('settings', (event, arg) => {
+		settings = arg;
+	});
 
 	let img = new Image(); 
+
+	var instance;
+
+	function initPan(element) {
+	    try {
+	    	console.log("test");
+
+	    	instance.destroy();
+	    }
+	    catch(e) {
+	    	console.log("errrrr", e);
+	    }
+
+
+		// And pass it to panzoom
+		instance = Panzoom(element, {
+			maxScale: 10000
+		});
+		element.parentElement.addEventListener('wheel', instance.zoomWithWheel);
+		element.addEventListener('panzoomchange', (event) => {
+		  	if (event.detail.scale >= 10) zoomed = true;
+			else zoomed = false;
+		})
+	};
 
   	$: render = ({ context }) => {
 	    context.drawImage(img, 0, 0);
 
 	    // just grab a DOM element
-		var element = document.querySelector('.canvas-container');
-
-		// And pass it to panzoom
-		var instance = panzoom(element);
+		let element = document.querySelector('.canvas-container-inner');
+	    initPan(element);
+		/*
 		instance.on('zoom', function(e) {
 			let data = instance.getTransform();
 			if (data.scale >= 10) zoomed = true;
 			else zoomed = false;
-		});
+		});*/
   	};
 
 	function handleFilesSelect(e) {
@@ -60,7 +90,6 @@
 
 		Also enable copy paste.
 	*/
-	let allSettings = {};
 
 	function handlePaste(event) {
 		let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
@@ -101,24 +130,38 @@
 <main>
 	<Titlebar
 		fileSelected={file}
-		settings={settings}
-		on:clear={e => { file = false; }}
-		on:settings={e => { settings = e.detail; }}
+		settingsOpen={settingsOpen}
+		on:clear={e => {
+			file = false;
+
+		    try {
+		    	console.log("destroying");
+		    	instance.destroy();
+		    }
+		    catch(e) {
+		    	console.log("err", e)
+		    }
+		}}
+		on:settingsOpen={e => { settingsOpen = e.detail; }}
 	/>
 	<Toolbox
-		settings={settings}
+		settingsOpen={settingsOpen}
 		fileSelected={file}
 	/>
 	<Desktop>
-		{#if settings}
-			<Settings />
+		{#if settingsOpen}
+			<Settings
+				settings={settings}
+			/>
 		{/if}
 
 		{#if file}
 			<div class="canvas-container" class:pixelated={zoomed}>
-			    <Canvas width={width} height={height}>
-					<Layer {render} />
-				</Canvas>
+				<div class="canvas-container-inner">
+				    <Canvas width={width} height={height}>
+						<Layer {render} />
+					</Canvas>
+				</div>
 			</div>
 		{:else}
 			<Dropzone 
@@ -203,20 +246,31 @@
 	}
 
 	.canvas-container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
 		overflow: hidden;
 		width: 100%;
 		height: 100%;
+		position: relative;
 
-		:global(canvas) {
-		    max-width: 100%;
-		    max-height: 100%;
-		    object-fit: contain;
-		    align-self: center;
-		    z-index:9999 !important;
-		    pointer-events:all !important;
+		&-inner {
+			overflow: hidden;
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+
+			:global(canvas) {
+			    max-width: 100%;
+			    max-height: 100%;
+			    object-fit: contain;
+			    align-self: center;
+			    z-index:9999 !important;
+			    pointer-events:all !important;
+			}
 		}
 	}
 

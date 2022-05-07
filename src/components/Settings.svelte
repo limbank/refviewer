@@ -2,14 +2,17 @@
 	const { ipcRenderer } = require('electron');
 
 	let setWindow = "recent";
-	let settings = {};
 
-	ipcRenderer.send('settings:get', 'all');
-	ipcRenderer.on('settings:all', (event, arg) => {
-		settings = arg;
+	export let settings = {};
 
-		console.log(arg);
-	});
+	let timeout;
+
+	$: {
+		clearTimeout(timeout);
+		timeout = setTimeout(()=> {
+        	ipcRenderer.send('settings:write', settings);
+		}, 500);
+    }
 </script>
 
 <div class="settings-container">
@@ -55,7 +58,7 @@
 						</div>
 						<div class="setting-control">
 							<label class="switch">
-								<input type="checkbox">
+								<input type="checkbox" bind:checked={settings.overwrite}>
 								<span class="slider"></span>
 							</label>
 						</div>
@@ -71,7 +74,7 @@
 						</div>
 						<div class="setting-control">
 							<label class="switch">
-								<input type="checkbox">
+								<input type="checkbox" bind:checked={settings.select}>
 								<span class="slider"></span>
 							</label>
 						</div>
@@ -100,7 +103,7 @@
 						</div>
 						<div class="setting-control">
 							<label class="switch">
-								<input type="checkbox">
+								<input type="checkbox" bind:checked={settings.autosave}>
 								<span class="slider"></span>
 							</label>
 						</div>
