@@ -1106,36 +1106,55 @@ var app = (function () {
     const { console: console_1$2 } = globals;
     const file$4 = "src\\components\\Toolbox.svelte";
 
-    // (25:1) {#if fileSelected && !settings}
+    // (27:1) {#if fileSelected && !settings}
     function create_if_block$2(ctx) {
-    	let button;
-    	let i;
+    	let button0;
+    	let i0;
+    	let t;
+    	let button1;
+    	let i1;
     	let mounted;
     	let dispose;
 
     	const block = {
     		c: function create() {
-    			button = element("button");
-    			i = element("i");
-    			attr_dev(i, "class", "far fa-clipboard");
-    			add_location(i, file$4, 26, 6, 664);
-    			attr_dev(button, "class", "control svelte-1b6psrh");
-    			add_location(button, file$4, 25, 2, 611);
+    			button0 = element("button");
+    			i0 = element("i");
+    			t = space();
+    			button1 = element("button");
+    			i1 = element("i");
+    			attr_dev(i0, "class", "far fa-clipboard");
+    			add_location(i0, file$4, 28, 6, 713);
+    			attr_dev(button0, "class", "control svelte-1b6psrh");
+    			add_location(button0, file$4, 27, 2, 660);
+    			attr_dev(i1, "class", "far fa-save");
+    			add_location(i1, file$4, 31, 6, 859);
+    			attr_dev(button1, "class", "control svelte-1b6psrh");
+    			add_location(button1, file$4, 30, 2, 762);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, button, anchor);
-    			append_dev(button, i);
+    			insert_dev(target, button0, anchor);
+    			append_dev(button0, i0);
+    			insert_dev(target, t, anchor);
+    			insert_dev(target, button1, anchor);
+    			append_dev(button1, i1);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*copyImage*/ ctx[2], false, false, false);
+    				dispose = [
+    					listen_dev(button0, "click", /*copyImage*/ ctx[3], false, false, false),
+    					listen_dev(button1, "click", /*click_handler*/ ctx[4], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
     		p: noop$1,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(button);
+    			if (detaching) detach_dev(button0);
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(button1);
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -1143,7 +1162,7 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(25:1) {#if fileSelected && !settings}",
+    		source: "(27:1) {#if fileSelected && !settings}",
     		ctx
     	});
 
@@ -1159,7 +1178,7 @@ var app = (function () {
     			div = element("div");
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-1b6psrh");
-    			add_location(div, file$4, 23, 0, 552);
+    			add_location(div, file$4, 25, 0, 601);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1204,6 +1223,7 @@ var app = (function () {
     function instance$5($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Toolbox", slots, []);
+    	const { ipcRenderer } = require("electron");
     	let { fileSelected = false } = $$props;
     	let { settings = false } = $$props;
 
@@ -1232,12 +1252,21 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn(`<Toolbox> was created with unknown prop '${key}'`);
     	});
 
+    	const click_handler = e => {
+    		ipcRenderer.send("saveImage", fileSelected);
+    	};
+
     	$$self.$$set = $$props => {
     		if ("fileSelected" in $$props) $$invalidate(0, fileSelected = $$props.fileSelected);
     		if ("settings" in $$props) $$invalidate(1, settings = $$props.settings);
     	};
 
-    	$$self.$capture_state = () => ({ fileSelected, settings, copyImage });
+    	$$self.$capture_state = () => ({
+    		ipcRenderer,
+    		fileSelected,
+    		settings,
+    		copyImage
+    	});
 
     	$$self.$inject_state = $$props => {
     		if ("fileSelected" in $$props) $$invalidate(0, fileSelected = $$props.fileSelected);
@@ -1248,7 +1277,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [fileSelected, settings, copyImage];
+    	return [fileSelected, settings, ipcRenderer, copyImage, click_handler];
     }
 
     class Toolbox extends SvelteComponentDev {
@@ -1301,11 +1330,11 @@ var app = (function () {
     			t1 = space();
     			div1 = element("div");
     			div1.textContent = "source.dog © 2018-2022";
-    			attr_dev(div0, "class", "settings-container-text svelte-gasr04");
+    			attr_dev(div0, "class", "settings-container-text svelte-13bbpr8");
     			add_location(div0, file$3, 124, 4, 3159);
-    			attr_dev(div1, "class", "settings-container-text svelte-gasr04");
+    			attr_dev(div1, "class", "settings-container-text svelte-13bbpr8");
     			add_location(div1, file$3, 127, 4, 3229);
-    			attr_dev(div2, "class", "settings-container-inner svelte-gasr04");
+    			attr_dev(div2, "class", "settings-container-inner svelte-13bbpr8");
     			add_location(div2, file$3, 123, 3, 3115);
     		},
     		m: function mount(target, anchor) {
@@ -1466,94 +1495,94 @@ var app = (function () {
     			input4 = element("input");
     			t25 = space();
     			span4 = element("span");
-    			attr_dev(div0, "class", "setting-title svelte-gasr04");
+    			attr_dev(div0, "class", "setting-title svelte-13bbpr8");
     			add_location(div0, file$3, 44, 6, 992);
-    			attr_dev(div1, "class", "setting-control svelte-gasr04");
+    			attr_dev(div1, "class", "setting-control svelte-13bbpr8");
     			add_location(div1, file$3, 47, 6, 1060);
-    			attr_dev(div2, "class", "setting-inner svelte-gasr04");
+    			attr_dev(div2, "class", "setting-inner svelte-13bbpr8");
     			add_location(div2, file$3, 43, 5, 957);
-    			attr_dev(div3, "class", "setting svelte-gasr04");
+    			attr_dev(div3, "class", "setting svelte-13bbpr8");
     			add_location(div3, file$3, 42, 4, 929);
-    			attr_dev(div4, "class", "setting-title svelte-gasr04");
+    			attr_dev(div4, "class", "setting-title svelte-13bbpr8");
     			add_location(div4, file$3, 52, 6, 1189);
     			attr_dev(input0, "type", "checkbox");
-    			attr_dev(input0, "class", "svelte-gasr04");
+    			attr_dev(input0, "class", "svelte-13bbpr8");
     			add_location(input0, file$3, 57, 8, 1332);
-    			attr_dev(span0, "class", "slider svelte-gasr04");
+    			attr_dev(span0, "class", "slider svelte-13bbpr8");
     			add_location(span0, file$3, 58, 8, 1365);
-    			attr_dev(label0, "class", "switch svelte-gasr04");
+    			attr_dev(label0, "class", "switch svelte-13bbpr8");
     			add_location(label0, file$3, 56, 7, 1300);
-    			attr_dev(div5, "class", "setting-control svelte-gasr04");
+    			attr_dev(div5, "class", "setting-control svelte-13bbpr8");
     			add_location(div5, file$3, 55, 6, 1262);
-    			attr_dev(div6, "class", "setting-inner svelte-gasr04");
+    			attr_dev(div6, "class", "setting-inner svelte-13bbpr8");
     			add_location(div6, file$3, 51, 5, 1154);
-    			attr_dev(div7, "class", "setting-description svelte-gasr04");
+    			attr_dev(div7, "class", "setting-description svelte-13bbpr8");
     			add_location(div7, file$3, 62, 5, 1444);
-    			attr_dev(div8, "class", "setting svelte-gasr04");
+    			attr_dev(div8, "class", "setting svelte-13bbpr8");
     			add_location(div8, file$3, 50, 4, 1126);
-    			attr_dev(div9, "class", "setting-title svelte-gasr04");
+    			attr_dev(div9, "class", "setting-title svelte-13bbpr8");
     			add_location(div9, file$3, 68, 6, 1637);
     			attr_dev(input1, "type", "checkbox");
-    			attr_dev(input1, "class", "svelte-gasr04");
+    			attr_dev(input1, "class", "svelte-13bbpr8");
     			add_location(input1, file$3, 73, 8, 1783);
-    			attr_dev(span1, "class", "slider svelte-gasr04");
+    			attr_dev(span1, "class", "slider svelte-13bbpr8");
     			add_location(span1, file$3, 74, 8, 1816);
-    			attr_dev(label1, "class", "switch svelte-gasr04");
+    			attr_dev(label1, "class", "switch svelte-13bbpr8");
     			add_location(label1, file$3, 72, 7, 1751);
-    			attr_dev(div10, "class", "setting-control svelte-gasr04");
+    			attr_dev(div10, "class", "setting-control svelte-13bbpr8");
     			add_location(div10, file$3, 71, 6, 1713);
-    			attr_dev(div11, "class", "setting-inner svelte-gasr04");
+    			attr_dev(div11, "class", "setting-inner svelte-13bbpr8");
     			add_location(div11, file$3, 67, 5, 1602);
-    			attr_dev(div12, "class", "setting-description svelte-gasr04");
+    			attr_dev(div12, "class", "setting-description svelte-13bbpr8");
     			add_location(div12, file$3, 78, 5, 1895);
-    			attr_dev(div13, "class", "setting svelte-gasr04");
+    			attr_dev(div13, "class", "setting svelte-13bbpr8");
     			add_location(div13, file$3, 66, 4, 1574);
-    			attr_dev(div14, "class", "setting-title svelte-gasr04");
+    			attr_dev(div14, "class", "setting-title svelte-13bbpr8");
     			add_location(div14, file$3, 84, 6, 2084);
     			attr_dev(input2, "type", "checkbox");
-    			attr_dev(input2, "class", "svelte-gasr04");
+    			attr_dev(input2, "class", "svelte-13bbpr8");
     			add_location(input2, file$3, 89, 8, 2224);
-    			attr_dev(span2, "class", "slider svelte-gasr04");
+    			attr_dev(span2, "class", "slider svelte-13bbpr8");
     			add_location(span2, file$3, 90, 8, 2287);
-    			attr_dev(label2, "class", "switch svelte-gasr04");
+    			attr_dev(label2, "class", "switch svelte-13bbpr8");
     			add_location(label2, file$3, 88, 7, 2192);
-    			attr_dev(div15, "class", "setting-control svelte-gasr04");
+    			attr_dev(div15, "class", "setting-control svelte-13bbpr8");
     			add_location(div15, file$3, 87, 6, 2154);
-    			attr_dev(div16, "class", "setting-inner svelte-gasr04");
+    			attr_dev(div16, "class", "setting-inner svelte-13bbpr8");
     			add_location(div16, file$3, 83, 5, 2049);
-    			attr_dev(div17, "class", "setting svelte-gasr04");
+    			attr_dev(div17, "class", "setting svelte-13bbpr8");
     			add_location(div17, file$3, 82, 4, 2021);
-    			attr_dev(div18, "class", "setting-title svelte-gasr04");
+    			attr_dev(div18, "class", "setting-title svelte-13bbpr8");
     			add_location(div18, file$3, 97, 6, 2440);
     			attr_dev(input3, "type", "checkbox");
-    			attr_dev(input3, "class", "svelte-gasr04");
+    			attr_dev(input3, "class", "svelte-13bbpr8");
     			add_location(input3, file$3, 102, 8, 2589);
-    			attr_dev(span3, "class", "slider svelte-gasr04");
+    			attr_dev(span3, "class", "slider svelte-13bbpr8");
     			add_location(span3, file$3, 103, 8, 2622);
-    			attr_dev(label3, "class", "switch svelte-gasr04");
+    			attr_dev(label3, "class", "switch svelte-13bbpr8");
     			add_location(label3, file$3, 101, 7, 2557);
-    			attr_dev(div19, "class", "setting-control svelte-gasr04");
+    			attr_dev(div19, "class", "setting-control svelte-13bbpr8");
     			add_location(div19, file$3, 100, 6, 2519);
-    			attr_dev(div20, "class", "setting-inner svelte-gasr04");
+    			attr_dev(div20, "class", "setting-inner svelte-13bbpr8");
     			add_location(div20, file$3, 96, 5, 2405);
-    			attr_dev(div21, "class", "setting svelte-gasr04");
+    			attr_dev(div21, "class", "setting svelte-13bbpr8");
     			add_location(div21, file$3, 95, 4, 2377);
-    			attr_dev(div22, "class", "setting-title svelte-gasr04");
+    			attr_dev(div22, "class", "setting-title svelte-13bbpr8");
     			add_location(div22, file$3, 110, 6, 2775);
     			attr_dev(input4, "type", "checkbox");
-    			attr_dev(input4, "class", "svelte-gasr04");
+    			attr_dev(input4, "class", "svelte-13bbpr8");
     			add_location(input4, file$3, 115, 8, 2917);
-    			attr_dev(span4, "class", "slider svelte-gasr04");
+    			attr_dev(span4, "class", "slider svelte-13bbpr8");
     			add_location(span4, file$3, 116, 8, 2982);
-    			attr_dev(label4, "class", "switch svelte-gasr04");
+    			attr_dev(label4, "class", "switch svelte-13bbpr8");
     			add_location(label4, file$3, 114, 7, 2885);
-    			attr_dev(div23, "class", "setting-control svelte-gasr04");
+    			attr_dev(div23, "class", "setting-control svelte-13bbpr8");
     			add_location(div23, file$3, 113, 6, 2847);
-    			attr_dev(div24, "class", "setting-inner svelte-gasr04");
+    			attr_dev(div24, "class", "setting-inner svelte-13bbpr8");
     			add_location(div24, file$3, 109, 5, 2740);
-    			attr_dev(div25, "class", "setting svelte-gasr04");
+    			attr_dev(div25, "class", "setting svelte-13bbpr8");
     			add_location(div25, file$3, 108, 4, 2712);
-    			attr_dev(div26, "class", "settings-container-inner svelte-gasr04");
+    			attr_dev(div26, "class", "settings-container-inner svelte-13bbpr8");
     			add_location(div26, file$3, 41, 3, 885);
     		},
     		m: function mount(target, anchor) {
@@ -1723,22 +1752,22 @@ var app = (function () {
     			t5 = space();
     			div1 = element("div");
     			if (if_block) if_block.c();
-    			attr_dev(li0, "class", "svelte-gasr04");
+    			attr_dev(li0, "class", "svelte-13bbpr8");
     			toggle_class(li0, "active", /*setWindow*/ ctx[0] == "recent");
     			add_location(li0, file$3, 17, 3, 385);
-    			attr_dev(li1, "class", "svelte-gasr04");
+    			attr_dev(li1, "class", "svelte-13bbpr8");
     			toggle_class(li1, "active", /*setWindow*/ ctx[0] == "settings");
     			add_location(li1, file$3, 23, 3, 506);
-    			attr_dev(li2, "class", "svelte-gasr04");
+    			attr_dev(li2, "class", "svelte-13bbpr8");
     			toggle_class(li2, "active", /*setWindow*/ ctx[0] == "about");
     			add_location(li2, file$3, 29, 3, 633);
-    			attr_dev(ul, "class", "settings-container-menu svelte-gasr04");
+    			attr_dev(ul, "class", "settings-container-menu svelte-13bbpr8");
     			add_location(ul, file$3, 16, 2, 344);
-    			attr_dev(div0, "class", "settings-container-sidebar svelte-gasr04");
+    			attr_dev(div0, "class", "settings-container-sidebar svelte-13bbpr8");
     			add_location(div0, file$3, 15, 1, 300);
-    			attr_dev(div1, "class", "settings-container-main svelte-gasr04");
+    			attr_dev(div1, "class", "settings-container-main svelte-13bbpr8");
     			add_location(div1, file$3, 37, 1, 767);
-    			attr_dev(div2, "class", "settings-container svelte-gasr04");
+    			attr_dev(div2, "class", "settings-container svelte-13bbpr8");
     			add_location(div2, file$3, 14, 0, 265);
     		},
     		l: function claim(nodes) {

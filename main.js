@@ -1,5 +1,6 @@
-const { app, BrowserWindow,ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog  } = require("electron");
 const imageDataURI = require('image-data-uri');
+const fs = require('fs');
 
 let mainWindow;
 
@@ -58,6 +59,28 @@ function createWindow() {
                 break;
             default: break;
         }
+    });
+
+    ipcMain.on('saveImage', (event, arg) => {
+        dialog.showSaveDialog(mainWindow, {
+            title: "Save image",
+            defaultPath: "image.png"
+        }).then(result => {
+          console.log(result);
+            let base64Data = arg
+                                .replace(/^data:image\/png;base64,/, "")
+                                .replace(/^data:image\/jpeg;base64,/, "");
+
+            fs.writeFile(result.filePath, base64Data, 'base64', err => {
+              if (err) {
+                console.error(err);
+              }
+              // file written successfully
+            });
+
+        }).catch(err => {
+          console.log(err);
+        });
     });
 }
 

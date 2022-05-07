@@ -40,7 +40,7 @@
 		{/if}
 	</div>
 	<div class="titlebar-group">
-		<span class="version">v. 4.0.5</span>
+		<span class="version">v. 4.0.6</span>
 		<button class="control control-pin" class:pinned on:click={e => { ipcRenderer.send('window', 'pin'); }}>
 	    	<i class="fas fa-thumbtack"></i>
 		</button>

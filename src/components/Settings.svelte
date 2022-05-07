@@ -123,7 +123,7 @@
 		{:else if setWindow=="about"}
 			<div class="settings-container-inner">
 				<div class="settings-container-text">
-					v. 4.0.5
+					v. 4.0.6
 				</div>
 				<div class="settings-container-text">
 					source.dog &copy; 2018-2022
@@ -152,6 +152,7 @@
 		&-main {
 			flex-grow: 1;
 			background: #3A3940;
+			overflow-y: auto;
 		}
 
 		&-menu {

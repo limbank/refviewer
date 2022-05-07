@@ -1,4 +1,6 @@
 <script>
+	const { ipcRenderer } = require('electron');
+
 	export let fileSelected = false;
 	export let settings = false;
 
@@ -26,10 +28,10 @@
 		<button class="control" on:click={copyImage}>
 	    	<i class="far fa-clipboard"></i>
 		</button>
-		<!--
-		<button class="control control-">
+		<button class="control" on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}>
 	    	<i class="far fa-save"></i>
 		</button>
+		<!--
 		<button class="control control-">
 	    	<i class="fas fa-sync-alt"></i>
 		</button>
