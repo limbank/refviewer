@@ -18,8 +18,17 @@
 	let settings = {};
 	let settingsOpen = false;
 
+	let proxySettings;
+	let initUpdate = 0;
+
 	ipcRenderer.on('settings', (event, arg) => {
 		settings = arg;
+		initUpdate++;
+		if (initUpdate<2) {
+			console.log("REPEATED UPDATE FAILED!", initUpdate);
+			proxySettings = settings;
+		}
+		console.log("SETTINGS UPDATED!!");
 	});
 
 	let img = new Image(); 
@@ -121,16 +130,17 @@
 
 <svelte:window on:paste={handlePaste}/>
 
-<div class="backdrop">
+<div class="backdrop" class:legacy={settings.theme}>
 	<div class="backdrop-bg backdrop-top"></div>
 	<div class="backdrop-bg backdrop-right"></div>
 	<div class="backdrop-bg backdrop-bottom"></div>
 	<div class="backdrop-bg backdrop-left"></div>
 </div>
-<main>
+<main class:legacy={settings.theme}>
 	<Titlebar
 		fileSelected={file}
 		settingsOpen={settingsOpen}
+		legacy={settings.theme}
 		on:clear={e => {
 			file = false;
 
@@ -151,7 +161,7 @@
 	<Desktop>
 		{#if settingsOpen}
 			<Settings
-				settings={settings}
+				settings={proxySettings}
 			/>
 		{/if}
 
@@ -198,9 +208,17 @@
 		overflow: hidden;
 		pointer-events: none;
 
+		&.legacy {
+			border-radius: 0PX;
+		}
+
 		&-bg {
 			background: #171719;
 			position: absolute;
+		}
+
+		&.legacy &-bg {
+			background: #111111;
 		}
 
 		&-top {
@@ -243,6 +261,11 @@
 		overflow: hidden;
 		display: flex;
 		padding: 30px 5px 5px;
+
+		&.legacy {
+			border-radius: 0PX;
+			padding: 35px 5px 5px;
+		}
 	}
 
 	.canvas-container {

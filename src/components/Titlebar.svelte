@@ -7,6 +7,7 @@
 
 	export let fileSelected = false;
 	export let settingsOpen = false;
+	export let legacy = false;
 	let pinned = false;
 
 	ipcRenderer.on('pin', (event, arg) => {
@@ -14,7 +15,7 @@
 	});
 </script>
 
-<div class="titlebar">
+<div class="titlebar" class:legacy={legacy}>
 	<div class="titlebar-group">
 		<button class="control control-menu" on:click={e => {
 			settingsOpen = !settingsOpen;
@@ -40,7 +41,8 @@
 		{/if}
 	</div>
 	<div class="titlebar-group">
-		<span class="version">v. 4.0.6</span>
+
+		<span class="version">v. 4.0.9</span>
 		<button class="control control-pin" class:pinned on:click={e => { ipcRenderer.send('window', 'pin'); }}>
 	    	<i class="fas fa-thumbtack"></i>
 		</button>
@@ -63,13 +65,20 @@
 		top: 0;
 		right: 0;
 		left: 0;
-		height: 30px;
+		height: 20px;
 		display: flex;
 		justify-content: space-between;
 	   	user-select: none;
 	   	-webkit-user-select: none;
    		-webkit-app-region: drag;
    		padding: 5px;
+		box-sizing: border-box;
+
+   		&.legacy {
+   			border-bottom: 2px solid #3F3F3F;
+   			padding: 0 10px 10px;
+   			height: 35px;
+   		}
 
    		&-group {
    			display: flex;

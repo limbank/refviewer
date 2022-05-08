@@ -126,7 +126,7 @@
 		{:else if setWindow=="about"}
 			<div class="settings-container-inner">
 				<div class="settings-container-text">
-					v. 4.0.6
+					v. 4.0.9
 				</div>
 				<div class="settings-container-text">
 					source.dog &copy; 2018-2022

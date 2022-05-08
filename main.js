@@ -82,7 +82,12 @@ let sp = new settingsProcessor({
 ipcMain.on('settings:write', (event, arg) => {
     //console.log("GOT SETTINGS!!", arg);
 
-    sp.writeSettings(arg);
+    sp.writeSettings(arg, () => {
+        mainWindow.webContents.send('settings', sp.settings);
+    });
+
+    //HEREmainWindow.webContents.send('settings', );
+    //event.reply('settings:all', sp.settings);
 });
 
 const fp = new fileProcessor();
