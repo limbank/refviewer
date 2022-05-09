@@ -78,6 +78,27 @@
    			border-bottom: 2px solid #3F3F3F;
    			padding: 0 10px 10px;
    			height: 35px;
+
+   			.control {
+			    border: 2px solid #3F3F3F;
+			    border-top: unset;
+			    border-top-left-radius: 0px;
+			    border-top-right-radius: 0px;
+			    border-bottom-left-radius: 4px;
+			    border-bottom-right-radius: 4px;
+			    height: 25px;
+			    color: #3F3F3F;
+			    line-height: 25px;
+			    text-align: center;
+			    width: 40px;
+			    background: transparent;
+
+			    &:hover {
+			    	border-color: black;
+				    color: black;
+				    background-color: #3F3F3F;
+			    }
+   			}
    		}
 
    		&-group {

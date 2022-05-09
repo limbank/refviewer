@@ -693,7 +693,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-trash");
     			add_location(i, file$6, 37, 8, 968);
-    			attr_dev(button, "class", "control control-clear svelte-ic8x1m");
+    			attr_dev(button, "class", "control control-clear svelte-c5kitq");
     			add_location(button, file$6, 36, 4, 881);
     		},
     		m: function mount(target, anchor) {
@@ -780,32 +780,32 @@ var app = (function () {
     			t6 = space();
     			button4 = element("button");
     			i3 = element("i");
-    			attr_dev(button0, "class", "control control-menu svelte-ic8x1m");
+    			attr_dev(button0, "class", "control control-menu svelte-c5kitq");
     			add_location(button0, file$6, 19, 2, 439);
-    			attr_dev(div0, "class", "titlebar-group svelte-ic8x1m");
+    			attr_dev(div0, "class", "titlebar-group svelte-c5kitq");
     			add_location(div0, file$6, 18, 1, 407);
-    			attr_dev(span, "class", "version svelte-ic8x1m");
+    			attr_dev(span, "class", "version svelte-c5kitq");
     			add_location(span, file$6, 44, 2, 1076);
-    			attr_dev(i0, "class", "fas fa-thumbtack svelte-ic8x1m");
+    			attr_dev(i0, "class", "fas fa-thumbtack svelte-c5kitq");
     			add_location(i0, file$6, 46, 6, 1229);
-    			attr_dev(button1, "class", "control control-pin svelte-ic8x1m");
+    			attr_dev(button1, "class", "control control-pin svelte-c5kitq");
     			toggle_class(button1, "pinned", /*pinned*/ ctx[3]);
     			add_location(button1, file$6, 45, 2, 1117);
     			attr_dev(i1, "class", "fas fa-minus");
     			add_location(i1, file$6, 49, 6, 1387);
-    			attr_dev(button2, "class", "control control-minimize svelte-ic8x1m");
+    			attr_dev(button2, "class", "control control-minimize svelte-c5kitq");
     			add_location(button2, file$6, 48, 2, 1278);
     			attr_dev(i2, "class", "fas fa-plus");
     			add_location(i2, file$6, 52, 6, 1540);
-    			attr_dev(button3, "class", "control control-restore svelte-ic8x1m");
+    			attr_dev(button3, "class", "control control-restore svelte-c5kitq");
     			add_location(button3, file$6, 51, 2, 1432);
     			attr_dev(i3, "class", "fas fa-times");
     			add_location(i3, file$6, 55, 6, 1687);
-    			attr_dev(button4, "class", "control control-close svelte-ic8x1m");
+    			attr_dev(button4, "class", "control control-close svelte-c5kitq");
     			add_location(button4, file$6, 54, 2, 1584);
-    			attr_dev(div1, "class", "titlebar-group svelte-ic8x1m");
+    			attr_dev(div1, "class", "titlebar-group svelte-c5kitq");
     			add_location(div1, file$6, 42, 1, 1042);
-    			attr_dev(div2, "class", "titlebar svelte-ic8x1m");
+    			attr_dev(div2, "class", "titlebar svelte-c5kitq");
     			toggle_class(div2, "legacy", /*legacy*/ ctx[2]);
     			add_location(div2, file$6, 17, 0, 360);
     		},
@@ -1039,15 +1039,16 @@ var app = (function () {
     function create_fragment$6(ctx) {
     	let div;
     	let current;
-    	const default_slot_template = /*#slots*/ ctx[1].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
+    	const default_slot_template = /*#slots*/ ctx[2].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[1], null);
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "desktop svelte-1u368qb");
-    			add_location(div, file$5, 3, 0, 23);
+    			attr_dev(div, "class", "desktop svelte-1o7d29u");
+    			toggle_class(div, "legacy", /*legacy*/ ctx[0]);
+    			add_location(div, file$5, 4, 0, 52);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1063,9 +1064,13 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 1)) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[0], !current ? -1 : dirty, null, null);
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 2)) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[1], !current ? -1 : dirty, null, null);
     				}
+    			}
+
+    			if (dirty & /*legacy*/ 1) {
+    				toggle_class(div, "legacy", /*legacy*/ ctx[0]);
     			}
     		},
     		i: function intro(local) {
@@ -1097,23 +1102,35 @@ var app = (function () {
     function instance$5($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Desktop", slots, ['default']);
-    	const writable_props = [];
+    	let { legacy = false } = $$props;
+    	const writable_props = ["legacy"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Desktop> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$$set = $$props => {
-    		if ("$$scope" in $$props) $$invalidate(0, $$scope = $$props.$$scope);
+    		if ("legacy" in $$props) $$invalidate(0, legacy = $$props.legacy);
+    		if ("$$scope" in $$props) $$invalidate(1, $$scope = $$props.$$scope);
     	};
 
-    	return [$$scope, slots];
+    	$$self.$capture_state = () => ({ legacy });
+
+    	$$self.$inject_state = $$props => {
+    		if ("legacy" in $$props) $$invalidate(0, legacy = $$props.legacy);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [legacy, $$scope, slots];
     }
 
     class Desktop extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$6, safe_not_equal, {});
+    		init(this, options, instance$5, create_fragment$6, safe_not_equal, { legacy: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1121,6 +1138,14 @@ var app = (function () {
     			options,
     			id: create_fragment$6.name
     		});
+    	}
+
+    	get legacy() {
+    		throw new Error("<Desktop>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set legacy(value) {
+    		throw new Error("<Desktop>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -4692,7 +4717,7 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file_1 = "src\\App.svelte";
 
-    // (162:2) {#if settingsOpen}
+    // (164:2) {#if settingsOpen}
     function create_if_block_1(ctx) {
     	let settings_1;
     	let current;
@@ -4733,14 +4758,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(162:2) {#if settingsOpen}",
+    		source: "(164:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (176:2) {:else}
+    // (178:2) {:else}
     function create_else_block(ctx) {
     	let dropzone;
     	let current;
@@ -4794,14 +4819,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(176:2) {:else}",
+    		source: "(178:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (168:2) {#if file}
+    // (170:2) {#if file}
     function create_if_block(ctx) {
     	let div1;
     	let div0;
@@ -4824,10 +4849,10 @@ var app = (function () {
     			div0 = element("div");
     			create_component(canvas.$$.fragment);
     			attr_dev(div0, "class", "canvas-container-inner svelte-3yuejm");
-    			add_location(div0, file_1, 169, 4, 3920);
+    			add_location(div0, file_1, 171, 4, 3950);
     			attr_dev(div1, "class", "canvas-container svelte-3yuejm");
     			toggle_class(div1, "pixelated", /*zoomed*/ ctx[3]);
-    			add_location(div1, file_1, 168, 3, 3859);
+    			add_location(div1, file_1, 170, 3, 3889);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -4869,14 +4894,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(168:2) {#if file}",
+    		source: "(170:2) {#if file}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (177:3) <Dropzone       on:drop={handleFilesSelect}       disableDefaultStyles="true"      multiple="false"      containerClasses="drop"      containerStyles="flex-grow:1;"     >
+    // (179:3) <Dropzone       on:drop={handleFilesSelect}       disableDefaultStyles="true"      multiple="false"      containerClasses="drop"      containerStyles="flex-grow:1;"     >
     function create_default_slot_2(ctx) {
     	let div3;
     	let div2;
@@ -4900,16 +4925,16 @@ var app = (function () {
     			br = element("br");
     			t2 = text("click to select");
     			attr_dev(i, "class", "fas fa-upload");
-    			add_location(i, file_1, 186, 7, 4382);
+    			add_location(i, file_1, 188, 7, 4412);
     			attr_dev(div0, "class", "dropzone-inner-icon svelte-3yuejm");
-    			add_location(div0, file_1, 185, 6, 4340);
-    			add_location(br, file_1, 189, 21, 4489);
+    			add_location(div0, file_1, 187, 6, 4370);
+    			add_location(br, file_1, 191, 21, 4519);
     			attr_dev(div1, "class", "dropzone-inner-text svelte-3yuejm");
-    			add_location(div1, file_1, 188, 6, 4433);
+    			add_location(div1, file_1, 190, 6, 4463);
     			attr_dev(div2, "class", "dropzone-inner svelte-3yuejm");
-    			add_location(div2, file_1, 184, 5, 4304);
+    			add_location(div2, file_1, 186, 5, 4334);
     			attr_dev(div3, "class", "dropzone-inner-wrapper svelte-3yuejm");
-    			add_location(div3, file_1, 183, 4, 4261);
+    			add_location(div3, file_1, 185, 4, 4291);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div3, anchor);
@@ -4931,14 +4956,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(177:3) <Dropzone       on:drop={handleFilesSelect}       disableDefaultStyles=\\\"true\\\"      multiple=\\\"false\\\"      containerClasses=\\\"drop\\\"      containerStyles=\\\"flex-grow:1;\\\"     >",
+    		source: "(179:3) <Dropzone       on:drop={handleFilesSelect}       disableDefaultStyles=\\\"true\\\"      multiple=\\\"false\\\"      containerClasses=\\\"drop\\\"      containerStyles=\\\"flex-grow:1;\\\"     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (171:8) <Canvas width={width} height={height}>
+    // (173:8) <Canvas width={width} height={height}>
     function create_default_slot_1(ctx) {
     	let layer;
     	let current;
@@ -4979,14 +5004,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(171:8) <Canvas width={width} height={height}>",
+    		source: "(173:8) <Canvas width={width} height={height}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (161:1) <Desktop>
+    // (161:1) <Desktop    legacy={settings.theme}   >
     function create_default_slot(ctx) {
     	let t_1;
     	let current_block_type_index;
@@ -5092,7 +5117,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(161:1) <Desktop>",
+    		source: "(161:1) <Desktop    legacy={settings.theme}   >",
     		ctx
     	});
 
@@ -5141,6 +5166,7 @@ var app = (function () {
 
     	desktop = new Desktop({
     			props: {
+    				legacy: /*settings*/ ctx[4].theme,
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},
@@ -5220,6 +5246,7 @@ var app = (function () {
     			if (dirty & /*file*/ 1) toolbox_changes.fileSelected = /*file*/ ctx[0];
     			toolbox.$set(toolbox_changes);
     			const desktop_changes = {};
+    			if (dirty & /*settings*/ 16) desktop_changes.legacy = /*settings*/ ctx[4].theme;
 
     			if (dirty & /*$$scope, zoomed, width, height, render, file, proxySettings, settingsOpen*/ 131439) {
     				desktop_changes.$$scope = { dirty, ctx };

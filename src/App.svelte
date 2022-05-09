@@ -158,7 +158,9 @@
 		settingsOpen={settingsOpen}
 		fileSelected={file}
 	/>
-	<Desktop>
+	<Desktop
+		legacy={settings.theme}
+	>
 		{#if settingsOpen}
 			<Settings
 				settings={proxySettings}
@@ -251,7 +253,8 @@
 	}
 
 	main {
-		position: fixed;
+		position: fixed;
+
 		z-index: 2;
 		left: 0;
 		top: 0;

@@ -1,7 +1,8 @@
 <script>
+	export let legacy = false;
 </script>
 
-<div class="desktop">
+<div class="desktop" class:legacy={legacy}>
 	<slot></slot>
 </div>
 
@@ -14,5 +15,9 @@
 		display: flex;
 		overflow: hidden;
 		position: relative;
+
+		&.legacy {
+			background: #111111;
+		}
 	}
 </style>
