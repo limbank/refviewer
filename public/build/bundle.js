@@ -1063,8 +1063,7 @@ var app = (function () {
     			if (!mounted) {
     				dispose = [
     					listen_dev(div, "dragover", /*dragover_handler*/ ctx[3], false, false, false),
-    					listen_dev(div, "drop", /*drop_handler*/ ctx[4], false, false, false),
-    					listen_dev(div, "paste", /*paste_handler*/ ctx[5], false, false, false)
+    					listen_dev(div, "drop", /*drop_handler*/ ctx[4], false, false, false)
     				];
 
     				mounted = true;
@@ -1127,10 +1126,6 @@ var app = (function () {
     		bubble.call(this, $$self, event);
     	}
 
-    	function paste_handler(event) {
-    		bubble.call(this, $$self, event);
-    	}
-
     	$$self.$$set = $$props => {
     		if ("legacy" in $$props) $$invalidate(0, legacy = $$props.legacy);
     		if ("$$scope" in $$props) $$invalidate(1, $$scope = $$props.$$scope);
@@ -1146,7 +1141,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [legacy, $$scope, slots, dragover_handler, drop_handler, paste_handler];
+    	return [legacy, $$scope, slots, dragover_handler, drop_handler];
     }
 
     class Desktop extends SvelteComponentDev {
@@ -1384,7 +1379,7 @@ var app = (function () {
 
     const file$3 = "src\\components\\Settings.svelte";
 
-    // (126:31) 
+    // (132:31) 
     function create_if_block_2(ctx) {
     	let div2;
     	let div0;
@@ -1399,12 +1394,12 @@ var app = (function () {
     			t1 = space();
     			div1 = element("div");
     			div1.textContent = "source.dog © 2018-2022";
-    			attr_dev(div0, "class", "settings-container-text svelte-13bbpr8");
-    			add_location(div0, file$3, 127, 4, 3280);
-    			attr_dev(div1, "class", "settings-container-text svelte-13bbpr8");
-    			add_location(div1, file$3, 130, 4, 3350);
-    			attr_dev(div2, "class", "settings-container-inner svelte-13bbpr8");
-    			add_location(div2, file$3, 126, 3, 3236);
+    			attr_dev(div0, "class", "settings-container-text svelte-ewc32s");
+    			add_location(div0, file$3, 133, 4, 3443);
+    			attr_dev(div1, "class", "settings-container-text svelte-ewc32s");
+    			add_location(div1, file$3, 136, 4, 3513);
+    			attr_dev(div2, "class", "settings-container-inner svelte-ewc32s");
+    			add_location(div2, file$3, 132, 3, 3399);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -1422,7 +1417,7 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(126:31) ",
+    		source: "(132:31) ",
     		ctx
     	});
 
@@ -1431,303 +1426,227 @@ var app = (function () {
 
     // (44:34) 
     function create_if_block_1$1(ctx) {
-    	let div26;
+    	let div19;
+    	let div4;
     	let div3;
-    	let div2;
     	let div0;
     	let t1;
     	let div1;
-    	let t2;
-    	let div8;
-    	let div6;
-    	let div4;
-    	let t4;
-    	let div5;
-    	let label0;
-    	let input0;
-    	let t5;
     	let span0;
-    	let t6;
-    	let div7;
-    	let t8;
-    	let div13;
-    	let div11;
+    	let t3;
+    	let div2;
+    	let input0;
+    	let t4;
     	let div9;
-    	let t10;
-    	let div10;
-    	let label1;
+    	let div7;
+    	let div5;
+    	let t6;
+    	let div6;
+    	let label0;
     	let input1;
-    	let t11;
+    	let t7;
     	let span1;
-    	let t12;
-    	let div12;
-    	let t14;
-    	let div17;
-    	let div16;
+    	let t8;
+    	let div8;
+    	let t10;
     	let div14;
-    	let t16;
-    	let div15;
-    	let label2;
+    	let div12;
+    	let div10;
+    	let t12;
+    	let div11;
+    	let label1;
     	let input2;
-    	let t17;
+    	let t13;
     	let span2;
-    	let t18;
-    	let div21;
-    	let div20;
+    	let t14;
+    	let div13;
+    	let t16;
     	let div18;
-    	let t20;
-    	let div19;
-    	let label3;
+    	let div17;
+    	let div15;
+    	let t18;
+    	let div16;
+    	let label2;
     	let input3;
-    	let t21;
+    	let t19;
     	let span3;
-    	let t22;
-    	let div25;
-    	let div24;
-    	let div22;
-    	let t24;
-    	let div23;
-    	let label4;
-    	let input4;
-    	let t25;
-    	let span4;
     	let mounted;
     	let dispose;
 
     	const block = {
     		c: function create() {
-    			div26 = element("div");
+    			div19 = element("div");
+    			div4 = element("div");
     			div3 = element("div");
-    			div2 = element("div");
     			div0 = element("div");
     			div0.textContent = "Zoom speed";
     			t1 = space();
     			div1 = element("div");
-    			t2 = space();
-    			div8 = element("div");
-    			div6 = element("div");
-    			div4 = element("div");
-    			div4.textContent = "Allow overwrite";
-    			t4 = space();
-    			div5 = element("div");
-    			label0 = element("label");
-    			input0 = element("input");
-    			t5 = space();
     			span0 = element("span");
-    			t6 = space();
-    			div7 = element("div");
-    			div7.textContent = "Allow selecting a new image while another image is loaded.";
-    			t8 = space();
-    			div13 = element("div");
-    			div11 = element("div");
+    			span0.textContent = "1.5";
+    			t3 = space();
+    			div2 = element("div");
+    			input0 = element("input");
+    			t4 = space();
     			div9 = element("div");
-    			div9.textContent = "Legacy file select";
-    			t10 = space();
-    			div10 = element("div");
-    			label1 = element("label");
+    			div7 = element("div");
+    			div5 = element("div");
+    			div5.textContent = "Allow overwrite";
+    			t6 = space();
+    			div6 = element("div");
+    			label0 = element("label");
     			input1 = element("input");
-    			t11 = space();
+    			t7 = space();
     			span1 = element("span");
-    			t12 = space();
-    			div12 = element("div");
-    			div12.textContent = "Enable a separate button for clicking to select a file";
-    			t14 = space();
-    			div17 = element("div");
-    			div16 = element("div");
+    			t8 = space();
+    			div8 = element("div");
+    			div8.textContent = "Allow selecting a new image while another image is loaded.";
+    			t10 = space();
     			div14 = element("div");
-    			div14.textContent = "Legacy theme";
-    			t16 = space();
-    			div15 = element("div");
-    			label2 = element("label");
+    			div12 = element("div");
+    			div10 = element("div");
+    			div10.textContent = "Legacy file select";
+    			t12 = space();
+    			div11 = element("div");
+    			label1 = element("label");
     			input2 = element("input");
-    			t17 = space();
+    			t13 = space();
     			span2 = element("span");
-    			t18 = space();
-    			div21 = element("div");
-    			div20 = element("div");
+    			t14 = space();
+    			div13 = element("div");
+    			div13.textContent = "Enable a separate button for clicking to select a file";
+    			t16 = space();
     			div18 = element("div");
-    			div18.textContent = "Auto-save screenshots";
-    			t20 = space();
-    			div19 = element("div");
-    			label3 = element("label");
+    			div17 = element("div");
+    			div15 = element("div");
+    			div15.textContent = "Legacy theme";
+    			t18 = space();
+    			div16 = element("div");
+    			label2 = element("label");
     			input3 = element("input");
-    			t21 = space();
+    			t19 = space();
     			span3 = element("span");
-    			t22 = space();
-    			div25 = element("div");
-    			div24 = element("div");
-    			div22 = element("div");
-    			div22.textContent = "Developer mode";
-    			t24 = space();
-    			div23 = element("div");
-    			label4 = element("label");
-    			input4 = element("input");
-    			t25 = space();
-    			span4 = element("span");
-    			attr_dev(div0, "class", "setting-title svelte-13bbpr8");
-    			add_location(div0, file$3, 47, 6, 1015);
-    			attr_dev(div1, "class", "setting-control svelte-13bbpr8");
-    			add_location(div1, file$3, 50, 6, 1083);
-    			attr_dev(div2, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div2, file$3, 46, 5, 980);
-    			attr_dev(div3, "class", "setting svelte-13bbpr8");
-    			add_location(div3, file$3, 45, 4, 952);
-    			attr_dev(div4, "class", "setting-title svelte-13bbpr8");
-    			add_location(div4, file$3, 55, 6, 1212);
-    			attr_dev(input0, "type", "checkbox");
-    			attr_dev(input0, "class", "svelte-13bbpr8");
-    			add_location(input0, file$3, 60, 8, 1355);
-    			attr_dev(span0, "class", "slider svelte-13bbpr8");
-    			add_location(span0, file$3, 61, 8, 1422);
-    			attr_dev(label0, "class", "switch svelte-13bbpr8");
-    			add_location(label0, file$3, 59, 7, 1323);
-    			attr_dev(div5, "class", "setting-control svelte-13bbpr8");
-    			add_location(div5, file$3, 58, 6, 1285);
-    			attr_dev(div6, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div6, file$3, 54, 5, 1177);
-    			attr_dev(div7, "class", "setting-description svelte-13bbpr8");
-    			add_location(div7, file$3, 65, 5, 1501);
-    			attr_dev(div8, "class", "setting svelte-13bbpr8");
-    			add_location(div8, file$3, 53, 4, 1149);
-    			attr_dev(div9, "class", "setting-title svelte-13bbpr8");
-    			add_location(div9, file$3, 71, 6, 1694);
+    			attr_dev(div0, "class", "setting-title svelte-ewc32s");
+    			add_location(div0, file$3, 47, 6, 1017);
+    			attr_dev(span0, "class", "setting-control-info svelte-ewc32s");
+    			add_location(span0, file$3, 51, 7, 1123);
+    			attr_dev(div1, "class", "setting-control svelte-ewc32s");
+    			add_location(div1, file$3, 50, 6, 1085);
+    			attr_dev(input0, "type", "range");
+    			attr_dev(input0, "class", "svelte-ewc32s");
+    			add_location(input0, file$3, 54, 7, 1234);
+    			attr_dev(div2, "class", "setting-control-large svelte-ewc32s");
+    			add_location(div2, file$3, 53, 6, 1190);
+    			attr_dev(div3, "class", "setting-inner svelte-ewc32s");
+    			add_location(div3, file$3, 46, 5, 982);
+    			attr_dev(div4, "class", "setting svelte-ewc32s");
+    			add_location(div4, file$3, 45, 4, 954);
+    			attr_dev(div5, "class", "setting-title svelte-ewc32s");
+    			add_location(div5, file$3, 60, 6, 1362);
     			attr_dev(input1, "type", "checkbox");
-    			attr_dev(input1, "class", "svelte-13bbpr8");
-    			add_location(input1, file$3, 76, 8, 1840);
-    			attr_dev(span1, "class", "slider svelte-13bbpr8");
-    			add_location(span1, file$3, 77, 8, 1904);
-    			attr_dev(label1, "class", "switch svelte-13bbpr8");
-    			add_location(label1, file$3, 75, 7, 1808);
-    			attr_dev(div10, "class", "setting-control svelte-13bbpr8");
-    			add_location(div10, file$3, 74, 6, 1770);
-    			attr_dev(div11, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div11, file$3, 70, 5, 1659);
-    			attr_dev(div12, "class", "setting-description svelte-13bbpr8");
-    			add_location(div12, file$3, 81, 5, 1983);
-    			attr_dev(div13, "class", "setting svelte-13bbpr8");
-    			add_location(div13, file$3, 69, 4, 1631);
-    			attr_dev(div14, "class", "setting-title svelte-13bbpr8");
-    			add_location(div14, file$3, 87, 6, 2172);
+    			attr_dev(input1, "class", "svelte-ewc32s");
+    			add_location(input1, file$3, 65, 8, 1505);
+    			attr_dev(span1, "class", "slider svelte-ewc32s");
+    			add_location(span1, file$3, 66, 8, 1572);
+    			attr_dev(label0, "class", "switch svelte-ewc32s");
+    			add_location(label0, file$3, 64, 7, 1473);
+    			attr_dev(div6, "class", "setting-control svelte-ewc32s");
+    			add_location(div6, file$3, 63, 6, 1435);
+    			attr_dev(div7, "class", "setting-inner svelte-ewc32s");
+    			add_location(div7, file$3, 59, 5, 1327);
+    			attr_dev(div8, "class", "setting-description svelte-ewc32s");
+    			add_location(div8, file$3, 70, 5, 1651);
+    			attr_dev(div9, "class", "setting svelte-ewc32s");
+    			add_location(div9, file$3, 58, 4, 1299);
+    			attr_dev(div10, "class", "setting-title svelte-ewc32s");
+    			add_location(div10, file$3, 76, 6, 1844);
     			attr_dev(input2, "type", "checkbox");
-    			attr_dev(input2, "class", "svelte-13bbpr8");
-    			add_location(input2, file$3, 92, 8, 2312);
-    			attr_dev(span2, "class", "slider svelte-13bbpr8");
-    			add_location(span2, file$3, 93, 8, 2375);
-    			attr_dev(label2, "class", "switch svelte-13bbpr8");
-    			add_location(label2, file$3, 91, 7, 2280);
-    			attr_dev(div15, "class", "setting-control svelte-13bbpr8");
-    			add_location(div15, file$3, 90, 6, 2242);
-    			attr_dev(div16, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div16, file$3, 86, 5, 2137);
-    			attr_dev(div17, "class", "setting svelte-13bbpr8");
-    			add_location(div17, file$3, 85, 4, 2109);
-    			attr_dev(div18, "class", "setting-title svelte-13bbpr8");
-    			add_location(div18, file$3, 100, 6, 2528);
+    			attr_dev(input2, "class", "svelte-ewc32s");
+    			add_location(input2, file$3, 81, 8, 1990);
+    			attr_dev(span2, "class", "slider svelte-ewc32s");
+    			add_location(span2, file$3, 82, 8, 2054);
+    			attr_dev(label1, "class", "switch svelte-ewc32s");
+    			add_location(label1, file$3, 80, 7, 1958);
+    			attr_dev(div11, "class", "setting-control svelte-ewc32s");
+    			add_location(div11, file$3, 79, 6, 1920);
+    			attr_dev(div12, "class", "setting-inner svelte-ewc32s");
+    			add_location(div12, file$3, 75, 5, 1809);
+    			attr_dev(div13, "class", "setting-description svelte-ewc32s");
+    			add_location(div13, file$3, 86, 5, 2133);
+    			attr_dev(div14, "class", "setting svelte-ewc32s");
+    			add_location(div14, file$3, 74, 4, 1781);
+    			attr_dev(div15, "class", "setting-title svelte-ewc32s");
+    			add_location(div15, file$3, 92, 6, 2322);
     			attr_dev(input3, "type", "checkbox");
-    			attr_dev(input3, "class", "svelte-13bbpr8");
-    			add_location(input3, file$3, 105, 8, 2677);
-    			attr_dev(span3, "class", "slider svelte-13bbpr8");
-    			add_location(span3, file$3, 106, 8, 2743);
-    			attr_dev(label3, "class", "switch svelte-13bbpr8");
-    			add_location(label3, file$3, 104, 7, 2645);
-    			attr_dev(div19, "class", "setting-control svelte-13bbpr8");
-    			add_location(div19, file$3, 103, 6, 2607);
-    			attr_dev(div20, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div20, file$3, 99, 5, 2493);
-    			attr_dev(div21, "class", "setting svelte-13bbpr8");
-    			add_location(div21, file$3, 98, 4, 2465);
-    			attr_dev(div22, "class", "setting-title svelte-13bbpr8");
-    			add_location(div22, file$3, 113, 6, 2896);
-    			attr_dev(input4, "type", "checkbox");
-    			attr_dev(input4, "class", "svelte-13bbpr8");
-    			add_location(input4, file$3, 118, 8, 3038);
-    			attr_dev(span4, "class", "slider svelte-13bbpr8");
-    			add_location(span4, file$3, 119, 8, 3103);
-    			attr_dev(label4, "class", "switch svelte-13bbpr8");
-    			add_location(label4, file$3, 117, 7, 3006);
-    			attr_dev(div23, "class", "setting-control svelte-13bbpr8");
-    			add_location(div23, file$3, 116, 6, 2968);
-    			attr_dev(div24, "class", "setting-inner svelte-13bbpr8");
-    			add_location(div24, file$3, 112, 5, 2861);
-    			attr_dev(div25, "class", "setting svelte-13bbpr8");
-    			add_location(div25, file$3, 111, 4, 2833);
-    			attr_dev(div26, "class", "settings-container-inner svelte-13bbpr8");
-    			add_location(div26, file$3, 44, 3, 908);
+    			attr_dev(input3, "class", "svelte-ewc32s");
+    			add_location(input3, file$3, 97, 8, 2462);
+    			attr_dev(span3, "class", "slider svelte-ewc32s");
+    			add_location(span3, file$3, 98, 8, 2525);
+    			attr_dev(label2, "class", "switch svelte-ewc32s");
+    			add_location(label2, file$3, 96, 7, 2430);
+    			attr_dev(div16, "class", "setting-control svelte-ewc32s");
+    			add_location(div16, file$3, 95, 6, 2392);
+    			attr_dev(div17, "class", "setting-inner svelte-ewc32s");
+    			add_location(div17, file$3, 91, 5, 2287);
+    			attr_dev(div18, "class", "setting svelte-ewc32s");
+    			add_location(div18, file$3, 90, 4, 2259);
+    			attr_dev(div19, "class", "settings-container-inner svelte-ewc32s");
+    			add_location(div19, file$3, 44, 3, 910);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div26, anchor);
-    			append_dev(div26, div3);
+    			insert_dev(target, div19, anchor);
+    			append_dev(div19, div4);
+    			append_dev(div4, div3);
+    			append_dev(div3, div0);
+    			append_dev(div3, t1);
+    			append_dev(div3, div1);
+    			append_dev(div1, span0);
+    			append_dev(div3, t3);
     			append_dev(div3, div2);
-    			append_dev(div2, div0);
-    			append_dev(div2, t1);
-    			append_dev(div2, div1);
-    			append_dev(div26, t2);
-    			append_dev(div26, div8);
-    			append_dev(div8, div6);
-    			append_dev(div6, div4);
-    			append_dev(div6, t4);
-    			append_dev(div6, div5);
-    			append_dev(div5, label0);
-    			append_dev(label0, input0);
-    			input0.checked = /*settings*/ ctx[0].overwrite;
-    			append_dev(label0, t5);
-    			append_dev(label0, span0);
-    			append_dev(div8, t6);
-    			append_dev(div8, div7);
-    			append_dev(div26, t8);
-    			append_dev(div26, div13);
-    			append_dev(div13, div11);
-    			append_dev(div11, div9);
-    			append_dev(div11, t10);
-    			append_dev(div11, div10);
-    			append_dev(div10, label1);
-    			append_dev(label1, input1);
-    			input1.checked = /*settings*/ ctx[0].select;
-    			append_dev(label1, t11);
-    			append_dev(label1, span1);
-    			append_dev(div13, t12);
-    			append_dev(div13, div12);
-    			append_dev(div26, t14);
-    			append_dev(div26, div17);
+    			append_dev(div2, input0);
+    			append_dev(div19, t4);
+    			append_dev(div19, div9);
+    			append_dev(div9, div7);
+    			append_dev(div7, div5);
+    			append_dev(div7, t6);
+    			append_dev(div7, div6);
+    			append_dev(div6, label0);
+    			append_dev(label0, input1);
+    			input1.checked = /*settings*/ ctx[0].overwrite;
+    			append_dev(label0, t7);
+    			append_dev(label0, span1);
+    			append_dev(div9, t8);
+    			append_dev(div9, div8);
+    			append_dev(div19, t10);
+    			append_dev(div19, div14);
+    			append_dev(div14, div12);
+    			append_dev(div12, div10);
+    			append_dev(div12, t12);
+    			append_dev(div12, div11);
+    			append_dev(div11, label1);
+    			append_dev(label1, input2);
+    			input2.checked = /*settings*/ ctx[0].select;
+    			append_dev(label1, t13);
+    			append_dev(label1, span2);
+    			append_dev(div14, t14);
+    			append_dev(div14, div13);
+    			append_dev(div19, t16);
+    			append_dev(div19, div18);
+    			append_dev(div18, div17);
+    			append_dev(div17, div15);
+    			append_dev(div17, t18);
     			append_dev(div17, div16);
-    			append_dev(div16, div14);
-    			append_dev(div16, t16);
-    			append_dev(div16, div15);
-    			append_dev(div15, label2);
-    			append_dev(label2, input2);
-    			input2.checked = /*settings*/ ctx[0].theme;
-    			append_dev(label2, t17);
-    			append_dev(label2, span2);
-    			append_dev(div26, t18);
-    			append_dev(div26, div21);
-    			append_dev(div21, div20);
-    			append_dev(div20, div18);
-    			append_dev(div20, t20);
-    			append_dev(div20, div19);
-    			append_dev(div19, label3);
-    			append_dev(label3, input3);
-    			input3.checked = /*settings*/ ctx[0].autosave;
-    			append_dev(label3, t21);
-    			append_dev(label3, span3);
-    			append_dev(div26, t22);
-    			append_dev(div26, div25);
-    			append_dev(div25, div24);
-    			append_dev(div24, div22);
-    			append_dev(div24, t24);
-    			append_dev(div24, div23);
-    			append_dev(div23, label4);
-    			append_dev(label4, input4);
-    			input4.checked = /*settings*/ ctx[0].devmode;
-    			append_dev(label4, t25);
-    			append_dev(label4, span4);
+    			append_dev(div16, label2);
+    			append_dev(label2, input3);
+    			input3.checked = /*settings*/ ctx[0].theme;
+    			append_dev(label2, t19);
+    			append_dev(label2, span3);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "change", /*input0_change_handler*/ ctx[6]),
-    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[7]),
-    					listen_dev(input2, "change", /*input2_change_handler*/ ctx[8]),
-    					listen_dev(input3, "change", /*input3_change_handler*/ ctx[9]),
-    					listen_dev(input4, "change", /*input4_change_handler*/ ctx[10])
+    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[6]),
+    					listen_dev(input2, "change", /*input2_change_handler*/ ctx[7]),
+    					listen_dev(input3, "change", /*input3_change_handler*/ ctx[8])
     				];
 
     				mounted = true;
@@ -1735,27 +1654,19 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*settings*/ 1) {
-    				input0.checked = /*settings*/ ctx[0].overwrite;
+    				input1.checked = /*settings*/ ctx[0].overwrite;
     			}
 
     			if (dirty & /*settings*/ 1) {
-    				input1.checked = /*settings*/ ctx[0].select;
+    				input2.checked = /*settings*/ ctx[0].select;
     			}
 
     			if (dirty & /*settings*/ 1) {
-    				input2.checked = /*settings*/ ctx[0].theme;
-    			}
-
-    			if (dirty & /*settings*/ 1) {
-    				input3.checked = /*settings*/ ctx[0].autosave;
-    			}
-
-    			if (dirty & /*settings*/ 1) {
-    				input4.checked = /*settings*/ ctx[0].devmode;
+    				input3.checked = /*settings*/ ctx[0].theme;
     			}
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div26);
+    			if (detaching) detach_dev(div19);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -1839,23 +1750,23 @@ var app = (function () {
     			t5 = space();
     			div1 = element("div");
     			if (if_block) if_block.c();
-    			attr_dev(li0, "class", "svelte-13bbpr8");
+    			attr_dev(li0, "class", "svelte-ewc32s");
     			toggle_class(li0, "active", /*setWindow*/ ctx[1] == "recent");
-    			add_location(li0, file$3, 20, 3, 408);
-    			attr_dev(li1, "class", "svelte-13bbpr8");
+    			add_location(li0, file$3, 20, 3, 410);
+    			attr_dev(li1, "class", "svelte-ewc32s");
     			toggle_class(li1, "active", /*setWindow*/ ctx[1] == "settings");
-    			add_location(li1, file$3, 26, 3, 529);
-    			attr_dev(li2, "class", "svelte-13bbpr8");
+    			add_location(li1, file$3, 26, 3, 531);
+    			attr_dev(li2, "class", "svelte-ewc32s");
     			toggle_class(li2, "active", /*setWindow*/ ctx[1] == "about");
-    			add_location(li2, file$3, 32, 3, 656);
-    			attr_dev(ul, "class", "settings-container-menu svelte-13bbpr8");
-    			add_location(ul, file$3, 19, 2, 367);
-    			attr_dev(div0, "class", "settings-container-sidebar svelte-13bbpr8");
-    			add_location(div0, file$3, 18, 1, 323);
-    			attr_dev(div1, "class", "settings-container-main svelte-13bbpr8");
-    			add_location(div1, file$3, 40, 1, 790);
-    			attr_dev(div2, "class", "settings-container svelte-13bbpr8");
-    			add_location(div2, file$3, 17, 0, 288);
+    			add_location(li2, file$3, 32, 3, 658);
+    			attr_dev(ul, "class", "settings-container-menu svelte-ewc32s");
+    			add_location(ul, file$3, 19, 2, 369);
+    			attr_dev(div0, "class", "settings-container-sidebar svelte-ewc32s");
+    			add_location(div0, file$3, 18, 1, 325);
+    			attr_dev(div1, "class", "settings-container-main svelte-ewc32s");
+    			add_location(div1, file$3, 40, 1, 792);
+    			attr_dev(div2, "class", "settings-container svelte-ewc32s");
+    			add_location(div2, file$3, 17, 0, 290);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1937,7 +1848,7 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Settings", slots, []);
     	const { ipcRenderer } = require("electron");
-    	let setWindow = "recent";
+    	let setWindow = "settings";
     	let { settings = {} } = $$props;
     	let timeout;
     	const writable_props = ["settings"];
@@ -1958,28 +1869,18 @@ var app = (function () {
     		$$invalidate(1, setWindow = "about");
     	};
 
-    	function input0_change_handler() {
+    	function input1_change_handler() {
     		settings.overwrite = this.checked;
     		$$invalidate(0, settings);
     	}
 
-    	function input1_change_handler() {
+    	function input2_change_handler() {
     		settings.select = this.checked;
     		$$invalidate(0, settings);
     	}
 
-    	function input2_change_handler() {
-    		settings.theme = this.checked;
-    		$$invalidate(0, settings);
-    	}
-
     	function input3_change_handler() {
-    		settings.autosave = this.checked;
-    		$$invalidate(0, settings);
-    	}
-
-    	function input4_change_handler() {
-    		settings.devmode = this.checked;
+    		settings.theme = this.checked;
     		$$invalidate(0, settings);
     	}
 
@@ -2026,11 +1927,9 @@ var app = (function () {
     		click_handler,
     		click_handler_1,
     		click_handler_2,
-    		input0_change_handler,
     		input1_change_handler,
     		input2_change_handler,
-    		input3_change_handler,
-    		input4_change_handler
+    		input3_change_handler
     	];
     }
 
@@ -3725,10 +3624,10 @@ var app = (function () {
     			div0 = element("div");
     			create_component(canvas.$$.fragment);
     			attr_dev(div0, "class", "canvas-container-inner svelte-ygwtze");
-    			add_location(div0, file_1, 160, 4, 3787);
+    			add_location(div0, file_1, 160, 4, 3786);
     			attr_dev(div1, "class", "canvas-container svelte-ygwtze");
     			toggle_class(div1, "pixelated", /*zoomed*/ ctx[3]);
-    			add_location(div1, file_1, 159, 3, 3726);
+    			add_location(div1, file_1, 159, 3, 3725);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -4008,19 +3907,19 @@ var app = (function () {
     			t5 = space();
     			create_component(desktop.$$.fragment);
     			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-ygwtze");
-    			add_location(div0, file_1, 121, 1, 2861);
+    			add_location(div0, file_1, 121, 1, 2860);
     			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-ygwtze");
-    			add_location(div1, file_1, 122, 1, 2908);
+    			add_location(div1, file_1, 122, 1, 2907);
     			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-ygwtze");
-    			add_location(div2, file_1, 123, 1, 2957);
+    			add_location(div2, file_1, 123, 1, 2956);
     			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-ygwtze");
-    			add_location(div3, file_1, 124, 1, 3007);
+    			add_location(div3, file_1, 124, 1, 3006);
     			attr_dev(div4, "class", "backdrop svelte-ygwtze");
     			toggle_class(div4, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(div4, file_1, 120, 0, 2806);
+    			add_location(div4, file_1, 120, 0, 2805);
     			attr_dev(main, "class", "svelte-ygwtze");
     			toggle_class(main, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(main, file_1, 127, 0, 3064);
+    			add_location(main, file_1, 127, 0, 3063);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4125,7 +4024,7 @@ var app = (function () {
     	let height;
     	let zoomed = false;
     	let settings = {};
-    	let settingsOpen = false;
+    	let settingsOpen = true;
     	let proxySettings;
     	let initUpdate = 0;
 

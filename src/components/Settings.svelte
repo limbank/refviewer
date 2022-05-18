@@ -1,7 +1,7 @@
 <script>
 	const { ipcRenderer } = require('electron');
 
-	let setWindow = "recent";
+	let setWindow = "settings";
 
 	export let settings = {};
 
@@ -48,7 +48,12 @@
 						<div class="setting-title">
 							Zoom speed
 						</div>
-						<div class="setting-control"></div>
+						<div class="setting-control">
+							<span class="setting-control-info">1.5</span>
+						</div>
+						<div class="setting-control-large">
+							<input type="range">
+						</div>
 					</div>
 				</div>
 				<div class="setting">
@@ -96,6 +101,7 @@
 						</div>
 					</div>
 				</div>
+				<!--
 				<div class="setting">
 					<div class="setting-inner">
 						<div class="setting-title">
@@ -121,12 +127,12 @@
 							</label>
 						</div>
 					</div>
-				</div>
+				</div>-->
 			</div>
 		{:else if setWindow=="about"}
 			<div class="settings-container-inner">
 				<div class="settings-container-text">
-					v. 4.0.9
+					v. 4.0.11
 				</div>
 				<div class="settings-container-text">
 					source.dog &copy; 2018-2022
@@ -206,6 +212,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: flex-start;
+			flex-wrap: wrap;
 		}
 
 		&-title {
@@ -225,6 +232,28 @@
 		&-control {
 			display: inline-flex;
 			align-items: center;
+
+			&-large {
+				display: flex;
+				width: 100%;
+				align-items: center;
+				box-sizing: border-box;
+				padding: 10px 0 0;
+			}
+
+			&-info {
+				display: inline-flex;
+				min-height: 20px;
+				min-width: 30px;
+				font-size: 12px;
+				font-weight: 600;
+				text-align: center;
+				align-items: center;
+				justify-content: center;
+				background-color: #2F2E33;
+				color: #171719;
+				border-radius: 3px;
+			}
 		}
 	}
 
@@ -278,4 +307,37 @@
 		}
 	}
 
+	input[type=range] {
+		-webkit-appearance: none;
+		margin: 0 0;
+		width: 100%;
+		background: transparent;
+	}
+
+	input[type=range]:focus {
+		outline: none;
+	}
+
+	input[type=range]::-webkit-slider-runnable-track {
+		width: 100%;
+		height: 6px;
+		cursor: pointer;
+		background: #2F2E33;
+		border-radius: 3px;
+		margin: 5px 0;
+	}
+
+	input[type=range]:focus::-webkit-slider-runnable-track {
+		background: #2F2E33;
+	}
+
+	input[type=range]::-webkit-slider-thumb {
+		height: 16px;
+		width: 10px;
+		border-radius: 3px;
+		background: #171719;
+		cursor: pointer;
+		-webkit-appearance: none;
+		margin: -5px 0 0;
+	}
 </style>

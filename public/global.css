@@ -26,3 +26,8 @@ body {
 	border-radius: 3px;
 	background: #2F2E33;
 }
+
+::selection {
+	background: #FAA916;
+	color: #171719;
+}

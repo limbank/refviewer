@@ -16,7 +16,7 @@
 	let height;
 	let zoomed = false;
 	let settings = {};
-	let settingsOpen = false;
+	let settingsOpen = true;
 
 	let proxySettings;
 	let initUpdate = 0;

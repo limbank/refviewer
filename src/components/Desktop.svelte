@@ -2,7 +2,7 @@
 	export let legacy = false;
 </script>
 
-<div class="desktop" class:legacy={legacy} on:dragover on:drop on:paste>
+<div class="desktop" class:legacy={legacy} on:dragover on:drop>
 	<slot ></slot>
 </div>
 
