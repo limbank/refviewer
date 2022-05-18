@@ -2,8 +2,8 @@
 	export let legacy = false;
 </script>
 
-<div class="desktop" class:legacy={legacy}>
-	<slot></slot>
+<div class="desktop" class:legacy={legacy} on:dragover on:drop on:paste>
+	<slot ></slot>
 </div>
 
 <style lang="scss">

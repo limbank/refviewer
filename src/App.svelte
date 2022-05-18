@@ -3,9 +3,9 @@
 	import Desktop from './components/Desktop.svelte';
 	import Toolbox from './components/Toolbox.svelte';
 	import Settings from './components/Settings.svelte';
+	import Dropfield from './components/Dropfield.svelte';
 
 	import { Canvas, Layer, t } from "svelte-canvas";
-	import Dropzone from "svelte-file-dropzone";
 
 	import Panzoom from '@panzoom/panzoom';
 
@@ -41,10 +41,7 @@
 
 	    	instance.destroy();
 	    }
-	    catch(e) {
-	    	console.log("errrrr", e);
-	    }
-
+	    catch(e) {/*console.log("errrrr", e);*/}
 
 		// And pass it to panzoom
 		instance = Panzoom(element, {
@@ -60,19 +57,14 @@
   	$: render = ({ context }) => {
 	    context.drawImage(img, 0, 0);
 
-	    // just grab a DOM element
 		let element = document.querySelector('.canvas-container-inner');
 	    initPan(element);
-		/*
-		instance.on('zoom', function(e) {
-			let data = instance.getTransform();
-			if (data.scale >= 10) zoomed = true;
-			else zoomed = false;
-		});*/
   	};
 
 	function handleFilesSelect(e) {
-	    const { acceptedFiles } = e.detail;
+		if (!settings.overwrite && file || settingsOpen) return;
+
+	    const acceptedFiles = Array.from(e.dataTransfer.files);
 
 	    ipcRenderer.send('file', acceptedFiles[0].path);
 	}
@@ -90,17 +82,14 @@
 
 	/*
 		NOTE!!!
-		Currently the drop zone gets hidden when the image
-		is shown, add overwriting on repeated drop into
-		the settings later.
 
 		Maybe add a setting that separates clicking
 		into a separate button.
-
-		Also enable copy paste.
 	*/
 
 	function handlePaste(event) {
+		if (!settings.overwrite && file || settingsOpen) return;
+
 		let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
 
 		let blob = null;
@@ -120,7 +109,6 @@
 
 		var a = new FileReader();
         a.onload = function(e) {
-        	if (file) return;
 			img.src = e.target.result;
 			file = e.target.result;
         }
@@ -136,6 +124,7 @@
 	<div class="backdrop-bg backdrop-bottom"></div>
 	<div class="backdrop-bg backdrop-left"></div>
 </div>
+
 <main class:legacy={settings.theme}>
 	<Titlebar
 		fileSelected={file}
@@ -160,11 +149,11 @@
 	/>
 	<Desktop
 		legacy={settings.theme}
+		on:dragover={(e) => { e.preventDefault(); }}
+		on:drop={handleFilesSelect}
 	>
 		{#if settingsOpen}
-			<Settings
-				settings={proxySettings}
-			/>
+			<Settings settings={proxySettings} />
 		{/if}
 
 		{#if file}
@@ -176,24 +165,7 @@
 				</div>
 			</div>
 		{:else}
-			<Dropzone 
-				on:drop={handleFilesSelect} 
-				disableDefaultStyles="true"
-				multiple="false"
-				containerClasses="drop"
-				containerStyles="flex-grow:1;"
-			>
-				<div class="dropzone-inner-wrapper">
-					<div class="dropzone-inner">
-						<div class="dropzone-inner-icon">
-							<i class="fas fa-upload"></i>
-						</div>
-						<div class="dropzone-inner-text">
-							Drag a file or<br>click to select
-						</div>
-					</div>
-				</div>
-			</Dropzone>
+			<Dropfield />
 		{/if}
 	</Desktop>
 </main>
@@ -253,7 +225,8 @@
 	}
 
 	main {
-		position: fixed;
+		position: fixed;
+
 
 		z-index: 2;
 		left: 0;
@@ -305,41 +278,6 @@
 		    image-rendering: -webkit-crisp-edges;
 		    image-rendering: pixelated;
 		    image-rendering: crisp-edges;
-		}
-	}
-
-	.dropzone-inner-wrapper {
-		padding: 10px;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		box-sizing: border-box;
-	}
-
-	.dropzone-inner {
-		cursor: pointer;
-		border:2px dashed #3A3940;
-		box-sizing: border-box;
-		border-radius: 3px;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-direction: column;
-		color: #3A3940;
-
-		&-icon {
-			font-size: 35px;
-			margin-bottom: 10px;
-		}
-
-		&-text {
-			font-size: 18px;
-			font-weight: bold;
-			text-align: center;
 		}
 	}
 </style>
