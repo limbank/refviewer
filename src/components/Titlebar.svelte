@@ -8,6 +8,8 @@
 	export let fileSelected = false;
 	export let settingsOpen = false;
 	export let legacy = false;
+	export let overwrite = false;
+	export let version;
 	let pinned = false;
 
 	ipcRenderer.on('pin', (event, arg) => {
@@ -28,11 +30,14 @@
 			{/if}
 		</button>
 		{#if !settingsOpen}
-			<!--
-			<button class="control control-screenshot">
-		    	<i class="fas fa-crosshairs"></i>
-			</button>
-			-->
+			{#if !fileSelected || overwrite}
+				<button class="control control-upload" on:click={e => { ipcRenderer.send('selectfile'); }}>
+			    	<i class="fas fa-upload"></i>
+				</button>
+				<button class="control control-screenshot">
+			    	<i class="fas fa-crosshairs"></i>
+				</button>
+			{/if}
 			{#if fileSelected}
 				<button class="control control-clear" on:click={e => { dispatch('clear'); }}>
 			    	<i class="fas fa-trash"></i>
@@ -41,8 +46,9 @@
 		{/if}
 	</div>
 	<div class="titlebar-group">
-
-		<span class="version">v. 4.0.9</span>
+		{#if version}
+			<span class="version">v. {version}</span>
+		{/if}
 		<button class="control control-pin" class:pinned on:click={e => { ipcRenderer.send('window', 'pin'); }}>
 	    	<i class="fas fa-thumbtack"></i>
 		</button>
@@ -148,6 +154,7 @@
 
 		&-menu,
 		&-screenshot,
+		&-upload,
 		&-clear {
 			font-size: 12px;
 		}

@@ -11,7 +11,7 @@ class settingsProcessor {
         this.home = data.home;
         this.filename = data.filename;
         this.file = path.join(this.home, this.filename);
-        this.settings = {};
+        this.settings = { zoom: 0.3 };
 
         fs.ensureFile(this.file, err => {
             this.readSettings(data.ready);
@@ -199,6 +199,10 @@ ipcMain.on('file', (event, arg) => {
     //file processor
 
     let file = fp.process(arg, event);
+});
+
+ipcMain.on('selectfile', (event, arg) => {
+    //select by prompt
 });
 /*
 let sg = {

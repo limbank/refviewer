@@ -16,26 +16,33 @@
 	let height;
 	let zoomed = false;
 	let settings = {};
-	let settingsOpen = true;
+	let settingsOpen = false;
 
 	let proxySettings;
 	let initUpdate = 0;
+	let instance;
+	let version = "4.0.12";
 
 	ipcRenderer.on('settings', (event, arg) => {
+		if (settings.zoom && settings.zoom != arg.zoom && instance) {
+			let element = document.querySelector('.canvas-container-inner');
+			initPan(element, arg.zoom);
+		}
+
 		settings = arg;
 		initUpdate++;
 		if (initUpdate<2) {
 			console.log("REPEATED UPDATE FAILED!", initUpdate);
 			proxySettings = settings;
 		}
-		console.log("SETTINGS UPDATED!!");
 	});
 
 	let img = new Image(); 
 
-	var instance;
 
-	function initPan(element) {
+	function initPan(element, customZoom = false) {
+		if (!element) return;
+
 	    try {
 	    	console.log("test");
 
@@ -45,7 +52,8 @@
 
 		// And pass it to panzoom
 		instance = Panzoom(element, {
-			maxScale: 10000
+			maxScale: 10000,
+			step: customZoom || settings.zoom
 		});
 		element.parentElement.addEventListener('wheel', instance.zoomWithWheel);
 		element.addEventListener('panzoomchange', (event) => {
@@ -85,10 +93,16 @@
 
 		Maybe add a setting that separates clicking
 		into a separate button.
+
+		Add image selection by dropping text in
 	*/
 
 	function handlePaste(event) {
 		if (!settings.overwrite && file || settingsOpen) return;
+
+		if (event.clipboardData.getData('Text') != "") {
+			console.log("test pasted! handle URL?");
+		}
 
 		let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
 
@@ -129,8 +143,11 @@
 	<Titlebar
 		fileSelected={file}
 		settingsOpen={settingsOpen}
+		overwrite={settings.overwrite}
 		legacy={settings.theme}
-		on:clear={e => {
+		version={version}
+		on:clear={e => {
+
 			file = false;
 
 		    try {
@@ -153,7 +170,10 @@
 		on:drop={handleFilesSelect}
 	>
 		{#if settingsOpen}
-			<Settings settings={proxySettings} />
+			<Settings
+				settings={proxySettings}
+				version={version}
+			/>
 		{/if}
 
 		{#if file}
@@ -165,7 +185,12 @@
 				</div>
 			</div>
 		{:else}
-			<Dropfield />
+			<Dropfield
+				legacy={settings.theme}
+				on:select={e => {
+					alert("woop");
+				}}
+			/>
 		{/if}
 	</Desktop>
 </main>
@@ -227,7 +252,7 @@
 	main {
 		position: fixed;
 
-
+		box-sizing: border-box;
 		z-index: 2;
 		left: 0;
 		top: 0;
@@ -240,7 +265,7 @@
 
 		&.legacy {
 			border-radius: 0PX;
-			padding: 35px 5px 5px;
+			padding: 35px 10px 10px;
 		}
 	}
 

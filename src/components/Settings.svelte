@@ -1,9 +1,10 @@
 <script>
 	const { ipcRenderer } = require('electron');
 
-	let setWindow = "settings";
+	let setWindow = "recent";
 
-	export let settings = {};
+	export let settings = { zoom: 0.3 };
+	export let version;
 
 	let timeout;
 
@@ -46,13 +47,13 @@
 				<div class="setting">
 					<div class="setting-inner">
 						<div class="setting-title">
-							Zoom speed
+							Zoom amount
 						</div>
 						<div class="setting-control">
-							<span class="setting-control-info">1.5</span>
+							<span class="setting-control-info">{settings.zoom}</span>
 						</div>
 						<div class="setting-control-large">
-							<input type="range">
+							<input type="range" bind:value={settings.zoom} step="0.1" max="1" min="0.1">
 						</div>
 					</div>
 				</div>
@@ -75,6 +76,20 @@
 				<div class="setting">
 					<div class="setting-inner">
 						<div class="setting-title">
+							Legacy theme
+						</div>
+						<div class="setting-control">
+							<label class="switch">
+								<input type="checkbox" bind:checked={settings.theme}>
+								<span class="slider"></span>
+							</label>
+						</div>
+					</div>
+				</div>
+				<!--
+				<div class="setting">
+					<div class="setting-inner">
+						<div class="setting-title">
 							Legacy file select
 						</div>
 						<div class="setting-control">
@@ -88,20 +103,6 @@
 						Enable a separate button for clicking to select a file
 					</div>
 				</div>
-				<div class="setting">
-					<div class="setting-inner">
-						<div class="setting-title">
-							Legacy theme
-						</div>
-						<div class="setting-control">
-							<label class="switch">
-								<input type="checkbox" bind:checked={settings.theme}>
-								<span class="slider"></span>
-							</label>
-						</div>
-					</div>
-				</div>
-				<!--
 				<div class="setting">
 					<div class="setting-inner">
 						<div class="setting-title">
@@ -131,9 +132,11 @@
 			</div>
 		{:else if setWindow=="about"}
 			<div class="settings-container-inner">
-				<div class="settings-container-text">
-					v. 4.0.11
-				</div>
+				{#if version}
+					<div class="settings-container-text">
+						v. {version}
+					</div>
+				{/if}
 				<div class="settings-container-text">
 					source.dog &copy; 2018-2022
 				</div>
