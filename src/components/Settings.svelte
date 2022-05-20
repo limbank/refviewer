@@ -249,12 +249,12 @@
 				min-height: 20px;
 				min-width: 30px;
 				font-size: 12px;
-				font-weight: 600;
+				font-weight: 500;
 				text-align: center;
 				align-items: center;
 				justify-content: center;
 				background-color: #2F2E33;
-				color: #171719;
+				color: #B7B9BC;
 				border-radius: 3px;
 			}
 		}

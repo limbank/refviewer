@@ -198,11 +198,22 @@ app.on("activate", function () {
 ipcMain.on('file', (event, arg) => {
     //file processor
 
-    let file = fp.process(arg, event);
+    fp.process(arg, event);
 });
 
 ipcMain.on('selectfile', (event, arg) => {
-    //select by prompt
+    dialog.showOpenDialog(mainWindow, {
+        title: "Open image"
+    }).then(result => {
+        if (!result.cancelled && result.filePaths.length > 0) {
+            let files = result.filePaths;
+
+
+            fp.process(files[0], event);
+        }
+    }).catch(err => {
+        console.log(err);
+    });
 });
 /*
 let sg = {

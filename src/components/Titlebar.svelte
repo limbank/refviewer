@@ -32,7 +32,7 @@
 		{#if !settingsOpen}
 			{#if !fileSelected || overwrite}
 				<button class="control control-upload" on:click={e => { ipcRenderer.send('selectfile'); }}>
-			    	<i class="fas fa-upload"></i>
+			    	<i class="fas fa-file-upload"></i>
 				</button>
 				<button class="control control-screenshot">
 			    	<i class="fas fa-crosshairs"></i>

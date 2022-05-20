@@ -21,7 +21,7 @@
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.12";
+	let version = "4.0.13";
 
 	ipcRenderer.on('settings', (event, arg) => {
 		if (settings.zoom && settings.zoom != arg.zoom && instance) {
@@ -72,9 +72,19 @@
 	function handleFilesSelect(e) {
 		if (!settings.overwrite && file || settingsOpen) return;
 
+	    //console.log(e.dataTransfer.files);
+
 	    const acceptedFiles = Array.from(e.dataTransfer.files);
 
-	    ipcRenderer.send('file', acceptedFiles[0].path);
+	    if (acceptedFiles.length > 0) {
+	    	ipcRenderer.send('file', acceptedFiles[0].path);
+	    }
+	    else {
+		    let items = e.dataTransfer;
+		    console.log(items.getData("text"), );
+
+		    //HANDLE URL, DATA, AND WHATEVER ERRORS HERE
+	    }
 	}
 
 	img.onload = function(){
