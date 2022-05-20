@@ -1,6 +1,9 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+
+	const dispatch = createEventDispatcher();
 
 	export let content;
 	export let options = {
@@ -15,12 +18,19 @@
 	onMount(async () => {
 		timeout = setTimeout((argument) => {
 			show = true;
+			dispatch('open');
 		}, 1500);
 	});
 </script>
 
 {#if show}
-	<div id="tooltip" class="tooltip" use:content={options} transition:fade="{{ duration: 200 }}">
+	<div 
+		id="tooltip" 
+		class="tooltip" 
+		use:content={options} 
+		in:fade="{{ duration: 200 }}"
+		out:fade="{{ duration: 50 }}"
+	>
 		<div class="tooltip-content">
 			<slot></slot>
 		</div>
@@ -49,8 +59,8 @@
 		.arrow:before {
 		    content: '';
 		    position: absolute;
-		    width: 10px;
-		    height: 10px;
+		    width: 8px;
+		    height: 8px;
 		    top: 50%;
 		    left: 50%;
 		    transform: translate(-50%, -50%) rotate(45deg);

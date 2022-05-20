@@ -10,17 +10,32 @@
 	    strategy: 'fixed',
 	};
 
-	let [popperRef, popperContent] = createPopperActions(defTip);
+	let [menuRef, menuContent] = createPopperActions(defTip);
+	let [fileRef, fileContent] = createPopperActions(defTip);
 	let [popperRef2, popperContent2] = createPopperActions(defTip);
 
 	let tipContent;
   	let showTooltip = false;
+  	let tipActive = false;
   	let tiptext = "";
 
   	function showTip(text, content) {
   		tiptext = text;
   		tipContent = content;
-  		showTooltip = true;
+
+  		let int = setInterval(() => {
+  			if (!tipActive) {
+  				clearInterval(int);
+  				showTooltip = true;
+  			}
+  		}, 100);
+  	}
+
+  	function hideTip() {
+  		setTimeout(() => {
+  			tipActive = false;
+  		}, 50);
+  		showTooltip = false
   	}
 
 	const dispatch = createEventDispatcher();
@@ -44,10 +59,9 @@
 				settingsOpen = !settingsOpen;
 				dispatch('settingsOpen', settingsOpen);
 			}}
-
-			use:popperRef
-			on:mouseenter={() => showTip("Main menu", popperContent) }
-			on:mouseleave={() => showTooltip = false }
+			use:menuRef
+			on:mouseenter={() => showTip(settingsOpen?"Close menu":"Main menu", menuContent) }
+			on:mouseleave={hideTip}
 		>
 			{#if settingsOpen}
     			<i class="fas fa-times"></i>
@@ -57,7 +71,13 @@
 		</button>
 		{#if !settingsOpen}
 			{#if !fileSelected || overwrite}
-				<button class="control control-upload" on:click={e => { ipcRenderer.send('selectfile'); }}>
+				<button
+					class="control control-upload"
+					on:click={e => { ipcRenderer.send('selectfile'); }}
+					use:fileRef
+					on:mouseenter={() => showTip("Select file", fileContent) }
+					on:mouseleave={hideTip}
+				>
 			    	<i class="fas fa-file-upload"></i>
 				</button>
 				<button class="control control-screenshot">
@@ -94,7 +114,7 @@
 	</div>
 
 {#if showTooltip && !tips}
-	<Tooltip content={tipContent}>
+	<Tooltip content={tipContent} on:open={()=>tipActive=true}>
 		{tiptext}
 	</Tooltip>
 {/if}

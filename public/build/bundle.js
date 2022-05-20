@@ -491,108 +491,121 @@ var app = (function () {
         }
     }
     const null_transition = { duration: 0 };
-    function create_bidirectional_transition(node, fn, params, intro) {
+    function create_in_transition(node, fn, params) {
         let config = fn(node, params);
-        let t = intro ? 0 : 1;
-        let running_program = null;
-        let pending_program = null;
-        let animation_name = null;
-        function clear_animation() {
+        let running = false;
+        let animation_name;
+        let task;
+        let uid = 0;
+        function cleanup() {
             if (animation_name)
                 delete_rule(node, animation_name);
         }
-        function init(program, duration) {
-            const d = program.b - t;
-            duration *= Math.abs(d);
-            return {
-                a: t,
-                b: program.b,
-                d,
-                duration,
-                start: program.start,
-                end: program.start + duration,
-                group: program.group
-            };
-        }
-        function go(b) {
+        function go() {
             const { delay = 0, duration = 300, easing = identity, tick = noop$1, css } = config || null_transition;
-            const program = {
-                start: now$1() + delay,
-                b
-            };
-            if (!b) {
-                // @ts-ignore todo: improve typings
-                program.group = outros;
-                outros.r += 1;
-            }
-            if (running_program || pending_program) {
-                pending_program = program;
-            }
-            else {
-                // if this is an intro, and there's a delay, we need to do
-                // an initial tick and/or apply CSS animation immediately
-                if (css) {
-                    clear_animation();
-                    animation_name = create_rule(node, t, b, duration, delay, easing, css);
+            if (css)
+                animation_name = create_rule(node, 0, 1, duration, delay, easing, css, uid++);
+            tick(0, 1);
+            const start_time = now$1() + delay;
+            const end_time = start_time + duration;
+            if (task)
+                task.abort();
+            running = true;
+            add_render_callback(() => dispatch(node, true, 'start'));
+            task = loop(now => {
+                if (running) {
+                    if (now >= end_time) {
+                        tick(1, 0);
+                        dispatch(node, true, 'end');
+                        cleanup();
+                        return running = false;
+                    }
+                    if (now >= start_time) {
+                        const t = easing((now - start_time) / duration);
+                        tick(t, 1 - t);
+                    }
                 }
-                if (b)
-                    tick(0, 1);
-                running_program = init(program, duration);
-                add_render_callback(() => dispatch(node, b, 'start'));
-                loop(now => {
-                    if (pending_program && now > pending_program.start) {
-                        running_program = init(pending_program, duration);
-                        pending_program = null;
-                        dispatch(node, running_program.b, 'start');
-                        if (css) {
-                            clear_animation();
-                            animation_name = create_rule(node, t, running_program.b, running_program.duration, 0, easing, config.css);
-                        }
-                    }
-                    if (running_program) {
-                        if (now >= running_program.end) {
-                            tick(t = running_program.b, 1 - t);
-                            dispatch(node, running_program.b, 'end');
-                            if (!pending_program) {
-                                // we're done
-                                if (running_program.b) {
-                                    // intro — we can tidy up immediately
-                                    clear_animation();
-                                }
-                                else {
-                                    // outro — needs to be coordinated
-                                    if (!--running_program.group.r)
-                                        run_all(running_program.group.c);
-                                }
-                            }
-                            running_program = null;
-                        }
-                        else if (now >= running_program.start) {
-                            const p = now - running_program.start;
-                            t = running_program.a + running_program.d * easing(p / running_program.duration);
-                            tick(t, 1 - t);
-                        }
-                    }
-                    return !!(running_program || pending_program);
-                });
-            }
+                return running;
+            });
         }
+        let started = false;
         return {
-            run(b) {
+            start() {
+                if (started)
+                    return;
+                delete_rule(node);
                 if (is_function(config)) {
-                    wait().then(() => {
-                        // @ts-ignore
-                        config = config();
-                        go(b);
-                    });
+                    config = config();
+                    wait().then(go);
                 }
                 else {
-                    go(b);
+                    go();
                 }
             },
+            invalidate() {
+                started = false;
+            },
             end() {
-                clear_animation();
-                running_program = pending_program = null;
+                if (running) {
+                    cleanup();
+                    running = false;
+                }
+            }
+        };
+    }
+    function create_out_transition(node, fn, params) {
+        let config = fn(node, params);
+        let running = true;
+        let animation_name;
+        const group = outros;
+        group.r += 1;
+        function go() {
+            const { delay = 0, duration = 300, easing = identity, tick = noop$1, css } = config || null_transition;
+            if (css)
+                animation_name = create_rule(node, 1, 0, duration, delay, easing, css);
+            const start_time = now$1() + delay;
+            const end_time = start_time + duration;
+            add_render_callback(() => dispatch(node, false, 'start'));
+            loop(now => {
+                if (running) {
+                    if (now >= end_time) {
+                        tick(0, 1);
+                        dispatch(node, false, 'end');
+                        if (!--group.r) {
+                            // this will result in `end()` being called,
+                            // so we don't need to clean up here
+                            run_all(group.c);
+                        }
+                        return false;
+                    }
+                    if (now >= start_time) {
+                        const t = easing((now - start_time) / duration);
+                        tick(1 - t, t);
+                    }
+                }
+                return running;
+            });
+        }
+        if (is_function(config)) {
+            wait().then(() => {
+                // @ts-ignore
+                config = config();
+                go();
+            });
+        }
+        else {
+            go();
+        }
+        return {
+            end(reset) {
+                if (reset && config.tick) {
+                    config.tick(1, 0);
+                }
+                if (running) {
+                    if (animation_name)
+                        delete_rule(node, animation_name);
+                    running = false;
+                }
             }
         };
     }
@@ -2846,14 +2859,15 @@ var app = (function () {
     /* src\components\Tooltip.svelte generated by Svelte v3.38.3 */
     const file$7 = "src\\components\\Tooltip.svelte";
 
-    // (22:0) {#if show}
+    // (26:0) {#if show}
     function create_if_block$5(ctx) {
     	let div2;
     	let div0;
     	let t;
     	let div1;
     	let content_action;
-    	let div2_transition;
+    	let div2_intro;
+    	let div2_outro;
     	let current;
     	let mounted;
     	let dispose;
@@ -2868,14 +2882,14 @@ var app = (function () {
     			t = space();
     			div1 = element("div");
     			attr_dev(div0, "class", "tooltip-content");
-    			add_location(div0, file$7, 23, 2, 473);
+    			add_location(div0, file$7, 33, 2, 635);
     			attr_dev(div1, "id", "arrow");
     			attr_dev(div1, "class", "arrow");
     			attr_dev(div1, "data-popper-arrow", "");
-    			add_location(div1, file$7, 26, 2, 534);
+    			add_location(div1, file$7, 36, 2, 696);
     			attr_dev(div2, "id", "tooltip");
     			attr_dev(div2, "class", "tooltip");
-    			add_location(div2, file$7, 22, 1, 375);
+    			add_location(div2, file$7, 26, 1, 493);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -2908,22 +2922,23 @@ var app = (function () {
     			transition_in(default_slot, local);
 
     			add_render_callback(() => {
-    				if (!div2_transition) div2_transition = create_bidirectional_transition(div2, fade, { duration: 200 }, true);
-    				div2_transition.run(1);
+    				if (div2_outro) div2_outro.end(1);
+    				if (!div2_intro) div2_intro = create_in_transition(div2, fade, { duration: 200 });
+    				div2_intro.start();
     			});
 
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(default_slot, local);
-    			if (!div2_transition) div2_transition = create_bidirectional_transition(div2, fade, { duration: 200 }, false);
-    			div2_transition.run(0);
+    			if (div2_intro) div2_intro.invalidate();
+    			div2_outro = create_out_transition(div2, fade, { duration: 50 });
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div2);
     			if (default_slot) default_slot.d(detaching);
-    			if (detaching && div2_transition) div2_transition.end();
+    			if (detaching && div2_outro) div2_outro.end();
     			mounted = false;
     			dispose();
     		}
@@ -2933,7 +2948,7 @@ var app = (function () {
     		block,
     		id: create_if_block$5.name,
     		type: "if",
-    		source: "(22:0) {#if show}",
+    		source: "(26:0) {#if show}",
     		ctx
     	});
 
@@ -3011,6 +3026,7 @@ var app = (function () {
     function instance$7($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Tooltip", slots, ['default']);
+    	const dispatch = createEventDispatcher();
     	let { content } = $$props;
 
     	let { options = {
@@ -3029,6 +3045,7 @@ var app = (function () {
     		timeout = setTimeout(
     			argument => {
     				$$invalidate(2, show = true);
+    				dispatch("open");
     			},
     			1500
     		);
@@ -3047,8 +3064,10 @@ var app = (function () {
     	};
 
     	$$self.$capture_state = () => ({
+    		createEventDispatcher,
     		onMount,
     		fade,
+    		dispatch,
     		content,
     		options,
     		timeout,
@@ -3109,7 +3128,7 @@ var app = (function () {
     /* src\components\Titlebar.svelte generated by Svelte v3.38.3 */
     const file$6 = "src\\components\\Titlebar.svelte";
 
-    // (54:3) {:else}
+    // (68:3) {:else}
     function create_else_block$1(ctx) {
     	let i;
 
@@ -3117,7 +3136,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-bars");
-    			add_location(i, file$6, 54, 7, 1374);
+    			add_location(i, file$6, 68, 7, 1690);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -3131,14 +3150,14 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(54:3) {:else}",
+    		source: "(68:3) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (52:3) {#if settingsOpen}
+    // (66:3) {#if settingsOpen}
     function create_if_block_5(ctx) {
     	let i;
 
@@ -3146,7 +3165,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$6, 52, 7, 1325);
+    			add_location(i, file$6, 66, 7, 1641);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -3160,14 +3179,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(52:3) {#if settingsOpen}",
+    		source: "(66:3) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (58:2) {#if !settingsOpen}
+    // (72:2) {#if !settingsOpen}
     function create_if_block_2$1(ctx) {
     	let t;
     	let if_block1_anchor;
@@ -3226,14 +3245,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(58:2) {#if !settingsOpen}",
+    		source: "(72:2) {#if !settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (59:3) {#if !fileSelected || overwrite}
+    // (73:3) {#if !fileSelected || overwrite}
     function create_if_block_4(ctx) {
     	let button0;
     	let i0;
@@ -3251,13 +3270,13 @@ var app = (function () {
     			button1 = element("button");
     			i1 = element("i");
     			attr_dev(i0, "class", "fas fa-file-upload");
-    			add_location(i0, file$6, 60, 8, 1591);
+    			add_location(i0, file$6, 80, 8, 2038);
     			attr_dev(button0, "class", "control control-upload svelte-2rbt48");
-    			add_location(button0, file$6, 59, 4, 1490);
+    			add_location(button0, file$6, 73, 4, 1806);
     			attr_dev(i1, "class", "fas fa-crosshairs");
-    			add_location(i1, file$6, 63, 8, 1699);
+    			add_location(i1, file$6, 83, 8, 2146);
     			attr_dev(button1, "class", "control control-screenshot svelte-2rbt48");
-    			add_location(button1, file$6, 62, 4, 1646);
+    			add_location(button1, file$6, 82, 4, 2093);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button0, anchor);
@@ -3267,7 +3286,13 @@ var app = (function () {
     			append_dev(button1, i1);
 
     			if (!mounted) {
-    				dispose = listen_dev(button0, "click", /*click_handler_1*/ ctx[20], false, false, false);
+    				dispose = [
+    					listen_dev(button0, "click", /*click_handler_1*/ ctx[23], false, false, false),
+    					action_destroyer(/*fileRef*/ ctx[14].call(null, button0)),
+    					listen_dev(button0, "mouseenter", /*mouseenter_handler_1*/ ctx[24], false, false, false),
+    					listen_dev(button0, "mouseleave", /*hideTip*/ ctx[19], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
@@ -3277,7 +3302,7 @@ var app = (function () {
     			if (detaching) detach_dev(t);
     			if (detaching) detach_dev(button1);
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -3285,14 +3310,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(59:3) {#if !fileSelected || overwrite}",
+    		source: "(73:3) {#if !fileSelected || overwrite}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (67:3) {#if fileSelected}
+    // (87:3) {#if fileSelected}
     function create_if_block_3$1(ctx) {
     	let button;
     	let i;
@@ -3304,16 +3329,16 @@ var app = (function () {
     			button = element("button");
     			i = element("i");
     			attr_dev(i, "class", "fas fa-trash");
-    			add_location(i, file$6, 68, 8, 1873);
+    			add_location(i, file$6, 88, 8, 2320);
     			attr_dev(button, "class", "control control-clear svelte-2rbt48");
-    			add_location(button, file$6, 67, 4, 1786);
+    			add_location(button, file$6, 87, 4, 2233);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
     			append_dev(button, i);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_2*/ ctx[21], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler_2*/ ctx[25], false, false, false);
     				mounted = true;
     			}
     		},
@@ -3329,14 +3354,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3$1.name,
     		type: "if",
-    		source: "(67:3) {#if fileSelected}",
+    		source: "(87:3) {#if fileSelected}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (75:2) {#if version}
+    // (95:2) {#if version}
     function create_if_block_1$2(ctx) {
     	let span;
     	let t0;
@@ -3348,7 +3373,7 @@ var app = (function () {
     			t0 = text("v. ");
     			t1 = text(/*version*/ ctx[5]);
     			attr_dev(span, "class", "version svelte-2rbt48");
-    			add_location(span, file$6, 75, 3, 1997);
+    			add_location(span, file$6, 95, 3, 2444);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -3356,7 +3381,7 @@ var app = (function () {
     			append_dev(span, t1);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*version*/ 32) set_data_dev(t1, /*version*/ ctx[5]);
+    			if (dirty[0] & /*version*/ 32) set_data_dev(t1, /*version*/ ctx[5]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(span);
@@ -3367,14 +3392,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(75:2) {#if version}",
+    		source: "(95:2) {#if version}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (96:0) {#if showTooltip && !tips}
+    // (116:0) {#if showTooltip && !tips}
     function create_if_block$4(ctx) {
     	let tooltip;
     	let current;
@@ -3388,6 +3413,8 @@ var app = (function () {
     			$$inline: true
     		});
 
+    	tooltip.$on("open", /*open_handler*/ ctx[32]);
+
     	const block = {
     		c: function create() {
     			create_component(tooltip.$$.fragment);
@@ -3398,9 +3425,9 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const tooltip_changes = {};
-    			if (dirty & /*tipContent*/ 64) tooltip_changes.content = /*tipContent*/ ctx[6];
+    			if (dirty[0] & /*tipContent*/ 64) tooltip_changes.content = /*tipContent*/ ctx[6];
 
-    			if (dirty & /*$$scope, tiptext*/ 536871168) {
+    			if (dirty[0] & /*tiptext*/ 512 | dirty[1] & /*$$scope*/ 8) {
     				tooltip_changes.$$scope = { dirty, ctx };
     			}
 
@@ -3424,26 +3451,26 @@ var app = (function () {
     		block,
     		id: create_if_block$4.name,
     		type: "if",
-    		source: "(96:0) {#if showTooltip && !tips}",
+    		source: "(116:0) {#if showTooltip && !tips}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (97:1) <Tooltip content={tipContent}>
+    // (117:1) <Tooltip content={tipContent} on:open={()=>tipActive=true}>
     function create_default_slot$1(ctx) {
     	let t;
 
     	const block = {
     		c: function create() {
-    			t = text(/*tiptext*/ ctx[8]);
+    			t = text(/*tiptext*/ ctx[9]);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*tiptext*/ 256) set_data_dev(t, /*tiptext*/ ctx[8]);
+    			if (dirty[0] & /*tiptext*/ 512) set_data_dev(t, /*tiptext*/ ctx[9]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t);
@@ -3454,7 +3481,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$1.name,
     		type: "slot",
-    		source: "(97:1) <Tooltip content={tipContent}>",
+    		source: "(117:1) <Tooltip content={tipContent} on:open={()=>tipActive=true}>",
     		ctx
     	});
 
@@ -3522,31 +3549,31 @@ var app = (function () {
     			t6 = space();
     			if (if_block3) if_block3.c();
     			attr_dev(button0, "class", "control control-menu svelte-2rbt48");
-    			add_location(button0, file$6, 40, 2, 1010);
+    			add_location(button0, file$6, 55, 2, 1325);
     			attr_dev(div0, "class", "titlebar-group svelte-2rbt48");
-    			add_location(div0, file$6, 39, 1, 978);
+    			add_location(div0, file$6, 54, 1, 1293);
     			attr_dev(i0, "class", "fas fa-thumbtack svelte-2rbt48");
-    			add_location(i0, file$6, 82, 6, 2290);
+    			add_location(i0, file$6, 102, 6, 2737);
     			attr_dev(button1, "class", "control control-pin svelte-2rbt48");
-    			toggle_class(button1, "pinned", /*pinned*/ ctx[9]);
-    			add_location(button1, file$6, 77, 2, 2051);
+    			toggle_class(button1, "pinned", /*pinned*/ ctx[10]);
+    			add_location(button1, file$6, 97, 2, 2498);
     			attr_dev(i1, "class", "fas fa-minus");
-    			add_location(i1, file$6, 85, 6, 2448);
+    			add_location(i1, file$6, 105, 6, 2895);
     			attr_dev(button2, "class", "control control-minimize svelte-2rbt48");
-    			add_location(button2, file$6, 84, 2, 2339);
+    			add_location(button2, file$6, 104, 2, 2786);
     			attr_dev(i2, "class", "fas fa-plus");
-    			add_location(i2, file$6, 88, 6, 2601);
+    			add_location(i2, file$6, 108, 6, 3048);
     			attr_dev(button3, "class", "control control-restore svelte-2rbt48");
-    			add_location(button3, file$6, 87, 2, 2493);
+    			add_location(button3, file$6, 107, 2, 2940);
     			attr_dev(i3, "class", "fas fa-times");
-    			add_location(i3, file$6, 91, 6, 2748);
+    			add_location(i3, file$6, 111, 6, 3195);
     			attr_dev(button4, "class", "control control-close svelte-2rbt48");
-    			add_location(button4, file$6, 90, 2, 2645);
+    			add_location(button4, file$6, 110, 2, 3092);
     			attr_dev(div1, "class", "titlebar-group svelte-2rbt48");
-    			add_location(div1, file$6, 73, 1, 1947);
+    			add_location(div1, file$6, 93, 1, 2394);
     			attr_dev(div2, "class", "titlebar svelte-2rbt48");
     			toggle_class(div2, "legacy", /*legacy*/ ctx[2]);
-    			add_location(div2, file$6, 38, 0, 931);
+    			add_location(div2, file$6, 53, 0, 1246);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3579,23 +3606,23 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*click_handler*/ ctx[17], false, false, false),
-    					action_destroyer(/*popperRef*/ ctx[11].call(null, button0)),
-    					listen_dev(button0, "mouseenter", /*mouseenter_handler*/ ctx[18], false, false, false),
-    					listen_dev(button0, "mouseleave", /*mouseleave_handler*/ ctx[19], false, false, false),
-    					action_destroyer(/*popperRef2*/ ctx[13].call(null, button1)),
-    					listen_dev(button1, "mouseenter", /*mouseenter_handler_1*/ ctx[22], false, false, false),
-    					listen_dev(button1, "mouseleave", /*mouseleave_handler_1*/ ctx[23], false, false, false),
-    					listen_dev(button1, "click", /*click_handler_3*/ ctx[24], false, false, false),
-    					listen_dev(button2, "click", /*click_handler_4*/ ctx[25], false, false, false),
-    					listen_dev(button3, "click", /*click_handler_5*/ ctx[26], false, false, false),
-    					listen_dev(button4, "click", /*click_handler_6*/ ctx[27], false, false, false)
+    					listen_dev(button0, "click", /*click_handler*/ ctx[21], false, false, false),
+    					action_destroyer(/*menuRef*/ ctx[12].call(null, button0)),
+    					listen_dev(button0, "mouseenter", /*mouseenter_handler*/ ctx[22], false, false, false),
+    					listen_dev(button0, "mouseleave", /*hideTip*/ ctx[19], false, false, false),
+    					action_destroyer(/*popperRef2*/ ctx[16].call(null, button1)),
+    					listen_dev(button1, "mouseenter", /*mouseenter_handler_2*/ ctx[26], false, false, false),
+    					listen_dev(button1, "mouseleave", /*mouseleave_handler*/ ctx[27], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_3*/ ctx[28], false, false, false),
+    					listen_dev(button2, "click", /*click_handler_4*/ ctx[29], false, false, false),
+    					listen_dev(button3, "click", /*click_handler_5*/ ctx[30], false, false, false),
+    					listen_dev(button4, "click", /*click_handler_6*/ ctx[31], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
+    		p: function update(ctx, dirty) {
     			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
     				if_block0.d(1);
     				if_block0 = current_block_type(ctx);
@@ -3632,15 +3659,15 @@ var app = (function () {
     				if_block2 = null;
     			}
 
-    			if (dirty & /*pinned*/ 512) {
-    				toggle_class(button1, "pinned", /*pinned*/ ctx[9]);
+    			if (dirty[0] & /*pinned*/ 1024) {
+    				toggle_class(button1, "pinned", /*pinned*/ ctx[10]);
     			}
 
     			if (/*showTooltip*/ ctx[7] && !/*tips*/ ctx[3]) {
     				if (if_block3) {
     					if_block3.p(ctx, dirty);
 
-    					if (dirty & /*showTooltip, tips*/ 136) {
+    					if (dirty[0] & /*showTooltip, tips*/ 136) {
     						transition_in(if_block3, 1);
     					}
     				} else {
@@ -3659,7 +3686,7 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (dirty & /*legacy*/ 4) {
+    			if (dirty[0] & /*legacy*/ 4) {
     				toggle_class(div2, "legacy", /*legacy*/ ctx[2]);
     			}
     		},
@@ -3699,16 +3726,38 @@ var app = (function () {
     	validate_slots("Titlebar", slots, []);
     	const { ipcRenderer } = require("electron");
     	let defTip = { placement: "bottom", strategy: "fixed" };
-    	let [popperRef, popperContent] = createPopperActions(defTip);
+    	let [menuRef, menuContent] = createPopperActions(defTip);
+    	let [fileRef, fileContent] = createPopperActions(defTip);
     	let [popperRef2, popperContent2] = createPopperActions(defTip);
     	let tipContent;
     	let showTooltip = false;
+    	let tipActive = false;
     	let tiptext = "";
 
     	function showTip(text, content) {
-    		$$invalidate(8, tiptext = text);
+    		$$invalidate(9, tiptext = text);
     		$$invalidate(6, tipContent = content);
-    		$$invalidate(7, showTooltip = true);
+
+    		let int = setInterval(
+    			() => {
+    				if (!tipActive) {
+    					clearInterval(int);
+    					$$invalidate(7, showTooltip = true);
+    				}
+    			},
+    			100
+    		);
+    	}
+
+    	function hideTip() {
+    		setTimeout(
+    			() => {
+    				$$invalidate(8, tipActive = false);
+    			},
+    			50
+    		);
+
+    		$$invalidate(7, showTooltip = false);
     	}
 
     	const dispatch = createEventDispatcher();
@@ -3721,7 +3770,7 @@ var app = (function () {
     	let pinned = false;
 
     	ipcRenderer.on("pin", (event, arg) => {
-    		$$invalidate(9, pinned = arg);
+    		$$invalidate(10, pinned = arg);
     	});
 
     	const writable_props = ["fileSelected", "settingsOpen", "legacy", "tips", "overwrite", "version"];
@@ -3735,19 +3784,20 @@ var app = (function () {
     		dispatch("settingsOpen", settingsOpen);
     	};
 
-    	const mouseenter_handler = () => showTip("Main menu", popperContent);
-    	const mouseleave_handler = () => $$invalidate(7, showTooltip = false);
+    	const mouseenter_handler = () => showTip(settingsOpen ? "Close menu" : "Main menu", menuContent);
 
     	const click_handler_1 = e => {
     		ipcRenderer.send("selectfile");
     	};
 
+    	const mouseenter_handler_1 = () => showTip("Select file", fileContent);
+
     	const click_handler_2 = e => {
     		dispatch("clear");
     	};
 
-    	const mouseenter_handler_1 = () => showTip("Test", popperContent2);
-    	const mouseleave_handler_1 = () => $$invalidate(7, showTooltip = false);
+    	const mouseenter_handler_2 = () => showTip("Test", popperContent2);
+    	const mouseleave_handler = () => $$invalidate(7, showTooltip = false);
 
     	const click_handler_3 = e => {
     		ipcRenderer.send("window", "pin");
@@ -3765,6 +3815,8 @@ var app = (function () {
     		ipcRenderer.send("window", "close");
     	};
 
+    	const open_handler = () => $$invalidate(8, tipActive = true);
+
     	$$self.$$set = $$props => {
     		if ("fileSelected" in $$props) $$invalidate(1, fileSelected = $$props.fileSelected);
     		if ("settingsOpen" in $$props) $$invalidate(0, settingsOpen = $$props.settingsOpen);
@@ -3780,14 +3832,18 @@ var app = (function () {
     		Tooltip,
     		ipcRenderer,
     		defTip,
-    		popperRef,
-    		popperContent,
+    		menuRef,
+    		menuContent,
+    		fileRef,
+    		fileContent,
     		popperRef2,
     		popperContent2,
     		tipContent,
     		showTooltip,
+    		tipActive,
     		tiptext,
     		showTip,
+    		hideTip,
     		dispatch,
     		fileSelected,
     		settingsOpen,
@@ -3800,20 +3856,23 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("defTip" in $$props) defTip = $$props.defTip;
-    		if ("popperRef" in $$props) $$invalidate(11, popperRef = $$props.popperRef);
-    		if ("popperContent" in $$props) $$invalidate(12, popperContent = $$props.popperContent);
-    		if ("popperRef2" in $$props) $$invalidate(13, popperRef2 = $$props.popperRef2);
-    		if ("popperContent2" in $$props) $$invalidate(14, popperContent2 = $$props.popperContent2);
+    		if ("menuRef" in $$props) $$invalidate(12, menuRef = $$props.menuRef);
+    		if ("menuContent" in $$props) $$invalidate(13, menuContent = $$props.menuContent);
+    		if ("fileRef" in $$props) $$invalidate(14, fileRef = $$props.fileRef);
+    		if ("fileContent" in $$props) $$invalidate(15, fileContent = $$props.fileContent);
+    		if ("popperRef2" in $$props) $$invalidate(16, popperRef2 = $$props.popperRef2);
+    		if ("popperContent2" in $$props) $$invalidate(17, popperContent2 = $$props.popperContent2);
     		if ("tipContent" in $$props) $$invalidate(6, tipContent = $$props.tipContent);
     		if ("showTooltip" in $$props) $$invalidate(7, showTooltip = $$props.showTooltip);
-    		if ("tiptext" in $$props) $$invalidate(8, tiptext = $$props.tiptext);
+    		if ("tipActive" in $$props) $$invalidate(8, tipActive = $$props.tipActive);
+    		if ("tiptext" in $$props) $$invalidate(9, tiptext = $$props.tiptext);
     		if ("fileSelected" in $$props) $$invalidate(1, fileSelected = $$props.fileSelected);
     		if ("settingsOpen" in $$props) $$invalidate(0, settingsOpen = $$props.settingsOpen);
     		if ("legacy" in $$props) $$invalidate(2, legacy = $$props.legacy);
     		if ("tips" in $$props) $$invalidate(3, tips = $$props.tips);
     		if ("overwrite" in $$props) $$invalidate(4, overwrite = $$props.overwrite);
     		if ("version" in $$props) $$invalidate(5, version = $$props.version);
-    		if ("pinned" in $$props) $$invalidate(9, pinned = $$props.pinned);
+    		if ("pinned" in $$props) $$invalidate(10, pinned = $$props.pinned);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -3829,26 +3888,31 @@ var app = (function () {
     		version,
     		tipContent,
     		showTooltip,
+    		tipActive,
     		tiptext,
     		pinned,
     		ipcRenderer,
-    		popperRef,
-    		popperContent,
+    		menuRef,
+    		menuContent,
+    		fileRef,
+    		fileContent,
     		popperRef2,
     		popperContent2,
     		showTip,
+    		hideTip,
     		dispatch,
     		click_handler,
     		mouseenter_handler,
-    		mouseleave_handler,
     		click_handler_1,
-    		click_handler_2,
     		mouseenter_handler_1,
-    		mouseleave_handler_1,
+    		click_handler_2,
+    		mouseenter_handler_2,
+    		mouseleave_handler,
     		click_handler_3,
     		click_handler_4,
     		click_handler_5,
-    		click_handler_6
+    		click_handler_6,
+    		open_handler
     	];
     }
 
@@ -3856,14 +3920,22 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$6, create_fragment$7, safe_not_equal, {
-    			fileSelected: 1,
-    			settingsOpen: 0,
-    			legacy: 2,
-    			tips: 3,
-    			overwrite: 4,
-    			version: 5
-    		});
+    		init(
+    			this,
+    			options,
+    			instance$6,
+    			create_fragment$7,
+    			safe_not_equal,
+    			{
+    				fileSelected: 1,
+    				settingsOpen: 0,
+    				legacy: 2,
+    				tips: 3,
+    				overwrite: 4,
+    				version: 5
+    			},
+    			[-1, -1]
+    		);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -4938,9 +5010,10 @@ var app = (function () {
     }
 
     /* src\components\Dropfield.svelte generated by Svelte v3.38.3 */
+
     const file$2 = "src\\components\\Dropfield.svelte";
 
-    // (11:3) {#if !legacy}
+    // (8:3) {#if !legacy}
     function create_if_block$1(ctx) {
     	let div;
     	let i;
@@ -4950,9 +5023,9 @@ var app = (function () {
     			div = element("div");
     			i = element("i");
     			attr_dev(i, "class", "fas fa-upload");
-    			add_location(i, file$2, 12, 5, 331);
+    			add_location(i, file$2, 9, 5, 235);
     			attr_dev(div, "class", "dropfield-inner-icon svelte-165i5wg");
-    			add_location(div, file$2, 11, 4, 290);
+    			add_location(div, file$2, 8, 4, 194);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4967,7 +5040,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(11:3) {#if !legacy}",
+    		source: "(8:3) {#if !legacy}",
     		ctx
     	});
 
@@ -4994,16 +5067,16 @@ var app = (function () {
     			div0 = element("div");
     			div0.textContent = "Drop image here";
     			attr_dev(div0, "class", "dropfield-inner-text-line");
-    			add_location(div0, file$2, 16, 4, 427);
+    			add_location(div0, file$2, 13, 4, 331);
     			attr_dev(div1, "class", "dropfield-inner-text svelte-165i5wg");
-    			add_location(div1, file$2, 15, 3, 387);
+    			add_location(div1, file$2, 12, 3, 291);
     			attr_dev(div2, "class", "dropfield-inner svelte-165i5wg");
-    			add_location(div2, file$2, 9, 2, 237);
+    			add_location(div2, file$2, 6, 2, 141);
     			attr_dev(div3, "class", "dropfield-inner-wrapper svelte-165i5wg");
-    			add_location(div3, file$2, 8, 1, 196);
+    			add_location(div3, file$2, 5, 1, 100);
     			attr_dev(div4, "class", "dropfield svelte-165i5wg");
     			toggle_class(div4, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div4, file$2, 7, 0, 148);
+    			add_location(div4, file$2, 4, 0, 52);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5056,7 +5129,6 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Dropfield", slots, []);
     	let { legacy = false } = $$props;
-    	const dispatch = createEventDispatcher();
     	const writable_props = ["legacy"];
 
     	Object.keys($$props).forEach(key => {
@@ -5067,7 +5139,7 @@ var app = (function () {
     		if ("legacy" in $$props) $$invalidate(0, legacy = $$props.legacy);
     	};
 
-    	$$self.$capture_state = () => ({ createEventDispatcher, legacy, dispatch });
+    	$$self.$capture_state = () => ({ legacy });
 
     	$$self.$inject_state = $$props => {
     		if ("legacy" in $$props) $$invalidate(0, legacy = $$props.legacy);

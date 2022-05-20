@@ -1,8 +1,5 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
-
 	export let legacy = false;
-	const dispatch = createEventDispatcher();
 </script>
 
 <div class="dropfield" class:legacy={legacy}>
