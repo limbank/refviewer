@@ -18,12 +18,13 @@
   	let showTooltip = false;
   	let tipActive = false;
   	let tiptext = "";
+  	let int;
 
   	function showTip(text, content) {
   		tiptext = text;
   		tipContent = content;
 
-  		let int = setInterval(() => {
+  		int = setInterval(() => {
   			if (!tipActive) {
   				clearInterval(int);
   				showTooltip = true;
@@ -32,10 +33,11 @@
   	}
 
   	function hideTip() {
+  		showTooltip = false
+		clearInterval(int);
   		setTimeout(() => {
   			tipActive = false;
   		}, 50);
-  		showTooltip = false
   	}
 
 	const dispatch = createEventDispatcher();
