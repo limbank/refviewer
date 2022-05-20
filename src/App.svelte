@@ -155,6 +155,7 @@
 		settingsOpen={settingsOpen}
 		overwrite={settings.overwrite}
 		legacy={settings.theme}
+		tips={settings.tooltips}
 		version={version}
 		on:clear={e => {
 

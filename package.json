@@ -33,6 +33,7 @@
         "@panzoom/panzoom": "^4.4.4",
         "fs-extra": "^10.1.0",
         "image-data-uri": "^2.0.1",
-        "svelte-canvas": "^0.7.1"
+        "svelte-canvas": "^0.7.1",
+        "svelte-popperjs": "^1.2.10"
     }
 }

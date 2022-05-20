@@ -86,6 +86,19 @@
 						</div>
 					</div>
 				</div>
+				<div class="setting">
+					<div class="setting-inner">
+						<div class="setting-title">
+							Disable tooltips
+						</div>
+						<div class="setting-control">
+							<label class="switch">
+								<input type="checkbox" bind:checked={settings.tooltips}>
+								<span class="slider"></span>
+							</label>
+						</div>
+					</div>
+				</div>
 				<!--
 				<div class="setting">
 					<div class="setting-inner">

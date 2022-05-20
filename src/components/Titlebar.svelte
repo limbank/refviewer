@@ -1,28 +1,54 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
+	import { createPopperActions } from 'svelte-popperjs';
+	import Tooltip from './Tooltip.svelte';
 
 	const { ipcRenderer } = require('electron');
+
+	let defTip = {
+	    placement: 'bottom',
+	    strategy: 'fixed',
+	};
+
+	let [popperRef, popperContent] = createPopperActions(defTip);
+	let [popperRef2, popperContent2] = createPopperActions(defTip);
+
+	let tipContent;
+  	let showTooltip = false;
+  	let tiptext = "";
+
+  	function showTip(text, content) {
+  		tiptext = text;
+  		tipContent = content;
+  		showTooltip = true;
+  	}
 
 	const dispatch = createEventDispatcher();
 
 	export let fileSelected = false;
 	export let settingsOpen = false;
 	export let legacy = false;
+	export let tips = false;
 	export let overwrite = false;
 	export let version;
 	let pinned = false;
 
-	ipcRenderer.on('pin', (event, arg) => {
-  		pinned = arg;
-	});
+	ipcRenderer.on('pin', (event, arg) => { pinned = arg; });
 </script>
 
 <div class="titlebar" class:legacy={legacy}>
 	<div class="titlebar-group">
-		<button class="control control-menu" on:click={e => {
-			settingsOpen = !settingsOpen;
-			dispatch('settingsOpen', settingsOpen);
-		}}>
+		<button
+			class="control control-menu"
+			on:click={e => {
+				settingsOpen = !settingsOpen;
+				dispatch('settingsOpen', settingsOpen);
+			}}
+
+			use:popperRef
+			on:mouseenter={() => showTip("Main menu", popperContent) }
+			on:mouseleave={() => showTooltip = false }
+		>
 			{#if settingsOpen}
     			<i class="fas fa-times"></i>
 			{:else}
@@ -49,7 +75,11 @@
 		{#if version}
 			<span class="version">v. {version}</span>
 		{/if}
-		<button class="control control-pin" class:pinned on:click={e => { ipcRenderer.send('window', 'pin'); }}>
+		<button class="control control-pin"
+
+			use:popperRef2
+			on:mouseenter={() => showTip("Test", popperContent2) }
+			on:mouseleave={() => showTooltip = false } class:pinned on:click={e => { ipcRenderer.send('window', 'pin'); }}>
 	    	<i class="fas fa-thumbtack"></i>
 		</button>
 		<button class="control control-minimize" on:click={e => { ipcRenderer.send('window', 'minimize'); }}>
@@ -62,6 +92,12 @@
 	    	<i class="fas fa-times"></i>
 		</button>
 	</div>
+
+{#if showTooltip && !tips}
+	<Tooltip content={tipContent}>
+		{tiptext}
+	</Tooltip>
+{/if}
 </div>
 
 <style lang="scss">
@@ -71,7 +107,7 @@
 		top: 0;
 		right: 0;
 		left: 0;
-		height: 20px;
+		height: 30px;
 		display: flex;
 		justify-content: space-between;
 	   	user-select: none;
