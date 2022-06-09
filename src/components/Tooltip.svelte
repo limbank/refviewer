@@ -1,9 +1,6 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-
-	const dispatch = createEventDispatcher();
 
 	export let content;
 	export let options = {
@@ -16,10 +13,9 @@
 	let show;
 
 	onMount(async () => {
-		timeout = setTimeout((argument) => {
+		setTimeout(() => {
 			show = true;
-			dispatch('open');
-		}, 1500);
+		}, 1200);
 	});
 </script>
 

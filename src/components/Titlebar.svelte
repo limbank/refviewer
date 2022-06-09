@@ -1,44 +1,8 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import { createPopperActions } from 'svelte-popperjs';
-	import Tooltip from './Tooltip.svelte';
+	import Control from './Control.svelte';
 
 	const { ipcRenderer } = require('electron');
-
-	let defTip = {
-	    placement: 'bottom',
-	    strategy: 'fixed',
-	};
-
-	let [menuRef, menuContent] = createPopperActions(defTip);
-	let [fileRef, fileContent] = createPopperActions(defTip);
-	let [popperRef2, popperContent2] = createPopperActions(defTip);
-
-	let tipContent;
-  	let showTooltip = false;
-  	let tipActive = false;
-  	let tiptext = "";
-  	let int;
-
-  	function showTip(text, content) {
-  		tiptext = text;
-  		tipContent = content;
-
-  		int = setInterval(() => {
-  			if (!tipActive) {
-  				clearInterval(int);
-  				showTooltip = true;
-  			}
-  		}, 100);
-  	}
-
-  	function hideTip() {
-  		showTooltip = false
-		clearInterval(int);
-  		setTimeout(() => {
-  			tipActive = false;
-  		}, 50);
-  	}
 
 	const dispatch = createEventDispatcher();
 
@@ -55,15 +19,17 @@
 
 <div class="titlebar" class:legacy={legacy}>
 	<div class="titlebar-group">
+		<!--
 		<button
 			class="control control-menu"
 			on:click={e => {
 				settingsOpen = !settingsOpen;
 				dispatch('settingsOpen', settingsOpen);
 			}}
-			use:menuRef
-			on:mouseenter={() => showTip(settingsOpen?"Close menu":"Main menu", menuContent) }
-			on:mouseleave={hideTip}
+
+			use:popperRef
+			on:mouseenter={() => showTooltip = true}
+			on:mouseleave={() => showTooltip = false}
 		>
 			{#if settingsOpen}
     			<i class="fas fa-times"></i>
@@ -71,25 +37,56 @@
     			<i class="fas fa-bars"></i>
 			{/if}
 		</button>
+		-->
+
+		<Control
+			tips={tips}
+			legacy={legacy}
+			size="12px"
+			tiptext={settingsOpen?"Close menu":"Main menu"}
+			on:click={e => {
+				settingsOpen = !settingsOpen;
+				dispatch('settingsOpen', settingsOpen);
+			}}
+		>
+			{#if settingsOpen}
+    			<i class="fas fa-times"></i>
+			{:else}
+    			<i class="fas fa-bars"></i>
+			{/if}
+		</Control>
+
 		{#if !settingsOpen}
 			{#if !fileSelected || overwrite}
-				<button
-					class="control control-upload"
+				<Control
+					tips={tips}
+					legacy={legacy}
+					size="12px"
+					tiptext="Select file"
 					on:click={e => { ipcRenderer.send('selectfile'); }}
-					use:fileRef
-					on:mouseenter={() => showTip("Select file", fileContent) }
-					on:mouseleave={hideTip}
 				>
-			    	<i class="fas fa-file-upload"></i>
-				</button>
-				<button class="control control-screenshot">
+					<i class="fas fa-file-upload"></i>
+				</Control>
+
+				<Control
+					tips={tips}
+					legacy={legacy}
+					size="12px"
+					tiptext="Screenshot"
+				>
 			    	<i class="fas fa-crosshairs"></i>
-				</button>
+				</Control>
 			{/if}
 			{#if fileSelected}
-				<button class="control control-clear" on:click={e => { dispatch('clear'); }}>
+				<Control
+					tips={tips}
+					legacy={legacy}
+					size="12px"
+					tiptext="Clear"
+					on:click={e => { dispatch('clear'); }}
+				>
 			    	<i class="fas fa-trash"></i>
-				</button>
+				</Control>
 			{/if}
 		{/if}
 	</div>
@@ -97,29 +94,41 @@
 		{#if version}
 			<span class="version">v. {version}</span>
 		{/if}
-		<button class="control control-pin"
-
-			use:popperRef2
-			on:mouseenter={() => showTip("Test", popperContent2) }
-			on:mouseleave={() => showTooltip = false } class:pinned on:click={e => { ipcRenderer.send('window', 'pin'); }}>
-	    	<i class="fas fa-thumbtack"></i>
-		</button>
-		<button class="control control-minimize" on:click={e => { ipcRenderer.send('window', 'minimize'); }}>
+		<Control
+			tips={tips}
+			legacy={legacy}
+			size="13px"
+			tiptext="Pin to top"
+			 on:click={e => { ipcRenderer.send('window', 'pin'); }}
+		>
+	    	<i class="fas fa-thumbtack" class:pinned></i>
+		</Control>
+		<Control
+			tips={tips}
+			legacy={legacy}
+			tiptext="Minimize"
+			on:click={e => { ipcRenderer.send('window', 'minimize'); }}
+		>
 	    	<i class="fas fa-minus"></i>
-		</button>
-		<button class="control control-restore" on:click={e => { ipcRenderer.send('window', 'maximize'); }}>
-	    	<i class="fas fa-plus"></i>
-		</button>
-		<button class="control control-close" on:click={e => { ipcRenderer.send('window', 'close'); }}>
+		</Control>
+		<Control
+			tips={tips}
+			legacy={legacy}
+			tiptext="Maximize"
+			on:click={e => { ipcRenderer.send('window', 'maximize'); }}
+		>
+			<i class="fas fa-plus"></i>
+		</Control>
+		<Control
+			tips={tips}
+			legacy={legacy}
+			tiptext="Close"
+			on:click={e => { ipcRenderer.send('window', 'close'); }}
+		>
 	    	<i class="fas fa-times"></i>
-		</button>
+		</Control>
 	</div>
 
-{#if showTooltip && !tips}
-	<Tooltip content={tipContent} on:open={()=>tipActive=true}>
-		{tiptext}
-	</Tooltip>
-{/if}
 </div>
 
 <style lang="scss">
@@ -142,27 +151,6 @@
    			border-bottom: 2px solid #3F3F3F;
    			padding: 0 10px 10px;
    			height: 35px;
-
-   			.control {
-			    border: 2px solid #3F3F3F;
-			    border-top: unset;
-			    border-top-left-radius: 0px;
-			    border-top-right-radius: 0px;
-			    border-bottom-left-radius: 4px;
-			    border-bottom-right-radius: 4px;
-			    height: 25px;
-			    color: #3F3F3F;
-			    line-height: 25px;
-			    text-align: center;
-			    width: 40px;
-			    background: transparent;
-
-			    &:hover {
-			    	border-color: black;
-				    color: black;
-				    background-color: #3F3F3F;
-			    }
-   			}
    		}
 
    		&-group {
@@ -183,52 +171,7 @@
    		}
 	}
 
-	.control {
-		box-sizing: border-box;
-		color: #171719;
-		background: #3A3940;
-		border-radius: 3px;
-		border: 0;
-		margin: 0;
-		padding: 2px 0 0;
-		height: 20px;
-		cursor: pointer;
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		width: 30px;
-		transition: color 0.1s ease-out;
-		-webkit-app-region: no-drag;
-		margin-left: 5px;
-		font-size: 14px;
-
-		&:first-child {
-			margin-left: 0px;
-		}
-
-		&:last-child {
-			margin-right: 0px;
-		}
-
-		&-menu,
-		&-screenshot,
-		&-upload,
-		&-clear {
-			font-size: 12px;
-		}
-
-		&:hover {
-			background: #FAA916;
-		}
-
-		&-pin {
-			font-size: 13px;
-
-			&.pinned {
-				i {
-					transform: rotate(-45deg);
-				}
-			}
-		}
+	i.pinned {
+		transform: rotate(-45deg);
 	}
 </style>

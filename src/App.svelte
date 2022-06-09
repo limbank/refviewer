@@ -21,7 +21,7 @@
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.13";
+	let version = "4.0.14";
 
 	ipcRenderer.on('settings', (event, arg) => {
 		if (settings.zoom && settings.zoom != arg.zoom && instance) {
@@ -157,7 +157,8 @@
 		legacy={settings.theme}
 		tips={settings.tooltips}
 		version={version}
-		on:clear={e => {
+		on:clear={e => {
+
 
 			file = false;
 
@@ -174,6 +175,8 @@
 	<Toolbox
 		settingsOpen={settingsOpen}
 		fileSelected={file}
+		legacy={settings.theme}
+		tips={settings.tooltips}
 	/>
 	<Desktop
 		legacy={settings.theme}
