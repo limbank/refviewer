@@ -1,14 +1,20 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
 	const { ipcRenderer } = require('electron');
 	import Tool from './Tool.svelte';
-
-	const dispatch = createEventDispatcher();
+	import Eyedropper from './Eyedropper.svelte';
+	import Backdrop from './Backdrop.svelte';
 
 	export let fileSelected = false;
 	export let settingsOpen = false;
 	export let legacy = false;
 	export let tips = false;
+	export let backdropColor = {
+		hex: "#000000",
+		r: "0",
+		g: "0",
+		b: "0",
+		a: "1"
+	};
 
 	function copyImage() {
 		var xhr = new XMLHttpRequest();
@@ -41,32 +47,29 @@
 			<i class="far fa-save"></i>
 		</Tool>
 		<Tool
-			tips={tips}
 			size="13px"
 			legacy={legacy}
+			tips={tips}
 			tiptext={"Copy image"}
 			on:click={copyImage}
 		>
 	    	<i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
 		</Tool>
-		<Tool
-			tips={tips}
-			size="12px"
+		<Eyedropper
 			legacy={legacy}
-			tiptext={"Pick a color"}
-			on:click={e => { dispatch('pickColor'); }}
-		>
-	    	<i class="fas fa-eye-dropper"></i>
-		</Tool>
+			tips={tips}
+		/>
+		<Backdrop
+			bind:backdropColor
+			legacy={legacy}
+			tips={tips}
+		/>
 		<!--
 		<button class="control control-">
 	    	<i class="fas fa-sync-alt"></i>
 		</button>
 		<button class="control control-">
 	    	<i class="fas fa-redo"></i>
-		</button>
-		<button class="control control-">
-	    	<i class="fas fa-fill"></i>
 		</button>
 		<button class="control control-">
 	    	<i class="fas fa-palette"></i>

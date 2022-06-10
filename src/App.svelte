@@ -23,7 +23,15 @@
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.15";
+	let version = "4.0.17";
+
+	let backdropColor = {
+		hex: "#2F2E33",
+		r: "47",
+		g: "46",
+		b: "51",
+		a: "1"
+	};
 
 	ipcRenderer.on('settings', (event, arg) => {
 		if (settings.zoom && settings.zoom != arg.zoom && instance) {
@@ -204,11 +212,13 @@
 		fileSelected={file}
 		legacy={settings.theme}
 		tips={settings.tooltips}
+		bind:backdropColor
 		on:pickColor={e => {
 			pickingmode = true;
 		}}
 	/>
 	<Desktop
+		{backdropColor}
 		legacy={settings.theme}
 		on:dragover={(e) => { e.preventDefault(); }}
 		on:drop={handleFilesSelect}
