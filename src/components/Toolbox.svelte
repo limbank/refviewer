@@ -1,6 +1,9 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	const { ipcRenderer } = require('electron');
 	import Tool from './Tool.svelte';
+
+	const dispatch = createEventDispatcher();
 
 	export let fileSelected = false;
 	export let settingsOpen = false;
@@ -31,6 +34,7 @@
 		<Tool
 			tips={tips}
 			legacy={legacy}
+			size="13px"
 			tiptext={"Save image"}
 			on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}
 		>
@@ -38,11 +42,21 @@
 		</Tool>
 		<Tool
 			tips={tips}
+			size="13px"
 			legacy={legacy}
 			tiptext={"Copy image"}
 			on:click={copyImage}
 		>
-	    	<i class="far fa-clipboard"></i>
+	    	<i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
+		</Tool>
+		<Tool
+			tips={tips}
+			size="12px"
+			legacy={legacy}
+			tiptext={"Pick a color"}
+			on:click={e => { dispatch('pickColor'); }}
+		>
+	    	<i class="fas fa-eye-dropper"></i>
 		</Tool>
 		<!--
 		<button class="control control-">
@@ -50,9 +64,6 @@
 		</button>
 		<button class="control control-">
 	    	<i class="fas fa-redo"></i>
-		</button>
-		<button class="control control-">
-	    	<i class="fas fa-eye-dropper"></i>
 		</button>
 		<button class="control control-">
 	    	<i class="fas fa-fill"></i>

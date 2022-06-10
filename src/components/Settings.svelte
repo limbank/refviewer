@@ -37,11 +37,19 @@
 			>
 				About
 			</li>
+			<li
+				class:active={setWindow=="changelog"}
+				on:click={e => { setWindow="changelog"; }}
+			>
+				Changelog
+			</li>
 		</ul>
 	</div>
 	<div class="settings-container-main">
 		{#if setWindow=="recent"}
-			recent
+			<div class="settings-container-inner">
+				recent
+			</div>
 		{:else if setWindow=="settings"}
 			<div class="settings-container-inner">
 				<div class="setting">
@@ -153,6 +161,10 @@
 				<div class="settings-container-text">
 					source.dog &copy; 2018-2022
 				</div>
+			</div>
+		{:else if setWindow=="changelog"}
+			<div class="settings-container-inner">
+				Changelog here
 			</div>
 		{/if}
 	</div>

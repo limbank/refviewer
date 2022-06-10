@@ -17,11 +17,13 @@
 	let zoomed = false;
 	let settings = {};
 	let settingsOpen = false;
+	let defaultDims;
+	let pickingmode = false;
 
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.14";
+	let version = "4.0.15";
 
 	ipcRenderer.on('settings', (event, arg) => {
 		if (settings.zoom && settings.zoom != arg.zoom && instance) {
@@ -38,7 +40,6 @@
 	});
 
 	let img = new Image(); 
-
 
 	function initPan(element, customZoom = false) {
 		if (!element) return;
@@ -68,6 +69,34 @@
 		let element = document.querySelector('.canvas-container-inner');
 	    initPan(element);
   	};
+
+    function getMousePos(canvas, evt, rect) {
+        return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+    }
+
+    function scaleNumber(num, oldRange, newRange){
+        var a = oldRange[0], b = oldRange[1], c = newRange[0], d = newRange[1];
+        return (b*c - (a)*d)/(b-a) + (num)*(d/(b-a));
+    }
+
+  	function handleMousemove(e) {
+  		if (!pickingmode) return;
+
+        var canvas = e.srcElement;
+        var ctx = canvas.getContext('2d');
+
+        var positionInfo = canvas.getBoundingClientRect();
+        var mousePos = getMousePos(canvas, e, positionInfo);
+
+        var newWidth = scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
+        var newHeight = scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
+
+        var imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
+        var pixel = imageData.data;
+        var pixelColor = "rgba("+pixel[0]+", "+pixel[1]+", "+pixel[2]+", "+pixel[3]+")";
+
+        console.log(pixelColor);
+  	}
 
 	function handleFilesSelect(e) {
 		if (!settings.overwrite && file || settingsOpen) return;
@@ -158,8 +187,6 @@
 		tips={settings.tooltips}
 		version={version}
 		on:clear={e => {
-
-
 			file = false;
 
 		    try {
@@ -177,6 +204,9 @@
 		fileSelected={file}
 		legacy={settings.theme}
 		tips={settings.tooltips}
+		on:pickColor={e => {
+			pickingmode = true;
+		}}
 	/>
 	<Desktop
 		legacy={settings.theme}
@@ -192,8 +222,15 @@
 
 		{#if file}
 			<div class="canvas-container" class:pixelated={zoomed}>
-				<div class="canvas-container-inner">
-				    <Canvas width={width} height={height}>
+				<div class="canvas-container-inner" class:pickingmode>
+				    <Canvas
+				    	width={width}
+				    	height={height}
+				    	on:mousemove={handleMousemove}
+				    	on:click={() => {
+				    		if (pickingmode) pickingmode = false;
+				    	}}
+				    >
 						<Layer {render} />
 					</Canvas>
 				</div>
@@ -300,14 +337,20 @@
 			justify-content: center;
 			align-items: center;
 
-
 			:global(canvas) {
 			    max-width: 100%;
 			    max-height: 100%;
+			    width: unset !important;
+			    height: unset !important;
 			    object-fit: contain;
 			    align-self: center;
 			    z-index:9999 !important;
 			    pointer-events:all !important;
+			    cursor: grab;
+			}
+
+			&.pickingmode :global(canvas) {
+				cursor: url("data:image/x-icon;base64,AAACAAEAICAQAAAAAADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAAAAh4eHAL+/vwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////////////////////////////////////////////////////////////////////D////g///+AP///gD///8B////A////sP///0D///6M///9H///+j////R////o////0f///9P////H////w=="),auto;
 			}
 		}
 	}
