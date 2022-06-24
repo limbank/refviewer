@@ -79,11 +79,20 @@ class fileProcessor {
         event.reply('deliver', path);
     }
     handleImage(path, event) {
-        imageDataURI.encodeFromFile(path)
-        .then(
-            (response) => {
-                event.reply('deliver', response);
-            });
+        if (path.startsWith("http")) {
+            imageDataURI.encodeFromURL(path)
+            .then(
+                (response) => {
+                    event.reply('deliver', response);
+                });
+        }
+        else {
+            imageDataURI.encodeFromFile(path)
+            .then(
+                (response) => {
+                    event.reply('deliver', response);
+                });
+        }
     }
     process(file, event) {
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();

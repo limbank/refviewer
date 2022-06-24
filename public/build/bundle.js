@@ -14048,7 +14048,7 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file_1 = "src\\App.svelte";
 
-    // (255:2) {#if settingsOpen}
+    // (309:2) {#if settingsOpen}
     function create_if_block_2(ctx) {
     	let menu;
     	let current;
@@ -14092,14 +14092,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(255:2) {#if settingsOpen}",
+    		source: "(309:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (308:2) {:else}
+    // (362:2) {:else}
     function create_else_block(ctx) {
     	let dropfield;
     	let current;
@@ -14142,14 +14142,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(308:2) {:else}",
+    		source: "(362:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (262:2) {#if file}
+    // (316:2) {#if file}
     function create_if_block(ctx) {
     	let div1;
     	let t_1;
@@ -14184,10 +14184,10 @@ var app = (function () {
     			create_component(canvas.$$.fragment);
     			attr_dev(div0, "class", "canvas-container-inner svelte-yycxzj");
     			toggle_class(div0, "pickingmode", /*pickingmode*/ ctx[6]);
-    			add_location(div0, file_1, 275, 4, 6714);
+    			add_location(div0, file_1, 329, 4, 8070);
     			attr_dev(div1, "class", "canvas-container svelte-yycxzj");
     			toggle_class(div1, "pixelated", /*zoomed*/ ctx[3]);
-    			add_location(div1, file_1, 262, 3, 6475);
+    			add_location(div1, file_1, 316, 3, 7831);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -14234,7 +14234,7 @@ var app = (function () {
     			if (dirty[0] & /*width*/ 2) canvas_changes.width = /*width*/ ctx[1];
     			if (dirty[0] & /*height*/ 4) canvas_changes.height = /*height*/ ctx[2];
 
-    			if (dirty[0] & /*render*/ 16384 | dirty[1] & /*$$scope*/ 16) {
+    			if (dirty[0] & /*render*/ 16384 | dirty[1] & /*$$scope*/ 256) {
     				canvas_changes.$$scope = { dirty, ctx };
     			}
 
@@ -14272,14 +14272,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(262:2) {#if file}",
+    		source: "(316:2) {#if file}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (268:4) {#if pickingmode && mouseincanvas}
+    // (322:4) {#if pickingmode && mouseincanvas}
     function create_if_block_1(ctx) {
     	let cursor;
     	let current;
@@ -14326,14 +14326,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(268:4) {#if pickingmode && mouseincanvas}",
+    		source: "(322:4) {#if pickingmode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (288:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log("COLOR UPDATE!", pickedColor);            }           }}          >
+    // (342:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log("COLOR UPDATE!", pickedColor);            }           }}          >
     function create_default_slot_1(ctx) {
     	let layer;
     	let current;
@@ -14374,14 +14374,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(288:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log(\\\"COLOR UPDATE!\\\", pickedColor);            }           }}          >",
+    		source: "(342:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log(\\\"COLOR UPDATE!\\\", pickedColor);            }           }}          >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (249:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >
+    // (303:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >
     function create_default_slot(ctx) {
     	let t_1;
     	let current_block_type_index;
@@ -14487,7 +14487,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(249:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >",
+    		source: "(303:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >",
     		ctx
     	});
 
@@ -14590,19 +14590,19 @@ var app = (function () {
     			t5 = space();
     			create_component(desktop.$$.fragment);
     			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-yycxzj");
-    			add_location(div0, file_1, 201, 1, 5174);
+    			add_location(div0, file_1, 255, 1, 6530);
     			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-yycxzj");
-    			add_location(div1, file_1, 202, 1, 5221);
+    			add_location(div1, file_1, 256, 1, 6577);
     			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-yycxzj");
-    			add_location(div2, file_1, 203, 1, 5270);
+    			add_location(div2, file_1, 257, 1, 6626);
     			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-yycxzj");
-    			add_location(div3, file_1, 204, 1, 5320);
+    			add_location(div3, file_1, 258, 1, 6676);
     			attr_dev(div4, "class", "backdrop svelte-yycxzj");
     			toggle_class(div4, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(div4, file_1, 200, 0, 5119);
+    			add_location(div4, file_1, 254, 0, 6475);
     			attr_dev(main, "class", "svelte-yycxzj");
     			toggle_class(main, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(main, file_1, 207, 0, 5377);
+    			add_location(main, file_1, 261, 0, 6733);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -14665,7 +14665,7 @@ var app = (function () {
     			if (dirty[0] & /*backdropColor*/ 4096) desktop_changes.backdropColor = /*backdropColor*/ ctx[12];
     			if (dirty[0] & /*settings*/ 16) desktop_changes.legacy = /*settings*/ ctx[4].theme;
 
-    			if (dirty[0] & /*zoomed, pickingmode, instance, width, height, mouseincanvas, pickedColor, chosenColor, render, m, file, settings, proxySettings, settingsOpen*/ 28671 | dirty[1] & /*$$scope*/ 16) {
+    			if (dirty[0] & /*zoomed, pickingmode, instance, width, height, mouseincanvas, pickedColor, chosenColor, render, m, file, settings, proxySettings, settingsOpen*/ 28671 | dirty[1] & /*$$scope*/ 256) {
     				desktop_changes.$$scope = { dirty, ctx };
     			}
 
@@ -14736,6 +14736,7 @@ var app = (function () {
     	let render;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
+    	var HTMLParser = require("node-html-parser");
     	const { ipcRenderer } = require("electron");
     	let file = false;
     	let width;
@@ -14748,11 +14749,12 @@ var app = (function () {
     	let proxySettings;
     	let initUpdate = 0;
     	let instance;
-    	let version = "4.0.20";
+    	let version = "4.0.21";
     	let pickedColor;
     	let chosenColor;
     	let mouseincanvas = false;
     	let backdropColor = { hex: "#2F2E33" };
+    	let readablefiletypes = ["png", "jpg", "jpeg", "bmp", "gif"];
     	let m = { x: 0, y: 0 };
 
     	function handleCursor(event) {
@@ -14807,6 +14809,14 @@ var app = (function () {
 
     	
 
+    	function verifyCompatibility(url) {
+    		for (var i = 0; i < readablefiletypes.length; i++) {
+    			if (url.toLowerCase().endsWith(readablefiletypes[i])) return true;
+    		}
+
+    		return false;
+    	}
+
     	function handleMousemove(e) {
     		if (!pickingmode) return;
     		$$invalidate(11, mouseincanvas = true);
@@ -14826,13 +14836,45 @@ var app = (function () {
     		if (!settings.overwrite && file || settingsOpen) return;
 
     		//console.log(e.dataTransfer.files);
+    		//console.log(e.dataTransfer.files);
     		const acceptedFiles = Array.from(e.dataTransfer.files);
+
+    		const acceptedItems = Array.from(e.dataTransfer.items);
 
     		if (acceptedFiles.length > 0) {
     			ipcRenderer.send("file", acceptedFiles[0].path);
+    		} else if (acceptedItems.length > 0) {
+    			let items = e.dataTransfer;
+    			let testHTML = items.getData("text/html");
+
+    			if (testHTML) {
+    				console.log(testHTML);
+
+    				//gotten HTML, likely an IMG tag
+    				let image = HTMLParser.parse(testHTML).querySelector("img");
+
+    				let url = HTMLParser.parse(testHTML).querySelector("a");
+    				console.log(image, url, "test123");
+
+    				if (image) {
+    					let srctext = image.getAttribute("src");
+
+    					if (srctext.startsWith("data")) {
+    						ipcRenderer.send("file", srctext);
+    					}
+    				} else if (url) {
+    					let srctext = url.getAttribute("href");
+    					ipcRenderer.send("file", srctext);
+    				}
+    			} else {
+    				let text = items.getData("text");
+    				console.log("hi idk lmao", text);
+    				ipcRenderer.send("file", text);
+    			}
     		} else {
     			let items = e.dataTransfer;
-    			console.log(items.getData("text"));
+    			let text = items.getData("text");
+    			console.log(text, "gotten text");
     		} //HANDLE URL, DATA, AND WHATEVER ERRORS HERE
     	}
 
@@ -14876,6 +14918,11 @@ var app = (function () {
     	so we'll handle it in-house instead.
 
     */
+    		getIMG(blob);
+    	}
+
+    	function getIMG(blob) {
+    		console.log("preparing img");
     		var a = new FileReader();
 
     		a.onload = function (e) {
@@ -14970,6 +15017,7 @@ var app = (function () {
     		Menu,
     		Dropfield,
     		Cursor,
+    		HTMLParser,
     		Canvas,
     		Layer,
     		t,
@@ -14991,20 +15039,24 @@ var app = (function () {
     		chosenColor,
     		mouseincanvas,
     		backdropColor,
+    		readablefiletypes,
     		m,
     		handleCursor,
     		img,
     		initPan,
+    		verifyCompatibility,
     		getMousePos,
     		scaleNumber,
     		rgbToHex,
     		handleMousemove,
     		handleFilesSelect,
     		handlePaste,
+    		getIMG,
     		render
     	});
 
     	$$self.$inject_state = $$props => {
+    		if ("HTMLParser" in $$props) HTMLParser = $$props.HTMLParser;
     		if ("file" in $$props) $$invalidate(0, file = $$props.file);
     		if ("width" in $$props) $$invalidate(1, width = $$props.width);
     		if ("height" in $$props) $$invalidate(2, height = $$props.height);
@@ -15021,6 +15073,7 @@ var app = (function () {
     		if ("chosenColor" in $$props) $$invalidate(10, chosenColor = $$props.chosenColor);
     		if ("mouseincanvas" in $$props) $$invalidate(11, mouseincanvas = $$props.mouseincanvas);
     		if ("backdropColor" in $$props) $$invalidate(12, backdropColor = $$props.backdropColor);
+    		if ("readablefiletypes" in $$props) readablefiletypes = $$props.readablefiletypes;
     		if ("m" in $$props) $$invalidate(13, m = $$props.m);
     		if ("img" in $$props) $$invalidate(20, img = $$props.img);
     		if ("render" in $$props) $$invalidate(14, render = $$props.render);

@@ -6,6 +6,7 @@
 	import Dropfield from './components/Dropfield.svelte';
 	import Cursor from './components/Cursor.svelte';
 
+	var HTMLParser = require('node-html-parser');
 	import { Canvas, Layer, t } from "svelte-canvas";
 
 	import Panzoom from '@panzoom/panzoom';
@@ -24,7 +25,7 @@
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.20";
+	let version = "4.0.21";
 
 	let pickedColor;
 	let chosenColor;
@@ -33,6 +34,10 @@
 	let backdropColor = {
 		hex: "#2F2E33"
 	};
+
+	let readablefiletypes = [
+		"png", "jpg", "jpeg", "bmp", "gif"
+	];
 
 	let m = { x: 0, y: 0 };
 
@@ -91,6 +96,14 @@
 	    initPan(element);
   	};
 
+	function verifyCompatibility(url) {
+		for (var i = 0; i < readablefiletypes.length; i++) {
+			if (url.toLowerCase().endsWith(readablefiletypes[i])) return true;
+		}
+
+		return false;
+	}
+
     function getMousePos(canvas, evt, rect) {
         return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
     }
@@ -128,16 +141,52 @@
 	function handleFilesSelect(e) {
 		if (!settings.overwrite && file || settingsOpen) return;
 
+		//console.log(e.dataTransfer.files);
 	    //console.log(e.dataTransfer.files);
 
 	    const acceptedFiles = Array.from(e.dataTransfer.files);
+	    const acceptedItems = Array.from(e.dataTransfer.items);
 
 	    if (acceptedFiles.length > 0) {
 	    	ipcRenderer.send('file', acceptedFiles[0].path);
 	    }
+	    else if (acceptedItems.length > 0) {
+		    let items = e.dataTransfer;
+
+			let testHTML = items.getData("text/html");
+
+			if (testHTML) {
+				console.log(testHTML);
+				//gotten HTML, likely an IMG tag
+				let image = HTMLParser.parse(testHTML).querySelector('img');
+				let url = HTMLParser.parse(testHTML).querySelector('a');
+
+				console.log(image, url, "test123");
+
+				if (image) {
+					let srctext = image.getAttribute('src');
+
+					if (srctext.startsWith("data")) {
+						ipcRenderer.send('file', srctext);
+					}
+				}
+				else if (url) {
+					let srctext = url.getAttribute('href');
+
+					ipcRenderer.send('file', srctext);
+				}
+			}
+			else {
+		    	let text = items.getData("text");
+
+				console.log("hi idk lmao", text);
+				ipcRenderer.send('file', text);
+			}
+	    }
 	    else {
 		    let items = e.dataTransfer;
-		    console.log(items.getData("text"), );
+		    let text = items.getData("text");
+		    console.log(text, "gotten text");
 
 		    //HANDLE URL, DATA, AND WHATEVER ERRORS HERE
 	    }
@@ -186,6 +235,11 @@
 			so we'll handle it in-house instead.
 
 		*/
+		getIMG(blob);
+	}
+
+	function getIMG(blob){
+		console.log("preparing img");
 
 		var a = new FileReader();
         a.onload = function(e) {
