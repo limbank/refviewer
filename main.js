@@ -6,6 +6,40 @@ const path = require('path');
 const imageDataURI = require('image-data-uri');
 const fs = require('fs-extra');
 
+class recentsProcessor {
+    constructor(data) {
+        this.home = data.home;
+        this.filename = data.filename;
+        this.file = path.join(this.home, this.filename);
+        this.recents = [];
+
+        fs.ensureFile(this.file, err => {
+            this.readRecents(data.ready);
+        });
+    }
+    readRecents(callback) {
+        fs.readJson(this.file, (err, packageObj) => {
+            let returnData = {};
+
+            if (!err) {
+                this.recents = packageObj;
+                returnData = packageObj;
+            }
+
+            if (callback && typeof callback == "function") callback(returnData);
+        });
+    }
+    writeRecents(recents = {}, callback) {
+        this.recents = recents;
+
+        fs.writeJson(this.file, recents, err => {
+            if (err) return console.error(err);
+
+            if (callback && typeof callback == "function") callback();
+        });
+    }
+}
+
 class settingsProcessor {
     constructor(data) {
         this.home = data.home;
@@ -73,6 +107,11 @@ class fileProcessor {
         }
     }
 }
+
+let rp = new recentsProcessor({
+    home: path.join(os.homedir(), '.refviewer'),
+    filename: 'recent.json'
+});
 
 let sp = new settingsProcessor({
     home: path.join(os.homedir(), '.refviewer'),

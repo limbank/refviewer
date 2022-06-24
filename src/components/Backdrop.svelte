@@ -14,11 +14,7 @@
 	});
 
 	export let backdropColor = {
-		hex: "#000000",
-		r: "0",
-		g: "0",
-		b: "0",
-		a: "1"
+		hex: "#000000"
 	};
 
 	let showDropdown = false;

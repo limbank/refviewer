@@ -6,9 +6,11 @@
 	export let tips = false;
 	export let reset;
 	export let alpha = true;
+
+	export let hex;
 	export let color;
 
-	$: console.log(color);
+	$: console.log("Got color", color);
 </script>
 
 <div class="picker-wrapper">
@@ -18,20 +20,20 @@
 			<div class="picker-controls-row">
 				<label>
 					<span>R:</span>
-					<input placeholder="R" type="" name="" bind:value={color.r}>
+					<input placeholder="R" type="text" bind:value={color.r}>
 				</label>
 				<label>
 					<span>G:</span>
-					<input placeholder="G" type="" name="" bind:value={color.g}>
+					<input placeholder="G" type="text" bind:value={color.g}>
 				</label>
 				<label>
 					<span>B:</span>
-					<input placeholder="B" type="" name="" bind:value={color.b}>
+					<input placeholder="B" type="text" bind:value={color.b}>
 				</label>
 				{#if alpha}
 					<label>
 						<span>A:</span>
-						<input placeholder="A" type="" name="" bind:value={color.a}>
+						<input placeholder="A" type="text" bind:value={color.a}>
 					</label>
 				{/if}
 			</div>
@@ -97,7 +99,7 @@
 
 	    &-split {
 	    	display: flex;
-			padding: 0 15px 10px;
+			padding: 0 15px 15px;
 			box-sizing: border-box;
 			width: 100%;
 			overflow: hidden;

@@ -1,19 +1,20 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	const { ipcRenderer } = require('electron');
+
 	import Tool from './Tool.svelte';
 	import Eyedropper from './Eyedropper.svelte';
 	import Backdrop from './Backdrop.svelte';
 
+	const dispatch = createEventDispatcher();
+
 	export let fileSelected = false;
+	export let pickedColor;
 	export let settingsOpen = false;
 	export let legacy = false;
 	export let tips = false;
 	export let backdropColor = {
-		hex: "#000000",
-		r: "0",
-		g: "0",
-		b: "0",
-		a: "1"
+		hex: "#000000"
 	};
 
 	function copyImage() {
@@ -58,6 +59,8 @@
 		<Eyedropper
 			legacy={legacy}
 			tips={tips}
+			bind:pickedColor
+			on:pickColor={() => dispatch("pickColor")}
 		/>
 		<Backdrop
 			bind:backdropColor

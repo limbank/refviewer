@@ -2,7 +2,7 @@
 	import Titlebar from './components/Titlebar.svelte';
 	import Desktop from './components/Desktop.svelte';
 	import Toolbox from './components/Toolbox.svelte';
-	import Settings from './components/Settings.svelte';
+	import Menu from './components/menu/Menu.svelte';
 	import Dropfield from './components/Dropfield.svelte';
 
 	import { Canvas, Layer, t } from "svelte-canvas";
@@ -23,14 +23,13 @@
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.17";
+	let version = "4.0.19";
+
+	let pickedColor;
+	let chosenColor;
 
 	let backdropColor = {
-		hex: "#2F2E33",
-		r: "47",
-		g: "46",
-		b: "51",
-		a: "1"
+		hex: "#2F2E33"
 	};
 
 	ipcRenderer.on('settings', (event, arg) => {
@@ -86,6 +85,10 @@
         var a = oldRange[0], b = oldRange[1], c = newRange[0], d = newRange[1];
         return (b*c - (a)*d)/(b-a) + (num)*(d/(b-a));
     }
+    function rgbToHex(red, green, blue) {
+		const rgb = (red << 16) | (green << 8) | (blue << 0);
+		return '#' + (0x1000000 + rgb).toString(16).slice(1);
+	}
 
   	function handleMousemove(e) {
   		if (!pickingmode) return;
@@ -103,7 +106,7 @@
         var pixel = imageData.data;
         var pixelColor = "rgba("+pixel[0]+", "+pixel[1]+", "+pixel[2]+", "+pixel[3]+")";
 
-        console.log(pixelColor);
+        chosenColor = rgbToHex(pixel[0], pixel[1], pixel[2]);
   	}
 
 	function handleFilesSelect(e) {
@@ -197,6 +200,14 @@
 		on:clear={e => {
 			file = false;
 
+	    	backdropColor = {
+				hex: "#2F2E33",
+				r: "47",
+				g: "46",
+				b: "51",
+				a: "1"
+			};
+
 		    try {
 		    	console.log("destroying");
 		    	instance.destroy();
@@ -212,6 +223,7 @@
 		fileSelected={file}
 		legacy={settings.theme}
 		tips={settings.tooltips}
+		bind:pickedColor
 		bind:backdropColor
 		on:pickColor={e => {
 			pickingmode = true;
@@ -224,7 +236,7 @@
 		on:drop={handleFilesSelect}
 	>
 		{#if settingsOpen}
-			<Settings
+			<Menu
 				settings={proxySettings}
 				version={version}
 			/>
@@ -238,7 +250,12 @@
 				    	height={height}
 				    	on:mousemove={handleMousemove}
 				    	on:click={() => {
-				    		if (pickingmode) pickingmode = false;
+				    		if (pickingmode) {
+				    			pickingmode = false;
+				    			pickedColor = chosenColor;
+
+				    			console.log("COLOR UPDATE!", pickedColor);
+				    		}
 				    	}}
 				    >
 						<Layer {render} />

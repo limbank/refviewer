@@ -14,17 +14,40 @@
 	});
 
 	let color = {
-		hex: "#000000",
-		r: "0",
-		g: "0",
-		b: "0",
-		a: "1"
+		hex: "#000000"
 	};
 
 	let showDropdown = false;
 
 	export let tips = false;
 	export let legacy = false;
+	export let pickedColor;
+
+	const hex2rgb = (hex) => {
+	    const r = parseInt(hex.slice(1, 3), 16)
+	    const g = parseInt(hex.slice(3, 5), 16)
+	    const b = parseInt(hex.slice(5, 7), 16)
+	    // return {r, g, b} // return an object
+	    return [ r, g, b ];
+	}
+
+	function rgb2hsv(r,g,b) {
+	  let v=Math.max(r,g,b), c=v-Math.min(r,g,b);
+	  let h= c && ((v==r) ? (g-b)/c : ((v==g) ? 2+(b-r)/c : 4+(r-g)/c)); 
+	  return [60*(h<0?h+6:h), v&&c/v, v];
+	}
+
+	function manageDropdown() {
+		color = {
+			hex: pickedColor
+		};
+
+		showDropdown = true;
+
+		console.log("generated color", color);
+	}
+
+	$: if (pickedColor) manageDropdown();
 </script>
 
 <Tool
@@ -33,8 +56,8 @@
 	legacy={legacy}
 	tiptext={"Pick a color"}
 	on:click={e => {
-		showDropdown = true;
-		//dispatch('pickColor');
+		//showDropdown = true;
+		dispatch('pickColor');
 	}}
 >
 	<i class="fas fa-eye-dropper" use:dropdownRef></i>
@@ -45,6 +68,7 @@
 		content={dropdownContent}
 		on:close={e => {
 			showDropdown = false;
+			pickedColor = false;
 		}}
 	>
 		<Colorpicker

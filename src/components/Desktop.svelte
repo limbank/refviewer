@@ -1,11 +1,7 @@
 <script>
 	export let legacy = false;
 	export let backdropColor = {
-		hex: "#2F2E33",
-		r: "47",
-		g: "46",
-		b: "51",
-		a: "1"
+		hex: "#2F2E33"
 	};
 </script>
 
