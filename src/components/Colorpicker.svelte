@@ -46,6 +46,13 @@
 						legacy={legacy}
 						size="12px"
 						tiptext="Copy"
+						on:click={e => {
+				            navigator.clipboard.writeText(color.hex).then(() => {
+							    console.log("Copied to clipboard");
+							}, () => {
+							    console.log("Failed to copy");
+							});
+						}}
 					>
 						<i class="far fa-clipboard" style="transform: translateY(-1px);"></i>
 					</Control>

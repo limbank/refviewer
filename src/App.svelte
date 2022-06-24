@@ -4,6 +4,7 @@
 	import Toolbox from './components/Toolbox.svelte';
 	import Menu from './components/menu/Menu.svelte';
 	import Dropfield from './components/Dropfield.svelte';
+	import Cursor from './components/Cursor.svelte';
 
 	import { Canvas, Layer, t } from "svelte-canvas";
 
@@ -23,14 +24,22 @@
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.19";
+	let version = "4.0.20";
 
 	let pickedColor;
 	let chosenColor;
+	let mouseincanvas = false;
 
 	let backdropColor = {
 		hex: "#2F2E33"
 	};
+
+	let m = { x: 0, y: 0 };
+
+	function handleCursor(event) {
+		m.x = event.clientX;
+		m.y = event.clientY;
+	}
 
 	ipcRenderer.on('settings', (event, arg) => {
 		if (settings.zoom && settings.zoom != arg.zoom && instance) {
@@ -65,6 +74,11 @@
 		});
 		element.parentElement.addEventListener('wheel', instance.zoomWithWheel);
 		element.addEventListener('panzoomchange', (event) => {
+			/*
+			if (pickingmode) {
+				event.preventDefault();
+				console.log("pcikingmode change");
+			}*/
 		  	if (event.detail.scale >= 10) zoomed = true;
 			else zoomed = false;
 		})
@@ -92,6 +106,8 @@
 
   	function handleMousemove(e) {
   		if (!pickingmode) return;
+
+  		mouseincanvas = true;
 
         var canvas = e.srcElement;
         var ctx = canvas.getContext('2d');
@@ -227,6 +243,7 @@
 		bind:backdropColor
 		on:pickColor={e => {
 			pickingmode = true;
+	  		instance.setOptions({disablePan:true});
 		}}
 	/>
 	<Desktop
@@ -243,15 +260,41 @@
 		{/if}
 
 		{#if file}
-			<div class="canvas-container" class:pixelated={zoomed}>
-				<div class="canvas-container-inner" class:pickingmode>
+			<div
+				class="canvas-container"
+				class:pixelated={zoomed}
+				on:mousemove={handleCursor}
+			>
+				{#if pickingmode && mouseincanvas}
+					<Cursor
+						x={m.x}
+						y={m.y}
+						bg={chosenColor}
+					/>
+				{/if}
+
+				<div
+					class="canvas-container-inner"
+					class:pickingmode
+			    	on:click={() => {
+			    		setTimeout(() => {
+				    		if (pickingmode) {
+				    			pickingmode = false;
+		  						instance.setOptions({disablePan:false});
+				    		}
+			    		}, 100);
+			    	}}
+				>
 				    <Canvas
 				    	width={width}
 				    	height={height}
 				    	on:mousemove={handleMousemove}
+				    	on:mouseenter={() => {mouseincanvas=true;}}
+				    	on:mouseleave={() => {mouseincanvas=false;}}
 				    	on:click={() => {
 				    		if (pickingmode) {
 				    			pickingmode = false;
+		  						instance.setOptions({disablePan:false});
 				    			pickedColor = chosenColor;
 
 				    			console.log("COLOR UPDATE!", pickedColor);
@@ -377,7 +420,9 @@
 			}
 
 			&.pickingmode :global(canvas) {
-				cursor: url("data:image/x-icon;base64,AAACAAEAICAQAAAAAADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAAAAh4eHAL+/vwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////////////////////////////////////////////////////////////////////D////g///+AP///gD///8B////A////sP///0D///6M///9H///+j////R////o////0f///9P////H////w=="),auto;
+				/*
+				cursor: url("data:image/x-icon;base64,AAACAAEAICAQAAAAAADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAAAAh4eHAL+/vwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////////////////////////////////////////////////////////////////////D////g///+AP///gD///8B////A////sP///0D///6M///9H///+j////R////o////0f///9P////H////w=="),auto;*/
+				cursor: none;
 			}
 		}
 	}
