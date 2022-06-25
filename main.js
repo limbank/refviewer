@@ -76,7 +76,10 @@ class settingsProcessor {
 
 class fileProcessor {
     handleDefault(path, event) {
-        event.reply('deliver', path);
+        console.log("hit default");
+
+        if (path.startsWith("http")) this.handleImage(path, event);
+        else event.reply('deliver', path);
     }
     handleImage(path, event) {
         if (path.startsWith("http")) {
@@ -96,6 +99,8 @@ class fileProcessor {
     }
     process(file, event) {
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
+
+        console.log("got ext", ext)
 
         switch(ext) {
             case "png": 

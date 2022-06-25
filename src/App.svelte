@@ -25,7 +25,7 @@
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.21";
+	let version = "4.0.22";
 
 	let pickedColor;
 	let chosenColor;
@@ -156,7 +156,7 @@
 			let testHTML = items.getData("text/html");
 
 			if (testHTML) {
-				console.log(testHTML);
+				console.log("GOT HTML!", testHTML);
 				//gotten HTML, likely an IMG tag
 				let image = HTMLParser.parse(testHTML).querySelector('img');
 				let url = HTMLParser.parse(testHTML).querySelector('a');
@@ -166,7 +166,13 @@
 				if (image) {
 					let srctext = image.getAttribute('src');
 
-					if (srctext.startsWith("data")) {
+					console.log("extracted src", srctext);
+
+					if (srctext.toLowerCase().startsWith("data")) {
+						ipcRenderer.send('file', srctext);
+					}
+					else if (srctext.toLowerCase().startsWith("http")) {
+						console.log("got html, sending")
 						ipcRenderer.send('file', srctext);
 					}
 				}
