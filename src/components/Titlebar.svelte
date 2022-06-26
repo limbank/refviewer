@@ -73,6 +73,7 @@
 					legacy={legacy}
 					size="12px"
 					tiptext="Screenshot"
+					on:click={e => { ipcRenderer.send('screenshot'); }}
 				>
 			    	<i class="fas fa-crosshairs"></i>
 				</Control>

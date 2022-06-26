@@ -5,6 +5,7 @@
 	import Menu from './components/menu/Menu.svelte';
 	import Dropfield from './components/Dropfield.svelte';
 	import Cursor from './components/Cursor.svelte';
+	import Zoomscale from './components/Zoomscale.svelte';
 
 	var HTMLParser = require('node-html-parser');
 	import { Canvas, Layer, t } from "svelte-canvas";
@@ -25,11 +26,13 @@
 	let proxySettings;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.22";
+	let version = "4.0.24";
 
 	let pickedColor;
 	let chosenColor;
 	let mouseincanvas = false;
+
+	let zoomscale = 1;
 
 	let backdropColor = {
 		hex: "#2F2E33"
@@ -84,16 +87,21 @@
 				event.preventDefault();
 				console.log("pcikingmode change");
 			}*/
+			zoomscale = Number(event.detail.scale).toFixed(1);
+
 		  	if (event.detail.scale >= 10) zoomed = true;
 			else zoomed = false;
 		})
 	};
 
   	$: render = ({ context }) => {
-	    context.drawImage(img, 0, 0);
+  		try {
+		    context.drawImage(img, 0, 0);
 
-		let element = document.querySelector('.canvas-container-inner');
-	    initPan(element);
+			let element = document.querySelector('.canvas-container-inner');
+		    initPan(element);
+  		}
+	    catch(e) {console.log("errrrr", e);}
   	};
 
 	function verifyCompatibility(url) {
@@ -332,6 +340,8 @@
 						bg={chosenColor}
 					/>
 				{/if}
+
+				<Zoomscale {zoomscale} {instance} />
 
 				<div
 					class="canvas-container-inner"
