@@ -9,7 +9,8 @@
         "start:svelte": "sirv public --no-clear",
         "dev:electron": "electron .",
         "dev": "concurrently \"npm run dev:electron\" \"npm run dev:svelte\"",
-        "start": "concurrently \"npm run dev:electron\" \"npm run start:svelte\""
+        "start": "concurrently \"npm run dev:electron\" \"npm run start:svelte\"",
+        "postinstall": "patch-package"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^17.0.0",
@@ -34,6 +35,7 @@
         "fs-extra": "^10.1.0",
         "image-data-uri": "^2.0.1",
         "node-html-parser": "^5.3.3",
+        "patch-package": "^6.4.7",
         "screenshot-desktop": "^1.12.7",
         "svelte-awesome-color-picker": "^0.0.10",
         "svelte-canvas": "^0.7.1",

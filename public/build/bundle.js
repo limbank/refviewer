@@ -15158,7 +15158,7 @@ var app = (function () {
     	let proxySettings;
     	let initUpdate = 0;
     	let instance;
-    	let version = "4.0.23";
+    	let version = "4.0.24";
     	let pickedColor;
     	let chosenColor;
     	let mouseincanvas = false;
