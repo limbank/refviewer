@@ -1,10 +1,13 @@
-const { app, BrowserWindow, ipcMain, dialog  } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, screen   } = require("electron");
 
 const os = require('os');
 const path = require('path');
-
-const imageDataURI = require('image-data-uri');
 const fs = require('fs-extra');
+const imageDataURI = require('image-data-uri');
+const screenshot = require('screenshot-desktop');
+const Jimp = require('jimp');
+
+let mainWindow, newWin;
 
 class recentsProcessor {
     constructor(data) {
@@ -79,21 +82,21 @@ class fileProcessor {
         console.log("hit default");
 
         if (path.startsWith("http")) this.handleImage(path, event);
-        else event.reply('deliver', path);
+        else mainWindow.webContents.send('deliver', response);
     }
     handleImage(path, event) {
         if (path.startsWith("http")) {
             imageDataURI.encodeFromURL(path)
             .then(
                 (response) => {
-                    event.reply('deliver', response);
+                    mainWindow.webContents.send('deliver', response);
                 });
         }
         else {
             imageDataURI.encodeFromFile(path)
             .then(
                 (response) => {
-                    event.reply('deliver', response);
+                    mainWindow.webContents.send('deliver', response);
                 });
         }
     }
@@ -144,8 +147,6 @@ ipcMain.on('settings:write', (event, arg) => {
 });
 
 const fp = new fileProcessor();
-
-let mainWindow;
 
 try {
     require("electron-reloader")(module);
@@ -249,9 +250,8 @@ app.on("activate", function () {
 //home = ;
 
 ipcMain.on('file', (event, arg) => {
-    //file processor
-
-    fp.process(arg, event);
+    fp.process(arg);
+    if (newWin) newWin.close();
 });
 
 ipcMain.on('selectfile', (event, arg) => {
@@ -268,18 +268,72 @@ ipcMain.on('selectfile', (event, arg) => {
         console.log(err);
     });
 });
-/*
-let sg = {
-    "devmode" : true,
-    "theme" : false
-};
 
-ipcMain.on('settings:get', (event, arg) => {
-    //file processor
+ipcMain.on('screenshot', (event, arg) => {
+    let windowPOS = mainWindow.getPosition();
 
-    if (arg == 'all') event.reply('settings:all', sg);
-    else {
+    let currentScreen = screen.getDisplayNearestPoint({
+        x: windowPOS[0],
+        y: windowPOS[1]
+    });
 
-    }
+    let allDisplays = screen.getAllDisplays();
+    let index = allDisplays.map(e => e.id).indexOf(currentScreen.id);;
+    mainWindow.hide();
+
+    screenshot.listDisplays().then((displays) => {
+
+        screenshot({
+            screen: displays[index].id,
+            filename: path.join(os.tmpdir(), 'screenshot.png')
+        }).then((imgPath) => {
+            impath = imgPath;
+
+            mainWindow.show();
+            
+            newWin = new BrowserWindow({
+                x: currentScreen.bounds.x,
+                y: currentScreen.bounds.y,
+                width: currentScreen.size.width,
+                height: currentScreen.size.height,
+                webPreferences: {
+                    nodeIntegration: true,
+                    contextIsolation: false
+                },
+                frame:false,
+                show: false
+            });
+
+            newWin.loadFile('public/screen.html');
+
+            newWin.once('ready-to-show', () => {
+                newWin.show();
+                newWin.setFullScreen(true);
+                newWin.focus();
+
+                ipcMain.on('image_crop', (e, arg) => {
+                    if (newWin) newWin.close();
+
+                    Jimp.read(impath, (err, image) => {
+                      if (err) throw err;
+                      else {
+                        image.crop(arg.x, arg.y, arg.w, arg.h)
+                        .quality(100)
+                        .getBase64(Jimp.MIME_JPEG, function (err, src) {
+                            //bakchere
+
+                            fp.process(src);
+                        });
+                      }
+                    });
+                });
+            });
+
+            newWin.on('close', function(e){
+                newWin = null;
+            });
+        }).catch((error) => {
+            console.log("error", error)
+        });
+    });
 });
-*/

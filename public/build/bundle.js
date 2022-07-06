@@ -5367,7 +5367,6 @@ var app = (function () {
             a: h.length <= 7 ? 1 : parseInt(h.substring(7, 9), 16) / 255
         };
     }
-
     /**
      * Convert RGB representation to HSV.
      * Credits to http://www.raphaeljs.com
@@ -11797,12 +11796,12 @@ var app = (function () {
     	let li12;
     	let t28;
     	let li13;
-    	let t30;
-    	let li14;
-    	let t31;
+    	let t29;
     	let div2;
-    	let t33;
+    	let t31;
     	let ul2;
+    	let li14;
+    	let t33;
     	let li15;
     	let t35;
     	let li16;
@@ -11810,8 +11809,6 @@ var app = (function () {
     	let li17;
     	let t39;
     	let li18;
-    	let t41;
-    	let li19;
 
     	const block = {
     		c: function create() {
@@ -11844,45 +11841,42 @@ var app = (function () {
     			t16 = space();
     			ul1 = element("ul");
     			li7 = element("li");
-    			li7.textContent = "Fixed a bug where the colorpicker was off by a quarter-pixel";
+    			li7.textContent = "The menu is no longer a dropdown, shows up over the workspace";
     			t18 = space();
     			li8 = element("li");
-    			li8.textContent = "The menu is no longer a dropdown, shows up over the workspace";
+    			li8.textContent = "The delete image button and tools now only show up when an image is selected";
     			t20 = space();
     			li9 = element("li");
-    			li9.textContent = "The delete image button and tools now only show up when an image is selected";
+    			li9.textContent = "Added the setting to switch to the legacy theme";
     			t22 = space();
     			li10 = element("li");
-    			li10.textContent = "Added the setting to switch to the legacy theme";
+    			li10.textContent = "Replaced the eyedropper color info window with a color picker";
     			t24 = space();
     			li11 = element("li");
-    			li11.textContent = "Replaced the eyedropper color info window with a color picker";
+    			li11.textContent = "Added the option to copy the color with a click to the color picker";
     			t26 = space();
     			li12 = element("li");
-    			li12.textContent = "Added the option to copy the color with a click to the color picker";
+    			li12.textContent = "Workspace color now resets when the image is cleared";
     			t28 = space();
     			li13 = element("li");
-    			li13.textContent = "Workspace color now resets when the image is cleared";
-    			t30 = space();
-    			li14 = element("li");
-    			t31 = space();
+    			t29 = space();
     			div2 = element("div");
     			div2.textContent = "Misc";
-    			t33 = space();
+    			t31 = space();
     			ul2 = element("ul");
+    			li14 = element("li");
+    			li14.textContent = "Changed the theme";
+    			t33 = space();
     			li15 = element("li");
-    			li15.textContent = "Changed the theme";
+    			li15.textContent = "Changed the framework from jQuery to Svelte";
     			t35 = space();
     			li16 = element("li");
-    			li16.textContent = "Changed the framework from jQuery to Svelte";
+    			li16.textContent = "The about window now opens inside the main window";
     			t37 = space();
     			li17 = element("li");
-    			li17.textContent = "The about window now opens inside the main window";
+    			li17.textContent = "The settings window now opens inside the main window";
     			t39 = space();
     			li18 = element("li");
-    			li18.textContent = "The settings window now opens inside the main window";
-    			t41 = space();
-    			li19 = element("li");
     			attr_dev(div0, "class", "about-text-title svelte-1wx3zio");
     			add_location(div0, file$6, 3, 0, 23);
     			add_location(li0, file$6, 7, 1, 105);
@@ -11897,24 +11891,23 @@ var app = (function () {
     			attr_dev(div1, "class", "about-text-title svelte-1wx3zio");
     			add_location(div1, file$6, 27, 0, 605);
     			add_location(li7, file$6, 31, 1, 688);
-    			add_location(li8, file$6, 34, 1, 767);
-    			add_location(li9, file$6, 37, 1, 847);
-    			add_location(li10, file$6, 40, 1, 942);
-    			add_location(li11, file$6, 43, 1, 1008);
-    			add_location(li12, file$6, 46, 1, 1088);
-    			add_location(li13, file$6, 49, 1, 1174);
-    			add_location(li14, file$6, 52, 1, 1245);
+    			add_location(li8, file$6, 34, 1, 768);
+    			add_location(li9, file$6, 37, 1, 863);
+    			add_location(li10, file$6, 40, 1, 929);
+    			add_location(li11, file$6, 43, 1, 1009);
+    			add_location(li12, file$6, 46, 1, 1095);
+    			add_location(li13, file$6, 49, 1, 1166);
     			attr_dev(ul1, "class", "change-list svelte-1wx3zio");
     			add_location(ul1, file$6, 30, 0, 661);
     			attr_dev(div2, "class", "about-text-title svelte-1wx3zio");
-    			add_location(div2, file$6, 54, 0, 1263);
-    			add_location(li15, file$6, 58, 1, 1337);
-    			add_location(li16, file$6, 61, 1, 1373);
-    			add_location(li17, file$6, 64, 1, 1435);
-    			add_location(li18, file$6, 67, 1, 1503);
-    			add_location(li19, file$6, 70, 1, 1574);
+    			add_location(div2, file$6, 51, 0, 1184);
+    			add_location(li14, file$6, 55, 1, 1258);
+    			add_location(li15, file$6, 58, 1, 1294);
+    			add_location(li16, file$6, 61, 1, 1356);
+    			add_location(li17, file$6, 64, 1, 1424);
+    			add_location(li18, file$6, 67, 1, 1495);
     			attr_dev(ul2, "class", "change-list svelte-1wx3zio");
-    			add_location(ul2, file$6, 57, 0, 1310);
+    			add_location(ul2, file$6, 54, 0, 1231);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -11953,12 +11946,12 @@ var app = (function () {
     			append_dev(ul1, li12);
     			append_dev(ul1, t28);
     			append_dev(ul1, li13);
-    			append_dev(ul1, t30);
-    			append_dev(ul1, li14);
-    			insert_dev(target, t31, anchor);
+    			insert_dev(target, t29, anchor);
     			insert_dev(target, div2, anchor);
-    			insert_dev(target, t33, anchor);
+    			insert_dev(target, t31, anchor);
     			insert_dev(target, ul2, anchor);
+    			append_dev(ul2, li14);
+    			append_dev(ul2, t33);
     			append_dev(ul2, li15);
     			append_dev(ul2, t35);
     			append_dev(ul2, li16);
@@ -11966,8 +11959,6 @@ var app = (function () {
     			append_dev(ul2, li17);
     			append_dev(ul2, t39);
     			append_dev(ul2, li18);
-    			append_dev(ul2, t41);
-    			append_dev(ul2, li19);
     		},
     		p: noop$1,
     		i: noop$1,
@@ -11980,9 +11971,9 @@ var app = (function () {
     			if (detaching) detach_dev(div1);
     			if (detaching) detach_dev(t16);
     			if (detaching) detach_dev(ul1);
-    			if (detaching) detach_dev(t31);
+    			if (detaching) detach_dev(t29);
     			if (detaching) detach_dev(div2);
-    			if (detaching) detach_dev(t33);
+    			if (detaching) detach_dev(t31);
     			if (detaching) detach_dev(ul2);
     		}
     	};
@@ -14436,7 +14427,7 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file_1 = "src\\App.svelte";
 
-    // (323:2) {#if settingsOpen}
+    // (326:2) {#if settingsOpen}
     function create_if_block_2(ctx) {
     	let menu;
     	let current;
@@ -14480,14 +14471,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(323:2) {#if settingsOpen}",
+    		source: "(326:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (378:2) {:else}
+    // (381:2) {:else}
     function create_else_block(ctx) {
     	let dropfield;
     	let current;
@@ -14530,14 +14521,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(378:2) {:else}",
+    		source: "(381:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (330:2) {#if file}
+    // (333:2) {#if file}
     function create_if_block(ctx) {
     	let div1;
     	let t0;
@@ -14584,10 +14575,10 @@ var app = (function () {
     			create_component(canvas.$$.fragment);
     			attr_dev(div0, "class", "canvas-container-inner svelte-yycxzj");
     			toggle_class(div0, "pickingmode", /*pickingmode*/ ctx[6]);
-    			add_location(div0, file_1, 345, 4, 8538);
+    			add_location(div0, file_1, 348, 4, 8592);
     			attr_dev(div1, "class", "canvas-container svelte-yycxzj");
     			toggle_class(div1, "pixelated", /*zoomed*/ ctx[3]);
-    			add_location(div1, file_1, 330, 3, 8255);
+    			add_location(div1, file_1, 333, 3, 8309);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -14681,14 +14672,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(330:2) {#if file}",
+    		source: "(333:2) {#if file}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (336:4) {#if pickingmode && mouseincanvas}
+    // (339:4) {#if pickingmode && mouseincanvas}
     function create_if_block_1(ctx) {
     	let cursor;
     	let current;
@@ -14735,14 +14726,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(336:4) {#if pickingmode && mouseincanvas}",
+    		source: "(339:4) {#if pickingmode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (358:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log("COLOR UPDATE!", pickedColor);            }           }}          >
+    // (361:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log("COLOR UPDATE!", pickedColor);            }           }}          >
     function create_default_slot_1(ctx) {
     	let layer;
     	let current;
@@ -14783,14 +14774,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(358:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log(\\\"COLOR UPDATE!\\\", pickedColor);            }           }}          >",
+    		source: "(361:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log(\\\"COLOR UPDATE!\\\", pickedColor);            }           }}          >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (317:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >
+    // (320:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >
     function create_default_slot(ctx) {
     	let t_1;
     	let current_block_type_index;
@@ -14896,7 +14887,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(317:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >",
+    		source: "(320:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >",
     		ctx
     	});
 
@@ -14999,19 +14990,19 @@ var app = (function () {
     			t5 = space();
     			create_component(desktop.$$.fragment);
     			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-yycxzj");
-    			add_location(div0, file_1, 269, 1, 6954);
+    			add_location(div0, file_1, 272, 1, 7008);
     			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-yycxzj");
-    			add_location(div1, file_1, 270, 1, 7001);
+    			add_location(div1, file_1, 273, 1, 7055);
     			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-yycxzj");
-    			add_location(div2, file_1, 271, 1, 7050);
+    			add_location(div2, file_1, 274, 1, 7104);
     			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-yycxzj");
-    			add_location(div3, file_1, 272, 1, 7100);
+    			add_location(div3, file_1, 275, 1, 7154);
     			attr_dev(div4, "class", "backdrop svelte-yycxzj");
     			toggle_class(div4, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(div4, file_1, 268, 0, 6899);
+    			add_location(div4, file_1, 271, 0, 6953);
     			attr_dev(main, "class", "svelte-yycxzj");
     			toggle_class(main, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(main, file_1, 275, 0, 7157);
+    			add_location(main, file_1, 278, 0, 7211);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -15120,6 +15111,11 @@ var app = (function () {
     	return block;
     }
 
+    function rgbToHex(red, green, blue) {
+    	const rgb = red << 16 | green << 8 | blue << 0;
+    	return "#" + (16777216 + rgb).toString(16).slice(1);
+    }
+
     function getMousePos(canvas, evt, rect) {
     	return {
     		x: evt.clientX - rect.left,
@@ -15130,11 +15126,6 @@ var app = (function () {
     function scaleNumber(num, oldRange, newRange) {
     	var a = oldRange[0], b = oldRange[1], c = newRange[0], d = newRange[1];
     	return (b * c - a * d) / (b - a) + num * (d / (b - a));
-    }
-
-    function rgbToHex(red, green, blue) {
-    	const rgb = red << 16 | green << 8 | blue << 0;
-    	return "#" + (16777216 + rgb).toString(16).slice(1);
     }
 
     const dragover_handler = e => {
@@ -15235,7 +15226,10 @@ var app = (function () {
     		var canvas = e.srcElement;
     		var ctx = canvas.getContext("2d");
     		var positionInfo = canvas.getBoundingClientRect();
+
+    		//console.log("POSINFO", positionInfo);
     		var mousePos = getMousePos(canvas, e, positionInfo);
+
     		var newWidth = scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
     		var newHeight = scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
     		var imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
@@ -15463,9 +15457,9 @@ var app = (function () {
     		img,
     		initPan,
     		verifyCompatibility,
+    		rgbToHex,
     		getMousePos,
     		scaleNumber,
-    		rgbToHex,
     		handleMousemove,
     		handleFilesSelect,
     		handlePaste,

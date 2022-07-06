@@ -111,6 +111,11 @@
 
 		return false;
 	}
+	
+    function rgbToHex(red, green, blue) {
+		const rgb = (red << 16) | (green << 8) | (blue << 0);
+		return '#' + (0x1000000 + rgb).toString(16).slice(1);
+	}
 
     function getMousePos(canvas, evt, rect) {
         return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
@@ -120,10 +125,6 @@
         var a = oldRange[0], b = oldRange[1], c = newRange[0], d = newRange[1];
         return (b*c - (a)*d)/(b-a) + (num)*(d/(b-a));
     }
-    function rgbToHex(red, green, blue) {
-		const rgb = (red << 16) | (green << 8) | (blue << 0);
-		return '#' + (0x1000000 + rgb).toString(16).slice(1);
-	}
 
   	function handleMousemove(e) {
   		if (!pickingmode) return;
@@ -134,6 +135,8 @@
         var ctx = canvas.getContext('2d');
 
         var positionInfo = canvas.getBoundingClientRect();
+        //console.log("POSINFO", positionInfo);
+
         var mousePos = getMousePos(canvas, e, positionInfo);
 
         var newWidth = scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);

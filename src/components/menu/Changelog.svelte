@@ -30,9 +30,6 @@
 </div>
 <ul class="change-list">
 	<li>
-		Fixed a bug where the colorpicker was off by a quarter-pixel
-	</li>
-	<li>
 		The menu is no longer a dropdown, shows up over the workspace
 	</li>
 	<li>
