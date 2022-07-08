@@ -1,12 +1,16 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	import Settings from './Settings.svelte';
 	import About from './About.svelte';
 	import Recent from './Recent.svelte';
 	import Changelog from './Changelog.svelte';
 
+	const dispatch = createEventDispatcher();
+
 	let setWindow = "recent";
 
 	export let settings;
+	export let recents;
 	export let version;
 </script>
 
@@ -42,7 +46,10 @@
 	<div class="settings-container-main">
 		{#if setWindow=="recent"}
 			<div class="settings-w-inner">
-				<Recent />
+				<Recent
+					{recents}
+					on:settingsOpen={e => { dispatch('settingsOpen', e.detail); }}
+				/>
 			</div>
 		{:else if setWindow=="settings"}
 			<div class="settings-w-inner">

@@ -24,6 +24,7 @@
 	let pickingmode = false;
 
 	let proxySettings;
+	let recents;
 	let initUpdate = 0;
 	let instance;
 	let version = "4.0.24";
@@ -48,6 +49,10 @@
 		m.x = event.clientX;
 		m.y = event.clientY;
 	}
+
+	ipcRenderer.on('recents', (event, arg) => {
+		recents = arg;
+	});
 
 	ipcRenderer.on('settings', (event, arg) => {
 		if (settings.zoom && settings.zoom != arg.zoom && instance) {
@@ -326,7 +331,9 @@
 		{#if settingsOpen}
 			<Menu
 				settings={proxySettings}
+				recents={recents}
 				version={version}
+				on:settingsOpen={e => { settingsOpen = e.detail; }}
 			/>
 		{/if}
 

@@ -8,6 +8,7 @@ const screenshot = require('screenshot-desktop');
 const Jimp = require('jimp');
 
 let mainWindow, newWin;
+let sp, rp;
 
 class recentsProcessor {
     constructor(data) {
@@ -32,13 +33,24 @@ class recentsProcessor {
             if (callback && typeof callback == "function") callback(returnData);
         });
     }
-    writeRecents(recents = {}, callback) {
-        this.recents = recents;
+    writeRecent(item, callback) {
+        if (!item) return;
 
-        fs.writeJson(this.file, recents, err => {
+        //get item in array and if it exists, move it to the front 
+        let index = this.recents.indexOf(item);
+
+        if (index >= 0) {
+            var [itemToMove] = this.recents.splice(index, 1);
+            this.recents.unshift(itemToMove);
+        }
+        else this.recents.unshift(item);
+
+        if (this.recents.length > 10) this.recents = this.recents.slice(0, 10);
+
+        fs.writeJson(this.file, this.recents, err => {
             if (err) return console.error(err);
 
-            if (callback && typeof callback == "function") callback();
+            if (callback && typeof callback == "function") callback(this.recents);
         });
     }
 }
@@ -79,12 +91,17 @@ class settingsProcessor {
 
 class fileProcessor {
     handleDefault(path, event) {
-        console.log("hit default");
-
         if (path.startsWith("http")) this.handleImage(path, event);
-        else mainWindow.webContents.send('deliver', response);
+        else {
+            console.log("hit default, returning: ", path);
+            mainWindow.webContents.send('deliver', path);
+        }
     }
     handleImage(path, event) {
+        rp.writeRecent(path, (recents) => {
+            mainWindow.webContents.send('recents', recents);
+        });
+
         if (path.startsWith("http")) {
             imageDataURI.encodeFromURL(path)
             .then(
@@ -102,8 +119,6 @@ class fileProcessor {
     }
     process(file, event) {
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
-
-        console.log("got ext", ext)
 
         switch(ext) {
             case "png": 
@@ -125,15 +140,17 @@ class fileProcessor {
     }
 }
 
-let rp = new recentsProcessor({
-    home: path.join(os.homedir(), '.refviewer'),
-    filename: 'recent.json'
-});
-
+//should i be redeclaring it like this??
+/*
 let sp = new settingsProcessor({
     home: path.join(os.homedir(), '.refviewer'),
     filename: 'config.json'
 });
+let rp = new recentsProcessor({
+    home: path.join(os.homedir(), '.refviewer'),
+    filename: 'recent.json'
+});
+*/
 
 ipcMain.on('settings:write', (event, arg) => {
     //console.log("GOT SETTINGS!!", arg);
@@ -189,6 +206,14 @@ function createWindow() {
             filename: 'config.json',
             ready: () => {
                 mainWindow.webContents.send('settings', sp.settings);
+            }
+        });
+
+        rp = new recentsProcessor({
+            home: path.join(os.homedir(), '.refviewer'),
+            filename: 'recents.json',
+            ready: () => {
+                mainWindow.webContents.send('recents', rp.recents);
             }
         });
     });
@@ -253,6 +278,14 @@ ipcMain.on('file', (event, arg) => {
     fp.process(arg);
     if (newWin) newWin.close();
 });
+
+/*
+ipcMain.on('recents:add', (event, arg) => {
+    rp.writeRecent(arg, (recents) => {
+        event.reply("recents", recents);
+    });
+});
+*/
 
 ipcMain.on('selectfile', (event, arg) => {
     dialog.showOpenDialog(mainWindow, {
@@ -323,6 +356,7 @@ ipcMain.on('screenshot', (event, arg) => {
                             //bakchere
 
                             fp.process(src);
+                            mainWindow.show();
                         });
                       }
                     });
