@@ -123,6 +123,7 @@
 		<Control
 			tips={tips}
 			legacy={legacy}
+			persistent={true}
 			tiptext="Close"
 			on:click={e => { ipcRenderer.send('window', 'close'); }}
 		>

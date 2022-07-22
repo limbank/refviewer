@@ -39,6 +39,7 @@
         "jimp": "^0.16.1",
         "node-html-parser": "^5.3.3",
         "patch-package": "^6.4.7",
+        "psd": "^3.4.0",
         "screenshot-desktop": "^1.12.7",
         "svelte-canvas": "^0.7.1",
         "svelte-popperjs": "^1.2.10",

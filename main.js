@@ -6,9 +6,17 @@ const fs = require('fs-extra');
 const imageDataURI = require('image-data-uri');
 const screenshot = require('screenshot-desktop');
 const Jimp = require('jimp');
+const PSD = require('psd');
+const { shell } = require('electron');
 
 let mainWindow, newWin;
 let sp, rp;
+
+const supportedExtensions = ['img', 'png', 'bmp', 'gif', 'jpeg', 'jpg', 'psd', 'tif', 'tiff', 'dng', 'webp'];
+
+function dataToBuffer(dataURI) {
+    return new Buffer(dataURI.split(",")[1], 'base64');
+}
 
 class recentsProcessor {
     constructor(data) {
@@ -90,37 +98,76 @@ class settingsProcessor {
 }
 
 class fileProcessor {
-    handleDefault(path, event) {
-        if (path.startsWith("http")) this.handleImage(path, event);
+    handleDefault(filePath, event) {
+        if (filePath.startsWith("http")) this.handleImage(filePath, event);
         else {
-            console.log("hit default, returning: ", path);
-            mainWindow.webContents.send('deliver', path);
+            console.log("hit default, returning: ", filePath);
+            mainWindow.webContents.send('deliver', filePath);
         }
     }
-    handleImage(path, event) {
-        rp.writeRecent(path, (recents) => {
+    handleImage(filePath, event) {
+        rp.writeRecent(filePath, (recents) => {
             mainWindow.webContents.send('recents', recents);
         });
 
-        if (path.startsWith("http")) {
-            imageDataURI.encodeFromURL(path)
+        if (filePath.startsWith("http")) {
+            imageDataURI.encodeFromURL(filePath)
             .then(
                 (response) => {
                     mainWindow.webContents.send('deliver', response);
                 });
         }
         else {
-            imageDataURI.encodeFromFile(path)
+            imageDataURI.encodeFromFile(filePath)
             .then(
                 (response) => {
                     mainWindow.webContents.send('deliver', response);
                 });
         }
+    }
+    handlePSD (filePath, event) {
+        let psdPath = path.join(os.tmpdir(), 'out.png');
+
+        PSD.open(filePath).then(function (psd) {
+            return psd.image.saveAsPng(psdPath);
+        }).then(() => {
+            imageDataURI.encodeFromFile(psdPath)
+            .then(
+                (response) => {
+                    mainWindow.webContents.send('deliver', response);
+                });
+        });
+    }
+    handleTIFF (filePath, event) {
+        Jimp.read(filePath, (err, image) => {
+          if (err) throw err;
+          else {
+            image
+            .getBase64(Jimp.MIME_JPEG, function (err, src) {
+                //bakchere
+
+                fp.process(src);
+                mainWindow.show();
+            });
+          }
+        });
     }
     process(file, event) {
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 
         switch(ext) {
+            case "psd": 
+                this.handlePSD(file, event);
+                break;
+            case "tif":
+                this.handleTIFF(file, event);
+                break;
+            case "tiff":
+                this.handleTIFF(file, event);
+                break;
+            case "dng":
+                this.handleTIFF(file, event);
+                break;
             case "png": 
                 this.handleImage(file, event);
                 break;
@@ -192,6 +239,11 @@ function createWindow() {
         icon: "public/favicon.png",
     });
 
+    mainWindow.webContents.on('will-navigate', function (e, url) {
+        e.preventDefault();
+        shell.openExternal(url);
+    });
+
     /*550, 400*/ /*238*/
 
     mainWindow.loadFile("public/index.html");
@@ -217,50 +269,6 @@ function createWindow() {
             }
         });
     });
-
-    ipcMain.on('window', (event, arg) => {
-        if (!mainWindow) return;
-        switch (arg) {
-            case "pin":
-                if (mainWindow.isAlwaysOnTop()) mainWindow.setAlwaysOnTop(false);
-                else mainWindow.setAlwaysOnTop(true);
-                event.reply('pin', mainWindow.isAlwaysOnTop());
-                break;
-            case "close":
-                mainWindow.close();
-                break;
-            case "maximize":
-                if (mainWindow.isMaximized()) mainWindow.unmaximize();
-                else mainWindow.maximize();
-                break;
-            case "minimize":
-                mainWindow.minimize();
-                break;
-            default: break;
-        }
-    });
-
-    ipcMain.on('saveImage', (event, arg) => {
-        dialog.showSaveDialog(mainWindow, {
-            title: "Save image",
-            defaultPath: "image.png"
-        }).then(result => {
-          console.log(result);
-            let base64Data = arg
-                                .replace(/^data:image\/png;base64,/, "")
-                                .replace(/^data:image\/jpeg;base64,/, "");
-
-            fs.writeFile(result.filePath, base64Data, 'base64', err => {
-              if (err) {
-                console.error(err);
-              }
-              // file written successfully
-            });
-
-        }).catch(err => {
-          console.log(err);
-        });
-    });
 }
 
 app.on("window-all-closed", function () {
@@ -271,8 +279,79 @@ app.on("activate", function () {
     if (mainWindow === null) createWindow();
 });
 
-//path.join(home, "config.json")
-//home = ;
+ipcMain.on('window', (event, arg) => {
+    if (!mainWindow) return;
+    switch (arg) {
+        case "pin":
+            if (mainWindow.isAlwaysOnTop()) mainWindow.setAlwaysOnTop(false);
+            else mainWindow.setAlwaysOnTop(true);
+            event.reply('pin', mainWindow.isAlwaysOnTop());
+            break;
+        case "close":
+            mainWindow.close();
+            break;
+        case "maximize":
+            if (mainWindow.isMaximized()) mainWindow.unmaximize();
+            else mainWindow.maximize();
+            break;
+        case "minimize":
+            mainWindow.minimize();
+            break;
+        default: break;
+    }
+});
+
+ipcMain.on('saveImage', (event, arg) => {
+    dialog.showSaveDialog(mainWindow, {
+        title: "Save image",
+        defaultPath: "image.png"
+    }).then(result => {
+      console.log(result);
+        let base64Data = arg
+                            .replace(/^data:image\/png;base64,/, "")
+                            .replace(/^data:image\/jpeg;base64,/, "");
+
+        fs.writeFile(result.filePath, base64Data, 'base64', err => {
+          if (err) {
+            console.error(err);
+          }
+          // file written successfully
+        });
+
+    }).catch(err => {
+      console.log(err);
+    });
+});
+
+ipcMain.on('flipImage', (event, arg) => {
+    Jimp.read(dataToBuffer(arg), (err, image) => {
+      if (err) throw err;
+      else {
+        image.mirror(true, false)
+        .getBase64(Jimp.MIME_JPEG, function (err, src) {
+            //bakchere
+
+            fp.process(src);
+            mainWindow.show();
+        });
+      }
+    });
+});
+
+ipcMain.on('rotateImage', (event, arg) => {
+    Jimp.read(dataToBuffer(arg), (err, image) => {
+      if (err) throw err;
+      else {
+        image.rotate(-90)
+        .getBase64(Jimp.MIME_JPEG, function (err, src) {
+            //bakchere
+
+            fp.process(src);
+            mainWindow.show();
+        });
+      }
+    });
+});
 
 ipcMain.on('file', (event, arg) => {
     fp.process(arg);
@@ -289,7 +368,8 @@ ipcMain.on('recents:add', (event, arg) => {
 
 ipcMain.on('selectfile', (event, arg) => {
     dialog.showOpenDialog(mainWindow, {
-        title: "Open image"
+        title: "Open image",
+        filters: [{ name: 'Images', extensions: supportedExtensions }]
     }).then(result => {
         if (!result.cancelled && result.filePaths.length > 0) {
             let files = result.filePaths;

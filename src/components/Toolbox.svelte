@@ -65,13 +65,25 @@
 			legacy={legacy}
 			tips={tips}
 		/>
-		<!--
-		<button class="control control-">
+		<Tool
+			size="13px"
+			legacy={legacy}
+			tips={tips}
+			tiptext={"Flip image"}
+			on:click={e => { ipcRenderer.send('flipImage', fileSelected); }}
+		>
 	    	<i class="fas fa-sync-alt"></i>
-		</button>
-		<button class="control control-">
+		</Tool>
+		<Tool
+			size="12px"
+			legacy={legacy}
+			tips={tips}
+			tiptext={"Rotate image"}
+			on:click={e => { ipcRenderer.send('rotateImage', fileSelected); }}
+		>
 	    	<i class="fas fa-redo"></i>
-		</button>
+		</Tool>
+		<!--
 		<button class="control control-">
 	    	<i class="fas fa-palette"></i>
 		</button>-->
@@ -85,5 +97,11 @@
 		flex-shrink: 0;
 		box-sizing: border-box;
 		margin-top: -1px;
+	}
+
+	@media only screen and (max-width: 300px) {
+		.toolbox {
+			display: none;
+		}
 	}
 </style>

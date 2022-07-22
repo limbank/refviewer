@@ -15,7 +15,8 @@
 </div>
 <div class="about-text">
 	GHOST<br>
-	Sade
+	Sade<br>
+	Ennoriel
 </div>
 <div class="about-text-title">
 	Made with:
@@ -30,13 +31,13 @@
 <div class="about-text">
 	<ul class="about-list">
 		<li class="about-list-icon">
-			<a href="https://trello.com/b/NlCLf8lW/refviewer" target="_blank" rel="nofollow"><i class="fab fa-trello"></i></a>
+			<a href="https://trello.com/b/NlCLf8lW/refviewer"><i class="fab fa-trello"></i></a>
 		</li>
 		<li class="about-list-icon">
-			<a href="https://github.com/atomic-addison/refviewer" target="_blank" rel="nofollow"><i class="fab fa-github-square"></i></a>
+			<a href="https://github.com/atomic-addison/refviewer"><i class="fab fa-github-square"></i></a>
 		</li>
 		<li class="about-list-icon">
-			<a href="https://source.dog" target="_blank" rel="nofollow"><i class="fas fa-home"></i></a>
+			<a href="https://source.dog"><i class="fas fa-home"></i></a>
 		</li>
 	</ul>
 </div>

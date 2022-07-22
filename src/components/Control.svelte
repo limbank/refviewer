@@ -13,6 +13,7 @@
 	export let legacy = false;
 	export let size = 14;
 	export let tiptext = false;
+	export let persistent = false;
 </script>
 
 <button
@@ -23,6 +24,7 @@
 	on:click
 	class="control"
 	class:legacy
+	class:persistent
 >
 	<slot></slot>
 </button>
@@ -84,6 +86,12 @@
 			    color: black;
 			    background-color: #3F3F3F;
 		    }
+		}
+	}
+
+	@media only screen and (max-width: 300px) {
+		.control:not(.persistent) {
+			display: none;
 		}
 	}
 </style>

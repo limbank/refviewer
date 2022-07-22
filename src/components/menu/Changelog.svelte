@@ -54,6 +54,9 @@
 </div>
 <ul class="change-list">
 	<li>
+		Removed support for untested .cr2 and .nef formats
+	</li>
+	<li>
 		Changed the theme
 	</li>
 	<li>

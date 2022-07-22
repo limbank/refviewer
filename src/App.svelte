@@ -28,7 +28,7 @@
 	let recents;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.26";
+	let version = "4.0.28";
 
 	let pickedColor;
 	let chosenColor;
@@ -38,9 +38,7 @@
 
 	let backdropColor = "#2F2E33";
 
-	let readablefiletypes = [
-		"png", "jpg", "jpeg", "bmp", "gif"
-	];
+	let readablefiletypes = ['img', 'png', 'bmp', 'gif', 'jpeg', 'jpg', 'psd', 'tif', 'tiff', 'dng', 'webp'];
 
 	let m = { x: 0, y: 0 };
 
@@ -500,6 +498,17 @@
 		    image-rendering: -webkit-crisp-edges;
 		    image-rendering: pixelated;
 		    image-rendering: crisp-edges;
+		}
+	}
+
+	@media only screen and (max-width: 300px) {
+		.backdrop {
+			&-left {
+				left: 0;
+				top: 0;
+				bottom: 0;
+				width: 17px;
+			}
 		}
 	}
 </style>
