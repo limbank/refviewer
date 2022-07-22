@@ -1,5 +1,6 @@
 <script>
-	import ColorPicker from 'svelte-awesome-color-picker/ColorPicker.svelte';
+	import ColorPicker from 'svelte-awesome-color-picker';
+	import tinycolor from 'tinycolor2';
 	import Control from './Control.svelte';
 
 	export let legacy = false;
@@ -8,46 +9,47 @@
 	export let alpha = true;
 
 	export let hex;
-	export let color;
+	export let rgb = tinycolor(hex).toRgb();
 
-	$: console.log("Got color", color);
+	$: console.log("Got color", rgb);
+	$: console.log("Got color", hex);
 </script>
 
 <div class="picker-wrapper">
-	<ColorPicker bind:color isOpen isInput={false} isAlpha={alpha} />
+	<ColorPicker bind:rgb bind:hex isOpen isInput={false} isAlpha={alpha} />
 	<div class="picker-split">
 		<div class="picker-controls">
 			<div class="picker-controls-row">
 				<label>
 					<span>R:</span>
-					<input placeholder="R" type="text" bind:value={color.r}>
+					<input placeholder="R" type="text" bind:value={rgb.r}>
 				</label>
 				<label>
 					<span>G:</span>
-					<input placeholder="G" type="text" bind:value={color.g}>
+					<input placeholder="G" type="text" bind:value={rgb.g}>
 				</label>
 				<label>
 					<span>B:</span>
-					<input placeholder="B" type="text" bind:value={color.b}>
+					<input placeholder="B" type="text" bind:value={rgb.b}>
 				</label>
 				{#if alpha}
 					<label>
 						<span>A:</span>
-						<input placeholder="A" type="text" bind:value={color.a}>
+						<input placeholder="A" type="text" bind:value={rgb.a}>
 					</label>
 				{/if}
 			</div>
 			<div class="picker-controls-row">
 				<label>
 					<span>HEX:</span>
-					<input placeholder="Hex" type="text" bind:value={color.hex}>
+					<input placeholder="Hex" type="text" bind:value={hex}>
 					<Control
 						tips={tips}
 						legacy={legacy}
 						size="12px"
 						tiptext="Copy"
 						on:click={e => {
-				            navigator.clipboard.writeText(color.hex).then(() => {
+				            navigator.clipboard.writeText(hex).then(() => {
 							    console.log("Copied to clipboard");
 							}, () => {
 							    console.log("Failed to copy");
@@ -63,7 +65,8 @@
 							size="12px"
 							tiptext="Reset"
 							on:click={e => {
-								color = reset;
+								hex = reset;
+								console.log("clicked!", hex, reset);
 							}}
 						>
 							<i class="fas fa-redo"></i>

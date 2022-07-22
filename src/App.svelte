@@ -6,6 +6,7 @@
 	import Dropfield from './components/Dropfield.svelte';
 	import Cursor from './components/Cursor.svelte';
 	import Zoomscale from './components/Zoomscale.svelte';
+	import tinycolor from 'tinycolor2';
 
 	var HTMLParser = require('node-html-parser');
 	import { Canvas, Layer, t } from "svelte-canvas";
@@ -27,7 +28,7 @@
 	let recents;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.24";
+	let version = "4.0.26";
 
 	let pickedColor;
 	let chosenColor;
@@ -35,9 +36,7 @@
 
 	let zoomscale = 1;
 
-	let backdropColor = {
-		hex: "#2F2E33"
-	};
+	let backdropColor = "#2F2E33";
 
 	let readablefiletypes = [
 		"png", "jpg", "jpeg", "bmp", "gif"
@@ -116,11 +115,6 @@
 
 		return false;
 	}
-	
-    function rgbToHex(red, green, blue) {
-		const rgb = (red << 16) | (green << 8) | (blue << 0);
-		return '#' + (0x1000000 + rgb).toString(16).slice(1);
-	}
 
     function getMousePos(canvas, evt, rect) {
         return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
@@ -151,7 +145,7 @@
         var pixel = imageData.data;
         var pixelColor = "rgba("+pixel[0]+", "+pixel[1]+", "+pixel[2]+", "+pixel[3]+")";
 
-        chosenColor = rgbToHex(pixel[0], pixel[1], pixel[2]);
+        chosenColor = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2] }).toHexString();
   	}
 
 	function handleFilesSelect(e) {
@@ -292,13 +286,7 @@
 		on:clear={e => {
 			file = false;
 
-	    	backdropColor = {
-				hex: "#2F2E33",
-				r: "47",
-				g: "46",
-				b: "51",
-				a: "1"
-			};
+	    	backdropColor = "#2F2E33";
 
 		    try {
 		    	console.log("destroying");

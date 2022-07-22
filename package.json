@@ -28,18 +28,20 @@
         "sass": "^1.35.2",
         "sirv-cli": "^1.0.0",
         "svelte": "^3.0.0",
+        "svelte-awesome-color-picker": "^1.1.7",
         "svelte-preprocess": "^4.7.4"
     },
     "dependencies": {
         "@panzoom/panzoom": "^4.4.4",
+        "chyme": "^1.1.4",
         "fs-extra": "^10.1.0",
         "image-data-uri": "^2.0.1",
         "jimp": "^0.16.1",
         "node-html-parser": "^5.3.3",
         "patch-package": "^6.4.7",
         "screenshot-desktop": "^1.12.7",
-        "svelte-awesome-color-picker": "^0.0.10",
         "svelte-canvas": "^0.7.1",
-        "svelte-popperjs": "^1.2.10"
+        "svelte-popperjs": "^1.2.10",
+        "tinycolor2": "^1.4.2"
     }
 }

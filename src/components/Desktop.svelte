@@ -1,11 +1,9 @@
 <script>
 	export let legacy = false;
-	export let backdropColor = {
-		hex: "#2F2E33"
-	};
+	export let backdropColor = "#2F2E33";
 </script>
 
-<div class="desktop" class:legacy={legacy} on:dragover on:drop style="background:{backdropColor.hex};">
+<div class="desktop" class:legacy={legacy} on:dragover on:drop style="background:{backdropColor};">
 	<slot ></slot>
 </div>
 

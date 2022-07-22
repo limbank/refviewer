@@ -13,9 +13,7 @@
 	    strategy: 'fixed',
 	});
 
-	export let backdropColor = {
-		hex: "#000000"
-	};
+	export let backdropColor = "#000000";
 
 	let showDropdown = false;
 
@@ -44,14 +42,8 @@
 		}}
 	>
 		<Colorpicker
-			bind:color={backdropColor}
-			reset={{
-				hex: "#2F2E33",
-				r: "47",
-				g: "46",
-				b: "51",
-				a: "1"
-			}}
+			bind:hex={backdropColor}
+			reset="#2F2E33"
 			legacy={legacy}
 			tips={tips} />
 	</Dropdown>

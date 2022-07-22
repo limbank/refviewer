@@ -13,9 +13,7 @@
 	    strategy: 'fixed',
 	});
 
-	let color = {
-		hex: "#000000"
-	};
+	let hex = "#000000";
 
 	let showDropdown = false;
 
@@ -38,13 +36,11 @@
 	}
 
 	function manageDropdown() {
-		color = {
-			hex: pickedColor
-		};
+		hex = pickedColor;
 
 		showDropdown = true;
 
-		console.log("generated color", color);
+		console.log("generated color", hex);
 	}
 
 	$: if (pickedColor) manageDropdown();
@@ -72,7 +68,7 @@
 		}}
 	>
 		<Colorpicker
-			bind:color
+			bind:hex
 			alpha={false}
 			legacy={legacy}
 			tips={tips} />

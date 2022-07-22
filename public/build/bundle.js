@@ -267,6 +267,20 @@ var app = (function () {
         node.addEventListener(event, handler, options);
         return () => node.removeEventListener(event, handler, options);
     }
+    function prevent_default(fn) {
+        return function (event) {
+            event.preventDefault();
+            // @ts-ignore
+            return fn.call(this, event);
+        };
+    }
+    function stop_propagation(fn) {
+        return function (event) {
+            event.stopPropagation();
+            // @ts-ignore
+            return fn.call(this, event);
+        };
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -4583,9 +4597,9 @@ var app = (function () {
     			div = element("div");
     			if (default_slot) default_slot.c();
     			attr_dev(div, "class", "desktop svelte-1o7d29u");
-    			set_style(div, "background", /*backdropColor*/ ctx[1].hex);
+    			set_style(div, "background", /*backdropColor*/ ctx[1]);
     			toggle_class(div, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div, file$p, 7, 0, 106);
+    			add_location(div, file$p, 5, 0, 92);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4616,7 +4630,7 @@ var app = (function () {
     			}
 
     			if (!current || dirty & /*backdropColor*/ 2) {
-    				set_style(div, "background", /*backdropColor*/ ctx[1].hex);
+    				set_style(div, "background", /*backdropColor*/ ctx[1]);
     			}
 
     			if (dirty & /*legacy*/ 1) {
@@ -4655,7 +4669,7 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Desktop", slots, ['default']);
     	let { legacy = false } = $$props;
-    	let { backdropColor = { hex: "#2F2E33" } } = $$props;
+    	let { backdropColor = "#2F2E33" } = $$props;
     	const writable_props = ["legacy", "backdropColor"];
 
     	Object.keys($$props).forEach(key => {
@@ -5342,10 +5356,6 @@ var app = (function () {
     	}
     }
 
-    /**
-     * Convert HSV representation to RGB HEX string.
-     * Credits to http://www.raphaeljs.com
-     */
     function hsv2rgb({ h, s, v, a = 1 }) {
         let R, G, B;
         let _h = (h % 360) / 60;
@@ -5361,18 +5371,12 @@ var app = (function () {
         const b = Math.floor(B * 255);
         return { r, g, b, a };
     }
-    /**
-     * Converts RGB representation to HEX representation
-     */
     function rgb2hex({ r, g, b, a = 1 }) {
         return {
             hex: '#' +
                 [r, g, b, Math.round(a * 255) | 0].reduce((acc, v) => `${acc}${v.toString(16).padStart(2, '0')}`, '')
         };
     }
-    /**
-     * Converts HEX representation to RGB representation
-     */
     function hex2rgb(hex) {
         const h = hex.hex;
         return {
@@ -5382,10 +5386,6 @@ var app = (function () {
             a: h.length <= 7 ? 1 : parseInt(h.substring(7, 9), 16) / 255
         };
     }
-    /**
-     * Convert RGB representation to HSV.
-     * Credits to http://www.raphaeljs.com
-     */
     function rgb2hsv$1({ r, g, b, a = 1 }) {
         const R = r / 255;
         const G = g / 255;
@@ -5394,7 +5394,7 @@ var app = (function () {
         const C = V - Math.min(R, G, B);
         const S = C === 0 ? 0 : C / V;
         let H = C === 0
-            ? null
+            ? 0
             : V === R
                 ? (G - B) / C + (G < B ? 6 : 0)
                 : V === G
@@ -5410,33 +5410,24 @@ var app = (function () {
     }
     function hsv2Color({ h, s, v, a }) {
         const rgb = hsv2rgb({ h, s, v, a });
-        return {
-            ...rgb,
-            ...rgb2hex(rgb),
-            h,
+        return Object.assign(Object.assign(Object.assign({}, rgb), rgb2hex(rgb)), { h,
             s,
-            v
-        };
+            v });
     }
     function rgb2Color({ r, g, b, a }) {
         const rgb = { r, g, b, a };
-        return {
-            ...rgb2hsv$1(rgb),
-            ...rgb2hex(rgb),
-            r,
+        return Object.assign(Object.assign(Object.assign({}, rgb2hsv$1(rgb)), rgb2hex(rgb)), { r,
             g,
-            b
-        };
+            b });
     }
     function hex2Color({ hex }) {
         const rgb = hex2rgb({ hex });
-        return {
-            ...rgb,
-            ...rgb2hsv$1(rgb),
-            hex
-        };
+        return Object.assign(Object.assign(Object.assign({}, rgb), rgb2hsv$1(rgb)), { hex });
     }
-    var _ = { hsv2Color, rgb2Color, hex2Color };
+
+    function clamp(value, min, max) {
+        return Math.min(Math.max(min, value), max);
+    }
 
     const subscriber_queue = [];
     /**
@@ -5583,23 +5574,12 @@ var app = (function () {
         return min + ((max - min) / 2) * (1 - Math.cos(Math.PI * X));
     }
 
-    /**
-     * Clamps value between a minimum and a maximum.
-     * @param value Numeric value to clamp.
-     * @param min Lower bound
-     * @param max Upper bound
-     * @returns clamped value between the lower and upper bound.
-     */
-    function clamp(value, min, max) {
-        return Math.min(Math.max(min, value), max);
-    }
-
     /* node_modules\svelte-awesome-color-picker\components\Picker.svelte generated by Svelte v3.38.3 */
 
-    const { window: window_1 } = globals;
+    const { window: window_1$2 } = globals;
     const file$m = "node_modules\\svelte-awesome-color-picker\\components\\Picker.svelte";
 
-    // (101:0) <svelte:component this={components.pickerWrapper} {focused} {toRight}>
+    // (100:0) <svelte:component this={components.pickerWrapper} {focused} {toRight}>
     function create_default_slot$8(ctx) {
     	let div;
     	let switch_instance;
@@ -5612,7 +5592,7 @@ var app = (function () {
     		return {
     			props: {
     				pos: /*pos*/ ctx[8],
-    				color: _.hsv2Color({
+    				color: hsv2Color({
     					h: /*h*/ ctx[3],
     					s: /*s*/ ctx[0],
     					v: /*v*/ ctx[1],
@@ -5631,10 +5611,10 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
-    			attr_dev(div, "class", "picker svelte-6pruf6");
+    			attr_dev(div, "class", "picker svelte-uiwgvv");
     			attr_dev(div, "tabindex", "0");
-    			set_style(div, "--color-bg", /*colorBg*/ ctx[7].hex);
-    			add_location(div, file$m, 101, 1, 3141);
+    			set_style(div, "--color-bg", /*colorBg*/ ctx[7]?.hex);
+    			add_location(div, file$m, 100, 1, 3021);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -5648,9 +5628,9 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div, "mousedown", /*pickerMouseDown*/ ctx[9], false, false, false),
+    					listen_dev(div, "mousedown", stop_propagation(prevent_default(/*pickerMouseDown*/ ctx[9])), false, true, true),
     					listen_dev(div, "touchstart", /*touch*/ ctx[15], false, false, false),
-    					listen_dev(div, "touchmove", /*touch*/ ctx[15], false, false, false),
+    					listen_dev(div, "touchmove", stop_propagation(prevent_default(/*touch*/ ctx[15])), false, true, true),
     					listen_dev(div, "touchend", /*touch*/ ctx[15], false, false, false)
     				];
 
@@ -5661,7 +5641,7 @@ var app = (function () {
     			const switch_instance_changes = {};
     			if (dirty & /*pos*/ 256) switch_instance_changes.pos = /*pos*/ ctx[8];
 
-    			if (dirty & /*h, s, v*/ 11) switch_instance_changes.color = _.hsv2Color({
+    			if (dirty & /*h, s, v*/ 11) switch_instance_changes.color = hsv2Color({
     				h: /*h*/ ctx[3],
     				s: /*s*/ ctx[0],
     				v: /*v*/ ctx[1],
@@ -5693,7 +5673,7 @@ var app = (function () {
     			}
 
     			if (!current || dirty & /*colorBg*/ 128) {
-    				set_style(div, "--color-bg", /*colorBg*/ ctx[7].hex);
+    				set_style(div, "--color-bg", /*colorBg*/ ctx[7]?.hex);
     			}
     		},
     		i: function intro(local) {
@@ -5718,7 +5698,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$8.name,
     		type: "slot",
-    		source: "(101:0) <svelte:component this={components.pickerWrapper} {focused} {toRight}>",
+    		source: "(100:0) <svelte:component this={components.pickerWrapper} {focused} {toRight}>",
     		ctx
     	});
 
@@ -5767,11 +5747,11 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(window_1, "mouseup", /*mouseUp*/ ctx[10], false, false, false),
-    					listen_dev(window_1, "mousedown", /*mouseDown*/ ctx[12], false, false, false),
-    					listen_dev(window_1, "mousemove", /*mouseMove*/ ctx[11], false, false, false),
-    					listen_dev(window_1, "keyup", /*keyup*/ ctx[13], false, false, false),
-    					listen_dev(window_1, "keydown", /*keydown*/ ctx[14], false, false, false)
+    					listen_dev(window_1$2, "mouseup", /*mouseUp*/ ctx[10], false, false, false),
+    					listen_dev(window_1$2, "mousedown", /*mouseDown*/ ctx[12], false, false, false),
+    					listen_dev(window_1$2, "mousemove", /*mouseMove*/ ctx[11], false, false, false),
+    					listen_dev(window_1$2, "keyup", /*keyup*/ ctx[13], false, false, false),
+    					listen_dev(window_1$2, "keydown", /*keydown*/ ctx[14], false, false, false)
     				];
 
     				mounted = true;
@@ -5892,7 +5872,7 @@ var app = (function () {
     	}
 
     	function keyup(e) {
-    		if (e.key === "Tab") $$invalidate(6, focused = document.activeElement.isSameNode(picker));
+    		if (e.key === "Tab") $$invalidate(6, focused = !!document.activeElement?.isSameNode(picker));
     		if (!e.repeat && focused) move();
     	}
 
@@ -5959,11 +5939,11 @@ var app = (function () {
     	};
 
     	$$self.$capture_state = () => ({
-    		_,
+    		hsv2Color,
+    		clamp,
     		keyPressed,
     		keyPressedCustom,
     		easeInOutSin,
-    		clamp,
     		components,
     		h,
     		s,
@@ -6012,7 +5992,7 @@ var app = (function () {
 
     	$$self.$$.update = () => {
     		if ($$self.$$.dirty & /*h*/ 8) {
-    			if (typeof h === "number") $$invalidate(7, colorBg = _.hsv2Color({ h, s: 1, v: 1, a: 1 }));
+    			if (typeof h === "number") $$invalidate(7, colorBg = hsv2Color({ h, s: 1, v: 1, a: 1 }));
     		}
 
     		if ($$self.$$.dirty & /*s, v, picker*/ 35) {
@@ -6140,6 +6120,8 @@ var app = (function () {
     }
 
     /* node_modules\svelte-awesome-color-picker\components\Slider.svelte generated by Svelte v3.38.3 */
+
+    const { window: window_1$1 } = globals;
     const file$l = "node_modules\\svelte-awesome-color-picker\\components\\Slider.svelte";
 
     // (82:0) <svelte:component this={components.sliderWrapper} {focused} {toRight}>
@@ -6169,10 +6151,10 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
-    			attr_dev(div, "class", "slider svelte-1aqbz3r");
+    			attr_dev(div, "class", "slider svelte-k84egy");
     			attr_dev(div, "tabindex", "0");
     			toggle_class(div, "to-right", /*toRight*/ ctx[1]);
-    			add_location(div, file$l, 82, 1, 2492);
+    			add_location(div, file$l, 82, 1, 2429);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -6186,9 +6168,9 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div, "mousedown", /*mouseDown*/ ctx[5], false, false, false),
+    					listen_dev(div, "mousedown", stop_propagation(prevent_default(/*mouseDown*/ ctx[5])), false, true, true),
     					listen_dev(div, "touchstart", /*touch*/ ctx[10], false, false, false),
-    					listen_dev(div, "touchmove", /*touch*/ ctx[10], false, false, false),
+    					listen_dev(div, "touchmove", stop_propagation(prevent_default(/*touch*/ ctx[10])), false, true, true),
     					listen_dev(div, "touchend", /*touch*/ ctx[10], false, false, false)
     				];
 
@@ -6299,10 +6281,10 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(window, "mouseup", /*mouseUp*/ ctx[6], false, false, false),
-    					listen_dev(window, "mousemove", /*mouseMove*/ ctx[7], false, false, false),
-    					listen_dev(window, "keyup", /*keyup*/ ctx[8], false, false, false),
-    					listen_dev(window, "keydown", /*keydown*/ ctx[9], false, false, false)
+    					listen_dev(window_1$1, "mouseup", /*mouseUp*/ ctx[6], false, false, false),
+    					listen_dev(window_1$1, "mousemove", /*mouseMove*/ ctx[7], false, false, false),
+    					listen_dev(window_1$1, "keyup", /*keyup*/ ctx[8], false, false, false),
+    					listen_dev(window_1$1, "keydown", /*keydown*/ ctx[9], false, false, false)
     				];
 
     				mounted = true;
@@ -6415,7 +6397,7 @@ var app = (function () {
     	}
 
     	function keyup(e) {
-    		if (e.key === "Tab") $$invalidate(4, focused = document.activeElement.isSameNode(slider));
+    		if (e.key === "Tab") $$invalidate(4, focused = !!document.activeElement?.isSameNode(slider));
     		if (!e.repeat && focused) move();
     	}
 
@@ -6431,7 +6413,7 @@ var app = (function () {
     			if (!focusMovementIntervalId) {
     				focusMovementCounter = 0;
 
-    				focusMovementIntervalId = setInterval(
+    				focusMovementIntervalId = window.setInterval(
     					() => {
     						const focusMovementFactor = easeInOutSin(++focusMovementCounter);
 
@@ -6595,6 +6577,8 @@ var app = (function () {
     }
 
     /* node_modules\svelte-awesome-color-picker\components\Alpha.svelte generated by Svelte v3.38.3 */
+
+    const { window: window_1 } = globals;
     const file$k = "node_modules\\svelte-awesome-color-picker\\components\\Alpha.svelte";
 
     // (91:0) <svelte:component this={components.alphaWrapper} {focused} {toRight}>
@@ -6611,7 +6595,7 @@ var app = (function () {
     			props: {
     				pos: /*pos*/ ctx[9],
     				toRight: /*toRight*/ ctx[6],
-    				color: _.hsv2Color({
+    				color: hsv2Color({
     					h: /*h*/ ctx[2],
     					s: /*s*/ ctx[3],
     					v: /*v*/ ctx[4],
@@ -6631,10 +6615,10 @@ var app = (function () {
     			div = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
     			attr_dev(div, "tabindex", "0");
-    			attr_dev(div, "class", "alpha svelte-1yfa8tq");
-    			set_style(div, "--alpha-color", /*hex*/ ctx[5].substring(0, 7));
+    			attr_dev(div, "class", "alpha svelte-1526m2d");
+    			set_style(div, "--alpha-color", /*hex*/ ctx[5]?.substring(0, 7));
     			toggle_class(div, "to-right", /*toRight*/ ctx[6]);
-    			add_location(div, file$k, 91, 1, 2656);
+    			add_location(div, file$k, 91, 1, 2590);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -6648,9 +6632,9 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div, "mousedown", /*mouseDown*/ ctx[10], false, false, false),
+    					listen_dev(div, "mousedown", stop_propagation(prevent_default(/*mouseDown*/ ctx[10])), false, true, true),
     					listen_dev(div, "touchstart", /*touch*/ ctx[15], false, false, false),
-    					listen_dev(div, "touchmove", /*touch*/ ctx[15], false, false, false),
+    					listen_dev(div, "touchmove", stop_propagation(prevent_default(/*touch*/ ctx[15])), false, true, true),
     					listen_dev(div, "touchend", /*touch*/ ctx[15], false, false, false)
     				];
 
@@ -6662,7 +6646,7 @@ var app = (function () {
     			if (dirty & /*pos*/ 512) switch_instance_changes.pos = /*pos*/ ctx[9];
     			if (dirty & /*toRight*/ 64) switch_instance_changes.toRight = /*toRight*/ ctx[6];
 
-    			if (dirty & /*h, s, v, a*/ 29) switch_instance_changes.color = _.hsv2Color({
+    			if (dirty & /*h, s, v, a*/ 29) switch_instance_changes.color = hsv2Color({
     				h: /*h*/ ctx[2],
     				s: /*s*/ ctx[3],
     				v: /*v*/ ctx[4],
@@ -6694,7 +6678,7 @@ var app = (function () {
     			}
 
     			if (!current || dirty & /*hex*/ 32) {
-    				set_style(div, "--alpha-color", /*hex*/ ctx[5].substring(0, 7));
+    				set_style(div, "--alpha-color", /*hex*/ ctx[5]?.substring(0, 7));
     			}
 
     			if (dirty & /*toRight*/ 64) {
@@ -6772,10 +6756,10 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(window, "mouseup", /*mouseUp*/ ctx[11], false, false, false),
-    					listen_dev(window, "mousemove", /*mouseMove*/ ctx[12], false, false, false),
-    					listen_dev(window, "keyup", /*keyup*/ ctx[13], false, false, false),
-    					listen_dev(window, "keydown", /*keydown*/ ctx[14], false, false, false)
+    					listen_dev(window_1, "mouseup", /*mouseUp*/ ctx[11], false, false, false),
+    					listen_dev(window_1, "mousemove", /*mouseMove*/ ctx[12], false, false, false),
+    					listen_dev(window_1, "keyup", /*keyup*/ ctx[13], false, false, false),
+    					listen_dev(window_1, "keydown", /*keydown*/ ctx[14], false, false, false)
     				];
 
     				mounted = true;
@@ -6856,7 +6840,7 @@ var app = (function () {
     	let { h } = $$props;
     	let { s } = $$props;
     	let { v } = $$props;
-    	let { a } = $$props;
+    	let { a = 1 } = $$props;
     	let { hex } = $$props;
     	let { toRight } = $$props;
     	let alpha;
@@ -6893,7 +6877,7 @@ var app = (function () {
     	}
 
     	function keyup(e) {
-    		if (e.key === "Tab") $$invalidate(8, focused = document.activeElement.isSameNode(alpha));
+    		if (e.key === "Tab") $$invalidate(8, focused = !!document.activeElement?.isSameNode(alpha));
     		if (!e.repeat && focused) move();
     	}
 
@@ -6913,7 +6897,7 @@ var app = (function () {
     			if (!focusMovementIntervalId) {
     				focusMovementCounter = 0;
 
-    				focusMovementIntervalId = setInterval(
+    				focusMovementIntervalId = window.setInterval(
     					() => {
     						const focusMovementFactor = easeInOutSin(++focusMovementCounter);
 
@@ -6965,7 +6949,7 @@ var app = (function () {
     	};
 
     	$$self.$capture_state = () => ({
-    		_,
+    		hsv2Color,
     		keyPressed,
     		keyPressedCustom,
     		easeInOutSin,
@@ -7089,10 +7073,6 @@ var app = (function () {
     			console.warn("<Alpha> was created without expected prop 'v'");
     		}
 
-    		if (/*a*/ ctx[0] === undefined && !("a" in props)) {
-    			console.warn("<Alpha> was created without expected prop 'a'");
-    		}
-
     		if (/*hex*/ ctx[5] === undefined && !("hex" in props)) {
     			console.warn("<Alpha> was created without expected prop 'hex'");
     		}
@@ -7167,9 +7147,9 @@ var app = (function () {
     	}
     }
 
-    /* node_modules\svelte-awesome-color-picker\components\SliderIndicator.svelte generated by Svelte v3.38.3 */
+    /* node_modules\svelte-awesome-color-picker\components\variant\default\SliderIndicator.svelte generated by Svelte v3.38.3 */
 
-    const file$j = "node_modules\\svelte-awesome-color-picker\\components\\SliderIndicator.svelte";
+    const file$j = "node_modules\\svelte-awesome-color-picker\\components\\variant\\default\\SliderIndicator.svelte";
 
     function create_fragment$m(ctx) {
     	let div;
@@ -7181,7 +7161,7 @@ var app = (function () {
     			attr_dev(div, "style", div_style_value = "" + ((/*toRight*/ ctx[1] ? "left" : "top") + ": " + /*pos*/ ctx[0] + "%;"));
     			attr_dev(div, "class", "svelte-1vfj60t");
     			toggle_class(div, "to-right", /*toRight*/ ctx[1]);
-    			add_location(div, file$j, 5, 0, 77);
+    			add_location(div, file$j, 5, 0, 73);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7302,9 +7282,9 @@ var app = (function () {
     	}
     }
 
-    /* node_modules\svelte-awesome-color-picker\components\PickerIndicator.svelte generated by Svelte v3.38.3 */
+    /* node_modules\svelte-awesome-color-picker\components\variant\default\PickerIndicator.svelte generated by Svelte v3.38.3 */
 
-    const file$i = "node_modules\\svelte-awesome-color-picker\\components\\PickerIndicator.svelte";
+    const file$i = "node_modules\\svelte-awesome-color-picker\\components\\variant\\default\\PickerIndicator.svelte";
 
     function create_fragment$l(ctx) {
     	let div;
@@ -7316,7 +7296,7 @@ var app = (function () {
     			set_style(div, "top", /*pos*/ ctx[0].y + "%");
     			set_style(div, "background-color", /*color*/ ctx[1].hex);
     			attr_dev(div, "class", "svelte-jwe14i");
-    			add_location(div, file$i, 4, 0, 56);
+    			add_location(div, file$i, 4, 0, 53);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7514,9 +7494,9 @@ var app = (function () {
     	}
     }
 
-    /* node_modules\svelte-awesome-color-picker\components\PickerWrapper.svelte generated by Svelte v3.38.3 */
+    /* node_modules\svelte-awesome-color-picker\components\variant\default\PickerWrapper.svelte generated by Svelte v3.38.3 */
 
-    const file$h = "node_modules\\svelte-awesome-color-picker\\components\\PickerWrapper.svelte";
+    const file$h = "node_modules\\svelte-awesome-color-picker\\components\\variant\\default\\PickerWrapper.svelte";
 
     function create_fragment$j(ctx) {
     	let div;
@@ -7528,10 +7508,10 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "svelte-18zlsxd");
+    			attr_dev(div, "class", "svelte-1uiperi");
     			toggle_class(div, "focused", /*focused*/ ctx[0]);
     			toggle_class(div, "to-right", /*toRight*/ ctx[1]);
-    			add_location(div, file$h, 4, 0, 62);
+    			add_location(div, file$h, 4, 0, 59);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7658,9 +7638,9 @@ var app = (function () {
     	}
     }
 
-    /* node_modules\svelte-awesome-color-picker\components\SliderWrapper.svelte generated by Svelte v3.38.3 */
+    /* node_modules\svelte-awesome-color-picker\components\variant\default\SliderWrapper.svelte generated by Svelte v3.38.3 */
 
-    const file$g = "node_modules\\svelte-awesome-color-picker\\components\\SliderWrapper.svelte";
+    const file$g = "node_modules\\svelte-awesome-color-picker\\components\\variant\\default\\SliderWrapper.svelte";
 
     function create_fragment$i(ctx) {
     	let div;
@@ -7672,10 +7652,10 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "svelte-ydfru3");
+    			attr_dev(div, "class", "svelte-6vskim");
     			toggle_class(div, "focused", /*focused*/ ctx[0]);
     			toggle_class(div, "to-right", /*toRight*/ ctx[1]);
-    			add_location(div, file$g, 4, 0, 62);
+    			add_location(div, file$g, 4, 0, 59);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7802,15 +7782,16 @@ var app = (function () {
     	}
     }
 
-    /* node_modules\svelte-awesome-color-picker\components\Input.svelte generated by Svelte v3.38.3 */
+    /* node_modules\svelte-awesome-color-picker\components\variant\default\Input.svelte generated by Svelte v3.38.3 */
 
-    const file$f = "node_modules\\svelte-awesome-color-picker\\components\\Input.svelte";
+    const file$f = "node_modules\\svelte-awesome-color-picker\\components\\variant\\default\\Input.svelte";
 
     function create_fragment$h(ctx) {
     	let button_1;
     	let div;
     	let t0;
     	let t1;
+    	let t2;
     	let input;
     	let input_value_value;
     	let mounted;
@@ -7820,17 +7801,18 @@ var app = (function () {
     		c: function create() {
     			button_1 = element("button");
     			div = element("div");
-    			t0 = text("\n\tChoose a color");
-    			t1 = space();
+    			t0 = space();
+    			t1 = text(/*label*/ ctx[2]);
+    			t2 = space();
     			input = element("input");
     			set_style(div, "background-color", /*color*/ ctx[1].hex);
-    			attr_dev(div, "class", "svelte-1ycc135");
-    			add_location(div, file$f, 12, 1, 278);
-    			attr_dev(button_1, "class", "svelte-1ycc135");
-    			add_location(button_1, file$f, 11, 0, 249);
+    			attr_dev(div, "class", "svelte-1qwu023");
+    			add_location(div, file$f, 13, 1, 289);
+    			attr_dev(button_1, "class", "svelte-1qwu023");
+    			add_location(button_1, file$f, 12, 0, 260);
     			attr_dev(input, "type", "hidden");
     			input.value = input_value_value = /*color*/ ctx[1].hex;
-    			add_location(input, file$f, 15, 0, 351);
+    			add_location(input, file$f, 16, 0, 355);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7839,12 +7821,13 @@ var app = (function () {
     			insert_dev(target, button_1, anchor);
     			append_dev(button_1, div);
     			append_dev(button_1, t0);
-    			/*button_1_binding*/ ctx[4](button_1);
-    			insert_dev(target, t1, anchor);
+    			append_dev(button_1, t1);
+    			/*button_1_binding*/ ctx[5](button_1);
+    			insert_dev(target, t2, anchor);
     			insert_dev(target, input, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(window, "keyup", /*keyup*/ ctx[2], false, false, false);
+    				dispose = listen_dev(window, "keyup", /*keyup*/ ctx[3], false, false, false);
     				mounted = true;
     			}
     		},
@@ -7852,6 +7835,8 @@ var app = (function () {
     			if (dirty & /*color*/ 2) {
     				set_style(div, "background-color", /*color*/ ctx[1].hex);
     			}
+
+    			if (dirty & /*label*/ 4) set_data_dev(t1, /*label*/ ctx[2]);
 
     			if (dirty & /*color*/ 2 && input_value_value !== (input_value_value = /*color*/ ctx[1].hex)) {
     				prop_dev(input, "value", input_value_value);
@@ -7861,8 +7846,8 @@ var app = (function () {
     		o: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(button_1);
-    			/*button_1_binding*/ ctx[4](null);
-    			if (detaching) detach_dev(t1);
+    			/*button_1_binding*/ ctx[5](null);
+    			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(input);
     			mounted = false;
     			dispose();
@@ -7885,13 +7870,14 @@ var app = (function () {
     	validate_slots("Input", slots, []);
     	let { button } = $$props;
     	let { color } = $$props;
+    	let { label } = $$props;
     	let { isOpen } = $$props;
 
     	function keyup(e) {
-    		if (document.activeElement.isSameNode(button) && !e.shiftKey && e.key === "Tab") $$invalidate(3, isOpen = true);
+    		if (document.activeElement?.isSameNode(button) && !e.shiftKey && e.key === "Tab") $$invalidate(4, isOpen = true);
     	}
 
-    	const writable_props = ["button", "color", "isOpen"];
+    	const writable_props = ["button", "color", "label", "isOpen"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Input> was created with unknown prop '${key}'`);
@@ -7907,28 +7893,30 @@ var app = (function () {
     	$$self.$$set = $$props => {
     		if ("button" in $$props) $$invalidate(0, button = $$props.button);
     		if ("color" in $$props) $$invalidate(1, color = $$props.color);
-    		if ("isOpen" in $$props) $$invalidate(3, isOpen = $$props.isOpen);
+    		if ("label" in $$props) $$invalidate(2, label = $$props.label);
+    		if ("isOpen" in $$props) $$invalidate(4, isOpen = $$props.isOpen);
     	};
 
-    	$$self.$capture_state = () => ({ button, color, isOpen, keyup });
+    	$$self.$capture_state = () => ({ button, color, label, isOpen, keyup });
 
     	$$self.$inject_state = $$props => {
     		if ("button" in $$props) $$invalidate(0, button = $$props.button);
     		if ("color" in $$props) $$invalidate(1, color = $$props.color);
-    		if ("isOpen" in $$props) $$invalidate(3, isOpen = $$props.isOpen);
+    		if ("label" in $$props) $$invalidate(2, label = $$props.label);
+    		if ("isOpen" in $$props) $$invalidate(4, isOpen = $$props.isOpen);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [button, color, keyup, isOpen, button_1_binding];
+    	return [button, color, label, keyup, isOpen, button_1_binding];
     }
 
     class Input extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$f, create_fragment$h, safe_not_equal, { button: 0, color: 1, isOpen: 3 });
+    		init(this, options, instance$f, create_fragment$h, safe_not_equal, { button: 0, color: 1, label: 2, isOpen: 4 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -7948,7 +7936,11 @@ var app = (function () {
     			console.warn("<Input> was created without expected prop 'color'");
     		}
 
-    		if (/*isOpen*/ ctx[3] === undefined && !("isOpen" in props)) {
+    		if (/*label*/ ctx[2] === undefined && !("label" in props)) {
+    			console.warn("<Input> was created without expected prop 'label'");
+    		}
+
+    		if (/*isOpen*/ ctx[4] === undefined && !("isOpen" in props)) {
     			console.warn("<Input> was created without expected prop 'isOpen'");
     		}
     	}
@@ -7969,6 +7961,14 @@ var app = (function () {
     		throw new Error("<Input>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
+    	get label() {
+    		throw new Error("<Input>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set label(value) {
+    		throw new Error("<Input>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
     	get isOpen() {
     		throw new Error("<Input>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
@@ -7978,9 +7978,9 @@ var app = (function () {
     	}
     }
 
-    /* node_modules\svelte-awesome-color-picker\components\Wrapper.svelte generated by Svelte v3.38.3 */
+    /* node_modules\svelte-awesome-color-picker\components\variant\default\Wrapper.svelte generated by Svelte v3.38.3 */
 
-    const file$e = "node_modules\\svelte-awesome-color-picker\\components\\Wrapper.svelte";
+    const file$e = "node_modules\\svelte-awesome-color-picker\\components\\variant\\default\\Wrapper.svelte";
 
     function create_fragment$g(ctx) {
     	let div;
@@ -7992,11 +7992,11 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "svelte-1u5o2lu");
+    			attr_dev(div, "class", "wrapper svelte-w29n8e");
     			toggle_class(div, "isOpen", /*isOpen*/ ctx[1]);
     			toggle_class(div, "isPopup", /*isPopup*/ ctx[2]);
     			toggle_class(div, "to-right", /*toRight*/ ctx[3]);
-    			add_location(div, file$e, 6, 0, 103);
+    			add_location(div, file$e, 6, 0, 98);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8172,23 +8172,11 @@ var app = (function () {
     	}
     }
 
-    function isHsv(color) {
-        return (color.h !== undefined &&
-            color.s !== undefined &&
-            color.v !== undefined);
-    }
-    function isHex(color) {
-        return color.hex !== undefined;
-    }
-    function isRgb(color) {
-        return (color.r !== undefined &&
-            color.g !== undefined &&
-            color.b !== undefined);
-    }
+    /* node_modules\svelte-awesome-color-picker\components\ColorPicker.svelte generated by Svelte v3.38.3 */
 
-    /* node_modules\svelte-awesome-color-picker\ColorPicker.svelte generated by Svelte v3.38.3 */
+    const { Object: Object_1 } = globals;
 
-    // (77:0) {#if isInput}
+    // (107:0) {#if isInput}
     function create_if_block_1$3(ctx) {
     	let switch_instance;
     	let updating_button;
@@ -8197,24 +8185,31 @@ var app = (function () {
     	let current;
 
     	function switch_instance_button_binding(value) {
-    		/*switch_instance_button_binding*/ ctx[11](value);
+    		/*switch_instance_button_binding*/ ctx[14](value);
     	}
 
     	function switch_instance_isOpen_binding(value) {
-    		/*switch_instance_isOpen_binding*/ ctx[12](value);
+    		/*switch_instance_isOpen_binding*/ ctx[15](value);
     	}
 
-    	var switch_value = /*getComponents*/ ctx[8]().input;
+    	var switch_value = /*getComponents*/ ctx[11]().input;
 
     	function switch_props(ctx) {
-    		let switch_instance_props = { color: /*color*/ ctx[0] };
+    		let switch_instance_props = {
+    			color: {
+    				.../*hsv*/ ctx[1],
+    				.../*rgb*/ ctx[0],
+    				hex: /*hex*/ ctx[2]
+    			},
+    			label: /*label*/ ctx[4]
+    		};
 
-    		if (/*button*/ ctx[6] !== void 0) {
-    			switch_instance_props.button = /*button*/ ctx[6];
+    		if (/*button*/ ctx[9] !== void 0) {
+    			switch_instance_props.button = /*button*/ ctx[9];
     		}
 
-    		if (/*isOpen*/ ctx[1] !== void 0) {
-    			switch_instance_props.isOpen = /*isOpen*/ ctx[1];
+    		if (/*isOpen*/ ctx[3] !== void 0) {
+    			switch_instance_props.isOpen = /*isOpen*/ ctx[3];
     		}
 
     		return {
@@ -8244,21 +8239,28 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const switch_instance_changes = {};
-    			if (dirty & /*color*/ 1) switch_instance_changes.color = /*color*/ ctx[0];
 
-    			if (!updating_button && dirty & /*button*/ 64) {
+    			if (dirty & /*hsv, rgb, hex*/ 7) switch_instance_changes.color = {
+    				.../*hsv*/ ctx[1],
+    				.../*rgb*/ ctx[0],
+    				hex: /*hex*/ ctx[2]
+    			};
+
+    			if (dirty & /*label*/ 16) switch_instance_changes.label = /*label*/ ctx[4];
+
+    			if (!updating_button && dirty & /*button*/ 512) {
     				updating_button = true;
-    				switch_instance_changes.button = /*button*/ ctx[6];
+    				switch_instance_changes.button = /*button*/ ctx[9];
     				add_flush_callback(() => updating_button = false);
     			}
 
-    			if (!updating_isOpen && dirty & /*isOpen*/ 2) {
+    			if (!updating_isOpen && dirty & /*isOpen*/ 8) {
     				updating_isOpen = true;
-    				switch_instance_changes.isOpen = /*isOpen*/ ctx[1];
+    				switch_instance_changes.isOpen = /*isOpen*/ ctx[3];
     				add_flush_callback(() => updating_isOpen = false);
     			}
 
-    			if (switch_value !== (switch_value = /*getComponents*/ ctx[8]().input)) {
+    			if (switch_value !== (switch_value = /*getComponents*/ ctx[11]().input)) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -8303,14 +8305,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$3.name,
     		type: "if",
-    		source: "(77:0) {#if isInput}",
+    		source: "(107:0) {#if isInput}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (91:1) {#if isAlpha}
+    // (127:1) {#if isAlpha}
     function create_if_block$a(ctx) {
     	let alpha;
     	let updating_a;
@@ -8318,28 +8320,28 @@ var app = (function () {
     	let current;
 
     	function alpha_a_binding(value) {
-    		/*alpha_a_binding*/ ctx[17](value);
+    		/*alpha_a_binding*/ ctx[20](value);
     	}
 
     	function alpha_isOpen_binding(value) {
-    		/*alpha_isOpen_binding*/ ctx[18](value);
+    		/*alpha_isOpen_binding*/ ctx[21](value);
     	}
 
     	let alpha_props = {
-    		components: /*getComponents*/ ctx[8](),
-    		h: /*color*/ ctx[0].h,
-    		s: /*color*/ ctx[0].s,
-    		v: /*color*/ ctx[0].v,
-    		hex: /*color*/ ctx[0].hex,
-    		toRight: /*toRight*/ ctx[5]
+    		components: /*getComponents*/ ctx[11](),
+    		h: /*hsv*/ ctx[1].h,
+    		s: /*hsv*/ ctx[1].s,
+    		v: /*hsv*/ ctx[1].v,
+    		hex: /*hex*/ ctx[2],
+    		toRight: /*toRight*/ ctx[8]
     	};
 
-    	if (/*color*/ ctx[0].a !== void 0) {
-    		alpha_props.a = /*color*/ ctx[0].a;
+    	if (/*hsv*/ ctx[1].a !== void 0) {
+    		alpha_props.a = /*hsv*/ ctx[1].a;
     	}
 
-    	if (/*isOpen*/ ctx[1] !== void 0) {
-    		alpha_props.isOpen = /*isOpen*/ ctx[1];
+    	if (/*isOpen*/ ctx[3] !== void 0) {
+    		alpha_props.isOpen = /*isOpen*/ ctx[3];
     	}
 
     	alpha = new Alpha({ props: alpha_props, $$inline: true });
@@ -8356,21 +8358,21 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const alpha_changes = {};
-    			if (dirty & /*color*/ 1) alpha_changes.h = /*color*/ ctx[0].h;
-    			if (dirty & /*color*/ 1) alpha_changes.s = /*color*/ ctx[0].s;
-    			if (dirty & /*color*/ 1) alpha_changes.v = /*color*/ ctx[0].v;
-    			if (dirty & /*color*/ 1) alpha_changes.hex = /*color*/ ctx[0].hex;
-    			if (dirty & /*toRight*/ 32) alpha_changes.toRight = /*toRight*/ ctx[5];
+    			if (dirty & /*hsv*/ 2) alpha_changes.h = /*hsv*/ ctx[1].h;
+    			if (dirty & /*hsv*/ 2) alpha_changes.s = /*hsv*/ ctx[1].s;
+    			if (dirty & /*hsv*/ 2) alpha_changes.v = /*hsv*/ ctx[1].v;
+    			if (dirty & /*hex*/ 4) alpha_changes.hex = /*hex*/ ctx[2];
+    			if (dirty & /*toRight*/ 256) alpha_changes.toRight = /*toRight*/ ctx[8];
 
-    			if (!updating_a && dirty & /*color*/ 1) {
+    			if (!updating_a && dirty & /*hsv*/ 2) {
     				updating_a = true;
-    				alpha_changes.a = /*color*/ ctx[0].a;
+    				alpha_changes.a = /*hsv*/ ctx[1].a;
     				add_flush_callback(() => updating_a = false);
     			}
 
-    			if (!updating_isOpen && dirty & /*isOpen*/ 2) {
+    			if (!updating_isOpen && dirty & /*isOpen*/ 8) {
     				updating_isOpen = true;
-    				alpha_changes.isOpen = /*isOpen*/ ctx[1];
+    				alpha_changes.isOpen = /*isOpen*/ ctx[3];
     				add_flush_callback(() => updating_isOpen = false);
     			}
 
@@ -8394,14 +8396,14 @@ var app = (function () {
     		block,
     		id: create_if_block$a.name,
     		type: "if",
-    		source: "(91:1) {#if isAlpha}",
+    		source: "(127:1) {#if isAlpha}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (81:0) <svelte:component this={getComponents().wrapper} bind:wrapper {isOpen} {isPopup} {toRight}>
+    // (117:0) <svelte:component this={getComponents().wrapper} bind:wrapper {isOpen} {isPopup} {toRight}>
     function create_default_slot$5(ctx) {
     	let picker;
     	let updating_s;
@@ -8415,33 +8417,33 @@ var app = (function () {
     	let current;
 
     	function picker_s_binding(value) {
-    		/*picker_s_binding*/ ctx[13](value);
+    		/*picker_s_binding*/ ctx[16](value);
     	}
 
     	function picker_v_binding(value) {
-    		/*picker_v_binding*/ ctx[14](value);
+    		/*picker_v_binding*/ ctx[17](value);
     	}
 
     	function picker_isOpen_binding(value) {
-    		/*picker_isOpen_binding*/ ctx[15](value);
+    		/*picker_isOpen_binding*/ ctx[18](value);
     	}
 
     	let picker_props = {
-    		components: /*getComponents*/ ctx[8](),
-    		h: /*color*/ ctx[0].h,
-    		toRight: /*toRight*/ ctx[5]
+    		components: /*getComponents*/ ctx[11](),
+    		h: /*hsv*/ ctx[1].h,
+    		toRight: /*toRight*/ ctx[8]
     	};
 
-    	if (/*color*/ ctx[0].s !== void 0) {
-    		picker_props.s = /*color*/ ctx[0].s;
+    	if (/*hsv*/ ctx[1].s !== void 0) {
+    		picker_props.s = /*hsv*/ ctx[1].s;
     	}
 
-    	if (/*color*/ ctx[0].v !== void 0) {
-    		picker_props.v = /*color*/ ctx[0].v;
+    	if (/*hsv*/ ctx[1].v !== void 0) {
+    		picker_props.v = /*hsv*/ ctx[1].v;
     	}
 
-    	if (/*isOpen*/ ctx[1] !== void 0) {
-    		picker_props.isOpen = /*isOpen*/ ctx[1];
+    	if (/*isOpen*/ ctx[3] !== void 0) {
+    		picker_props.isOpen = /*isOpen*/ ctx[3];
     	}
 
     	picker = new Picker({ props: picker_props, $$inline: true });
@@ -8450,21 +8452,21 @@ var app = (function () {
     	binding_callbacks.push(() => bind(picker, "isOpen", picker_isOpen_binding));
 
     	function slider_h_binding(value) {
-    		/*slider_h_binding*/ ctx[16](value);
+    		/*slider_h_binding*/ ctx[19](value);
     	}
 
     	let slider_props = {
-    		components: /*getComponents*/ ctx[8](),
-    		toRight: /*toRight*/ ctx[5]
+    		components: /*getComponents*/ ctx[11](),
+    		toRight: /*toRight*/ ctx[8]
     	};
 
-    	if (/*color*/ ctx[0].h !== void 0) {
-    		slider_props.h = /*color*/ ctx[0].h;
+    	if (/*hsv*/ ctx[1].h !== void 0) {
+    		slider_props.h = /*hsv*/ ctx[1].h;
     	}
 
     	slider = new Slider({ props: slider_props, $$inline: true });
     	binding_callbacks.push(() => bind(slider, "h", slider_h_binding));
-    	let if_block = /*isAlpha*/ ctx[2] && create_if_block$a(ctx);
+    	let if_block = /*isAlpha*/ ctx[5] && create_if_block$a(ctx);
 
     	const block = {
     		c: function create() {
@@ -8486,44 +8488,44 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const picker_changes = {};
-    			if (dirty & /*color*/ 1) picker_changes.h = /*color*/ ctx[0].h;
-    			if (dirty & /*toRight*/ 32) picker_changes.toRight = /*toRight*/ ctx[5];
+    			if (dirty & /*hsv*/ 2) picker_changes.h = /*hsv*/ ctx[1].h;
+    			if (dirty & /*toRight*/ 256) picker_changes.toRight = /*toRight*/ ctx[8];
 
-    			if (!updating_s && dirty & /*color*/ 1) {
+    			if (!updating_s && dirty & /*hsv*/ 2) {
     				updating_s = true;
-    				picker_changes.s = /*color*/ ctx[0].s;
+    				picker_changes.s = /*hsv*/ ctx[1].s;
     				add_flush_callback(() => updating_s = false);
     			}
 
-    			if (!updating_v && dirty & /*color*/ 1) {
+    			if (!updating_v && dirty & /*hsv*/ 2) {
     				updating_v = true;
-    				picker_changes.v = /*color*/ ctx[0].v;
+    				picker_changes.v = /*hsv*/ ctx[1].v;
     				add_flush_callback(() => updating_v = false);
     			}
 
-    			if (!updating_isOpen && dirty & /*isOpen*/ 2) {
+    			if (!updating_isOpen && dirty & /*isOpen*/ 8) {
     				updating_isOpen = true;
-    				picker_changes.isOpen = /*isOpen*/ ctx[1];
+    				picker_changes.isOpen = /*isOpen*/ ctx[3];
     				add_flush_callback(() => updating_isOpen = false);
     			}
 
     			picker.$set(picker_changes);
     			const slider_changes = {};
-    			if (dirty & /*toRight*/ 32) slider_changes.toRight = /*toRight*/ ctx[5];
+    			if (dirty & /*toRight*/ 256) slider_changes.toRight = /*toRight*/ ctx[8];
 
-    			if (!updating_h && dirty & /*color*/ 1) {
+    			if (!updating_h && dirty & /*hsv*/ 2) {
     				updating_h = true;
-    				slider_changes.h = /*color*/ ctx[0].h;
+    				slider_changes.h = /*hsv*/ ctx[1].h;
     				add_flush_callback(() => updating_h = false);
     			}
 
     			slider.$set(slider_changes);
 
-    			if (/*isAlpha*/ ctx[2]) {
+    			if (/*isAlpha*/ ctx[5]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty & /*isAlpha*/ 4) {
+    					if (dirty & /*isAlpha*/ 32) {
     						transition_in(if_block, 1);
     					}
     				} else {
@@ -8569,7 +8571,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$5.name,
     		type: "slot",
-    		source: "(81:0) <svelte:component this={getComponents().wrapper} bind:wrapper {isOpen} {isPopup} {toRight}>",
+    		source: "(117:0) <svelte:component this={getComponents().wrapper} bind:wrapper {isOpen} {isPopup} {toRight}>",
     		ctx
     	});
 
@@ -8587,25 +8589,25 @@ var app = (function () {
     	let mounted;
     	let dispose;
     	arrowkeyhandler = new ArrowKeyHandler({ $$inline: true });
-    	let if_block = /*isInput*/ ctx[3] && create_if_block_1$3(ctx);
+    	let if_block = /*isInput*/ ctx[6] && create_if_block_1$3(ctx);
 
     	function switch_instance_wrapper_binding(value) {
-    		/*switch_instance_wrapper_binding*/ ctx[19](value);
+    		/*switch_instance_wrapper_binding*/ ctx[22](value);
     	}
 
-    	var switch_value = /*getComponents*/ ctx[8]().wrapper;
+    	var switch_value = /*getComponents*/ ctx[11]().wrapper;
 
     	function switch_props(ctx) {
     		let switch_instance_props = {
-    			isOpen: /*isOpen*/ ctx[1],
-    			isPopup: /*isPopup*/ ctx[4],
-    			toRight: /*toRight*/ ctx[5],
+    			isOpen: /*isOpen*/ ctx[3],
+    			isPopup: /*isPopup*/ ctx[7],
+    			toRight: /*toRight*/ ctx[8],
     			$$slots: { default: [create_default_slot$5] },
     			$$scope: { ctx }
     		};
 
-    		if (/*wrapper*/ ctx[7] !== void 0) {
-    			switch_instance_props.wrapper = /*wrapper*/ ctx[7];
+    		if (/*wrapper*/ ctx[10] !== void 0) {
+    			switch_instance_props.wrapper = /*wrapper*/ ctx[10];
     		}
 
     		return {
@@ -8645,16 +8647,16 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(window, "mousedown", /*mousedown*/ ctx[9], false, false, false);
+    				dispose = listen_dev(window, "mousedown", /*mousedown*/ ctx[12], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*isInput*/ ctx[3]) {
+    			if (/*isInput*/ ctx[6]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty & /*isInput*/ 8) {
+    					if (dirty & /*isInput*/ 64) {
     						transition_in(if_block, 1);
     					}
     				} else {
@@ -8674,21 +8676,21 @@ var app = (function () {
     			}
 
     			const switch_instance_changes = {};
-    			if (dirty & /*isOpen*/ 2) switch_instance_changes.isOpen = /*isOpen*/ ctx[1];
-    			if (dirty & /*isPopup*/ 16) switch_instance_changes.isPopup = /*isPopup*/ ctx[4];
-    			if (dirty & /*toRight*/ 32) switch_instance_changes.toRight = /*toRight*/ ctx[5];
+    			if (dirty & /*isOpen*/ 8) switch_instance_changes.isOpen = /*isOpen*/ ctx[3];
+    			if (dirty & /*isPopup*/ 128) switch_instance_changes.isPopup = /*isPopup*/ ctx[7];
+    			if (dirty & /*toRight*/ 256) switch_instance_changes.toRight = /*toRight*/ ctx[8];
 
-    			if (dirty & /*$$scope, color, toRight, isOpen, isAlpha*/ 2097191) {
+    			if (dirty & /*$$scope, hsv, hex, toRight, isOpen, isAlpha*/ 268435758) {
     				switch_instance_changes.$$scope = { dirty, ctx };
     			}
 
-    			if (!updating_wrapper && dirty & /*wrapper*/ 128) {
+    			if (!updating_wrapper && dirty & /*wrapper*/ 1024) {
     				updating_wrapper = true;
-    				switch_instance_changes.wrapper = /*wrapper*/ ctx[7];
+    				switch_instance_changes.wrapper = /*wrapper*/ ctx[10];
     				add_flush_callback(() => updating_wrapper = false);
     			}
 
-    			if (switch_value !== (switch_value = /*getComponents*/ ctx[8]().wrapper)) {
+    			if (switch_value !== (switch_value = /*getComponents*/ ctx[11]().wrapper)) {
     				if (switch_instance) {
     					group_outros();
     					const old_component = switch_instance;
@@ -8753,22 +8755,18 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("ColorPicker", slots, []);
     	let { components = {} } = $$props;
+    	let { label = "Choose a color" } = $$props;
     	let { isAlpha = true } = $$props;
     	let { isInput = true } = $$props;
     	let { isPopup = true } = $$props;
     	let { isOpen = !isInput } = $$props;
     	let { toRight = false } = $$props;
-
-    	let { color = {
-    		h: 0,
-    		s: 1,
-    		v: 1,
-    		a: 1,
-    		hex: "#FF0000",
-    		r: 255,
-    		g: 0,
-    		b: 0
-    	} } = $$props;
+    	let { rgb = { r: 255, g: 0, b: 0 } } = $$props;
+    	let { hsv = { h: 0, s: 1, v: 1 } } = $$props;
+    	let { hex = "#ff0000" } = $$props;
+    	let _rgb = { r: 255, g: 0, b: 0 };
+    	let _hsv = { h: 0, s: 1, v: 1 };
+    	let _hex = "#ff0000";
 
     	const default_components = {
     		sliderIndicator: SliderIndicator,
@@ -8791,84 +8789,139 @@ var app = (function () {
     	function mousedown({ target }) {
     		if (isInput) {
     			if (button.isSameNode(target)) {
-    				$$invalidate(1, isOpen = !isOpen);
+    				$$invalidate(3, isOpen = !isOpen);
     			} else if (isOpen && !wrapper.contains(target)) {
-    				$$invalidate(1, isOpen = false);
+    				$$invalidate(3, isOpen = false);
     			}
     		}
     	}
 
-    	const writable_props = ["components", "isAlpha", "isInput", "isPopup", "isOpen", "toRight", "color"];
+    	/**
+     * using a function seems to trigger the exported value change only once when all of them has been updated
+     * and not just after the hsv change
+     */
+    	function updateColor() {
+    		// reinitialize empty alpha values
+    		if (hsv.a === undefined) $$invalidate(1, hsv.a = 1, hsv);
 
-    	Object.keys($$props).forEach(key => {
+    		if (_hsv.a === undefined) _hsv.a = 1;
+    		if (rgb.a === undefined) $$invalidate(0, rgb.a = 1, rgb);
+    		if (_rgb.a === undefined) _rgb.a = 1;
+    		if (hex?.substring(7) === "ff") $$invalidate(2, hex = hex.substring(0, 7));
+    		if (hex?.substring(7) === "ff") $$invalidate(2, hex = hex.substring(0, 7));
+
+    		// check which color format changed and updates the others accordingly
+    		if (hsv.h !== _hsv.h || hsv.s !== _hsv.s || hsv.v !== _hsv.v || hsv.a !== hsv.a) {
+    			const color = hsv2Color(hsv);
+    			const { r, g, b, a, hex: cHex } = color;
+    			$$invalidate(0, rgb = { r, g, b, a });
+    			$$invalidate(2, hex = cHex);
+    		} else if (rgb.r !== _rgb.r || rgb.g !== _rgb.g || rgb.b !== _rgb.b || rgb.a !== _rgb.a) {
+    			const color = rgb2Color(rgb);
+    			const { h, s, v, a, hex: cHex } = color;
+    			$$invalidate(1, hsv = { h, s, v, a });
+    			$$invalidate(2, hex = cHex);
+    		} else if (hex !== _hex) {
+    			const color = hex2Color({ hex });
+    			const { r, g, b, h, s, v, a } = color;
+    			$$invalidate(0, rgb = { r, g, b, a });
+    			$$invalidate(1, hsv = { h, s, v, a });
+    		}
+
+    		// update old colors
+    		_hsv = Object.assign({}, hsv);
+
+    		_rgb = Object.assign({}, rgb);
+    		_hex = hex;
+    	}
+
+    	const writable_props = [
+    		"components",
+    		"label",
+    		"isAlpha",
+    		"isInput",
+    		"isPopup",
+    		"isOpen",
+    		"toRight",
+    		"rgb",
+    		"hsv",
+    		"hex"
+    	];
+
+    	Object_1.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ColorPicker> was created with unknown prop '${key}'`);
     	});
 
     	function switch_instance_button_binding(value) {
     		button = value;
-    		$$invalidate(6, button);
+    		$$invalidate(9, button);
     	}
 
     	function switch_instance_isOpen_binding(value) {
     		isOpen = value;
-    		$$invalidate(1, isOpen);
+    		$$invalidate(3, isOpen);
     	}
 
     	function picker_s_binding(value) {
-    		if ($$self.$$.not_equal(color.s, value)) {
-    			color.s = value;
-    			$$invalidate(0, color);
+    		if ($$self.$$.not_equal(hsv.s, value)) {
+    			hsv.s = value;
+    			$$invalidate(1, hsv);
     		}
     	}
 
     	function picker_v_binding(value) {
-    		if ($$self.$$.not_equal(color.v, value)) {
-    			color.v = value;
-    			$$invalidate(0, color);
+    		if ($$self.$$.not_equal(hsv.v, value)) {
+    			hsv.v = value;
+    			$$invalidate(1, hsv);
     		}
     	}
 
     	function picker_isOpen_binding(value) {
     		isOpen = value;
-    		$$invalidate(1, isOpen);
+    		$$invalidate(3, isOpen);
     	}
 
     	function slider_h_binding(value) {
-    		if ($$self.$$.not_equal(color.h, value)) {
-    			color.h = value;
-    			$$invalidate(0, color);
+    		if ($$self.$$.not_equal(hsv.h, value)) {
+    			hsv.h = value;
+    			$$invalidate(1, hsv);
     		}
     	}
 
     	function alpha_a_binding(value) {
-    		if ($$self.$$.not_equal(color.a, value)) {
-    			color.a = value;
-    			$$invalidate(0, color);
+    		if ($$self.$$.not_equal(hsv.a, value)) {
+    			hsv.a = value;
+    			$$invalidate(1, hsv);
     		}
     	}
 
     	function alpha_isOpen_binding(value) {
     		isOpen = value;
-    		$$invalidate(1, isOpen);
+    		$$invalidate(3, isOpen);
     	}
 
     	function switch_instance_wrapper_binding(value) {
     		wrapper = value;
-    		$$invalidate(7, wrapper);
+    		$$invalidate(10, wrapper);
     	}
 
     	$$self.$$set = $$props => {
-    		if ("components" in $$props) $$invalidate(10, components = $$props.components);
-    		if ("isAlpha" in $$props) $$invalidate(2, isAlpha = $$props.isAlpha);
-    		if ("isInput" in $$props) $$invalidate(3, isInput = $$props.isInput);
-    		if ("isPopup" in $$props) $$invalidate(4, isPopup = $$props.isPopup);
-    		if ("isOpen" in $$props) $$invalidate(1, isOpen = $$props.isOpen);
-    		if ("toRight" in $$props) $$invalidate(5, toRight = $$props.toRight);
-    		if ("color" in $$props) $$invalidate(0, color = $$props.color);
+    		if ("components" in $$props) $$invalidate(13, components = $$props.components);
+    		if ("label" in $$props) $$invalidate(4, label = $$props.label);
+    		if ("isAlpha" in $$props) $$invalidate(5, isAlpha = $$props.isAlpha);
+    		if ("isInput" in $$props) $$invalidate(6, isInput = $$props.isInput);
+    		if ("isPopup" in $$props) $$invalidate(7, isPopup = $$props.isPopup);
+    		if ("isOpen" in $$props) $$invalidate(3, isOpen = $$props.isOpen);
+    		if ("toRight" in $$props) $$invalidate(8, toRight = $$props.toRight);
+    		if ("rgb" in $$props) $$invalidate(0, rgb = $$props.rgb);
+    		if ("hsv" in $$props) $$invalidate(1, hsv = $$props.hsv);
+    		if ("hex" in $$props) $$invalidate(2, hex = $$props.hex);
     	};
 
     	$$self.$capture_state = () => ({
-    		_,
+    		hsv2Color,
+    		hex2Color,
+    		rgb2Color,
     		Picker,
     		Slider,
     		Alpha,
@@ -8879,33 +8932,43 @@ var app = (function () {
     		SliderWrapper,
     		Input,
     		Wrapper,
-    		isHex,
-    		isHsv,
-    		isRgb,
     		components,
+    		label,
     		isAlpha,
     		isInput,
     		isPopup,
     		isOpen,
     		toRight,
-    		color,
+    		rgb,
+    		hsv,
+    		hex,
+    		_rgb,
+    		_hsv,
+    		_hex,
     		default_components,
     		getComponents,
     		button,
     		wrapper,
-    		mousedown
+    		mousedown,
+    		updateColor
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("components" in $$props) $$invalidate(10, components = $$props.components);
-    		if ("isAlpha" in $$props) $$invalidate(2, isAlpha = $$props.isAlpha);
-    		if ("isInput" in $$props) $$invalidate(3, isInput = $$props.isInput);
-    		if ("isPopup" in $$props) $$invalidate(4, isPopup = $$props.isPopup);
-    		if ("isOpen" in $$props) $$invalidate(1, isOpen = $$props.isOpen);
-    		if ("toRight" in $$props) $$invalidate(5, toRight = $$props.toRight);
-    		if ("color" in $$props) $$invalidate(0, color = $$props.color);
-    		if ("button" in $$props) $$invalidate(6, button = $$props.button);
-    		if ("wrapper" in $$props) $$invalidate(7, wrapper = $$props.wrapper);
+    		if ("components" in $$props) $$invalidate(13, components = $$props.components);
+    		if ("label" in $$props) $$invalidate(4, label = $$props.label);
+    		if ("isAlpha" in $$props) $$invalidate(5, isAlpha = $$props.isAlpha);
+    		if ("isInput" in $$props) $$invalidate(6, isInput = $$props.isInput);
+    		if ("isPopup" in $$props) $$invalidate(7, isPopup = $$props.isPopup);
+    		if ("isOpen" in $$props) $$invalidate(3, isOpen = $$props.isOpen);
+    		if ("toRight" in $$props) $$invalidate(8, toRight = $$props.toRight);
+    		if ("rgb" in $$props) $$invalidate(0, rgb = $$props.rgb);
+    		if ("hsv" in $$props) $$invalidate(1, hsv = $$props.hsv);
+    		if ("hex" in $$props) $$invalidate(2, hex = $$props.hex);
+    		if ("_rgb" in $$props) _rgb = $$props._rgb;
+    		if ("_hsv" in $$props) _hsv = $$props._hsv;
+    		if ("_hex" in $$props) _hex = $$props._hex;
+    		if ("button" in $$props) $$invalidate(9, button = $$props.button);
+    		if ("wrapper" in $$props) $$invalidate(10, wrapper = $$props.wrapper);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -8913,22 +8976,19 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*color*/ 1) {
-    			{
-    				if (color && isHsv(color)) {
-    					$$invalidate(0, color = _.hsv2Color(color));
-    				} else if (color && isHex(color)) {
-    					$$invalidate(0, color = _.hex2Color(color));
-    				} else if (color && isRgb(color)) {
-    					$$invalidate(0, color = _.rgb2Color(color));
-    				}
+    		if ($$self.$$.dirty & /*hsv, rgb, hex*/ 7) {
+    			if (hsv || rgb || hex) {
+    				updateColor();
     			}
     		}
     	};
 
     	return [
-    		color,
+    		rgb,
+    		hsv,
+    		hex,
     		isOpen,
+    		label,
     		isAlpha,
     		isInput,
     		isPopup,
@@ -8955,13 +9015,16 @@ var app = (function () {
     		super(options);
 
     		init(this, options, instance$d, create_fragment$f, safe_not_equal, {
-    			components: 10,
-    			isAlpha: 2,
-    			isInput: 3,
-    			isPopup: 4,
-    			isOpen: 1,
-    			toRight: 5,
-    			color: 0
+    			components: 13,
+    			label: 4,
+    			isAlpha: 5,
+    			isInput: 6,
+    			isPopup: 7,
+    			isOpen: 3,
+    			toRight: 8,
+    			rgb: 0,
+    			hsv: 1,
+    			hex: 2
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -8977,6 +9040,14 @@ var app = (function () {
     	}
 
     	set components(value) {
+    		throw new Error("<ColorPicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get label() {
+    		throw new Error("<ColorPicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set label(value) {
     		throw new Error("<ColorPicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
@@ -9020,21 +9091,1236 @@ var app = (function () {
     		throw new Error("<ColorPicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get color() {
+    	get rgb() {
     		throw new Error("<ColorPicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set color(value) {
+    	set rgb(value) {
+    		throw new Error("<ColorPicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get hsv() {
+    		throw new Error("<ColorPicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set hsv(value) {
+    		throw new Error("<ColorPicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get hex() {
+    		throw new Error("<ColorPicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set hex(value) {
     		throw new Error("<ColorPicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
+
+    function createCommonjsModule(fn) {
+      var module = { exports: {} };
+    	return fn(module, module.exports), module.exports;
+    }
+
+    var tinycolor = createCommonjsModule(function (module) {
+    // TinyColor v1.4.2
+    // https://github.com/bgrins/TinyColor
+    // Brian Grinstead, MIT License
+
+    (function(Math) {
+
+    var trimLeft = /^\s+/,
+        trimRight = /\s+$/,
+        tinyCounter = 0,
+        mathRound = Math.round,
+        mathMin = Math.min,
+        mathMax = Math.max,
+        mathRandom = Math.random;
+
+    function tinycolor (color, opts) {
+
+        color = (color) ? color : '';
+        opts = opts || { };
+
+        // If input is already a tinycolor, return itself
+        if (color instanceof tinycolor) {
+           return color;
+        }
+        // If we are called as a function, call using new instead
+        if (!(this instanceof tinycolor)) {
+            return new tinycolor(color, opts);
+        }
+
+        var rgb = inputToRGB(color);
+        this._originalInput = color,
+        this._r = rgb.r,
+        this._g = rgb.g,
+        this._b = rgb.b,
+        this._a = rgb.a,
+        this._roundA = mathRound(100*this._a) / 100,
+        this._format = opts.format || rgb.format;
+        this._gradientType = opts.gradientType;
+
+        // Don't let the range of [0,255] come back in [0,1].
+        // Potentially lose a little bit of precision here, but will fix issues where
+        // .5 gets interpreted as half of the total, instead of half of 1
+        // If it was supposed to be 128, this was already taken care of by `inputToRgb`
+        if (this._r < 1) { this._r = mathRound(this._r); }
+        if (this._g < 1) { this._g = mathRound(this._g); }
+        if (this._b < 1) { this._b = mathRound(this._b); }
+
+        this._ok = rgb.ok;
+        this._tc_id = tinyCounter++;
+    }
+
+    tinycolor.prototype = {
+        isDark: function() {
+            return this.getBrightness() < 128;
+        },
+        isLight: function() {
+            return !this.isDark();
+        },
+        isValid: function() {
+            return this._ok;
+        },
+        getOriginalInput: function() {
+          return this._originalInput;
+        },
+        getFormat: function() {
+            return this._format;
+        },
+        getAlpha: function() {
+            return this._a;
+        },
+        getBrightness: function() {
+            //http://www.w3.org/TR/AERT#color-contrast
+            var rgb = this.toRgb();
+            return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+        },
+        getLuminance: function() {
+            //http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+            var rgb = this.toRgb();
+            var RsRGB, GsRGB, BsRGB, R, G, B;
+            RsRGB = rgb.r/255;
+            GsRGB = rgb.g/255;
+            BsRGB = rgb.b/255;
+
+            if (RsRGB <= 0.03928) {R = RsRGB / 12.92;} else {R = Math.pow(((RsRGB + 0.055) / 1.055), 2.4);}
+            if (GsRGB <= 0.03928) {G = GsRGB / 12.92;} else {G = Math.pow(((GsRGB + 0.055) / 1.055), 2.4);}
+            if (BsRGB <= 0.03928) {B = BsRGB / 12.92;} else {B = Math.pow(((BsRGB + 0.055) / 1.055), 2.4);}
+            return (0.2126 * R) + (0.7152 * G) + (0.0722 * B);
+        },
+        setAlpha: function(value) {
+            this._a = boundAlpha(value);
+            this._roundA = mathRound(100*this._a) / 100;
+            return this;
+        },
+        toHsv: function() {
+            var hsv = rgbToHsv(this._r, this._g, this._b);
+            return { h: hsv.h * 360, s: hsv.s, v: hsv.v, a: this._a };
+        },
+        toHsvString: function() {
+            var hsv = rgbToHsv(this._r, this._g, this._b);
+            var h = mathRound(hsv.h * 360), s = mathRound(hsv.s * 100), v = mathRound(hsv.v * 100);
+            return (this._a == 1) ?
+              "hsv("  + h + ", " + s + "%, " + v + "%)" :
+              "hsva(" + h + ", " + s + "%, " + v + "%, "+ this._roundA + ")";
+        },
+        toHsl: function() {
+            var hsl = rgbToHsl(this._r, this._g, this._b);
+            return { h: hsl.h * 360, s: hsl.s, l: hsl.l, a: this._a };
+        },
+        toHslString: function() {
+            var hsl = rgbToHsl(this._r, this._g, this._b);
+            var h = mathRound(hsl.h * 360), s = mathRound(hsl.s * 100), l = mathRound(hsl.l * 100);
+            return (this._a == 1) ?
+              "hsl("  + h + ", " + s + "%, " + l + "%)" :
+              "hsla(" + h + ", " + s + "%, " + l + "%, "+ this._roundA + ")";
+        },
+        toHex: function(allow3Char) {
+            return rgbToHex(this._r, this._g, this._b, allow3Char);
+        },
+        toHexString: function(allow3Char) {
+            return '#' + this.toHex(allow3Char);
+        },
+        toHex8: function(allow4Char) {
+            return rgbaToHex(this._r, this._g, this._b, this._a, allow4Char);
+        },
+        toHex8String: function(allow4Char) {
+            return '#' + this.toHex8(allow4Char);
+        },
+        toRgb: function() {
+            return { r: mathRound(this._r), g: mathRound(this._g), b: mathRound(this._b), a: this._a };
+        },
+        toRgbString: function() {
+            return (this._a == 1) ?
+              "rgb("  + mathRound(this._r) + ", " + mathRound(this._g) + ", " + mathRound(this._b) + ")" :
+              "rgba(" + mathRound(this._r) + ", " + mathRound(this._g) + ", " + mathRound(this._b) + ", " + this._roundA + ")";
+        },
+        toPercentageRgb: function() {
+            return { r: mathRound(bound01(this._r, 255) * 100) + "%", g: mathRound(bound01(this._g, 255) * 100) + "%", b: mathRound(bound01(this._b, 255) * 100) + "%", a: this._a };
+        },
+        toPercentageRgbString: function() {
+            return (this._a == 1) ?
+              "rgb("  + mathRound(bound01(this._r, 255) * 100) + "%, " + mathRound(bound01(this._g, 255) * 100) + "%, " + mathRound(bound01(this._b, 255) * 100) + "%)" :
+              "rgba(" + mathRound(bound01(this._r, 255) * 100) + "%, " + mathRound(bound01(this._g, 255) * 100) + "%, " + mathRound(bound01(this._b, 255) * 100) + "%, " + this._roundA + ")";
+        },
+        toName: function() {
+            if (this._a === 0) {
+                return "transparent";
+            }
+
+            if (this._a < 1) {
+                return false;
+            }
+
+            return hexNames[rgbToHex(this._r, this._g, this._b, true)] || false;
+        },
+        toFilter: function(secondColor) {
+            var hex8String = '#' + rgbaToArgbHex(this._r, this._g, this._b, this._a);
+            var secondHex8String = hex8String;
+            var gradientType = this._gradientType ? "GradientType = 1, " : "";
+
+            if (secondColor) {
+                var s = tinycolor(secondColor);
+                secondHex8String = '#' + rgbaToArgbHex(s._r, s._g, s._b, s._a);
+            }
+
+            return "progid:DXImageTransform.Microsoft.gradient("+gradientType+"startColorstr="+hex8String+",endColorstr="+secondHex8String+")";
+        },
+        toString: function(format) {
+            var formatSet = !!format;
+            format = format || this._format;
+
+            var formattedString = false;
+            var hasAlpha = this._a < 1 && this._a >= 0;
+            var needsAlphaFormat = !formatSet && hasAlpha && (format === "hex" || format === "hex6" || format === "hex3" || format === "hex4" || format === "hex8" || format === "name");
+
+            if (needsAlphaFormat) {
+                // Special case for "transparent", all other non-alpha formats
+                // will return rgba when there is transparency.
+                if (format === "name" && this._a === 0) {
+                    return this.toName();
+                }
+                return this.toRgbString();
+            }
+            if (format === "rgb") {
+                formattedString = this.toRgbString();
+            }
+            if (format === "prgb") {
+                formattedString = this.toPercentageRgbString();
+            }
+            if (format === "hex" || format === "hex6") {
+                formattedString = this.toHexString();
+            }
+            if (format === "hex3") {
+                formattedString = this.toHexString(true);
+            }
+            if (format === "hex4") {
+                formattedString = this.toHex8String(true);
+            }
+            if (format === "hex8") {
+                formattedString = this.toHex8String();
+            }
+            if (format === "name") {
+                formattedString = this.toName();
+            }
+            if (format === "hsl") {
+                formattedString = this.toHslString();
+            }
+            if (format === "hsv") {
+                formattedString = this.toHsvString();
+            }
+
+            return formattedString || this.toHexString();
+        },
+        clone: function() {
+            return tinycolor(this.toString());
+        },
+
+        _applyModification: function(fn, args) {
+            var color = fn.apply(null, [this].concat([].slice.call(args)));
+            this._r = color._r;
+            this._g = color._g;
+            this._b = color._b;
+            this.setAlpha(color._a);
+            return this;
+        },
+        lighten: function() {
+            return this._applyModification(lighten, arguments);
+        },
+        brighten: function() {
+            return this._applyModification(brighten, arguments);
+        },
+        darken: function() {
+            return this._applyModification(darken, arguments);
+        },
+        desaturate: function() {
+            return this._applyModification(desaturate, arguments);
+        },
+        saturate: function() {
+            return this._applyModification(saturate, arguments);
+        },
+        greyscale: function() {
+            return this._applyModification(greyscale, arguments);
+        },
+        spin: function() {
+            return this._applyModification(spin, arguments);
+        },
+
+        _applyCombination: function(fn, args) {
+            return fn.apply(null, [this].concat([].slice.call(args)));
+        },
+        analogous: function() {
+            return this._applyCombination(analogous, arguments);
+        },
+        complement: function() {
+            return this._applyCombination(complement, arguments);
+        },
+        monochromatic: function() {
+            return this._applyCombination(monochromatic, arguments);
+        },
+        splitcomplement: function() {
+            return this._applyCombination(splitcomplement, arguments);
+        },
+        triad: function() {
+            return this._applyCombination(triad, arguments);
+        },
+        tetrad: function() {
+            return this._applyCombination(tetrad, arguments);
+        }
+    };
+
+    // If input is an object, force 1 into "1.0" to handle ratios properly
+    // String input requires "1.0" as input, so 1 will be treated as 1
+    tinycolor.fromRatio = function(color, opts) {
+        if (typeof color == "object") {
+            var newColor = {};
+            for (var i in color) {
+                if (color.hasOwnProperty(i)) {
+                    if (i === "a") {
+                        newColor[i] = color[i];
+                    }
+                    else {
+                        newColor[i] = convertToPercentage(color[i]);
+                    }
+                }
+            }
+            color = newColor;
+        }
+
+        return tinycolor(color, opts);
+    };
+
+    // Given a string or object, convert that input to RGB
+    // Possible string inputs:
+    //
+    //     "red"
+    //     "#f00" or "f00"
+    //     "#ff0000" or "ff0000"
+    //     "#ff000000" or "ff000000"
+    //     "rgb 255 0 0" or "rgb (255, 0, 0)"
+    //     "rgb 1.0 0 0" or "rgb (1, 0, 0)"
+    //     "rgba (255, 0, 0, 1)" or "rgba 255, 0, 0, 1"
+    //     "rgba (1.0, 0, 0, 1)" or "rgba 1.0, 0, 0, 1"
+    //     "hsl(0, 100%, 50%)" or "hsl 0 100% 50%"
+    //     "hsla(0, 100%, 50%, 1)" or "hsla 0 100% 50%, 1"
+    //     "hsv(0, 100%, 100%)" or "hsv 0 100% 100%"
+    //
+    function inputToRGB(color) {
+
+        var rgb = { r: 0, g: 0, b: 0 };
+        var a = 1;
+        var s = null;
+        var v = null;
+        var l = null;
+        var ok = false;
+        var format = false;
+
+        if (typeof color == "string") {
+            color = stringInputToObject(color);
+        }
+
+        if (typeof color == "object") {
+            if (isValidCSSUnit(color.r) && isValidCSSUnit(color.g) && isValidCSSUnit(color.b)) {
+                rgb = rgbToRgb(color.r, color.g, color.b);
+                ok = true;
+                format = String(color.r).substr(-1) === "%" ? "prgb" : "rgb";
+            }
+            else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
+                s = convertToPercentage(color.s);
+                v = convertToPercentage(color.v);
+                rgb = hsvToRgb(color.h, s, v);
+                ok = true;
+                format = "hsv";
+            }
+            else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
+                s = convertToPercentage(color.s);
+                l = convertToPercentage(color.l);
+                rgb = hslToRgb(color.h, s, l);
+                ok = true;
+                format = "hsl";
+            }
+
+            if (color.hasOwnProperty("a")) {
+                a = color.a;
+            }
+        }
+
+        a = boundAlpha(a);
+
+        return {
+            ok: ok,
+            format: color.format || format,
+            r: mathMin(255, mathMax(rgb.r, 0)),
+            g: mathMin(255, mathMax(rgb.g, 0)),
+            b: mathMin(255, mathMax(rgb.b, 0)),
+            a: a
+        };
+    }
+
+
+    // Conversion Functions
+    // --------------------
+
+    // `rgbToHsl`, `rgbToHsv`, `hslToRgb`, `hsvToRgb` modified from:
+    // <http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript>
+
+    // `rgbToRgb`
+    // Handle bounds / percentage checking to conform to CSS color spec
+    // <http://www.w3.org/TR/css3-color/>
+    // *Assumes:* r, g, b in [0, 255] or [0, 1]
+    // *Returns:* { r, g, b } in [0, 255]
+    function rgbToRgb(r, g, b){
+        return {
+            r: bound01(r, 255) * 255,
+            g: bound01(g, 255) * 255,
+            b: bound01(b, 255) * 255
+        };
+    }
+
+    // `rgbToHsl`
+    // Converts an RGB color value to HSL.
+    // *Assumes:* r, g, and b are contained in [0, 255] or [0, 1]
+    // *Returns:* { h, s, l } in [0,1]
+    function rgbToHsl(r, g, b) {
+
+        r = bound01(r, 255);
+        g = bound01(g, 255);
+        b = bound01(b, 255);
+
+        var max = mathMax(r, g, b), min = mathMin(r, g, b);
+        var h, s, l = (max + min) / 2;
+
+        if(max == min) {
+            h = s = 0; // achromatic
+        }
+        else {
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch(max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+
+            h /= 6;
+        }
+
+        return { h: h, s: s, l: l };
+    }
+
+    // `hslToRgb`
+    // Converts an HSL color value to RGB.
+    // *Assumes:* h is contained in [0, 1] or [0, 360] and s and l are contained [0, 1] or [0, 100]
+    // *Returns:* { r, g, b } in the set [0, 255]
+    function hslToRgb(h, s, l) {
+        var r, g, b;
+
+        h = bound01(h, 360);
+        s = bound01(s, 100);
+        l = bound01(l, 100);
+
+        function hue2rgb(p, q, t) {
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        if(s === 0) {
+            r = g = b = l; // achromatic
+        }
+        else {
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+        }
+
+        return { r: r * 255, g: g * 255, b: b * 255 };
+    }
+
+    // `rgbToHsv`
+    // Converts an RGB color value to HSV
+    // *Assumes:* r, g, and b are contained in the set [0, 255] or [0, 1]
+    // *Returns:* { h, s, v } in [0,1]
+    function rgbToHsv(r, g, b) {
+
+        r = bound01(r, 255);
+        g = bound01(g, 255);
+        b = bound01(b, 255);
+
+        var max = mathMax(r, g, b), min = mathMin(r, g, b);
+        var h, s, v = max;
+
+        var d = max - min;
+        s = max === 0 ? 0 : d / max;
+
+        if(max == min) {
+            h = 0; // achromatic
+        }
+        else {
+            switch(max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+        return { h: h, s: s, v: v };
+    }
+
+    // `hsvToRgb`
+    // Converts an HSV color value to RGB.
+    // *Assumes:* h is contained in [0, 1] or [0, 360] and s and v are contained in [0, 1] or [0, 100]
+    // *Returns:* { r, g, b } in the set [0, 255]
+     function hsvToRgb(h, s, v) {
+
+        h = bound01(h, 360) * 6;
+        s = bound01(s, 100);
+        v = bound01(v, 100);
+
+        var i = Math.floor(h),
+            f = h - i,
+            p = v * (1 - s),
+            q = v * (1 - f * s),
+            t = v * (1 - (1 - f) * s),
+            mod = i % 6,
+            r = [v, q, p, p, t, v][mod],
+            g = [t, v, v, q, p, p][mod],
+            b = [p, p, t, v, v, q][mod];
+
+        return { r: r * 255, g: g * 255, b: b * 255 };
+    }
+
+    // `rgbToHex`
+    // Converts an RGB color to hex
+    // Assumes r, g, and b are contained in the set [0, 255]
+    // Returns a 3 or 6 character hex
+    function rgbToHex(r, g, b, allow3Char) {
+
+        var hex = [
+            pad2(mathRound(r).toString(16)),
+            pad2(mathRound(g).toString(16)),
+            pad2(mathRound(b).toString(16))
+        ];
+
+        // Return a 3 character hex if possible
+        if (allow3Char && hex[0].charAt(0) == hex[0].charAt(1) && hex[1].charAt(0) == hex[1].charAt(1) && hex[2].charAt(0) == hex[2].charAt(1)) {
+            return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0);
+        }
+
+        return hex.join("");
+    }
+
+    // `rgbaToHex`
+    // Converts an RGBA color plus alpha transparency to hex
+    // Assumes r, g, b are contained in the set [0, 255] and
+    // a in [0, 1]. Returns a 4 or 8 character rgba hex
+    function rgbaToHex(r, g, b, a, allow4Char) {
+
+        var hex = [
+            pad2(mathRound(r).toString(16)),
+            pad2(mathRound(g).toString(16)),
+            pad2(mathRound(b).toString(16)),
+            pad2(convertDecimalToHex(a))
+        ];
+
+        // Return a 4 character hex if possible
+        if (allow4Char && hex[0].charAt(0) == hex[0].charAt(1) && hex[1].charAt(0) == hex[1].charAt(1) && hex[2].charAt(0) == hex[2].charAt(1) && hex[3].charAt(0) == hex[3].charAt(1)) {
+            return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0) + hex[3].charAt(0);
+        }
+
+        return hex.join("");
+    }
+
+    // `rgbaToArgbHex`
+    // Converts an RGBA color to an ARGB Hex8 string
+    // Rarely used, but required for "toFilter()"
+    function rgbaToArgbHex(r, g, b, a) {
+
+        var hex = [
+            pad2(convertDecimalToHex(a)),
+            pad2(mathRound(r).toString(16)),
+            pad2(mathRound(g).toString(16)),
+            pad2(mathRound(b).toString(16))
+        ];
+
+        return hex.join("");
+    }
+
+    // `equals`
+    // Can be called with any tinycolor input
+    tinycolor.equals = function (color1, color2) {
+        if (!color1 || !color2) { return false; }
+        return tinycolor(color1).toRgbString() == tinycolor(color2).toRgbString();
+    };
+
+    tinycolor.random = function() {
+        return tinycolor.fromRatio({
+            r: mathRandom(),
+            g: mathRandom(),
+            b: mathRandom()
+        });
+    };
+
+
+    // Modification Functions
+    // ----------------------
+    // Thanks to less.js for some of the basics here
+    // <https://github.com/cloudhead/less.js/blob/master/lib/less/functions.js>
+
+    function desaturate(color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var hsl = tinycolor(color).toHsl();
+        hsl.s -= amount / 100;
+        hsl.s = clamp01(hsl.s);
+        return tinycolor(hsl);
+    }
+
+    function saturate(color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var hsl = tinycolor(color).toHsl();
+        hsl.s += amount / 100;
+        hsl.s = clamp01(hsl.s);
+        return tinycolor(hsl);
+    }
+
+    function greyscale(color) {
+        return tinycolor(color).desaturate(100);
+    }
+
+    function lighten (color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var hsl = tinycolor(color).toHsl();
+        hsl.l += amount / 100;
+        hsl.l = clamp01(hsl.l);
+        return tinycolor(hsl);
+    }
+
+    function brighten(color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var rgb = tinycolor(color).toRgb();
+        rgb.r = mathMax(0, mathMin(255, rgb.r - mathRound(255 * - (amount / 100))));
+        rgb.g = mathMax(0, mathMin(255, rgb.g - mathRound(255 * - (amount / 100))));
+        rgb.b = mathMax(0, mathMin(255, rgb.b - mathRound(255 * - (amount / 100))));
+        return tinycolor(rgb);
+    }
+
+    function darken (color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var hsl = tinycolor(color).toHsl();
+        hsl.l -= amount / 100;
+        hsl.l = clamp01(hsl.l);
+        return tinycolor(hsl);
+    }
+
+    // Spin takes a positive or negative amount within [-360, 360] indicating the change of hue.
+    // Values outside of this range will be wrapped into this range.
+    function spin(color, amount) {
+        var hsl = tinycolor(color).toHsl();
+        var hue = (hsl.h + amount) % 360;
+        hsl.h = hue < 0 ? 360 + hue : hue;
+        return tinycolor(hsl);
+    }
+
+    // Combination Functions
+    // ---------------------
+    // Thanks to jQuery xColor for some of the ideas behind these
+    // <https://github.com/infusion/jQuery-xcolor/blob/master/jquery.xcolor.js>
+
+    function complement(color) {
+        var hsl = tinycolor(color).toHsl();
+        hsl.h = (hsl.h + 180) % 360;
+        return tinycolor(hsl);
+    }
+
+    function triad(color) {
+        var hsl = tinycolor(color).toHsl();
+        var h = hsl.h;
+        return [
+            tinycolor(color),
+            tinycolor({ h: (h + 120) % 360, s: hsl.s, l: hsl.l }),
+            tinycolor({ h: (h + 240) % 360, s: hsl.s, l: hsl.l })
+        ];
+    }
+
+    function tetrad(color) {
+        var hsl = tinycolor(color).toHsl();
+        var h = hsl.h;
+        return [
+            tinycolor(color),
+            tinycolor({ h: (h + 90) % 360, s: hsl.s, l: hsl.l }),
+            tinycolor({ h: (h + 180) % 360, s: hsl.s, l: hsl.l }),
+            tinycolor({ h: (h + 270) % 360, s: hsl.s, l: hsl.l })
+        ];
+    }
+
+    function splitcomplement(color) {
+        var hsl = tinycolor(color).toHsl();
+        var h = hsl.h;
+        return [
+            tinycolor(color),
+            tinycolor({ h: (h + 72) % 360, s: hsl.s, l: hsl.l}),
+            tinycolor({ h: (h + 216) % 360, s: hsl.s, l: hsl.l})
+        ];
+    }
+
+    function analogous(color, results, slices) {
+        results = results || 6;
+        slices = slices || 30;
+
+        var hsl = tinycolor(color).toHsl();
+        var part = 360 / slices;
+        var ret = [tinycolor(color)];
+
+        for (hsl.h = ((hsl.h - (part * results >> 1)) + 720) % 360; --results; ) {
+            hsl.h = (hsl.h + part) % 360;
+            ret.push(tinycolor(hsl));
+        }
+        return ret;
+    }
+
+    function monochromatic(color, results) {
+        results = results || 6;
+        var hsv = tinycolor(color).toHsv();
+        var h = hsv.h, s = hsv.s, v = hsv.v;
+        var ret = [];
+        var modification = 1 / results;
+
+        while (results--) {
+            ret.push(tinycolor({ h: h, s: s, v: v}));
+            v = (v + modification) % 1;
+        }
+
+        return ret;
+    }
+
+    // Utility Functions
+    // ---------------------
+
+    tinycolor.mix = function(color1, color2, amount) {
+        amount = (amount === 0) ? 0 : (amount || 50);
+
+        var rgb1 = tinycolor(color1).toRgb();
+        var rgb2 = tinycolor(color2).toRgb();
+
+        var p = amount / 100;
+
+        var rgba = {
+            r: ((rgb2.r - rgb1.r) * p) + rgb1.r,
+            g: ((rgb2.g - rgb1.g) * p) + rgb1.g,
+            b: ((rgb2.b - rgb1.b) * p) + rgb1.b,
+            a: ((rgb2.a - rgb1.a) * p) + rgb1.a
+        };
+
+        return tinycolor(rgba);
+    };
+
+
+    // Readability Functions
+    // ---------------------
+    // <http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef (WCAG Version 2)
+
+    // `contrast`
+    // Analyze the 2 colors and returns the color contrast defined by (WCAG Version 2)
+    tinycolor.readability = function(color1, color2) {
+        var c1 = tinycolor(color1);
+        var c2 = tinycolor(color2);
+        return (Math.max(c1.getLuminance(),c2.getLuminance())+0.05) / (Math.min(c1.getLuminance(),c2.getLuminance())+0.05);
+    };
+
+    // `isReadable`
+    // Ensure that foreground and background color combinations meet WCAG2 guidelines.
+    // The third argument is an optional Object.
+    //      the 'level' property states 'AA' or 'AAA' - if missing or invalid, it defaults to 'AA';
+    //      the 'size' property states 'large' or 'small' - if missing or invalid, it defaults to 'small'.
+    // If the entire object is absent, isReadable defaults to {level:"AA",size:"small"}.
+
+    // *Example*
+    //    tinycolor.isReadable("#000", "#111") => false
+    //    tinycolor.isReadable("#000", "#111",{level:"AA",size:"large"}) => false
+    tinycolor.isReadable = function(color1, color2, wcag2) {
+        var readability = tinycolor.readability(color1, color2);
+        var wcag2Parms, out;
+
+        out = false;
+
+        wcag2Parms = validateWCAG2Parms(wcag2);
+        switch (wcag2Parms.level + wcag2Parms.size) {
+            case "AAsmall":
+            case "AAAlarge":
+                out = readability >= 4.5;
+                break;
+            case "AAlarge":
+                out = readability >= 3;
+                break;
+            case "AAAsmall":
+                out = readability >= 7;
+                break;
+        }
+        return out;
+
+    };
+
+    // `mostReadable`
+    // Given a base color and a list of possible foreground or background
+    // colors for that base, returns the most readable color.
+    // Optionally returns Black or White if the most readable color is unreadable.
+    // *Example*
+    //    tinycolor.mostReadable(tinycolor.mostReadable("#123", ["#124", "#125"],{includeFallbackColors:false}).toHexString(); // "#112255"
+    //    tinycolor.mostReadable(tinycolor.mostReadable("#123", ["#124", "#125"],{includeFallbackColors:true}).toHexString();  // "#ffffff"
+    //    tinycolor.mostReadable("#a8015a", ["#faf3f3"],{includeFallbackColors:true,level:"AAA",size:"large"}).toHexString(); // "#faf3f3"
+    //    tinycolor.mostReadable("#a8015a", ["#faf3f3"],{includeFallbackColors:true,level:"AAA",size:"small"}).toHexString(); // "#ffffff"
+    tinycolor.mostReadable = function(baseColor, colorList, args) {
+        var bestColor = null;
+        var bestScore = 0;
+        var readability;
+        var includeFallbackColors, level, size ;
+        args = args || {};
+        includeFallbackColors = args.includeFallbackColors ;
+        level = args.level;
+        size = args.size;
+
+        for (var i= 0; i < colorList.length ; i++) {
+            readability = tinycolor.readability(baseColor, colorList[i]);
+            if (readability > bestScore) {
+                bestScore = readability;
+                bestColor = tinycolor(colorList[i]);
+            }
+        }
+
+        if (tinycolor.isReadable(baseColor, bestColor, {"level":level,"size":size}) || !includeFallbackColors) {
+            return bestColor;
+        }
+        else {
+            args.includeFallbackColors=false;
+            return tinycolor.mostReadable(baseColor,["#fff", "#000"],args);
+        }
+    };
+
+
+    // Big List of Colors
+    // ------------------
+    // <http://www.w3.org/TR/css3-color/#svg-color>
+    var names = tinycolor.names = {
+        aliceblue: "f0f8ff",
+        antiquewhite: "faebd7",
+        aqua: "0ff",
+        aquamarine: "7fffd4",
+        azure: "f0ffff",
+        beige: "f5f5dc",
+        bisque: "ffe4c4",
+        black: "000",
+        blanchedalmond: "ffebcd",
+        blue: "00f",
+        blueviolet: "8a2be2",
+        brown: "a52a2a",
+        burlywood: "deb887",
+        burntsienna: "ea7e5d",
+        cadetblue: "5f9ea0",
+        chartreuse: "7fff00",
+        chocolate: "d2691e",
+        coral: "ff7f50",
+        cornflowerblue: "6495ed",
+        cornsilk: "fff8dc",
+        crimson: "dc143c",
+        cyan: "0ff",
+        darkblue: "00008b",
+        darkcyan: "008b8b",
+        darkgoldenrod: "b8860b",
+        darkgray: "a9a9a9",
+        darkgreen: "006400",
+        darkgrey: "a9a9a9",
+        darkkhaki: "bdb76b",
+        darkmagenta: "8b008b",
+        darkolivegreen: "556b2f",
+        darkorange: "ff8c00",
+        darkorchid: "9932cc",
+        darkred: "8b0000",
+        darksalmon: "e9967a",
+        darkseagreen: "8fbc8f",
+        darkslateblue: "483d8b",
+        darkslategray: "2f4f4f",
+        darkslategrey: "2f4f4f",
+        darkturquoise: "00ced1",
+        darkviolet: "9400d3",
+        deeppink: "ff1493",
+        deepskyblue: "00bfff",
+        dimgray: "696969",
+        dimgrey: "696969",
+        dodgerblue: "1e90ff",
+        firebrick: "b22222",
+        floralwhite: "fffaf0",
+        forestgreen: "228b22",
+        fuchsia: "f0f",
+        gainsboro: "dcdcdc",
+        ghostwhite: "f8f8ff",
+        gold: "ffd700",
+        goldenrod: "daa520",
+        gray: "808080",
+        green: "008000",
+        greenyellow: "adff2f",
+        grey: "808080",
+        honeydew: "f0fff0",
+        hotpink: "ff69b4",
+        indianred: "cd5c5c",
+        indigo: "4b0082",
+        ivory: "fffff0",
+        khaki: "f0e68c",
+        lavender: "e6e6fa",
+        lavenderblush: "fff0f5",
+        lawngreen: "7cfc00",
+        lemonchiffon: "fffacd",
+        lightblue: "add8e6",
+        lightcoral: "f08080",
+        lightcyan: "e0ffff",
+        lightgoldenrodyellow: "fafad2",
+        lightgray: "d3d3d3",
+        lightgreen: "90ee90",
+        lightgrey: "d3d3d3",
+        lightpink: "ffb6c1",
+        lightsalmon: "ffa07a",
+        lightseagreen: "20b2aa",
+        lightskyblue: "87cefa",
+        lightslategray: "789",
+        lightslategrey: "789",
+        lightsteelblue: "b0c4de",
+        lightyellow: "ffffe0",
+        lime: "0f0",
+        limegreen: "32cd32",
+        linen: "faf0e6",
+        magenta: "f0f",
+        maroon: "800000",
+        mediumaquamarine: "66cdaa",
+        mediumblue: "0000cd",
+        mediumorchid: "ba55d3",
+        mediumpurple: "9370db",
+        mediumseagreen: "3cb371",
+        mediumslateblue: "7b68ee",
+        mediumspringgreen: "00fa9a",
+        mediumturquoise: "48d1cc",
+        mediumvioletred: "c71585",
+        midnightblue: "191970",
+        mintcream: "f5fffa",
+        mistyrose: "ffe4e1",
+        moccasin: "ffe4b5",
+        navajowhite: "ffdead",
+        navy: "000080",
+        oldlace: "fdf5e6",
+        olive: "808000",
+        olivedrab: "6b8e23",
+        orange: "ffa500",
+        orangered: "ff4500",
+        orchid: "da70d6",
+        palegoldenrod: "eee8aa",
+        palegreen: "98fb98",
+        paleturquoise: "afeeee",
+        palevioletred: "db7093",
+        papayawhip: "ffefd5",
+        peachpuff: "ffdab9",
+        peru: "cd853f",
+        pink: "ffc0cb",
+        plum: "dda0dd",
+        powderblue: "b0e0e6",
+        purple: "800080",
+        rebeccapurple: "663399",
+        red: "f00",
+        rosybrown: "bc8f8f",
+        royalblue: "4169e1",
+        saddlebrown: "8b4513",
+        salmon: "fa8072",
+        sandybrown: "f4a460",
+        seagreen: "2e8b57",
+        seashell: "fff5ee",
+        sienna: "a0522d",
+        silver: "c0c0c0",
+        skyblue: "87ceeb",
+        slateblue: "6a5acd",
+        slategray: "708090",
+        slategrey: "708090",
+        snow: "fffafa",
+        springgreen: "00ff7f",
+        steelblue: "4682b4",
+        tan: "d2b48c",
+        teal: "008080",
+        thistle: "d8bfd8",
+        tomato: "ff6347",
+        turquoise: "40e0d0",
+        violet: "ee82ee",
+        wheat: "f5deb3",
+        white: "fff",
+        whitesmoke: "f5f5f5",
+        yellow: "ff0",
+        yellowgreen: "9acd32"
+    };
+
+    // Make it easy to access colors via `hexNames[hex]`
+    var hexNames = tinycolor.hexNames = flip(names);
+
+
+    // Utilities
+    // ---------
+
+    // `{ 'name1': 'val1' }` becomes `{ 'val1': 'name1' }`
+    function flip(o) {
+        var flipped = { };
+        for (var i in o) {
+            if (o.hasOwnProperty(i)) {
+                flipped[o[i]] = i;
+            }
+        }
+        return flipped;
+    }
+
+    // Return a valid alpha value [0,1] with all invalid values being set to 1
+    function boundAlpha(a) {
+        a = parseFloat(a);
+
+        if (isNaN(a) || a < 0 || a > 1) {
+            a = 1;
+        }
+
+        return a;
+    }
+
+    // Take input from [0, n] and return it as [0, 1]
+    function bound01(n, max) {
+        if (isOnePointZero(n)) { n = "100%"; }
+
+        var processPercent = isPercentage(n);
+        n = mathMin(max, mathMax(0, parseFloat(n)));
+
+        // Automatically convert percentage into number
+        if (processPercent) {
+            n = parseInt(n * max, 10) / 100;
+        }
+
+        // Handle floating point rounding errors
+        if ((Math.abs(n - max) < 0.000001)) {
+            return 1;
+        }
+
+        // Convert into [0, 1] range if it isn't already
+        return (n % max) / parseFloat(max);
+    }
+
+    // Force a number between 0 and 1
+    function clamp01(val) {
+        return mathMin(1, mathMax(0, val));
+    }
+
+    // Parse a base-16 hex value into a base-10 integer
+    function parseIntFromHex(val) {
+        return parseInt(val, 16);
+    }
+
+    // Need to handle 1.0 as 100%, since once it is a number, there is no difference between it and 1
+    // <http://stackoverflow.com/questions/7422072/javascript-how-to-detect-number-as-a-decimal-including-1-0>
+    function isOnePointZero(n) {
+        return typeof n == "string" && n.indexOf('.') != -1 && parseFloat(n) === 1;
+    }
+
+    // Check to see if string passed in is a percentage
+    function isPercentage(n) {
+        return typeof n === "string" && n.indexOf('%') != -1;
+    }
+
+    // Force a hex value to have 2 characters
+    function pad2(c) {
+        return c.length == 1 ? '0' + c : '' + c;
+    }
+
+    // Replace a decimal with it's percentage value
+    function convertToPercentage(n) {
+        if (n <= 1) {
+            n = (n * 100) + "%";
+        }
+
+        return n;
+    }
+
+    // Converts a decimal to a hex value
+    function convertDecimalToHex(d) {
+        return Math.round(parseFloat(d) * 255).toString(16);
+    }
+    // Converts a hex value to a decimal
+    function convertHexToDecimal(h) {
+        return (parseIntFromHex(h) / 255);
+    }
+
+    var matchers = (function() {
+
+        // <http://www.w3.org/TR/css3-values/#integers>
+        var CSS_INTEGER = "[-\\+]?\\d+%?";
+
+        // <http://www.w3.org/TR/css3-values/#number-value>
+        var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
+
+        // Allow positive/negative integer/number.  Don't capture the either/or, just the entire outcome.
+        var CSS_UNIT = "(?:" + CSS_NUMBER + ")|(?:" + CSS_INTEGER + ")";
+
+        // Actual matching.
+        // Parentheses and commas are optional, but not required.
+        // Whitespace can take the place of commas or opening paren
+        var PERMISSIVE_MATCH3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+        var PERMISSIVE_MATCH4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+
+        return {
+            CSS_UNIT: new RegExp(CSS_UNIT),
+            rgb: new RegExp("rgb" + PERMISSIVE_MATCH3),
+            rgba: new RegExp("rgba" + PERMISSIVE_MATCH4),
+            hsl: new RegExp("hsl" + PERMISSIVE_MATCH3),
+            hsla: new RegExp("hsla" + PERMISSIVE_MATCH4),
+            hsv: new RegExp("hsv" + PERMISSIVE_MATCH3),
+            hsva: new RegExp("hsva" + PERMISSIVE_MATCH4),
+            hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+            hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+            hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+            hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/
+        };
+    })();
+
+    // `isValidCSSUnit`
+    // Take in a single string / number and check to see if it looks like a CSS unit
+    // (see `matchers` above for definition).
+    function isValidCSSUnit(color) {
+        return !!matchers.CSS_UNIT.exec(color);
+    }
+
+    // `stringInputToObject`
+    // Permissive string parsing.  Take in a number of formats, and output an object
+    // based on detected format.  Returns `{ r, g, b }` or `{ h, s, l }` or `{ h, s, v}`
+    function stringInputToObject(color) {
+
+        color = color.replace(trimLeft,'').replace(trimRight, '').toLowerCase();
+        var named = false;
+        if (names[color]) {
+            color = names[color];
+            named = true;
+        }
+        else if (color == 'transparent') {
+            return { r: 0, g: 0, b: 0, a: 0, format: "name" };
+        }
+
+        // Try to match string input using regular expressions.
+        // Keep most of the number bounding out of this function - don't worry about [0,1] or [0,100] or [0,360]
+        // Just return an object and let the conversion functions handle that.
+        // This way the result will be the same whether the tinycolor is initialized with string or object.
+        var match;
+        if ((match = matchers.rgb.exec(color))) {
+            return { r: match[1], g: match[2], b: match[3] };
+        }
+        if ((match = matchers.rgba.exec(color))) {
+            return { r: match[1], g: match[2], b: match[3], a: match[4] };
+        }
+        if ((match = matchers.hsl.exec(color))) {
+            return { h: match[1], s: match[2], l: match[3] };
+        }
+        if ((match = matchers.hsla.exec(color))) {
+            return { h: match[1], s: match[2], l: match[3], a: match[4] };
+        }
+        if ((match = matchers.hsv.exec(color))) {
+            return { h: match[1], s: match[2], v: match[3] };
+        }
+        if ((match = matchers.hsva.exec(color))) {
+            return { h: match[1], s: match[2], v: match[3], a: match[4] };
+        }
+        if ((match = matchers.hex8.exec(color))) {
+            return {
+                r: parseIntFromHex(match[1]),
+                g: parseIntFromHex(match[2]),
+                b: parseIntFromHex(match[3]),
+                a: convertHexToDecimal(match[4]),
+                format: named ? "name" : "hex8"
+            };
+        }
+        if ((match = matchers.hex6.exec(color))) {
+            return {
+                r: parseIntFromHex(match[1]),
+                g: parseIntFromHex(match[2]),
+                b: parseIntFromHex(match[3]),
+                format: named ? "name" : "hex"
+            };
+        }
+        if ((match = matchers.hex4.exec(color))) {
+            return {
+                r: parseIntFromHex(match[1] + '' + match[1]),
+                g: parseIntFromHex(match[2] + '' + match[2]),
+                b: parseIntFromHex(match[3] + '' + match[3]),
+                a: convertHexToDecimal(match[4] + '' + match[4]),
+                format: named ? "name" : "hex8"
+            };
+        }
+        if ((match = matchers.hex3.exec(color))) {
+            return {
+                r: parseIntFromHex(match[1] + '' + match[1]),
+                g: parseIntFromHex(match[2] + '' + match[2]),
+                b: parseIntFromHex(match[3] + '' + match[3]),
+                format: named ? "name" : "hex"
+            };
+        }
+
+        return false;
+    }
+
+    function validateWCAG2Parms(parms) {
+        // return valid WCAG2 parms for isReadable.
+        // If input parms are invalid, return {"level":"AA", "size":"small"}
+        var level, size;
+        parms = parms || {"level":"AA", "size":"small"};
+        level = (parms.level || "AA").toUpperCase();
+        size = (parms.size || "small").toLowerCase();
+        if (level !== "AA" && level !== "AAA") {
+            level = "AA";
+        }
+        if (size !== "small" && size !== "large") {
+            size = "small";
+        }
+        return {"level":level, "size":size};
+    }
+
+    // Node: Export function
+    if (module.exports) {
+        module.exports = tinycolor;
+    }
+    // AMD/requirejs: Define the module
+    else {
+        window.tinycolor = tinycolor;
+    }
+
+    })(Math);
+    });
 
     /* src\components\Colorpicker.svelte generated by Svelte v3.38.3 */
 
     const { console: console_1$3 } = globals;
     const file$d = "src\\components\\Colorpicker.svelte";
 
-    // (33:4) {#if alpha}
+    // (35:4) {#if alpha}
     function create_if_block_1$2(ctx) {
     	let label;
     	let span;
@@ -9050,27 +10336,27 @@ var app = (function () {
     			span.textContent = "A:";
     			t1 = space();
     			input = element("input");
-    			add_location(span, file$d, 34, 6, 897);
+    			add_location(span, file$d, 36, 6, 974);
     			attr_dev(input, "placeholder", "A");
     			attr_dev(input, "type", "text");
-    			add_location(input, file$d, 35, 6, 920);
-    			add_location(label, file$d, 33, 5, 882);
+    			add_location(input, file$d, 37, 6, 997);
+    			add_location(label, file$d, 35, 5, 959);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			append_dev(label, span);
     			append_dev(label, t1);
     			append_dev(label, input);
-    			set_input_value(input, /*color*/ ctx[0].a);
+    			set_input_value(input, /*rgb*/ ctx[1].a);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[10]);
+    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[11]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*color*/ 1 && input.value !== /*color*/ ctx[0].a) {
-    				set_input_value(input, /*color*/ ctx[0].a);
+    			if (dirty & /*rgb*/ 2 && input.value !== /*rgb*/ ctx[1].a) {
+    				set_input_value(input, /*rgb*/ ctx[1].a);
     			}
     		},
     		d: function destroy(detaching) {
@@ -9084,14 +10370,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(33:4) {#if alpha}",
+    		source: "(35:4) {#if alpha}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (44:5) <Control        tips={tips}        legacy={legacy}        size="12px"        tiptext="Copy"        on:click={e => {                  navigator.clipboard.writeText(color.hex).then(() => {             console.log("Copied to clipboard");         }, () => {             console.log("Failed to copy");         });        }}       >
+    // (46:5) <Control        tips={tips}        legacy={legacy}        size="12px"        tiptext="Copy"        on:click={e => {                  navigator.clipboard.writeText(hex).then(() => {             console.log("Copied to clipboard");         }, () => {             console.log("Failed to copy");         });        }}       >
     function create_default_slot_1$4(ctx) {
     	let i;
 
@@ -9100,7 +10386,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-1px)");
-    			add_location(i, file$d, 56, 6, 1496);
+    			add_location(i, file$d, 58, 6, 1559);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -9114,22 +10400,22 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$4.name,
     		type: "slot",
-    		source: "(44:5) <Control        tips={tips}        legacy={legacy}        size=\\\"12px\\\"        tiptext=\\\"Copy\\\"        on:click={e => {                  navigator.clipboard.writeText(color.hex).then(() => {             console.log(\\\"Copied to clipboard\\\");         }, () => {             console.log(\\\"Failed to copy\\\");         });        }}       >",
+    		source: "(46:5) <Control        tips={tips}        legacy={legacy}        size=\\\"12px\\\"        tiptext=\\\"Copy\\\"        on:click={e => {                  navigator.clipboard.writeText(hex).then(() => {             console.log(\\\"Copied to clipboard\\\");         }, () => {             console.log(\\\"Failed to copy\\\");         });        }}       >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (59:5) {#if reset}
+    // (61:5) {#if reset}
     function create_if_block$9(ctx) {
     	let control;
     	let current;
 
     	control = new Control({
     			props: {
-    				tips: /*tips*/ ctx[2],
-    				legacy: /*legacy*/ ctx[1],
+    				tips: /*tips*/ ctx[3],
+    				legacy: /*legacy*/ ctx[2],
     				size: "12px",
     				tiptext: "Reset",
     				$$slots: { default: [create_default_slot$4] },
@@ -9138,7 +10424,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control.$on("click", /*click_handler_1*/ ctx[13]);
+    	control.$on("click", /*click_handler_1*/ ctx[14]);
 
     	const block = {
     		c: function create() {
@@ -9150,10 +10436,10 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const control_changes = {};
-    			if (dirty & /*tips*/ 4) control_changes.tips = /*tips*/ ctx[2];
-    			if (dirty & /*legacy*/ 2) control_changes.legacy = /*legacy*/ ctx[1];
+    			if (dirty & /*tips*/ 8) control_changes.tips = /*tips*/ ctx[3];
+    			if (dirty & /*legacy*/ 4) control_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 16384) {
+    			if (dirty & /*$$scope*/ 32768) {
     				control_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9177,14 +10463,14 @@ var app = (function () {
     		block,
     		id: create_if_block$9.name,
     		type: "if",
-    		source: "(59:5) {#if reset}",
+    		source: "(61:5) {#if reset}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (60:6) <Control         tips={tips}         legacy={legacy}         size="12px"         tiptext="Reset"         on:click={e => {          color = reset;         }}        >
+    // (62:6) <Control         tips={tips}         legacy={legacy}         size="12px"         tiptext="Reset"         on:click={e => {          hex = reset;          console.log("clicked!", hex, reset);         }}        >
     function create_default_slot$4(ctx) {
     	let i;
 
@@ -9192,7 +10478,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$d, 68, 7, 1782);
+    			add_location(i, file$d, 71, 7, 1889);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -9206,7 +10492,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$4.name,
     		type: "slot",
-    		source: "(60:6) <Control         tips={tips}         legacy={legacy}         size=\\\"12px\\\"         tiptext=\\\"Reset\\\"         on:click={e => {          color = reset;         }}        >",
+    		source: "(62:6) <Control         tips={tips}         legacy={legacy}         size=\\\"12px\\\"         tiptext=\\\"Reset\\\"         on:click={e => {          hex = reset;          console.log(\\\"clicked!\\\", hex, reset);         }}        >",
     		ctx
     	});
 
@@ -9216,7 +10502,8 @@ var app = (function () {
     function create_fragment$e(ctx) {
     	let div4;
     	let colorpicker;
-    	let updating_color;
+    	let updating_rgb;
+    	let updating_hex;
     	let t0;
     	let div3;
     	let div2;
@@ -9249,28 +10536,37 @@ var app = (function () {
     	let mounted;
     	let dispose;
 
-    	function colorpicker_color_binding(value) {
-    		/*colorpicker_color_binding*/ ctx[6](value);
+    	function colorpicker_rgb_binding(value) {
+    		/*colorpicker_rgb_binding*/ ctx[6](value);
+    	}
+
+    	function colorpicker_hex_binding(value) {
+    		/*colorpicker_hex_binding*/ ctx[7](value);
     	}
 
     	let colorpicker_props = {
     		isOpen: true,
     		isInput: false,
-    		isAlpha: /*alpha*/ ctx[4]
+    		isAlpha: /*alpha*/ ctx[5]
     	};
 
-    	if (/*color*/ ctx[0] !== void 0) {
-    		colorpicker_props.color = /*color*/ ctx[0];
+    	if (/*rgb*/ ctx[1] !== void 0) {
+    		colorpicker_props.rgb = /*rgb*/ ctx[1];
+    	}
+
+    	if (/*hex*/ ctx[0] !== void 0) {
+    		colorpicker_props.hex = /*hex*/ ctx[0];
     	}
 
     	colorpicker = new ColorPicker({ props: colorpicker_props, $$inline: true });
-    	binding_callbacks.push(() => bind(colorpicker, "color", colorpicker_color_binding));
-    	let if_block0 = /*alpha*/ ctx[4] && create_if_block_1$2(ctx);
+    	binding_callbacks.push(() => bind(colorpicker, "rgb", colorpicker_rgb_binding));
+    	binding_callbacks.push(() => bind(colorpicker, "hex", colorpicker_hex_binding));
+    	let if_block0 = /*alpha*/ ctx[5] && create_if_block_1$2(ctx);
 
     	control = new Control({
     			props: {
-    				tips: /*tips*/ ctx[2],
-    				legacy: /*legacy*/ ctx[1],
+    				tips: /*tips*/ ctx[3],
+    				legacy: /*legacy*/ ctx[2],
     				size: "12px",
     				tiptext: "Copy",
     				$$slots: { default: [create_default_slot_1$4] },
@@ -9279,8 +10575,8 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control.$on("click", /*click_handler*/ ctx[12]);
-    	let if_block1 = /*reset*/ ctx[3] && create_if_block$9(ctx);
+    	control.$on("click", /*click_handler*/ ctx[13]);
+    	let if_block1 = /*reset*/ ctx[4] && create_if_block$9(ctx);
 
     	const block = {
     		c: function create() {
@@ -9320,36 +10616,36 @@ var app = (function () {
     			create_component(control.$$.fragment);
     			t14 = space();
     			if (if_block1) if_block1.c();
-    			add_location(span0, file$d, 21, 5, 542);
+    			add_location(span0, file$d, 23, 5, 625);
     			attr_dev(input0, "placeholder", "R");
     			attr_dev(input0, "type", "text");
-    			add_location(input0, file$d, 22, 5, 564);
-    			add_location(label0, file$d, 20, 4, 528);
-    			add_location(span1, file$d, 25, 5, 654);
+    			add_location(input0, file$d, 24, 5, 647);
+    			add_location(label0, file$d, 22, 4, 611);
+    			add_location(span1, file$d, 27, 5, 735);
     			attr_dev(input1, "placeholder", "G");
     			attr_dev(input1, "type", "text");
-    			add_location(input1, file$d, 26, 5, 676);
-    			add_location(label1, file$d, 24, 4, 640);
-    			add_location(span2, file$d, 29, 5, 766);
+    			add_location(input1, file$d, 28, 5, 757);
+    			add_location(label1, file$d, 26, 4, 721);
+    			add_location(span2, file$d, 31, 5, 845);
     			attr_dev(input2, "placeholder", "B");
     			attr_dev(input2, "type", "text");
-    			add_location(input2, file$d, 30, 5, 788);
-    			add_location(label2, file$d, 28, 4, 752);
+    			add_location(input2, file$d, 32, 5, 867);
+    			add_location(label2, file$d, 30, 4, 831);
     			attr_dev(div0, "class", "picker-controls-row");
-    			add_location(div0, file$d, 19, 3, 489);
-    			add_location(span3, file$d, 41, 5, 1071);
+    			add_location(div0, file$d, 21, 3, 572);
+    			add_location(span3, file$d, 43, 5, 1146);
     			attr_dev(input3, "placeholder", "Hex");
     			attr_dev(input3, "type", "text");
-    			add_location(input3, file$d, 42, 5, 1095);
-    			add_location(label3, file$d, 40, 4, 1057);
+    			add_location(input3, file$d, 44, 5, 1170);
+    			add_location(label3, file$d, 42, 4, 1132);
     			attr_dev(div1, "class", "picker-controls-row");
-    			add_location(div1, file$d, 39, 3, 1018);
+    			add_location(div1, file$d, 41, 3, 1093);
     			attr_dev(div2, "class", "picker-controls");
-    			add_location(div2, file$d, 18, 2, 455);
+    			add_location(div2, file$d, 20, 2, 538);
     			attr_dev(div3, "class", "picker-split");
-    			add_location(div3, file$d, 17, 1, 425);
+    			add_location(div3, file$d, 19, 1, 508);
     			attr_dev(div4, "class", "picker-wrapper");
-    			add_location(div4, file$d, 15, 0, 326);
+    			add_location(div4, file$d, 17, 0, 402);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9365,19 +10661,19 @@ var app = (function () {
     			append_dev(label0, span0);
     			append_dev(label0, t2);
     			append_dev(label0, input0);
-    			set_input_value(input0, /*color*/ ctx[0].r);
+    			set_input_value(input0, /*rgb*/ ctx[1].r);
     			append_dev(div0, t3);
     			append_dev(div0, label1);
     			append_dev(label1, span1);
     			append_dev(label1, t5);
     			append_dev(label1, input1);
-    			set_input_value(input1, /*color*/ ctx[0].g);
+    			set_input_value(input1, /*rgb*/ ctx[1].g);
     			append_dev(div0, t6);
     			append_dev(div0, label2);
     			append_dev(label2, span2);
     			append_dev(label2, t8);
     			append_dev(label2, input2);
-    			set_input_value(input2, /*color*/ ctx[0].b);
+    			set_input_value(input2, /*rgb*/ ctx[1].b);
     			append_dev(div0, t9);
     			if (if_block0) if_block0.m(div0, null);
     			append_dev(div2, t10);
@@ -9386,7 +10682,7 @@ var app = (function () {
     			append_dev(label3, span3);
     			append_dev(label3, t12);
     			append_dev(label3, input3);
-    			set_input_value(input3, /*color*/ ctx[0].hex);
+    			set_input_value(input3, /*hex*/ ctx[0]);
     			append_dev(label3, t13);
     			mount_component(control, label3, null);
     			append_dev(label3, t14);
@@ -9395,10 +10691,10 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[7]),
-    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[8]),
-    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[9]),
-    					listen_dev(input3, "input", /*input3_input_handler*/ ctx[11])
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[8]),
+    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[9]),
+    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[10]),
+    					listen_dev(input3, "input", /*input3_input_handler*/ ctx[12])
     				];
 
     				mounted = true;
@@ -9406,29 +10702,35 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			const colorpicker_changes = {};
-    			if (dirty & /*alpha*/ 16) colorpicker_changes.isAlpha = /*alpha*/ ctx[4];
+    			if (dirty & /*alpha*/ 32) colorpicker_changes.isAlpha = /*alpha*/ ctx[5];
 
-    			if (!updating_color && dirty & /*color*/ 1) {
-    				updating_color = true;
-    				colorpicker_changes.color = /*color*/ ctx[0];
-    				add_flush_callback(() => updating_color = false);
+    			if (!updating_rgb && dirty & /*rgb*/ 2) {
+    				updating_rgb = true;
+    				colorpicker_changes.rgb = /*rgb*/ ctx[1];
+    				add_flush_callback(() => updating_rgb = false);
+    			}
+
+    			if (!updating_hex && dirty & /*hex*/ 1) {
+    				updating_hex = true;
+    				colorpicker_changes.hex = /*hex*/ ctx[0];
+    				add_flush_callback(() => updating_hex = false);
     			}
 
     			colorpicker.$set(colorpicker_changes);
 
-    			if (dirty & /*color*/ 1 && input0.value !== /*color*/ ctx[0].r) {
-    				set_input_value(input0, /*color*/ ctx[0].r);
+    			if (dirty & /*rgb*/ 2 && input0.value !== /*rgb*/ ctx[1].r) {
+    				set_input_value(input0, /*rgb*/ ctx[1].r);
     			}
 
-    			if (dirty & /*color*/ 1 && input1.value !== /*color*/ ctx[0].g) {
-    				set_input_value(input1, /*color*/ ctx[0].g);
+    			if (dirty & /*rgb*/ 2 && input1.value !== /*rgb*/ ctx[1].g) {
+    				set_input_value(input1, /*rgb*/ ctx[1].g);
     			}
 
-    			if (dirty & /*color*/ 1 && input2.value !== /*color*/ ctx[0].b) {
-    				set_input_value(input2, /*color*/ ctx[0].b);
+    			if (dirty & /*rgb*/ 2 && input2.value !== /*rgb*/ ctx[1].b) {
+    				set_input_value(input2, /*rgb*/ ctx[1].b);
     			}
 
-    			if (/*alpha*/ ctx[4]) {
+    			if (/*alpha*/ ctx[5]) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
     				} else {
@@ -9441,25 +10743,25 @@ var app = (function () {
     				if_block0 = null;
     			}
 
-    			if (dirty & /*color*/ 1 && input3.value !== /*color*/ ctx[0].hex) {
-    				set_input_value(input3, /*color*/ ctx[0].hex);
+    			if (dirty & /*hex*/ 1 && input3.value !== /*hex*/ ctx[0]) {
+    				set_input_value(input3, /*hex*/ ctx[0]);
     			}
 
     			const control_changes = {};
-    			if (dirty & /*tips*/ 4) control_changes.tips = /*tips*/ ctx[2];
-    			if (dirty & /*legacy*/ 2) control_changes.legacy = /*legacy*/ ctx[1];
+    			if (dirty & /*tips*/ 8) control_changes.tips = /*tips*/ ctx[3];
+    			if (dirty & /*legacy*/ 4) control_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 16384) {
+    			if (dirty & /*$$scope*/ 32768) {
     				control_changes.$$scope = { dirty, ctx };
     			}
 
     			control.$set(control_changes);
 
-    			if (/*reset*/ ctx[3]) {
+    			if (/*reset*/ ctx[4]) {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
 
-    					if (dirty & /*reset*/ 8) {
+    					if (dirty & /*reset*/ 16) {
     						transition_in(if_block1, 1);
     					}
     				} else {
@@ -9521,45 +10823,50 @@ var app = (function () {
     	let { reset } = $$props;
     	let { alpha = true } = $$props;
     	let { hex } = $$props;
-    	let { color } = $$props;
-    	const writable_props = ["legacy", "tips", "reset", "alpha", "hex", "color"];
+    	let { rgb = tinycolor(hex).toRgb() } = $$props;
+    	const writable_props = ["legacy", "tips", "reset", "alpha", "hex", "rgb"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$3.warn(`<Colorpicker> was created with unknown prop '${key}'`);
     	});
 
-    	function colorpicker_color_binding(value) {
-    		color = value;
-    		$$invalidate(0, color);
+    	function colorpicker_rgb_binding(value) {
+    		rgb = value;
+    		$$invalidate(1, rgb);
+    	}
+
+    	function colorpicker_hex_binding(value) {
+    		hex = value;
+    		$$invalidate(0, hex);
     	}
 
     	function input0_input_handler() {
-    		color.r = this.value;
-    		$$invalidate(0, color);
+    		rgb.r = this.value;
+    		$$invalidate(1, rgb);
     	}
 
     	function input1_input_handler() {
-    		color.g = this.value;
-    		$$invalidate(0, color);
+    		rgb.g = this.value;
+    		$$invalidate(1, rgb);
     	}
 
     	function input2_input_handler() {
-    		color.b = this.value;
-    		$$invalidate(0, color);
+    		rgb.b = this.value;
+    		$$invalidate(1, rgb);
     	}
 
     	function input_input_handler() {
-    		color.a = this.value;
-    		$$invalidate(0, color);
+    		rgb.a = this.value;
+    		$$invalidate(1, rgb);
     	}
 
     	function input3_input_handler() {
-    		color.hex = this.value;
-    		$$invalidate(0, color);
+    		hex = this.value;
+    		$$invalidate(0, hex);
     	}
 
     	const click_handler = e => {
-    		navigator.clipboard.writeText(color.hex).then(
+    		navigator.clipboard.writeText(hex).then(
     			() => {
     				console.log("Copied to clipboard");
     			},
@@ -9570,36 +10877,38 @@ var app = (function () {
     	};
 
     	const click_handler_1 = e => {
-    		$$invalidate(0, color = reset);
+    		$$invalidate(0, hex = reset);
+    		console.log("clicked!", hex, reset);
     	};
 
     	$$self.$$set = $$props => {
-    		if ("legacy" in $$props) $$invalidate(1, legacy = $$props.legacy);
-    		if ("tips" in $$props) $$invalidate(2, tips = $$props.tips);
-    		if ("reset" in $$props) $$invalidate(3, reset = $$props.reset);
-    		if ("alpha" in $$props) $$invalidate(4, alpha = $$props.alpha);
-    		if ("hex" in $$props) $$invalidate(5, hex = $$props.hex);
-    		if ("color" in $$props) $$invalidate(0, color = $$props.color);
+    		if ("legacy" in $$props) $$invalidate(2, legacy = $$props.legacy);
+    		if ("tips" in $$props) $$invalidate(3, tips = $$props.tips);
+    		if ("reset" in $$props) $$invalidate(4, reset = $$props.reset);
+    		if ("alpha" in $$props) $$invalidate(5, alpha = $$props.alpha);
+    		if ("hex" in $$props) $$invalidate(0, hex = $$props.hex);
+    		if ("rgb" in $$props) $$invalidate(1, rgb = $$props.rgb);
     	};
 
     	$$self.$capture_state = () => ({
     		ColorPicker,
+    		tinycolor,
     		Control,
     		legacy,
     		tips,
     		reset,
     		alpha,
     		hex,
-    		color
+    		rgb
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("legacy" in $$props) $$invalidate(1, legacy = $$props.legacy);
-    		if ("tips" in $$props) $$invalidate(2, tips = $$props.tips);
-    		if ("reset" in $$props) $$invalidate(3, reset = $$props.reset);
-    		if ("alpha" in $$props) $$invalidate(4, alpha = $$props.alpha);
-    		if ("hex" in $$props) $$invalidate(5, hex = $$props.hex);
-    		if ("color" in $$props) $$invalidate(0, color = $$props.color);
+    		if ("legacy" in $$props) $$invalidate(2, legacy = $$props.legacy);
+    		if ("tips" in $$props) $$invalidate(3, tips = $$props.tips);
+    		if ("reset" in $$props) $$invalidate(4, reset = $$props.reset);
+    		if ("alpha" in $$props) $$invalidate(5, alpha = $$props.alpha);
+    		if ("hex" in $$props) $$invalidate(0, hex = $$props.hex);
+    		if ("rgb" in $$props) $$invalidate(1, rgb = $$props.rgb);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -9607,19 +10916,24 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*color*/ 1) {
-    			console.log("Got color", color);
+    		if ($$self.$$.dirty & /*rgb*/ 2) {
+    			console.log("Got color", rgb);
+    		}
+
+    		if ($$self.$$.dirty & /*hex*/ 1) {
+    			console.log("Got color", hex);
     		}
     	};
 
     	return [
-    		color,
+    		hex,
+    		rgb,
     		legacy,
     		tips,
     		reset,
     		alpha,
-    		hex,
-    		colorpicker_color_binding,
+    		colorpicker_rgb_binding,
+    		colorpicker_hex_binding,
     		input0_input_handler,
     		input1_input_handler,
     		input2_input_handler,
@@ -9635,12 +10949,12 @@ var app = (function () {
     		super(options);
 
     		init(this, options, instance$c, create_fragment$e, safe_not_equal, {
-    			legacy: 1,
-    			tips: 2,
-    			reset: 3,
-    			alpha: 4,
-    			hex: 5,
-    			color: 0
+    			legacy: 2,
+    			tips: 3,
+    			reset: 4,
+    			alpha: 5,
+    			hex: 0,
+    			rgb: 1
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -9653,16 +10967,12 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*reset*/ ctx[3] === undefined && !("reset" in props)) {
+    		if (/*reset*/ ctx[4] === undefined && !("reset" in props)) {
     			console_1$3.warn("<Colorpicker> was created without expected prop 'reset'");
     		}
 
-    		if (/*hex*/ ctx[5] === undefined && !("hex" in props)) {
+    		if (/*hex*/ ctx[0] === undefined && !("hex" in props)) {
     			console_1$3.warn("<Colorpicker> was created without expected prop 'hex'");
-    		}
-
-    		if (/*color*/ ctx[0] === undefined && !("color" in props)) {
-    			console_1$3.warn("<Colorpicker> was created without expected prop 'color'");
     		}
     	}
 
@@ -9706,11 +11016,11 @@ var app = (function () {
     		throw new Error("<Colorpicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get color() {
+    	get rgb() {
     		throw new Error("<Colorpicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set color(value) {
+    	set rgb(value) {
     		throw new Error("<Colorpicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -9720,7 +11030,7 @@ var app = (function () {
     const { console: console_1$2 } = globals;
     const file$c = "src\\components\\Eyedropper.svelte";
 
-    // (53:0) <Tool   tips={tips}   size="12px"   legacy={legacy}   tiptext={"Pick a color"}   on:click={e => {    //showDropdown = true;    dispatch('pickColor');   }}  >
+    // (49:0) <Tool   tips={tips}   size="12px"   legacy={legacy}   tiptext={"Pick a color"}   on:click={e => {    //showDropdown = true;    dispatch('pickColor');   }}  >
     function create_default_slot_1$3(ctx) {
     	let i;
     	let mounted;
@@ -9730,7 +11040,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-eye-dropper");
-    			add_location(i, file$c, 62, 1, 1378);
+    			add_location(i, file$c, 58, 1, 1342);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -9751,14 +11061,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$3.name,
     		type: "slot",
-    		source: "(53:0) <Tool   tips={tips}   size=\\\"12px\\\"   legacy={legacy}   tiptext={\\\"Pick a color\\\"}   on:click={e => {    //showDropdown = true;    dispatch('pickColor');   }}  >",
+    		source: "(49:0) <Tool   tips={tips}   size=\\\"12px\\\"   legacy={legacy}   tiptext={\\\"Pick a color\\\"}   on:click={e => {    //showDropdown = true;    dispatch('pickColor');   }}  >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (66:0) {#if showDropdown}
+    // (62:0) {#if showDropdown}
     function create_if_block$8(ctx) {
     	let dropdown;
     	let current;
@@ -9785,7 +11095,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const dropdown_changes = {};
 
-    			if (dirty & /*$$scope, legacy, tips, color*/ 8206) {
+    			if (dirty & /*$$scope, legacy, tips, hex*/ 8206) {
     				dropdown_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9809,21 +11119,21 @@ var app = (function () {
     		block,
     		id: create_if_block$8.name,
     		type: "if",
-    		source: "(66:0) {#if showDropdown}",
+    		source: "(62:0) {#if showDropdown}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (67:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;     pickedColor = false;    }}   >
+    // (63:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;     pickedColor = false;    }}   >
     function create_default_slot$3(ctx) {
     	let colorpicker;
-    	let updating_color;
+    	let updating_hex;
     	let current;
 
-    	function colorpicker_color_binding(value) {
-    		/*colorpicker_color_binding*/ ctx[9](value);
+    	function colorpicker_hex_binding(value) {
+    		/*colorpicker_hex_binding*/ ctx[9](value);
     	}
 
     	let colorpicker_props = {
@@ -9832,12 +11142,12 @@ var app = (function () {
     		tips: /*tips*/ ctx[1]
     	};
 
-    	if (/*color*/ ctx[3] !== void 0) {
-    		colorpicker_props.color = /*color*/ ctx[3];
+    	if (/*hex*/ ctx[3] !== void 0) {
+    		colorpicker_props.hex = /*hex*/ ctx[3];
     	}
 
     	colorpicker = new Colorpicker({ props: colorpicker_props, $$inline: true });
-    	binding_callbacks.push(() => bind(colorpicker, "color", colorpicker_color_binding));
+    	binding_callbacks.push(() => bind(colorpicker, "hex", colorpicker_hex_binding));
 
     	const block = {
     		c: function create() {
@@ -9852,10 +11162,10 @@ var app = (function () {
     			if (dirty & /*legacy*/ 4) colorpicker_changes.legacy = /*legacy*/ ctx[2];
     			if (dirty & /*tips*/ 2) colorpicker_changes.tips = /*tips*/ ctx[1];
 
-    			if (!updating_color && dirty & /*color*/ 8) {
-    				updating_color = true;
-    				colorpicker_changes.color = /*color*/ ctx[3];
-    				add_flush_callback(() => updating_color = false);
+    			if (!updating_hex && dirty & /*hex*/ 8) {
+    				updating_hex = true;
+    				colorpicker_changes.hex = /*hex*/ ctx[3];
+    				add_flush_callback(() => updating_hex = false);
     			}
 
     			colorpicker.$set(colorpicker_changes);
@@ -9878,7 +11188,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$3.name,
     		type: "slot",
-    		source: "(67:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;     pickedColor = false;    }}   >",
+    		source: "(63:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;     pickedColor = false;    }}   >",
     		ctx
     	});
 
@@ -10007,7 +11317,7 @@ var app = (function () {
     		strategy: "fixed"
     	});
 
-    	let color = { hex: "#000000" };
+    	let hex = "#000000";
     	let showDropdown = false;
     	let { tips = false } = $$props;
     	let { legacy = false } = $$props;
@@ -10023,9 +11333,9 @@ var app = (function () {
     	};
 
     	function manageDropdown() {
-    		$$invalidate(3, color = { hex: pickedColor });
+    		$$invalidate(3, hex = pickedColor);
     		$$invalidate(4, showDropdown = true);
-    		console.log("generated color", color);
+    		console.log("generated color", hex);
     	}
 
     	const writable_props = ["tips", "legacy", "pickedColor"];
@@ -10039,9 +11349,9 @@ var app = (function () {
     		dispatch("pickColor");
     	};
 
-    	function colorpicker_color_binding(value) {
-    		color = value;
-    		$$invalidate(3, color);
+    	function colorpicker_hex_binding(value) {
+    		hex = value;
+    		$$invalidate(3, hex);
     	}
 
     	const close_handler = e => {
@@ -10064,7 +11374,7 @@ var app = (function () {
     		dispatch,
     		dropdownRef,
     		dropdownContent,
-    		color,
+    		hex,
     		showDropdown,
     		tips,
     		legacy,
@@ -10075,7 +11385,7 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("color" in $$props) $$invalidate(3, color = $$props.color);
+    		if ("hex" in $$props) $$invalidate(3, hex = $$props.hex);
     		if ("showDropdown" in $$props) $$invalidate(4, showDropdown = $$props.showDropdown);
     		if ("tips" in $$props) $$invalidate(1, tips = $$props.tips);
     		if ("legacy" in $$props) $$invalidate(2, legacy = $$props.legacy);
@@ -10096,13 +11406,13 @@ var app = (function () {
     		pickedColor,
     		tips,
     		legacy,
-    		color,
+    		hex,
     		showDropdown,
     		dispatch,
     		dropdownRef,
     		dropdownContent,
     		click_handler,
-    		colorpicker_color_binding,
+    		colorpicker_hex_binding,
     		close_handler
     	];
     }
@@ -10155,7 +11465,7 @@ var app = (function () {
     /* src\components\Backdrop.svelte generated by Svelte v3.38.3 */
     const file$b = "src\\components\\Backdrop.svelte";
 
-    // (26:0) <Tool   tips={tips}   size="12px"   legacy={legacy}   tiptext={"Change background"}   on:click={e => {    showDropdown = true;    //dispatch('pickColor');   }}  >
+    // (24:0) <Tool   tips={tips}   size="12px"   legacy={legacy}   tiptext={"Change background"}   on:click={e => {    showDropdown = true;    //dispatch('pickColor');   }}  >
     function create_default_slot_1$2(ctx) {
     	let i;
     	let mounted;
@@ -10165,7 +11475,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-fill");
-    			add_location(i, file$b, 35, 1, 745);
+    			add_location(i, file$b, 33, 1, 731);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -10186,14 +11496,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(26:0) <Tool   tips={tips}   size=\\\"12px\\\"   legacy={legacy}   tiptext={\\\"Change background\\\"}   on:click={e => {    showDropdown = true;    //dispatch('pickColor');   }}  >",
+    		source: "(24:0) <Tool   tips={tips}   size=\\\"12px\\\"   legacy={legacy}   tiptext={\\\"Change background\\\"}   on:click={e => {    showDropdown = true;    //dispatch('pickColor');   }}  >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (39:0) {#if showDropdown}
+    // (37:0) {#if showDropdown}
     function create_if_block$7(ctx) {
     	let dropdown;
     	let current;
@@ -10244,41 +11554,35 @@ var app = (function () {
     		block,
     		id: create_if_block$7.name,
     		type: "if",
-    		source: "(39:0) {#if showDropdown}",
+    		source: "(37:0) {#if showDropdown}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (40:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >
+    // (38:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >
     function create_default_slot$2(ctx) {
     	let colorpicker;
-    	let updating_color;
+    	let updating_hex;
     	let current;
 
-    	function colorpicker_color_binding(value) {
-    		/*colorpicker_color_binding*/ ctx[7](value);
+    	function colorpicker_hex_binding(value) {
+    		/*colorpicker_hex_binding*/ ctx[7](value);
     	}
 
     	let colorpicker_props = {
-    		reset: {
-    			hex: "#2F2E33",
-    			r: "47",
-    			g: "46",
-    			b: "51",
-    			a: "1"
-    		},
+    		reset: "#2F2E33",
     		legacy: /*legacy*/ ctx[2],
     		tips: /*tips*/ ctx[1]
     	};
 
     	if (/*backdropColor*/ ctx[0] !== void 0) {
-    		colorpicker_props.color = /*backdropColor*/ ctx[0];
+    		colorpicker_props.hex = /*backdropColor*/ ctx[0];
     	}
 
     	colorpicker = new Colorpicker({ props: colorpicker_props, $$inline: true });
-    	binding_callbacks.push(() => bind(colorpicker, "color", colorpicker_color_binding));
+    	binding_callbacks.push(() => bind(colorpicker, "hex", colorpicker_hex_binding));
 
     	const block = {
     		c: function create() {
@@ -10293,10 +11597,10 @@ var app = (function () {
     			if (dirty & /*legacy*/ 4) colorpicker_changes.legacy = /*legacy*/ ctx[2];
     			if (dirty & /*tips*/ 2) colorpicker_changes.tips = /*tips*/ ctx[1];
 
-    			if (!updating_color && dirty & /*backdropColor*/ 1) {
-    				updating_color = true;
-    				colorpicker_changes.color = /*backdropColor*/ ctx[0];
-    				add_flush_callback(() => updating_color = false);
+    			if (!updating_hex && dirty & /*backdropColor*/ 1) {
+    				updating_hex = true;
+    				colorpicker_changes.hex = /*backdropColor*/ ctx[0];
+    				add_flush_callback(() => updating_hex = false);
     			}
 
     			colorpicker.$set(colorpicker_changes);
@@ -10319,7 +11623,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(40:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >",
+    		source: "(38:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >",
     		ctx
     	});
 
@@ -10438,7 +11742,7 @@ var app = (function () {
     		strategy: "fixed"
     	});
 
-    	let { backdropColor = { hex: "#000000" } } = $$props;
+    	let { backdropColor = "#000000" } = $$props;
     	let showDropdown = false;
     	let { tips = false } = $$props;
     	let { legacy = false } = $$props;
@@ -10452,7 +11756,7 @@ var app = (function () {
     		$$invalidate(3, showDropdown = true);
     	}; //dispatch('pickColor');
 
-    	function colorpicker_color_binding(value) {
+    	function colorpicker_hex_binding(value) {
     		backdropColor = value;
     		$$invalidate(0, backdropColor);
     	}
@@ -10501,7 +11805,7 @@ var app = (function () {
     		dropdownRef,
     		dropdownContent,
     		click_handler,
-    		colorpicker_color_binding,
+    		colorpicker_hex_binding,
     		close_handler
     	];
     }
@@ -10549,7 +11853,7 @@ var app = (function () {
     const { console: console_1$1 } = globals;
     const file$a = "src\\components\\Toolbox.svelte";
 
-    // (40:1) {#if fileSelected && !settingsOpen}
+    // (38:1) {#if fileSelected && !settingsOpen}
     function create_if_block$6(ctx) {
     	let tool0;
     	let t0;
@@ -10715,14 +12019,14 @@ var app = (function () {
     		block,
     		id: create_if_block$6.name,
     		type: "if",
-    		source: "(40:1) {#if fileSelected && !settingsOpen}",
+    		source: "(38:1) {#if fileSelected && !settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (41:2) <Tool     tips={tips}     legacy={legacy}     size="13px"     tiptext={"Save image"}     on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}    >
+    // (39:2) <Tool     tips={tips}     legacy={legacy}     size="13px"     tiptext={"Save image"}     on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}    >
     function create_default_slot_1$1(ctx) {
     	let i;
 
@@ -10730,7 +12034,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "far fa-save");
-    			add_location(i, file$a, 47, 3, 1193);
+    			add_location(i, file$a, 45, 3, 1179);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -10744,14 +12048,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$1.name,
     		type: "slot",
-    		source: "(41:2) <Tool     tips={tips}     legacy={legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}    >",
+    		source: "(39:2) <Tool     tips={tips}     legacy={legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (50:2) <Tool     size="13px"     legacy={legacy}     tips={tips}     tiptext={"Copy image"}     on:click={copyImage}    >
+    // (48:2) <Tool     size="13px"     legacy={legacy}     tips={tips}     tiptext={"Copy image"}     on:click={copyImage}    >
     function create_default_slot$1(ctx) {
     	let i;
 
@@ -10760,7 +12064,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-2px)");
-    			add_location(i, file$a, 56, 6, 1357);
+    			add_location(i, file$a, 54, 6, 1343);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -10774,7 +12078,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$1.name,
     		type: "slot",
-    		source: "(50:2) <Tool     size=\\\"13px\\\"     legacy={legacy}     tips={tips}     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
+    		source: "(48:2) <Tool     size=\\\"13px\\\"     legacy={legacy}     tips={tips}     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
     		ctx
     	});
 
@@ -10791,7 +12095,7 @@ var app = (function () {
     			div = element("div");
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-1avmval");
-    			add_location(div, file$a, 38, 0, 967);
+    			add_location(div, file$a, 36, 0, 953);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -10861,7 +12165,7 @@ var app = (function () {
     	let { settingsOpen = false } = $$props;
     	let { legacy = false } = $$props;
     	let { tips = false } = $$props;
-    	let { backdropColor = { hex: "#000000" } } = $$props;
+    	let { backdropColor = "#000000" } = $$props;
 
     	function copyImage() {
     		var xhr = new XMLHttpRequest();
@@ -14716,7 +16020,7 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file_1 = "src\\App.svelte";
 
-    // (331:2) {#if settingsOpen}
+    // (319:2) {#if settingsOpen}
     function create_if_block_2(ctx) {
     	let menu;
     	let current;
@@ -14764,14 +16068,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(331:2) {#if settingsOpen}",
+    		source: "(319:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (388:2) {:else}
+    // (376:2) {:else}
     function create_else_block(ctx) {
     	let dropfield;
     	let current;
@@ -14814,14 +16118,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(388:2) {:else}",
+    		source: "(376:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (340:2) {#if file}
+    // (328:2) {#if file}
     function create_if_block(ctx) {
     	let div1;
     	let t0;
@@ -14868,10 +16172,10 @@ var app = (function () {
     			create_component(canvas.$$.fragment);
     			attr_dev(div0, "class", "canvas-container-inner svelte-yycxzj");
     			toggle_class(div0, "pickingmode", /*pickingmode*/ ctx[6]);
-    			add_location(div0, file_1, 355, 4, 8759);
+    			add_location(div0, file_1, 343, 4, 8574);
     			attr_dev(div1, "class", "canvas-container svelte-yycxzj");
     			toggle_class(div1, "pixelated", /*zoomed*/ ctx[3]);
-    			add_location(div1, file_1, 340, 3, 8476);
+    			add_location(div1, file_1, 328, 3, 8291);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -14965,14 +16269,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(340:2) {#if file}",
+    		source: "(328:2) {#if file}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (346:4) {#if pickingmode && mouseincanvas}
+    // (334:4) {#if pickingmode && mouseincanvas}
     function create_if_block_1(ctx) {
     	let cursor;
     	let current;
@@ -15019,14 +16323,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(346:4) {#if pickingmode && mouseincanvas}",
+    		source: "(334:4) {#if pickingmode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (368:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log("COLOR UPDATE!", pickedColor);            }           }}          >
+    // (356:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log("COLOR UPDATE!", pickedColor);            }           }}          >
     function create_default_slot_1(ctx) {
     	let layer;
     	let current;
@@ -15067,14 +16371,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(368:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log(\\\"COLOR UPDATE!\\\", pickedColor);            }           }}          >",
+    		source: "(356:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log(\\\"COLOR UPDATE!\\\", pickedColor);            }           }}          >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (325:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >
+    // (313:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >
     function create_default_slot(ctx) {
     	let t_1;
     	let current_block_type_index;
@@ -15180,7 +16484,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(325:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >",
+    		source: "(313:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >",
     		ctx
     	});
 
@@ -15283,19 +16587,19 @@ var app = (function () {
     			t5 = space();
     			create_component(desktop.$$.fragment);
     			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-yycxzj");
-    			add_location(div0, file_1, 277, 1, 7095);
+    			add_location(div0, file_1, 271, 1, 6983);
     			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-yycxzj");
-    			add_location(div1, file_1, 278, 1, 7142);
+    			add_location(div1, file_1, 272, 1, 7030);
     			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-yycxzj");
-    			add_location(div2, file_1, 279, 1, 7191);
+    			add_location(div2, file_1, 273, 1, 7079);
     			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-yycxzj");
-    			add_location(div3, file_1, 280, 1, 7241);
+    			add_location(div3, file_1, 274, 1, 7129);
     			attr_dev(div4, "class", "backdrop svelte-yycxzj");
     			toggle_class(div4, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(div4, file_1, 276, 0, 7040);
+    			add_location(div4, file_1, 270, 0, 6928);
     			attr_dev(main, "class", "svelte-yycxzj");
     			toggle_class(main, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(main, file_1, 283, 0, 7298);
+    			add_location(main, file_1, 277, 0, 7186);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -15404,11 +16708,6 @@ var app = (function () {
     	return block;
     }
 
-    function rgbToHex(red, green, blue) {
-    	const rgb = red << 16 | green << 8 | blue << 0;
-    	return "#" + (16777216 + rgb).toString(16).slice(1);
-    }
-
     function getMousePos(canvas, evt, rect) {
     	return {
     		x: evt.clientX - rect.left,
@@ -15448,7 +16747,7 @@ var app = (function () {
     	let chosenColor;
     	let mouseincanvas = false;
     	let zoomscale = 1;
-    	let backdropColor = { hex: "#2F2E33" };
+    	let backdropColor = "#2F2E33";
     	let readablefiletypes = ["png", "jpg", "jpeg", "bmp", "gif"];
     	let m = { x: 0, y: 0 };
 
@@ -15533,7 +16832,7 @@ var app = (function () {
     		var imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
     		var pixel = imageData.data;
     		"rgba(" + pixel[0] + ", " + pixel[1] + ", " + pixel[2] + ", " + pixel[3] + ")";
-    		$$invalidate(11, chosenColor = rgbToHex(pixel[0], pixel[1], pixel[2]));
+    		$$invalidate(11, chosenColor = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2] }).toHexString());
     	}
 
     	function handleFilesSelect(e) {
@@ -15649,14 +16948,7 @@ var app = (function () {
 
     	const clear_handler = e => {
     		$$invalidate(0, file = false);
-
-    		$$invalidate(14, backdropColor = {
-    			hex: "#2F2E33",
-    			r: "47",
-    			g: "46",
-    			b: "51",
-    			a: "1"
-    		});
+    		$$invalidate(14, backdropColor = "#2F2E33");
 
     		try {
     			console.log("destroying");
@@ -15730,6 +17022,7 @@ var app = (function () {
     		Dropfield,
     		Cursor,
     		Zoomscale,
+    		tinycolor,
     		HTMLParser,
     		Canvas,
     		Layer,
@@ -15760,7 +17053,6 @@ var app = (function () {
     		img,
     		initPan,
     		verifyCompatibility,
-    		rgbToHex,
     		getMousePos,
     		scaleNumber,
     		handleMousemove,

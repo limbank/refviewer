@@ -13,9 +13,7 @@
 	export let settingsOpen = false;
 	export let legacy = false;
 	export let tips = false;
-	export let backdropColor = {
-		hex: "#000000"
-	};
+	export let backdropColor = "#000000";
 
 	function copyImage() {
 		var xhr = new XMLHttpRequest();
