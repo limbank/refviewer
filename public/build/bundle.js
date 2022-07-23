@@ -3538,7 +3538,7 @@ var app = (function () {
     const file$r = "src\\components\\Titlebar.svelte";
 
     // (54:3) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$1(ctx) {
     	let i;
 
     	const block = {
@@ -3557,7 +3557,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$2.name,
+    		id: create_else_block$1.name,
     		type: "else",
     		source: "(54:3) {:else}",
     		ctx
@@ -3567,7 +3567,7 @@ var app = (function () {
     }
 
     // (52:3) {#if settingsOpen}
-    function create_if_block_4(ctx) {
+    function create_if_block_4$1(ctx) {
     	let i;
 
     	const block = {
@@ -3586,7 +3586,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_4.name,
+    		id: create_if_block_4$1.name,
     		type: "if",
     		source: "(52:3) {#if settingsOpen}",
     		ctx
@@ -3600,8 +3600,8 @@ var app = (function () {
     	let if_block_anchor;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*settingsOpen*/ ctx[0]) return create_if_block_4;
-    		return create_else_block$2;
+    		if (/*settingsOpen*/ ctx[0]) return create_if_block_4$1;
+    		return create_else_block$1;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -3649,7 +3649,7 @@ var app = (function () {
     	let t;
     	let if_block1_anchor;
     	let current;
-    	let if_block0 = (!/*fileSelected*/ ctx[1] || /*overwrite*/ ctx[4]) && create_if_block_3$1(ctx);
+    	let if_block0 = (!/*fileSelected*/ ctx[1] || /*overwrite*/ ctx[4]) && create_if_block_3$2(ctx);
     	let if_block1 = /*fileSelected*/ ctx[1] && create_if_block_2$2(ctx);
 
     	const block = {
@@ -3675,7 +3675,7 @@ var app = (function () {
     						transition_in(if_block0, 1);
     					}
     				} else {
-    					if_block0 = create_if_block_3$1(ctx);
+    					if_block0 = create_if_block_3$2(ctx);
     					if_block0.c();
     					transition_in(if_block0, 1);
     					if_block0.m(t.parentNode, t);
@@ -3744,7 +3744,7 @@ var app = (function () {
     }
 
     // (60:3) {#if !fileSelected || overwrite}
-    function create_if_block_3$1(ctx) {
+    function create_if_block_3$2(ctx) {
     	let control0;
     	let t;
     	let control1;
@@ -3830,7 +3830,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3$1.name,
+    		id: create_if_block_3$2.name,
     		type: "if",
     		source: "(60:3) {#if !fileSelected || overwrite}",
     		ctx
@@ -11986,13 +11986,19 @@ var app = (function () {
     function create_each_block$1(ctx) {
     	let div2;
     	let div0;
-    	let t0_value = /*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb + "";
+    	let t0_value = Math.floor(/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb[0]) + "";
     	let t0;
     	let t1;
-    	let div1;
-    	let t2_value = /*tinycolor*/ ctx[6](`rgb(${/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb})`).toHexString() + "";
+    	let t2_value = Math.floor(/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb[1]) + "";
     	let t2;
     	let t3;
+    	let t4_value = Math.floor(/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb[2]) + "";
+    	let t4;
+    	let t5;
+    	let div1;
+    	let t6_value = /*tinycolor*/ ctx[6](`rgb(${/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb})`).toHexString() + "";
+    	let t6;
+    	let t7;
     	let mounted;
     	let dispose;
 
@@ -12005,15 +12011,19 @@ var app = (function () {
     			div2 = element("div");
     			div0 = element("div");
     			t0 = text(t0_value);
-    			t1 = space();
-    			div1 = element("div");
+    			t1 = text(",\r\n\t\t\t\t\t\t");
     			t2 = text(t2_value);
-    			t3 = space();
-    			attr_dev(div0, "class", "item-detail svelte-fokxdb");
+    			t3 = text(",\r\n\t\t\t\t\t\t");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			div1 = element("div");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			attr_dev(div0, "class", "item-detail svelte-1k3hh6i");
     			add_location(div0, file$b, 61, 5, 1514);
-    			attr_dev(div1, "class", "item-detail svelte-fokxdb");
-    			add_location(div1, file$b, 64, 5, 1593);
-    			attr_dev(div2, "class", "item svelte-fokxdb");
+    			attr_dev(div1, "class", "item-detail svelte-1k3hh6i");
+    			add_location(div1, file$b, 66, 5, 1708);
+    			attr_dev(div2, "class", "item svelte-1k3hh6i");
     			set_style(div2, "background", "rgb(" + /*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb + ")");
     			add_location(div2, file$b, 50, 4, 1148);
     		},
@@ -12021,10 +12031,14 @@ var app = (function () {
     			insert_dev(target, div2, anchor);
     			append_dev(div2, div0);
     			append_dev(div0, t0);
-    			append_dev(div2, t1);
+    			append_dev(div0, t1);
+    			append_dev(div0, t2);
+    			append_dev(div0, t3);
+    			append_dev(div0, t4);
+    			append_dev(div2, t5);
     			append_dev(div2, div1);
-    			append_dev(div1, t2);
-    			append_dev(div2, t3);
+    			append_dev(div1, t6);
+    			append_dev(div2, t7);
 
     			if (!mounted) {
     				dispose = listen_dev(div2, "click", click_handler_1, false, false, false);
@@ -12033,8 +12047,10 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*palette*/ 16 && t0_value !== (t0_value = /*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb + "")) set_data_dev(t0, t0_value);
-    			if (dirty & /*palette*/ 16 && t2_value !== (t2_value = /*tinycolor*/ ctx[6](`rgb(${/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb})`).toHexString() + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*palette*/ 16 && t0_value !== (t0_value = Math.floor(/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb[0]) + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*palette*/ 16 && t2_value !== (t2_value = Math.floor(/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb[1]) + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*palette*/ 16 && t4_value !== (t4_value = Math.floor(/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb[2]) + "")) set_data_dev(t4, t4_value);
+    			if (dirty & /*palette*/ 16 && t6_value !== (t6_value = /*tinycolor*/ ctx[6](`rgb(${/*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb})`).toHexString() + "")) set_data_dev(t6, t6_value);
 
     			if (dirty & /*palette*/ 16) {
     				set_style(div2, "background", "rgb(" + /*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb + ")");
@@ -12077,7 +12093,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div, "class", "palette svelte-fokxdb");
+    			attr_dev(div, "class", "palette svelte-1k3hh6i");
     			add_location(div, file$b, 48, 2, 1055);
     		},
     		m: function mount(target, anchor) {
@@ -12088,7 +12104,7 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*palette, Object, navigator, tinycolor, console*/ 80) {
+    			if (dirty & /*palette, Object, navigator, tinycolor, console, Math*/ 80) {
     				each_value = Object.entries(/*palette*/ ctx[4]);
     				validate_each_argument(each_value);
     				let i;
@@ -13727,7 +13743,7 @@ var app = (function () {
     }
 
     // (25:1) {:else}
-    function create_else_block$1(ctx) {
+    function create_else_block(ctx) {
     	let span;
 
     	const block = {
@@ -13748,7 +13764,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$1.name,
+    		id: create_else_block.name,
     		type: "else",
     		source: "(25:1) {:else}",
     		ctx
@@ -13894,7 +13910,7 @@ var app = (function () {
 
     	function select_block_type(ctx, dirty) {
     		if (/*recents*/ ctx[0] && /*recents*/ ctx[0].length) return create_if_block$4;
-    		return create_else_block$1;
+    		return create_else_block;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -14284,7 +14300,7 @@ var app = (function () {
     const file$5 = "src\\components\\menu\\Menu.svelte";
 
     // (62:35) 
-    function create_if_block_3(ctx) {
+    function create_if_block_3$1(ctx) {
     	let div;
     	let changelog;
     	let current;
@@ -14320,7 +14336,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3.name,
+    		id: create_if_block_3$1.name,
     		type: "if",
     		source: "(62:35) ",
     		ctx
@@ -14511,7 +14527,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	const if_block_creators = [create_if_block$3, create_if_block_1$1, create_if_block_2$1, create_if_block_3];
+    	const if_block_creators = [create_if_block$3, create_if_block_1$1, create_if_block_2$1, create_if_block_3$1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -16728,8 +16744,8 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file_1 = "src\\App.svelte";
 
-    // (317:2) {#if settingsOpen}
-    function create_if_block_2(ctx) {
+    // (322:2) {#if settingsOpen}
+    function create_if_block_4(ctx) {
     	let menu;
     	let current;
 
@@ -16737,12 +16753,12 @@ var app = (function () {
     			props: {
     				settings: /*proxySettings*/ ctx[7],
     				recents: /*recents*/ ctx[8],
-    				version: /*version*/ ctx[17]
+    				version: /*version*/ ctx[18]
     			},
     			$$inline: true
     		});
 
-    	menu.$on("settingsOpen", /*settingsOpen_handler_1*/ ctx[28]);
+    	menu.$on("settingsOpen", /*settingsOpen_handler_1*/ ctx[29]);
 
     	const block = {
     		c: function create() {
@@ -16774,67 +16790,61 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2.name,
+    		id: create_if_block_4.name,
     		type: "if",
-    		source: "(317:2) {#if settingsOpen}",
+    		source: "(322:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (374:2) {:else}
-    function create_else_block(ctx) {
-    	let dropfield;
-    	let current;
-
-    	dropfield = new Dropfield({
-    			props: { legacy: /*settings*/ ctx[4].theme },
-    			$$inline: true
-    		});
-
-    	dropfield.$on("select", /*select_handler*/ ctx[33]);
+    // (331:2) {#if loading}
+    function create_if_block_3(ctx) {
+    	let div3;
+    	let div2;
+    	let div0;
+    	let div1;
 
     	const block = {
     		c: function create() {
-    			create_component(dropfield.$$.fragment);
+    			div3 = element("div");
+    			div2 = element("div");
+    			div0 = element("div");
+    			div1 = element("div");
+    			attr_dev(div0, "class", "svelte-a8worf");
+    			add_location(div0, file_1, 332, 28, 8447);
+    			attr_dev(div1, "class", "svelte-a8worf");
+    			add_location(div1, file_1, 332, 39, 8458);
+    			attr_dev(div2, "class", "lds-ripple svelte-a8worf");
+    			add_location(div2, file_1, 332, 4, 8423);
+    			attr_dev(div3, "class", "loader svelte-a8worf");
+    			add_location(div3, file_1, 331, 3, 8397);
     		},
     		m: function mount(target, anchor) {
-    			mount_component(dropfield, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const dropfield_changes = {};
-    			if (dirty[0] & /*settings*/ 16) dropfield_changes.legacy = /*settings*/ ctx[4].theme;
-    			dropfield.$set(dropfield_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(dropfield.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(dropfield.$$.fragment, local);
-    			current = false;
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div2);
+    			append_dev(div2, div0);
+    			append_dev(div2, div1);
     		},
     		d: function destroy(detaching) {
-    			destroy_component(dropfield, detaching);
+    			if (detaching) detach_dev(div3);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
-    		type: "else",
-    		source: "(374:2) {:else}",
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(331:2) {#if loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (326:2) {#if file}
-    function create_if_block(ctx) {
+    // (337:2) {#if file}
+    function create_if_block_1(ctx) {
     	let div1;
     	let t0;
     	let zoomscale_1;
@@ -16844,11 +16854,11 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*pickingmode*/ ctx[6] && /*mouseincanvas*/ ctx[12] && create_if_block_1(ctx);
+    	let if_block = /*pickingmode*/ ctx[6] && /*mouseincanvas*/ ctx[13] && create_if_block_2(ctx);
 
     	zoomscale_1 = new Zoomscale({
     			props: {
-    				zoomscale: /*zoomscale*/ ctx[13],
+    				zoomscale: /*zoomscale*/ ctx[14],
     				instance: /*instance*/ ctx[9]
     			},
     			$$inline: true
@@ -16864,10 +16874,10 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	canvas.$on("mousemove", /*handleMousemove*/ ctx[19]);
-    	canvas.$on("mouseenter", /*mouseenter_handler*/ ctx[29]);
-    	canvas.$on("mouseleave", /*mouseleave_handler*/ ctx[30]);
-    	canvas.$on("click", /*click_handler*/ ctx[31]);
+    	canvas.$on("mousemove", /*handleMousemove*/ ctx[20]);
+    	canvas.$on("mouseenter", /*mouseenter_handler*/ ctx[30]);
+    	canvas.$on("mouseleave", /*mouseleave_handler*/ ctx[31]);
+    	canvas.$on("click", /*click_handler*/ ctx[32]);
 
     	const block = {
     		c: function create() {
@@ -16878,12 +16888,12 @@ var app = (function () {
     			t1 = space();
     			div0 = element("div");
     			create_component(canvas.$$.fragment);
-    			attr_dev(div0, "class", "canvas-container-inner svelte-fd7l68");
+    			attr_dev(div0, "class", "canvas-container-inner svelte-a8worf");
     			toggle_class(div0, "pickingmode", /*pickingmode*/ ctx[6]);
-    			add_location(div0, file_1, 341, 4, 8611);
-    			attr_dev(div1, "class", "canvas-container svelte-fd7l68");
+    			add_location(div0, file_1, 352, 4, 8799);
+    			attr_dev(div1, "class", "canvas-container svelte-a8worf");
     			toggle_class(div1, "pixelated", /*zoomed*/ ctx[3]);
-    			add_location(div1, file_1, 326, 3, 8328);
+    			add_location(div1, file_1, 337, 3, 8516);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -16897,23 +16907,23 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div0, "click", /*click_handler_1*/ ctx[32], false, false, false),
-    					listen_dev(div1, "mousemove", /*handleCursor*/ ctx[18], false, false, false)
+    					listen_dev(div0, "click", /*click_handler_1*/ ctx[33], false, false, false),
+    					listen_dev(div1, "mousemove", /*handleCursor*/ ctx[19], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (/*pickingmode*/ ctx[6] && /*mouseincanvas*/ ctx[12]) {
+    			if (/*pickingmode*/ ctx[6] && /*mouseincanvas*/ ctx[13]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty[0] & /*pickingmode, mouseincanvas*/ 4160) {
+    					if (dirty[0] & /*pickingmode, mouseincanvas*/ 8256) {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block_1(ctx);
+    					if_block = create_if_block_2(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div1, t0);
@@ -16929,14 +16939,14 @@ var app = (function () {
     			}
 
     			const zoomscale_1_changes = {};
-    			if (dirty[0] & /*zoomscale*/ 8192) zoomscale_1_changes.zoomscale = /*zoomscale*/ ctx[13];
+    			if (dirty[0] & /*zoomscale*/ 16384) zoomscale_1_changes.zoomscale = /*zoomscale*/ ctx[14];
     			if (dirty[0] & /*instance*/ 512) zoomscale_1_changes.instance = /*instance*/ ctx[9];
     			zoomscale_1.$set(zoomscale_1_changes);
     			const canvas_changes = {};
     			if (dirty[0] & /*width*/ 2) canvas_changes.width = /*width*/ ctx[1];
     			if (dirty[0] & /*height*/ 4) canvas_changes.height = /*height*/ ctx[2];
 
-    			if (dirty[0] & /*render*/ 65536 | dirty[1] & /*$$scope*/ 2048) {
+    			if (dirty[0] & /*render*/ 131072 | dirty[1] & /*$$scope*/ 4096) {
     				canvas_changes.$$scope = { dirty, ctx };
     			}
 
@@ -16975,25 +16985,25 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block.name,
+    		id: create_if_block_1.name,
     		type: "if",
-    		source: "(326:2) {#if file}",
+    		source: "(337:2) {#if file}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (332:4) {#if pickingmode && mouseincanvas}
-    function create_if_block_1(ctx) {
+    // (343:4) {#if pickingmode && mouseincanvas}
+    function create_if_block_2(ctx) {
     	let cursor;
     	let current;
 
     	cursor = new Cursor({
     			props: {
-    				x: /*m*/ ctx[15].x,
-    				y: /*m*/ ctx[15].y,
-    				bg: /*chosenColor*/ ctx[11]
+    				x: /*m*/ ctx[16].x,
+    				y: /*m*/ ctx[16].y,
+    				bg: /*chosenColor*/ ctx[12]
     			},
     			$$inline: true
     		});
@@ -17008,9 +17018,9 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const cursor_changes = {};
-    			if (dirty[0] & /*m*/ 32768) cursor_changes.x = /*m*/ ctx[15].x;
-    			if (dirty[0] & /*m*/ 32768) cursor_changes.y = /*m*/ ctx[15].y;
-    			if (dirty[0] & /*chosenColor*/ 2048) cursor_changes.bg = /*chosenColor*/ ctx[11];
+    			if (dirty[0] & /*m*/ 65536) cursor_changes.x = /*m*/ ctx[16].x;
+    			if (dirty[0] & /*m*/ 65536) cursor_changes.y = /*m*/ ctx[16].y;
+    			if (dirty[0] & /*chosenColor*/ 4096) cursor_changes.bg = /*chosenColor*/ ctx[12];
     			cursor.$set(cursor_changes);
     		},
     		i: function intro(local) {
@@ -17029,22 +17039,22 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1.name,
+    		id: create_if_block_2.name,
     		type: "if",
-    		source: "(332:4) {#if pickingmode && mouseincanvas}",
+    		source: "(343:4) {#if pickingmode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (354:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log("COLOR UPDATE!", pickedColor);            }           }}          >
+    // (365:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log("COLOR UPDATE!", pickedColor);            }           }}          >
     function create_default_slot_1(ctx) {
     	let layer;
     	let current;
 
     	layer = new Layer({
-    			props: { render: /*render*/ ctx[16] },
+    			props: { render: /*render*/ ctx[17] },
     			$$inline: true
     		});
 
@@ -17058,7 +17068,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const layer_changes = {};
-    			if (dirty[0] & /*render*/ 65536) layer_changes.render = /*render*/ ctx[16];
+    			if (dirty[0] & /*render*/ 131072) layer_changes.render = /*render*/ ctx[17];
     			layer.$set(layer_changes);
     		},
     		i: function intro(local) {
@@ -17079,44 +17089,95 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(354:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log(\\\"COLOR UPDATE!\\\", pickedColor);            }           }}          >",
+    		source: "(365:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => {mouseincanvas=true;}}           on:mouseleave={() => {mouseincanvas=false;}}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({disablePan:false});             pickedColor = chosenColor;               console.log(\\\"COLOR UPDATE!\\\", pickedColor);            }           }}          >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (311:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >
-    function create_default_slot(ctx) {
-    	let t_1;
-    	let current_block_type_index;
-    	let if_block1;
-    	let if_block1_anchor;
+    // (387:2) {#if !file && !loading}
+    function create_if_block(ctx) {
+    	let dropfield;
     	let current;
-    	let if_block0 = /*settingsOpen*/ ctx[5] && create_if_block_2(ctx);
-    	const if_block_creators = [create_if_block, create_else_block];
-    	const if_blocks = [];
 
-    	function select_block_type(ctx, dirty) {
-    		if (/*file*/ ctx[0]) return 0;
-    		return 1;
-    	}
+    	dropfield = new Dropfield({
+    			props: { legacy: /*settings*/ ctx[4].theme },
+    			$$inline: true
+    		});
 
-    	current_block_type_index = select_block_type(ctx);
-    	if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	dropfield.$on("select", /*select_handler*/ ctx[34]);
+
+    	const block = {
+    		c: function create() {
+    			create_component(dropfield.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(dropfield, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const dropfield_changes = {};
+    			if (dirty[0] & /*settings*/ 16) dropfield_changes.legacy = /*settings*/ ctx[4].theme;
+    			dropfield.$set(dropfield_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(dropfield.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(dropfield.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(dropfield, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(387:2) {#if !file && !loading}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (316:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >
+    function create_default_slot(ctx) {
+    	let t0;
+    	let t1;
+    	let t2;
+    	let if_block3_anchor;
+    	let current;
+    	let if_block0 = /*settingsOpen*/ ctx[5] && create_if_block_4(ctx);
+    	let if_block1 = /*loading*/ ctx[10] && create_if_block_3(ctx);
+    	let if_block2 = /*file*/ ctx[0] && create_if_block_1(ctx);
+    	let if_block3 = !/*file*/ ctx[0] && !/*loading*/ ctx[10] && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
     			if (if_block0) if_block0.c();
-    			t_1 = space();
-    			if_block1.c();
-    			if_block1_anchor = empty();
+    			t0 = space();
+    			if (if_block1) if_block1.c();
+    			t1 = space();
+    			if (if_block2) if_block2.c();
+    			t2 = space();
+    			if (if_block3) if_block3.c();
+    			if_block3_anchor = empty();
     		},
     		m: function mount(target, anchor) {
     			if (if_block0) if_block0.m(target, anchor);
-    			insert_dev(target, t_1, anchor);
-    			if_blocks[current_block_type_index].m(target, anchor);
-    			insert_dev(target, if_block1_anchor, anchor);
+    			insert_dev(target, t0, anchor);
+    			if (if_block1) if_block1.m(target, anchor);
+    			insert_dev(target, t1, anchor);
+    			if (if_block2) if_block2.m(target, anchor);
+    			insert_dev(target, t2, anchor);
+    			if (if_block3) if_block3.m(target, anchor);
+    			insert_dev(target, if_block3_anchor, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -17128,10 +17189,10 @@ var app = (function () {
     						transition_in(if_block0, 1);
     					}
     				} else {
-    					if_block0 = create_if_block_2(ctx);
+    					if_block0 = create_if_block_4(ctx);
     					if_block0.c();
     					transition_in(if_block0, 1);
-    					if_block0.m(t_1.parentNode, t_1);
+    					if_block0.m(t0.parentNode, t0);
     				}
     			} else if (if_block0) {
     				group_outros();
@@ -17143,48 +17204,85 @@ var app = (function () {
     				check_outros();
     			}
 
-    			let previous_block_index = current_block_type_index;
-    			current_block_type_index = select_block_type(ctx);
+    			if (/*loading*/ ctx[10]) {
+    				if (if_block1) ; else {
+    					if_block1 = create_if_block_3(ctx);
+    					if_block1.c();
+    					if_block1.m(t1.parentNode, t1);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
 
-    			if (current_block_type_index === previous_block_index) {
-    				if_blocks[current_block_type_index].p(ctx, dirty);
-    			} else {
+    			if (/*file*/ ctx[0]) {
+    				if (if_block2) {
+    					if_block2.p(ctx, dirty);
+
+    					if (dirty[0] & /*file*/ 1) {
+    						transition_in(if_block2, 1);
+    					}
+    				} else {
+    					if_block2 = create_if_block_1(ctx);
+    					if_block2.c();
+    					transition_in(if_block2, 1);
+    					if_block2.m(t2.parentNode, t2);
+    				}
+    			} else if (if_block2) {
     				group_outros();
 
-    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
-    					if_blocks[previous_block_index] = null;
+    				transition_out(if_block2, 1, 1, () => {
+    					if_block2 = null;
     				});
 
     				check_outros();
-    				if_block1 = if_blocks[current_block_type_index];
+    			}
 
-    				if (!if_block1) {
-    					if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-    					if_block1.c();
+    			if (!/*file*/ ctx[0] && !/*loading*/ ctx[10]) {
+    				if (if_block3) {
+    					if_block3.p(ctx, dirty);
+
+    					if (dirty[0] & /*file, loading*/ 1025) {
+    						transition_in(if_block3, 1);
+    					}
     				} else {
-    					if_block1.p(ctx, dirty);
+    					if_block3 = create_if_block(ctx);
+    					if_block3.c();
+    					transition_in(if_block3, 1);
+    					if_block3.m(if_block3_anchor.parentNode, if_block3_anchor);
     				}
+    			} else if (if_block3) {
+    				group_outros();
 
-    				transition_in(if_block1, 1);
-    				if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+    				transition_out(if_block3, 1, 1, () => {
+    					if_block3 = null;
+    				});
+
+    				check_outros();
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(if_block0);
-    			transition_in(if_block1);
+    			transition_in(if_block2);
+    			transition_in(if_block3);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(if_block0);
-    			transition_out(if_block1);
+    			transition_out(if_block2);
+    			transition_out(if_block3);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (if_block0) if_block0.d(detaching);
-    			if (detaching) detach_dev(t_1);
-    			if_blocks[current_block_type_index].d(detaching);
-    			if (detaching) detach_dev(if_block1_anchor);
+    			if (detaching) detach_dev(t0);
+    			if (if_block1) if_block1.d(detaching);
+    			if (detaching) detach_dev(t1);
+    			if (if_block2) if_block2.d(detaching);
+    			if (detaching) detach_dev(t2);
+    			if (if_block3) if_block3.d(detaching);
+    			if (detaching) detach_dev(if_block3_anchor);
     		}
     	};
 
@@ -17192,7 +17290,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(311:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >",
+    		source: "(316:1) <Desktop    {backdropColor}    legacy={settings.theme}    on:dragover={(e) => { e.preventDefault(); }}    on:drop={handleFilesSelect}   >",
     		ctx
     	});
 
@@ -17228,20 +17326,20 @@ var app = (function () {
     				overwrite: /*settings*/ ctx[4].overwrite,
     				legacy: /*settings*/ ctx[4].theme,
     				tips: /*settings*/ ctx[4].tooltips,
-    				version: /*version*/ ctx[17]
+    				version: /*version*/ ctx[18]
     			},
     			$$inline: true
     		});
 
-    	titlebar.$on("clear", /*clear_handler*/ ctx[23]);
-    	titlebar.$on("settingsOpen", /*settingsOpen_handler*/ ctx[24]);
+    	titlebar.$on("clear", /*clear_handler*/ ctx[24]);
+    	titlebar.$on("settingsOpen", /*settingsOpen_handler*/ ctx[25]);
 
     	function toolbox_pickedColor_binding(value) {
-    		/*toolbox_pickedColor_binding*/ ctx[25](value);
+    		/*toolbox_pickedColor_binding*/ ctx[26](value);
     	}
 
     	function toolbox_backdropColor_binding(value) {
-    		/*toolbox_backdropColor_binding*/ ctx[26](value);
+    		/*toolbox_backdropColor_binding*/ ctx[27](value);
     	}
 
     	let toolbox_props = {
@@ -17251,22 +17349,22 @@ var app = (function () {
     		tips: /*settings*/ ctx[4].tooltips
     	};
 
-    	if (/*pickedColor*/ ctx[10] !== void 0) {
-    		toolbox_props.pickedColor = /*pickedColor*/ ctx[10];
+    	if (/*pickedColor*/ ctx[11] !== void 0) {
+    		toolbox_props.pickedColor = /*pickedColor*/ ctx[11];
     	}
 
-    	if (/*backdropColor*/ ctx[14] !== void 0) {
-    		toolbox_props.backdropColor = /*backdropColor*/ ctx[14];
+    	if (/*backdropColor*/ ctx[15] !== void 0) {
+    		toolbox_props.backdropColor = /*backdropColor*/ ctx[15];
     	}
 
     	toolbox = new Toolbox({ props: toolbox_props, $$inline: true });
     	binding_callbacks.push(() => bind(toolbox, "pickedColor", toolbox_pickedColor_binding));
     	binding_callbacks.push(() => bind(toolbox, "backdropColor", toolbox_backdropColor_binding));
-    	toolbox.$on("pickColor", /*pickColor_handler*/ ctx[27]);
+    	toolbox.$on("pickColor", /*pickColor_handler*/ ctx[28]);
 
     	desktop = new Desktop({
     			props: {
-    				backdropColor: /*backdropColor*/ ctx[14],
+    				backdropColor: /*backdropColor*/ ctx[15],
     				legacy: /*settings*/ ctx[4].theme,
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
@@ -17275,7 +17373,7 @@ var app = (function () {
     		});
 
     	desktop.$on("dragover", dragover_handler);
-    	desktop.$on("drop", /*handleFilesSelect*/ ctx[20]);
+    	desktop.$on("drop", /*handleFilesSelect*/ ctx[21]);
 
     	const block = {
     		c: function create() {
@@ -17294,20 +17392,20 @@ var app = (function () {
     			create_component(toolbox.$$.fragment);
     			t5 = space();
     			create_component(desktop.$$.fragment);
-    			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-fd7l68");
-    			add_location(div0, file_1, 269, 1, 7020);
-    			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-fd7l68");
-    			add_location(div1, file_1, 270, 1, 7067);
-    			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-fd7l68");
-    			add_location(div2, file_1, 271, 1, 7116);
-    			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-fd7l68");
-    			add_location(div3, file_1, 272, 1, 7166);
-    			attr_dev(div4, "class", "backdrop svelte-fd7l68");
+    			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-a8worf");
+    			add_location(div0, file_1, 274, 1, 7086);
+    			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-a8worf");
+    			add_location(div1, file_1, 275, 1, 7133);
+    			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-a8worf");
+    			add_location(div2, file_1, 276, 1, 7182);
+    			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-a8worf");
+    			add_location(div3, file_1, 277, 1, 7232);
+    			attr_dev(div4, "class", "backdrop svelte-a8worf");
     			toggle_class(div4, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(div4, file_1, 268, 0, 6965);
-    			attr_dev(main, "class", "svelte-fd7l68");
+    			add_location(div4, file_1, 273, 0, 7031);
+    			attr_dev(main, "class", "svelte-a8worf");
     			toggle_class(main, "legacy", /*settings*/ ctx[4].theme);
-    			add_location(main, file_1, 275, 0, 7223);
+    			add_location(main, file_1, 280, 0, 7289);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17331,7 +17429,7 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(window, "paste", /*handlePaste*/ ctx[21], false, false, false);
+    				dispose = listen_dev(window, "paste", /*handlePaste*/ ctx[22], false, false, false);
     				mounted = true;
     			}
     		},
@@ -17353,24 +17451,24 @@ var app = (function () {
     			if (dirty[0] & /*settings*/ 16) toolbox_changes.legacy = /*settings*/ ctx[4].theme;
     			if (dirty[0] & /*settings*/ 16) toolbox_changes.tips = /*settings*/ ctx[4].tooltips;
 
-    			if (!updating_pickedColor && dirty[0] & /*pickedColor*/ 1024) {
+    			if (!updating_pickedColor && dirty[0] & /*pickedColor*/ 2048) {
     				updating_pickedColor = true;
-    				toolbox_changes.pickedColor = /*pickedColor*/ ctx[10];
+    				toolbox_changes.pickedColor = /*pickedColor*/ ctx[11];
     				add_flush_callback(() => updating_pickedColor = false);
     			}
 
-    			if (!updating_backdropColor && dirty[0] & /*backdropColor*/ 16384) {
+    			if (!updating_backdropColor && dirty[0] & /*backdropColor*/ 32768) {
     				updating_backdropColor = true;
-    				toolbox_changes.backdropColor = /*backdropColor*/ ctx[14];
+    				toolbox_changes.backdropColor = /*backdropColor*/ ctx[15];
     				add_flush_callback(() => updating_backdropColor = false);
     			}
 
     			toolbox.$set(toolbox_changes);
     			const desktop_changes = {};
-    			if (dirty[0] & /*backdropColor*/ 16384) desktop_changes.backdropColor = /*backdropColor*/ ctx[14];
+    			if (dirty[0] & /*backdropColor*/ 32768) desktop_changes.backdropColor = /*backdropColor*/ ctx[15];
     			if (dirty[0] & /*settings*/ 16) desktop_changes.legacy = /*settings*/ ctx[4].theme;
 
-    			if (dirty[0] & /*zoomed, pickingmode, instance, width, height, mouseincanvas, pickedColor, chosenColor, render, zoomscale, m, file, settings, proxySettings, recents, settingsOpen*/ 114687 | dirty[1] & /*$$scope*/ 2048) {
+    			if (dirty[0] & /*settings, file, loading, zoomed, pickingmode, instance, width, height, mouseincanvas, pickedColor, chosenColor, render, zoomscale, m, proxySettings, recents, settingsOpen*/ 229375 | dirty[1] & /*$$scope*/ 4096) {
     				desktop_changes.$$scope = { dirty, ctx };
     			}
 
@@ -17450,7 +17548,8 @@ var app = (function () {
     	let recents;
     	let initUpdate = 0;
     	let instance;
-    	let version = "4.0.29";
+    	let version = "4.0.30";
+    	let loading = false;
     	let pickedColor;
     	let chosenColor;
     	let mouseincanvas = false;
@@ -17460,8 +17559,8 @@ var app = (function () {
     	let m = { x: 0, y: 0 };
 
     	function handleCursor(event) {
-    		$$invalidate(15, m.x = event.clientX, m);
-    		$$invalidate(15, m.y = event.clientY, m);
+    		$$invalidate(16, m.x = event.clientX, m);
+    		$$invalidate(16, m.y = event.clientY, m);
     	}
 
     	ipcRenderer.on("recents", (event, arg) => {
@@ -17509,7 +17608,7 @@ var app = (function () {
     	event.preventDefault();
     	console.log("pcikingmode change");
     }*/
-    			$$invalidate(13, zoomscale = Number(event.detail.scale).toFixed(1));
+    			$$invalidate(14, zoomscale = Number(event.detail.scale).toFixed(1));
 
     			if (event.detail.scale >= 10) $$invalidate(3, zoomed = true); else $$invalidate(3, zoomed = false);
     		});
@@ -17527,7 +17626,7 @@ var app = (function () {
 
     	function handleMousemove(e) {
     		if (!pickingmode) return;
-    		$$invalidate(12, mouseincanvas = true);
+    		$$invalidate(13, mouseincanvas = true);
     		var canvas = e.srcElement;
     		var ctx = canvas.getContext("2d");
     		var positionInfo = canvas.getBoundingClientRect();
@@ -17540,11 +17639,12 @@ var app = (function () {
     		var imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
     		var pixel = imageData.data;
     		"rgba(" + pixel[0] + ", " + pixel[1] + ", " + pixel[2] + ", " + pixel[3] + ")";
-    		$$invalidate(11, chosenColor = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2] }).toHexString());
+    		$$invalidate(12, chosenColor = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2] }).toHexString());
     	}
 
     	function handleFilesSelect(e) {
     		if (!settings.overwrite && file || settingsOpen) return;
+    		$$invalidate(10, loading = true);
 
     		//console.log(e.dataTransfer.files);
     		//console.log(e.dataTransfer.files);
@@ -17600,7 +17700,8 @@ var app = (function () {
 
     	ipcRenderer.on("deliver", (event, arg) => {
     		console.log("loading file!");
-    		$$invalidate(22, img.src = arg, img);
+    		$$invalidate(23, img.src = arg, img);
+    		$$invalidate(10, loading = false);
     		$$invalidate(0, file = arg);
     	});
 
@@ -17641,7 +17742,7 @@ var app = (function () {
     		var a = new FileReader();
 
     		a.onload = function (e) {
-    			$$invalidate(22, img.src = e.target.result, img);
+    			$$invalidate(23, img.src = e.target.result, img);
     			$$invalidate(0, file = e.target.result);
     		};
 
@@ -17656,7 +17757,7 @@ var app = (function () {
 
     	const clear_handler = e => {
     		$$invalidate(0, file = false);
-    		$$invalidate(14, backdropColor = "#2F2E33");
+    		$$invalidate(15, backdropColor = "#2F2E33");
 
     		try {
     			console.log("destroying");
@@ -17672,12 +17773,12 @@ var app = (function () {
 
     	function toolbox_pickedColor_binding(value) {
     		pickedColor = value;
-    		$$invalidate(10, pickedColor);
+    		$$invalidate(11, pickedColor);
     	}
 
     	function toolbox_backdropColor_binding(value) {
     		backdropColor = value;
-    		$$invalidate(14, backdropColor);
+    		$$invalidate(15, backdropColor);
     	}
 
     	const pickColor_handler = e => {
@@ -17690,18 +17791,18 @@ var app = (function () {
     	};
 
     	const mouseenter_handler = () => {
-    		$$invalidate(12, mouseincanvas = true);
+    		$$invalidate(13, mouseincanvas = true);
     	};
 
     	const mouseleave_handler = () => {
-    		$$invalidate(12, mouseincanvas = false);
+    		$$invalidate(13, mouseincanvas = false);
     	};
 
     	const click_handler = () => {
     		if (pickingmode) {
     			$$invalidate(6, pickingmode = false);
     			instance.setOptions({ disablePan: false });
-    			$$invalidate(10, pickedColor = chosenColor);
+    			$$invalidate(11, pickedColor = chosenColor);
     			console.log("COLOR UPDATE!", pickedColor);
     		}
     	};
@@ -17750,6 +17851,7 @@ var app = (function () {
     		initUpdate,
     		instance,
     		version,
+    		loading,
     		pickedColor,
     		chosenColor,
     		mouseincanvas,
@@ -17784,16 +17886,17 @@ var app = (function () {
     		if ("recents" in $$props) $$invalidate(8, recents = $$props.recents);
     		if ("initUpdate" in $$props) initUpdate = $$props.initUpdate;
     		if ("instance" in $$props) $$invalidate(9, instance = $$props.instance);
-    		if ("version" in $$props) $$invalidate(17, version = $$props.version);
-    		if ("pickedColor" in $$props) $$invalidate(10, pickedColor = $$props.pickedColor);
-    		if ("chosenColor" in $$props) $$invalidate(11, chosenColor = $$props.chosenColor);
-    		if ("mouseincanvas" in $$props) $$invalidate(12, mouseincanvas = $$props.mouseincanvas);
-    		if ("zoomscale" in $$props) $$invalidate(13, zoomscale = $$props.zoomscale);
-    		if ("backdropColor" in $$props) $$invalidate(14, backdropColor = $$props.backdropColor);
+    		if ("version" in $$props) $$invalidate(18, version = $$props.version);
+    		if ("loading" in $$props) $$invalidate(10, loading = $$props.loading);
+    		if ("pickedColor" in $$props) $$invalidate(11, pickedColor = $$props.pickedColor);
+    		if ("chosenColor" in $$props) $$invalidate(12, chosenColor = $$props.chosenColor);
+    		if ("mouseincanvas" in $$props) $$invalidate(13, mouseincanvas = $$props.mouseincanvas);
+    		if ("zoomscale" in $$props) $$invalidate(14, zoomscale = $$props.zoomscale);
+    		if ("backdropColor" in $$props) $$invalidate(15, backdropColor = $$props.backdropColor);
     		if ("readablefiletypes" in $$props) readablefiletypes = $$props.readablefiletypes;
-    		if ("m" in $$props) $$invalidate(15, m = $$props.m);
-    		if ("img" in $$props) $$invalidate(22, img = $$props.img);
-    		if ("render" in $$props) $$invalidate(16, render = $$props.render);
+    		if ("m" in $$props) $$invalidate(16, m = $$props.m);
+    		if ("img" in $$props) $$invalidate(23, img = $$props.img);
+    		if ("render" in $$props) $$invalidate(17, render = $$props.render);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -17801,8 +17904,8 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*img*/ 4194304) {
-    			$$invalidate(16, render = ({ context }) => {
+    		if ($$self.$$.dirty[0] & /*img*/ 8388608) {
+    			$$invalidate(17, render = ({ context }) => {
     				try {
     					context.drawImage(img, 0, 0);
     					let element = document.querySelector(".canvas-container-inner");
@@ -17825,6 +17928,7 @@ var app = (function () {
     		proxySettings,
     		recents,
     		instance,
+    		loading,
     		pickedColor,
     		chosenColor,
     		mouseincanvas,

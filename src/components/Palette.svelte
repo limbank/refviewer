@@ -60,7 +60,9 @@
 					style="background: rgb({palette[color_name]._rgb});"
 				>
 					<div class="item-detail">
-						{palette[color_name]._rgb}
+						{Math.floor(palette[color_name]._rgb[0])},
+						{Math.floor(palette[color_name]._rgb[1])},
+						{Math.floor(palette[color_name]._rgb[2])}
 					</div>
 					<div class="item-detail">
 						{tinycolor(`rgb(${palette[color_name]._rgb})`).toHexString()}
@@ -75,8 +77,8 @@
 	.palette {
 		padding: 15px;
 		display: grid;
-		grid-template-columns: 60px 60px 60px;
-		grid-template-rows: 60px 60px;
+		grid-template-columns: 70px 70px 70px;
+		grid-template-rows: 70px 70px;
 		grid-column-gap: 5px;
 		grid-row-gap: 5px;
 

@@ -9,6 +9,7 @@ const Jimp = require('jimp');
 const PSD = require('psd');
 const { shell } = require('electron');
 const Vibrant = require('node-vibrant');
+const sharp = require('sharp');
 
 let mainWindow, newWin;
 let sp, rp;
@@ -127,7 +128,26 @@ class fileProcessor {
                 });
         }
     }
+    handleConversion (filePath, event) {
+        rp.writeRecent(filePath, (recents) => {
+            mainWindow.webContents.send('recents', recents);
+        });
+
+        sharp(filePath)
+            .png()
+            .toBuffer()
+            .then( data => {
+                mainWindow.webContents.send('deliver', `data:image/png;base64,${data.toString('base64')}`);
+            })
+            .catch( err => {
+                console.log(err);
+            });
+    }
     handlePSD (filePath, event) {
+        rp.writeRecent(filePath, (recents) => {
+            mainWindow.webContents.send('recents', recents);
+        });
+
         let psdPath = path.join(os.tmpdir(), 'out.png');
 
         PSD.open(filePath).then(function (psd) {
@@ -141,6 +161,10 @@ class fileProcessor {
         });
     }
     handleTIFF (filePath, event) {
+        rp.writeRecent(filePath, (recents) => {
+            mainWindow.webContents.send('recents', recents);
+        });
+        
         Jimp.read(filePath, (err, image) => {
           if (err) throw err;
           else {
@@ -183,6 +207,12 @@ class fileProcessor {
                 break;
             case "bmp": 
                 this.handleImage(file, event);
+                break;
+            case "webp": 
+                this.handleConversion(file, event);
+                break;
+            case "gif": 
+                this.handleConversion(file, event);
                 break;
             default:
                 this.handleDefault(file, event);
@@ -361,7 +391,7 @@ ipcMain.on('file', (event, arg) => {
 
 ipcMain.on('getPalette', (event, arg) => {
     if (generatedPalette) return mainWindow.webContents.send('palette', generatedPalette);
-    
+
     console.log("Making a palette...");
     let filePath = path.join(os.tmpdir(), 'out.png');
     let base64Data = arg
