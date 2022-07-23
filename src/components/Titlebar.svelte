@@ -98,6 +98,15 @@
 		<Control
 			tips={tips}
 			legacy={legacy}
+			size="12px"
+			tiptext="New window"
+			 on:click={e => { ipcRenderer.send('window', 'new'); }}
+		>
+	    	<i class="fas fa-window"></i>
+		</Control>
+		<Control
+			tips={tips}
+			legacy={legacy}
 			size="13px"
 			tiptext="Pin to top"
 			 on:click={e => { ipcRenderer.send('window', 'pin'); }}

@@ -23,7 +23,6 @@
 	<li>
 		Added the overwrite setting to prevent replacing active image
 	</li>
-	<li></li>
 </ul>
 <div class="about-text-title">
 	Fixes/Updates
@@ -47,7 +46,9 @@
 	<li>
 		Workspace color now resets when the image is cleared
 	</li>
-	<li></li>
+	<li>
+		The screenshot cropping process now highlights the area that is being cropped
+	</li>
 </ul>
 <div class="about-text-title">
 	Misc
@@ -68,7 +69,6 @@
 	<li>
 		The settings window now opens inside the main window
 	</li>
-	<li></li>
 </ul>
 
 <style lang="scss">

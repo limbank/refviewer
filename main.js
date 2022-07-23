@@ -14,6 +14,7 @@ const sharp = require('sharp');
 let mainWindow, newWin;
 let sp, rp;
 let generatedPalette;
+let processorsReady = false;
 
 const supportedExtensions = ['img', 'png', 'bmp', 'gif', 'jpeg', 'jpg', 'psd', 'tif', 'tiff', 'dng', 'webp'];
 
@@ -105,39 +106,39 @@ class fileProcessor {
         if (filePath.startsWith("http")) this.handleImage(filePath, event);
         else {
             console.log("hit default, returning: ", filePath);
-            mainWindow.webContents.send('deliver', filePath);
+            event.sender.send('deliver', filePath);
         }
     }
     handleImage(filePath, event) {
         rp.writeRecent(filePath, (recents) => {
-            mainWindow.webContents.send('recents', recents);
+            event.sender.send('recents', recents);
         });
 
         if (filePath.startsWith("http")) {
             imageDataURI.encodeFromURL(filePath)
             .then(
                 (response) => {
-                    mainWindow.webContents.send('deliver', response);
+                    event.sender.send('deliver', response);
                 });
         }
         else {
             imageDataURI.encodeFromFile(filePath)
             .then(
                 (response) => {
-                    mainWindow.webContents.send('deliver', response);
+                    event.sender.send('deliver', response);
                 });
         }
     }
     handleConversion (filePath, event) {
         rp.writeRecent(filePath, (recents) => {
-            mainWindow.webContents.send('recents', recents);
+            event.sender.send('recents', recents);
         });
 
         sharp(filePath)
             .png()
             .toBuffer()
             .then( data => {
-                mainWindow.webContents.send('deliver', `data:image/png;base64,${data.toString('base64')}`);
+                event.sender.send('deliver', `data:image/png;base64,${data.toString('base64')}`);
             })
             .catch( err => {
                 console.log(err);
@@ -145,7 +146,7 @@ class fileProcessor {
     }
     handlePSD (filePath, event) {
         rp.writeRecent(filePath, (recents) => {
-            mainWindow.webContents.send('recents', recents);
+            event.sender.send('recents', recents);
         });
 
         let psdPath = path.join(os.tmpdir(), 'out.png');
@@ -156,15 +157,19 @@ class fileProcessor {
             imageDataURI.encodeFromFile(psdPath)
             .then(
                 (response) => {
-                    mainWindow.webContents.send('deliver', response);
+                    event.sender.send('deliver', response);
                 });
         });
     }
     handleTIFF (filePath, event) {
-        rp.writeRecent(filePath, (recents) => {
-            mainWindow.webContents.send('recents', recents);
-        });
+        let senderID = event.sender.id;
+        let activeWindow = wm.getWindowByID(senderID);
         
+        if (!activeWindow) return;
+        rp.writeRecent(filePath, (recents) => {
+            event.sender.send('recents', recents);
+        });
+
         Jimp.read(filePath, (err, image) => {
           if (err) throw err;
           else {
@@ -172,8 +177,8 @@ class fileProcessor {
             .getBase64(Jimp.MIME_JPEG, function (err, src) {
                 //bakchere
 
-                fp.process(src);
-                mainWindow.show();
+                fp.process(src, event);
+                activeWindow.show();
             });
           }
         });
@@ -221,6 +226,87 @@ class fileProcessor {
     }
 }
 
+class windowManager {
+    constructor () {
+        this.windows = [];
+    }
+    waitForProcessors(callback) {
+        let interval = setInterval(() => {
+            if (processorsReady) {
+                clearInterval(interval);
+
+                if (callback && typeof callback == "function") callback();
+            }
+        }, 100);
+    }
+    createWindow() {
+        this.waitForProcessors(() => {
+            console.log("CREATING WINDOW!!");
+
+            this.windows.push(new BrowserWindow({
+                width: 550,
+                height: 400,
+                minWidth: 238,
+                minHeight: 238,
+                frame: false,
+                transparent: true,
+                webPreferences: {
+                    nodeIntegration: true,
+                    contextIsolation: false
+                },
+                icon: "public/favicon.png",
+            }));
+
+            let w = this.windows[this.windows.length-1];
+
+            w.loadFile("public/index.html");
+
+            w.on("closed", () => {
+                w = null;
+                this.windows.splice(this.windows.indexOf(w), 1);
+            });
+
+            w.webContents.on('will-navigate', function (e, url) {
+                e.preventDefault();
+                shell.openExternal(url);
+            });
+
+            /*
+            w.webContents.on('did-finish-load', () => {
+                sp = new settingsProcessor({
+                    home: path.join(os.homedir(), '.refviewer'),
+                    filename: 'config.json',
+                    ready: () => {
+                        w.webContents.send('settings', sp.settings);
+                    }
+                });
+
+                rp = new recentsProcessor({
+                    home: path.join(os.homedir(), '.refviewer'),
+                    filename: 'recents.json',
+                    ready: () => {
+                        w.webContents.send('recents', rp.recents);
+                    }
+                });
+            });*/
+
+            w.webContents.on('did-finish-load', () => {
+                w.webContents.send('settings', sp.settings);
+                w.webContents.send('recents', rp.recents);
+            });
+        });
+    }
+    deleteWindow() {
+
+    }
+    getWindowByID(id) {
+        for (var i = 0; i < this.windows.length; i++) {
+            if (this.windows[i].id == id) return this.windows[i];
+        }
+
+        return false;
+    }
+}
 //should i be redeclaring it like this??
 /*
 let sp = new settingsProcessor({
@@ -233,73 +319,36 @@ let rp = new recentsProcessor({
 });
 */
 
-ipcMain.on('settings:write', (event, arg) => {
-    sp.writeSettings(arg, () => {
-        mainWindow.webContents.send('settings', sp.settings);
-    });
-
-    //HEREmainWindow.webContents.send('settings', );
-    //event.reply('settings:all', sp.settings);
-});
-
 const fp = new fileProcessor();
+const wm = new windowManager();
+
+let gotTheLock;
+
+sp = new settingsProcessor({
+    home: path.join(os.homedir(), '.refviewer'),
+    filename: 'config.json',
+    ready: () => {
+        rp = new recentsProcessor({
+            home: path.join(os.homedir(), '.refviewer'),
+            filename: 'recents.json',
+            ready: () => {
+                processorsReady = true;
+            }
+        });
+    }
+});
 
 try {
     require("electron-reloader")(module);
 } catch (_) {}
 
-const gotTheLock = app.requestSingleInstanceLock();
+gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
     app.quit();
 } else {
-    app.on("ready", createWindow);
-}
-
-function createWindow() {
-    mainWindow = new BrowserWindow({
-        width: 550,
-        height: 400,
-        minWidth: 238,
-        minHeight: 238,
-        frame: false,
-        transparent: true,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        },
-        icon: "public/favicon.png",
-    });
-
-    mainWindow.webContents.on('will-navigate', function (e, url) {
-        e.preventDefault();
-        shell.openExternal(url);
-    });
-
-    /*550, 400*/ /*238*/
-
-    mainWindow.loadFile("public/index.html");
-
-    mainWindow.on("closed", function () {
-        mainWindow = null;
-    });
-
-    mainWindow.webContents.on('did-finish-load', () => {
-        sp = new settingsProcessor({
-            home: path.join(os.homedir(), '.refviewer'),
-            filename: 'config.json',
-            ready: () => {
-                mainWindow.webContents.send('settings', sp.settings);
-            }
-        });
-
-        rp = new recentsProcessor({
-            home: path.join(os.homedir(), '.refviewer'),
-            filename: 'recents.json',
-            ready: () => {
-                mainWindow.webContents.send('recents', rp.recents);
-            }
-        });
+    app.on("ready", () => {
+        wm.createWindow();
     });
 }
 
@@ -308,33 +357,49 @@ app.on("window-all-closed", function () {
 });
 
 app.on("activate", function () {
-    if (mainWindow === null) createWindow();
+    if (wm.windows.length <= 0) wm.createWindow();
+});    
+
+ipcMain.on('settings:write', (event, arg) => {
+    sp.writeSettings(arg, () => {
+        event.sender.send('settings', sp.settings);
+    });
 });
 
 ipcMain.on('window', (event, arg) => {
-    if (!mainWindow) return;
+    let senderID = event.sender.id;
+    let activeWindow = wm.getWindowByID(senderID);
+
+    if (!activeWindow) return;
     switch (arg) {
         case "pin":
-            if (mainWindow.isAlwaysOnTop()) mainWindow.setAlwaysOnTop(false);
-            else mainWindow.setAlwaysOnTop(true);
-            event.reply('pin', mainWindow.isAlwaysOnTop());
+            if (activeWindow.isAlwaysOnTop()) activeWindow.setAlwaysOnTop(false);
+            else activeWindow.setAlwaysOnTop(true);
+            event.sender.send('pin', activeWindow.isAlwaysOnTop());
             break;
         case "close":
-            mainWindow.close();
+            activeWindow.close();
             break;
         case "maximize":
-            if (mainWindow.isMaximized()) mainWindow.unmaximize();
-            else mainWindow.maximize();
+            if (activeWindow.isMaximized()) activeWindow.unmaximize();
+            else activeWindow.maximize();
             break;
         case "minimize":
-            mainWindow.minimize();
+            activeWindow.minimize();
+            break;
+        case "new":
+            wm.createWindow();
             break;
         default: break;
     }
 });
 
 ipcMain.on('saveImage', (event, arg) => {
-    dialog.showSaveDialog(mainWindow, {
+    let senderID = event.sender.id;
+    let activeWindow = wm.getWindowByID(senderID);
+
+    if (!activeWindow) return;
+    dialog.showSaveDialog(activeWindow, {
         title: "Save image",
         defaultPath: "image.png"
     }).then(result => {
@@ -355,6 +420,10 @@ ipcMain.on('saveImage', (event, arg) => {
 });
 
 ipcMain.on('flipImage', (event, arg) => {
+    let senderID = event.sender.id;
+    let activeWindow = wm.getWindowByID(senderID);
+    
+    if (!activeWindow) return;
     Jimp.read(dataToBuffer(arg), (err, image) => {
       if (err) throw err;
       else {
@@ -362,14 +431,18 @@ ipcMain.on('flipImage', (event, arg) => {
         .getBase64(Jimp.MIME_JPEG, function (err, src) {
             //bakchere
 
-            fp.process(src);
-            mainWindow.show();
+            fp.process(src, event);
+            activeWindow.show();
         });
       }
     });
 });
 
 ipcMain.on('rotateImage', (event, arg) => {
+    let senderID = event.sender.id;
+    let activeWindow = wm.getWindowByID(senderID);
+    
+    if (!activeWindow) return;
     Jimp.read(dataToBuffer(arg), (err, image) => {
       if (err) throw err;
       else {
@@ -377,20 +450,24 @@ ipcMain.on('rotateImage', (event, arg) => {
         .getBase64(Jimp.MIME_JPEG, function (err, src) {
             //bakchere
 
-            fp.process(src);
-            mainWindow.show();
+            fp.process(src, event);
+            activeWindow.show();
         });
       }
     });
 });
 
 ipcMain.on('file', (event, arg) => {
-    fp.process(arg);
+    fp.process(arg, event);
     if (newWin) newWin.close();
 });
 
+ipcMain.on('action', (event, arg) => {
+    event.sender.send('action', arg);
+});
+
 ipcMain.on('getPalette', (event, arg) => {
-    if (generatedPalette) return mainWindow.webContents.send('palette', generatedPalette);
+    if (generatedPalette) return event.sender.send('palette', generatedPalette);
 
     console.log("Making a palette...");
     let filePath = path.join(os.tmpdir(), 'out.png');
@@ -406,20 +483,24 @@ ipcMain.on('getPalette', (event, arg) => {
         Vibrant.from(filePath).getPalette().then((palette) => {
             generatedPalette = palette;
 
-            mainWindow.webContents.send('palette', generatedPalette);
+            event.sender.send('palette', generatedPalette);
         });
     });
 });
 /*
 ipcMain.on('recents:add', (event, arg) => {
     rp.writeRecent(arg, (recents) => {
-        event.reply("recents", recents);
+        event.sender.send("recents", recents);
     });
 });
 */
 
 ipcMain.on('selectfile', (event, arg) => {
-    dialog.showOpenDialog(mainWindow, {
+    let senderID = event.sender.id;
+    let activeWindow = wm.getWindowByID(senderID);
+    
+    if (!activeWindow) return;
+    dialog.showOpenDialog(activeWindow, {
         title: "Open image",
         filters: [{ name: 'Images', extensions: supportedExtensions }]
     }).then(result => {
@@ -435,7 +516,11 @@ ipcMain.on('selectfile', (event, arg) => {
 });
 
 ipcMain.on('screenshot', (event, arg) => {
-    let windowPOS = mainWindow.getPosition();
+    let senderID = event.sender.id;
+    let activeWindow = wm.getWindowByID(senderID);
+    
+    if (!activeWindow) return;
+    let windowPOS = activeWindow.getPosition();
 
     let currentScreen = screen.getDisplayNearestPoint({
         x: windowPOS[0],
@@ -444,7 +529,7 @@ ipcMain.on('screenshot', (event, arg) => {
 
     let allDisplays = screen.getAllDisplays();
     let index = allDisplays.map(e => e.id).indexOf(currentScreen.id);;
-    mainWindow.hide();
+    activeWindow.hide();
 
     screenshot.listDisplays().then((displays) => {
 
@@ -454,7 +539,7 @@ ipcMain.on('screenshot', (event, arg) => {
         }).then((imgPath) => {
             impath = imgPath;
 
-            mainWindow.show();
+            activeWindow.show();
             
             newWin = new BrowserWindow({
                 x: currentScreen.bounds.x,
@@ -487,8 +572,8 @@ ipcMain.on('screenshot', (event, arg) => {
                         .getBase64(Jimp.MIME_JPEG, function (err, src) {
                             //bakchere
 
-                            fp.process(src);
-                            mainWindow.show();
+                            fp.process(src, event);
+                            activeWindow.show();
                         });
                       }
                     });

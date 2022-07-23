@@ -69,6 +69,7 @@ setTimeout(function() {
 
     function draw() {
         ctx.globalAlpha = 1.0;
+        ctx.drawImage(image, rect.startX, rect.startY, rect.w, rect.h, rect.startX, rect.startY, rect.w, rect.h);
         ctx.setLineDash([6]);
         ctx.strokeStyle = 'red';
         ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);

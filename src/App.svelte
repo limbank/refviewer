@@ -2,6 +2,8 @@
 	import Titlebar from './components/Titlebar.svelte';
 	import Desktop from './components/Desktop.svelte';
 	import Toolbox from './components/Toolbox.svelte';
+	import Actions from './components/Actions.svelte';
+	import Loader from './components/Loader.svelte';
 	import Menu from './components/menu/Menu.svelte';
 	import Dropfield from './components/Dropfield.svelte';
 	import Cursor from './components/Cursor.svelte';
@@ -28,7 +30,7 @@
 	let recents;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.30";
+	let version = "4.0.32";
 
 	let loading = false;
 
@@ -269,7 +271,9 @@
 	}
 </script>
 
-<svelte:window on:paste={handlePaste}/>
+<svelte:window on:paste={handlePaste} on:click={(e) => {
+	ipcRenderer.send('action', "test");
+}}/>
 
 <div class="backdrop" class:legacy={settings.theme}>
 	<div class="backdrop-bg backdrop-top"></div>
@@ -329,9 +333,7 @@
 		{/if}
 
 		{#if loading}
-			<div class="loader">
-				<div class="lds-ripple"><div></div><div></div></div>
-			</div>
+			<Loader />
 		{/if}
 
 		{#if file}
@@ -392,6 +394,8 @@
 				}}
 			/>
 		{/if}
+
+		<Actions />
 	</Desktop>
 </main>
 
@@ -502,64 +506,6 @@
 				/*
 				cursor: url("data:image/x-icon;base64,AAACAAEAICAQAAAAAADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAAAAh4eHAL+/vwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////////////////////////////////////////////////////////////////////D////g///+AP///gD///8B////A////sP///0D///6M///9H///+j////R////o////0f///9P////H////w=="),auto;*/
 				cursor: none;
-			}
-		}
-	}
-
-	.loader {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		.lds-ripple {
-			display: inline-block;
-			position: relative;
-			width: 80px;
-			height: 80px;
-
-			div {
-				position: absolute;
-				border: 4px solid #3A3940;
-				opacity: 1;
-				border-radius: 50%;
-				animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-
-				&:nth-child(2) {
-					animation-delay: -0.5s;
-				}
-			}
-		}
-
-		@keyframes lds-ripple {
-			0% {
-				top: 36px;
-				left: 36px;
-				width: 0;
-				height: 0;
-				opacity: 0;
-			}
-			4.9% {
-				top: 36px;
-				left: 36px;
-				width: 0;
-				height: 0;
-				opacity: 0;
-			}
-			5% {
-				top: 36px;
-				left: 36px;
-				width: 0;
-				height: 0;
-				opacity: 1;
-			}
-			100% {
-				top: 0px;
-				left: 0px;
-				width: 72px;
-				height: 72px;
-				opacity: 0;
 			}
 		}
 	}
