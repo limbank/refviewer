@@ -28,7 +28,7 @@
 	let recents;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.28";
+	let version = "4.0.29";
 
 	let pickedColor;
 	let chosenColor;

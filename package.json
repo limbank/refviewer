@@ -38,6 +38,7 @@
         "image-data-uri": "^2.0.1",
         "jimp": "^0.16.1",
         "node-html-parser": "^5.3.3",
+        "node-vibrant": "^3.2.1-alpha.1",
         "patch-package": "^6.4.7",
         "psd": "^3.4.0",
         "screenshot-desktop": "^1.12.7",

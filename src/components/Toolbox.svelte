@@ -5,6 +5,7 @@
 	import Tool from './Tool.svelte';
 	import Eyedropper from './Eyedropper.svelte';
 	import Backdrop from './Backdrop.svelte';
+	import Palette from './Palette.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -83,6 +84,11 @@
 		>
 	    	<i class="fas fa-redo"></i>
 		</Tool>
+		<Palette
+			bind:fileSelected
+			legacy={legacy}
+			tips={tips}
+		/>
 		<!--
 		<button class="control control-">
 	    	<i class="fas fa-palette"></i>

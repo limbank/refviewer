@@ -8,9 +8,11 @@ const screenshot = require('screenshot-desktop');
 const Jimp = require('jimp');
 const PSD = require('psd');
 const { shell } = require('electron');
+const Vibrant = require('node-vibrant');
 
 let mainWindow, newWin;
 let sp, rp;
+let generatedPalette;
 
 const supportedExtensions = ['img', 'png', 'bmp', 'gif', 'jpeg', 'jpg', 'psd', 'tif', 'tiff', 'dng', 'webp'];
 
@@ -155,6 +157,8 @@ class fileProcessor {
     process(file, event) {
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 
+        generatedPalette = null;
+
         switch(ext) {
             case "psd": 
                 this.handlePSD(file, event);
@@ -200,8 +204,6 @@ let rp = new recentsProcessor({
 */
 
 ipcMain.on('settings:write', (event, arg) => {
-    //console.log("GOT SETTINGS!!", arg);
-
     sp.writeSettings(arg, () => {
         mainWindow.webContents.send('settings', sp.settings);
     });
@@ -306,7 +308,6 @@ ipcMain.on('saveImage', (event, arg) => {
         title: "Save image",
         defaultPath: "image.png"
     }).then(result => {
-      console.log(result);
         let base64Data = arg
                             .replace(/^data:image\/png;base64,/, "")
                             .replace(/^data:image\/jpeg;base64,/, "");
@@ -358,6 +359,27 @@ ipcMain.on('file', (event, arg) => {
     if (newWin) newWin.close();
 });
 
+ipcMain.on('getPalette', (event, arg) => {
+    if (generatedPalette) return mainWindow.webContents.send('palette', generatedPalette);
+    
+    console.log("Making a palette...");
+    let filePath = path.join(os.tmpdir(), 'out.png');
+    let base64Data = arg
+                            .replace(/^data:image\/png;base64,/, "")
+                            .replace(/^data:image\/jpeg;base64,/, "");
+
+    fs.writeFile(filePath, base64Data, 'base64', err => {
+        if (err) {
+            console.error(err);
+        }
+
+        Vibrant.from(filePath).getPalette().then((palette) => {
+            generatedPalette = palette;
+
+            mainWindow.webContents.send('palette', generatedPalette);
+        });
+    });
+});
 /*
 ipcMain.on('recents:add', (event, arg) => {
     rp.writeRecent(arg, (recents) => {
