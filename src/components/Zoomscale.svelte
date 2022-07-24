@@ -16,7 +16,7 @@
 <style lang="scss">
 	.zoomscale {
 		position: fixed;
-		z-index: 999;
+		z-index: 2;
 		cursor: pointer;
 		border-radius:5px;
 		background: #171719;

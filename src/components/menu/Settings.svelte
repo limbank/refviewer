@@ -68,6 +68,22 @@
 		</div>
 	</div>
 </div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			Ignore transparency
+		</div>
+		<div class="setting-control">
+			<label class="switch">
+				<input type="checkbox" bind:checked={settings.transparency}>
+				<span class="slider"></span>
+			</label>
+		</div>
+	</div>
+	<div class="setting-description">
+		Make the image ignore background transparency and stay opaque.
+	</div>
+</div>
 <!--
 <div class="setting">
 	<div class="setting-inner">

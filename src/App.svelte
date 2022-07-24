@@ -30,7 +30,7 @@
 	let recents;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.32";
+	let version = "4.0.33";
 
 	let loading = false;
 
@@ -108,6 +108,13 @@
 		    initPan(element);
   		}
 	    catch(e) {console.log("errrrr", e);}
+  	};
+
+  	let workAreaOpacity = {a:1};
+
+  	$: {
+  		if(!settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb();
+		else workAreaOpacity = {a:1};
   	};
 
 	function verifyCompatibility(url) {
@@ -269,11 +276,15 @@
         }
         a.readAsDataURL(blob);
 	}
+
+	/*
+		 on:click={(e) => {
+			ipcRenderer.send('action', "test");
+		}}
+	*/
 </script>
 
-<svelte:window on:paste={handlePaste} on:click={(e) => {
-	ipcRenderer.send('action', "test");
-}}/>
+<svelte:window on:paste={handlePaste} />
 
 <div class="backdrop" class:legacy={settings.theme}>
 	<div class="backdrop-bg backdrop-top"></div>
@@ -363,6 +374,8 @@
 				    		}
 			    		}, 100);
 			    	}}
+
+			    	style="opacity: {workAreaOpacity.a}"
 				>
 				    <Canvas
 				    	width={width}

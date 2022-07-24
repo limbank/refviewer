@@ -70,7 +70,7 @@
 <style lang="scss">
 	.settings-container {
 		position: absolute;
-		z-index: 2;
+		z-index: 3;
 		left: 0;
 		top: 0;
 		right: 0;

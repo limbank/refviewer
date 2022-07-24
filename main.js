@@ -123,10 +123,12 @@ class fileProcessor {
         }
         else {
             imageDataURI.encodeFromFile(filePath)
-            .then(
-                (response) => {
-                    event.sender.send('deliver', response);
-                });
+            .then((response) => {
+                event.sender.send('deliver', response);
+            })
+            .catch((error) => {
+                event.sender.send('action', "Error loading file!");
+            });
         }
     }
     handleConversion (filePath, event) {
@@ -271,33 +273,11 @@ class windowManager {
                 shell.openExternal(url);
             });
 
-            /*
-            w.webContents.on('did-finish-load', () => {
-                sp = new settingsProcessor({
-                    home: path.join(os.homedir(), '.refviewer'),
-                    filename: 'config.json',
-                    ready: () => {
-                        w.webContents.send('settings', sp.settings);
-                    }
-                });
-
-                rp = new recentsProcessor({
-                    home: path.join(os.homedir(), '.refviewer'),
-                    filename: 'recents.json',
-                    ready: () => {
-                        w.webContents.send('recents', rp.recents);
-                    }
-                });
-            });*/
-
             w.webContents.on('did-finish-load', () => {
                 w.webContents.send('settings', sp.settings);
                 w.webContents.send('recents', rp.recents);
             });
         });
-    }
-    deleteWindow() {
-
     }
     getWindowByID(id) {
         for (var i = 0; i < this.windows.length; i++) {
@@ -307,17 +287,6 @@ class windowManager {
         return false;
     }
 }
-//should i be redeclaring it like this??
-/*
-let sp = new settingsProcessor({
-    home: path.join(os.homedir(), '.refviewer'),
-    filename: 'config.json'
-});
-let rp = new recentsProcessor({
-    home: path.join(os.homedir(), '.refviewer'),
-    filename: 'recent.json'
-});
-*/
 
 const fp = new fileProcessor();
 const wm = new windowManager();
@@ -367,10 +336,12 @@ ipcMain.on('settings:write', (event, arg) => {
 });
 
 ipcMain.on('window', (event, arg) => {
+    //console.log("GOT A WINDOW MESSAGE!");
     let senderID = event.sender.id;
     let activeWindow = wm.getWindowByID(senderID);
-
+    //console.log("SENDER ID!", senderID);
     if (!activeWindow) return;
+    //console.log("WINDOW FOUND!", activeWindow.id);
     switch (arg) {
         case "pin":
             if (activeWindow.isAlwaysOnTop()) activeWindow.setAlwaysOnTop(false);

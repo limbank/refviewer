@@ -12,6 +12,9 @@
 		Added the option to make the workspace area transparent
 	</li>
 	<li>
+		Added the option to make the image ignore workspace transparency
+	</li>
+	<li>
 		The cursor now shows colors when color picking instead of using the button's background
 	</li>
 	<li>
@@ -73,10 +76,6 @@
 
 <style lang="scss">
 	.about-text {
-		color: #B7B9BC;
-		font-size: 12px;
-		margin-bottom: 10px;
-
 		&-title {
 			font-size: 14px;
 			color: #B7B9BC;
@@ -89,7 +88,10 @@
 	.change-list {
 		padding: 0 0 0 15px;
 		margin: 0;
-		color: #B7B9BC;
-		font-size: 12px;
+
+		li {
+			color: #B7B9BC;
+			font-size: 12px;
+		}
 	}
 </style>

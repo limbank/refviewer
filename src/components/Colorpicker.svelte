@@ -16,33 +16,33 @@
 </script>
 
 <div class="picker-wrapper">
-	<ColorPicker bind:rgb bind:hex isOpen isInput={false} isAlpha={alpha} />
+	<ColorPicker bind:rgb bind:hex isOpen isInput={false} isAlpha={alpha} isTextInput={false} />
 	<div class="picker-split">
 		<div class="picker-controls">
 			<div class="picker-controls-row">
 				<label>
 					<span>R:</span>
-					<input placeholder="R" type="text" bind:value={rgb.r}>
+					<input placeholder="R" type="number" bind:value={rgb.r}>
 				</label>
 				<label>
 					<span>G:</span>
-					<input placeholder="G" type="text" bind:value={rgb.g}>
+					<input placeholder="G" type="number" bind:value={rgb.g}>
 				</label>
 				<label>
 					<span>B:</span>
-					<input placeholder="B" type="text" bind:value={rgb.b}>
+					<input placeholder="B" type="number" bind:value={rgb.b}>
 				</label>
 				{#if alpha}
 					<label>
 						<span>A:</span>
-						<input placeholder="A" type="text" bind:value={rgb.a}>
+						<input placeholder="A" type="number" bind:value={rgb.a}>
 					</label>
 				{/if}
 			</div>
 			<div class="picker-controls-row">
 				<label>
 					<span>HEX:</span>
-					<input placeholder="Hex" type="text" bind:value={hex}>
+					<input placeholder="Hex" type="text" bind:value={hex} disabled>
 					<Control
 						tips={tips}
 						legacy={legacy}
@@ -93,7 +93,7 @@
 			border-radius: 3px;
 		    box-sizing: border-box;
 
-			&>div.isOpen {
+			.wrapper.isOpen {
 				margin: 0;
 				background: transparent;
 				border: 0px;
@@ -170,6 +170,13 @@
 				    border: 0;
 					width: 30px;
 			    	flex-grow: 1;
+
+			    	&::-webkit-outer-spin-button,
+					&::-webkit-inner-spin-button {
+					  	-webkit-appearance: none;
+					  	margin: 0;
+					}
+
 
 					&:focus {
 						outline: none;
