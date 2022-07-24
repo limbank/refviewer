@@ -2,8 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import { createPopperActions } from 'svelte-popperjs';
 
-	import Tool from './Tool.svelte';
-	import Dropdown from './Dropdown.svelte';
+	import Tool from '../common/Tool.svelte';
+	import Dropdown from '../common/Dropdown.svelte';
 	import Colorpicker from './Colorpicker.svelte';
 
 	const dispatch = createEventDispatcher();

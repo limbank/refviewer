@@ -1,11 +1,11 @@
 <script>
+	const { ipcRenderer } = require('electron');
 	import { createEventDispatcher } from 'svelte';
 	import { createPopperActions } from 'svelte-popperjs';
-	const { ipcRenderer } = require('electron');
 	const tinycolor = require("tinycolor2");
 
-	import Tool from './Tool.svelte';
-	import Dropdown from './Dropdown.svelte';
+	import Tool from '../common/Tool.svelte';
+	import Dropdown from '../common/Dropdown.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -27,9 +27,9 @@
 </script>
 
 <Tool
-	tips={tips}
+	{tips}
+	{legacy}
 	size="12px"
-	legacy={legacy}
 	tiptext={"Generate palette"}
 	on:click={e => {
 		ipcRenderer.send('getPalette', fileSelected);
@@ -51,9 +51,9 @@
 				<div
 					on:click={e => {
 			            navigator.clipboard.writeText(tinycolor(`rgb(${palette[color_name]._rgb})`).toHexString()).then(() => {
-						    console.log("Copied to clipboard");
+						    ipcRenderer.send('action', "Color copied!");
 						}, () => {
-						    console.log("Failed to copy");
+						    ipcRenderer.send('action', "Failed to copy color");
 						});
 					}}
 					class="item"

@@ -379,10 +379,9 @@ ipcMain.on('saveImage', (event, arg) => {
                             .replace(/^data:image\/jpeg;base64,/, "");
 
         fs.writeFile(result.filePath, base64Data, 'base64', err => {
-          if (err) {
-            console.error(err);
-          }
-          // file written successfully
+            if (err) console.error(err);
+
+            event.sender.send('action', "Image saved!");
         });
 
     }).catch(err => {

@@ -1,6 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import Control from './Control.svelte';
+	import Control from './common/Control.svelte';
 
 	const { ipcRenderer } = require('electron');
 
@@ -17,33 +17,13 @@
 	ipcRenderer.on('pin', (event, arg) => { pinned = arg; });
 </script>
 
-<div class="titlebar" class:legacy={legacy}>
+<div class="titlebar" class:legacy>
 	<div class="titlebar-group">
-		<!--
-		<button
-			class="control control-menu"
-			on:click={e => {
-				settingsOpen = !settingsOpen;
-				dispatch('settingsOpen', settingsOpen);
-			}}
-
-			use:popperRef
-			on:mouseenter={() => showTooltip = true}
-			on:mouseleave={() => showTooltip = false}
-		>
-			{#if settingsOpen}
-    			<i class="fas fa-times"></i>
-			{:else}
-    			<i class="fas fa-bars"></i>
-			{/if}
-		</button>
-		-->
-
 		<Control
-			tips={tips}
-			legacy={legacy}
+			{tips}
+			{legacy}
 			size="12px"
-			tiptext={settingsOpen?"Close menu":"Main menu"}
+			tiptext={settingsOpen ? "Close menu" : "Main menu"}
 			on:click={e => {
 				settingsOpen = !settingsOpen;
 				dispatch('settingsOpen', settingsOpen);
@@ -59,8 +39,8 @@
 		{#if !settingsOpen}
 			{#if !fileSelected || overwrite}
 				<Control
-					tips={tips}
-					legacy={legacy}
+					{tips}
+					{legacy}
 					size="12px"
 					tiptext="Select file"
 					on:click={e => { ipcRenderer.send('selectfile'); }}
@@ -69,8 +49,8 @@
 				</Control>
 
 				<Control
-					tips={tips}
-					legacy={legacy}
+					{tips}
+					{legacy}
 					size="12px"
 					tiptext="Screenshot"
 					on:click={e => { ipcRenderer.send('screenshot'); }}
@@ -80,8 +60,8 @@
 			{/if}
 			{#if fileSelected}
 				<Control
-					tips={tips}
-					legacy={legacy}
+					{tips}
+					{legacy}
 					size="12px"
 					tiptext="Clear"
 					on:click={e => { dispatch('clear'); }}
@@ -96,8 +76,8 @@
 			<span class="version">v. {version}</span>
 		{/if}
 		<Control
-			tips={tips}
-			legacy={legacy}
+			{tips}
+			{legacy}
 			size="12px"
 			tiptext="New window"
 			 on:click={e => { ipcRenderer.send('window', 'new'); }}
@@ -105,8 +85,8 @@
 	    	<i class="fas fa-window"></i>
 		</Control>
 		<Control
-			tips={tips}
-			legacy={legacy}
+			{tips}
+			{legacy}
 			size="13px"
 			tiptext="Pin to top"
 			 on:click={e => { ipcRenderer.send('window', 'pin'); }}
@@ -114,24 +94,24 @@
 	    	<i class="fas fa-thumbtack" class:pinned></i>
 		</Control>
 		<Control
-			tips={tips}
-			legacy={legacy}
+			{tips}
+			{legacy}
 			tiptext="Minimize"
 			on:click={e => { ipcRenderer.send('window', 'minimize'); }}
 		>
 	    	<i class="fas fa-minus"></i>
 		</Control>
 		<Control
-			tips={tips}
-			legacy={legacy}
+			{tips}
+			{legacy}
 			tiptext="Maximize"
 			on:click={e => { ipcRenderer.send('window', 'maximize'); }}
 		>
 			<i class="fas fa-plus"></i>
 		</Control>
 		<Control
-			tips={tips}
-			legacy={legacy}
+			{tips}
+			{legacy}
 			persistent={true}
 			tiptext="Close"
 			on:click={e => { ipcRenderer.send('window', 'close'); }}

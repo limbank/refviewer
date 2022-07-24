@@ -53,10 +53,6 @@
 				font-size: 18px;
 				font-weight: bold;
 				text-align: center;
-
-				&-control {
-					padding: 5px 0;
-				}
 			}
 
 			&-wrapper {

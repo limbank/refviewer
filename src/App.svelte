@@ -3,19 +3,18 @@
 	import Desktop from './components/Desktop.svelte';
 	import Toolbox from './components/Toolbox.svelte';
 	import Actions from './components/Actions.svelte';
-	import Loader from './components/Loader.svelte';
-	import Menu from './components/menu/Menu.svelte';
 	import Dropfield from './components/Dropfield.svelte';
+	import Menu from './components/menu/Menu.svelte';
+	import Loader from './components/common/Loader.svelte';
 	import Cursor from './components/Cursor.svelte';
 	import Zoomscale from './components/Zoomscale.svelte';
 	import tinycolor from 'tinycolor2';
-
-	var HTMLParser = require('node-html-parser');
+	import Panzoom from '@panzoom/panzoom';
 	import { Canvas, Layer, t } from "svelte-canvas";
 
-	import Panzoom from '@panzoom/panzoom';
-
+	const HTMLParser = require('node-html-parser');
 	const { ipcRenderer } = require('electron');
+	const { version } = require('../package.json');
 
 	let file = false;
 	let width;
@@ -23,14 +22,13 @@
 	let zoomed = false;
 	let settings = {};
 	let settingsOpen = false;
-	let defaultDims;
 	let pickingmode = false;
 
 	let proxySettings;
 	let recents;
 	let initUpdate = 0;
 	let instance;
-	let version = "4.0.33";
+	//let version = "4.0.33";
 
 	let loading = false;
 
@@ -44,8 +42,10 @@
 
 	let readablefiletypes = ['img', 'png', 'bmp', 'gif', 'jpeg', 'jpg', 'psd', 'tif', 'tiff', 'dng', 'webp'];
 
-	let m = { x: 0, y: 0 };
+	let img = new Image();
+  	let workAreaOpacity = {a:1};
 
+	let m = { x: 0, y: 0 };
 	function handleCursor(event) {
 		m.x = event.clientX;
 		m.y = event.clientY;
@@ -69,8 +69,6 @@
 		}
 	});
 
-	let img = new Image(); 
-
 	function initPan(element, customZoom = false) {
 		if (!element) return;
 
@@ -88,11 +86,6 @@
 		});
 		element.parentElement.addEventListener('wheel', instance.zoomWithWheel);
 		element.addEventListener('panzoomchange', (event) => {
-			/*
-			if (pickingmode) {
-				event.preventDefault();
-				console.log("pcikingmode change");
-			}*/
 			zoomscale = Number(event.detail.scale).toFixed(1);
 
 		  	if (event.detail.scale >= 10) zoomed = true;
@@ -109,8 +102,6 @@
   		}
 	    catch(e) {console.log("errrrr", e);}
   	};
-
-  	let workAreaOpacity = {a:1};
 
   	$: {
   		if(!settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb();
@@ -130,7 +121,7 @@
     }
 
     function scaleNumber(num, oldRange, newRange){
-        var a = oldRange[0], b = oldRange[1], c = newRange[0], d = newRange[1];
+        let a = oldRange[0], b = oldRange[1], c = newRange[0], d = newRange[1];
         return (b*c - (a)*d)/(b-a) + (num)*(d/(b-a));
     }
 
@@ -139,20 +130,17 @@
 
   		mouseincanvas = true;
 
-        var canvas = e.srcElement;
-        var ctx = canvas.getContext('2d');
+        let canvas = e.srcElement;
+        let ctx = canvas.getContext('2d');
 
-        var positionInfo = canvas.getBoundingClientRect();
-        //console.log("POSINFO", positionInfo);
+        let positionInfo = canvas.getBoundingClientRect();
+        let mousePos = getMousePos(canvas, e, positionInfo);
+        let newWidth = scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
+        let newHeight = scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
 
-        var mousePos = getMousePos(canvas, e, positionInfo);
-
-        var newWidth = scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
-        var newHeight = scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
-
-        var imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
-        var pixel = imageData.data;
-        var pixelColor = "rgba("+pixel[0]+", "+pixel[1]+", "+pixel[2]+", "+pixel[3]+")";
+        let imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
+        let pixel = imageData.data;
+        let pixelColor = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${pixel[3]})`;
 
         chosenColor = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2] }).toHexString();
   	}
@@ -161,9 +149,6 @@
 		if (!settings.overwrite && file || settingsOpen) return;
 
 		loading = true;
-
-		//console.log(e.dataTransfer.files);
-	    //console.log(e.dataTransfer.files);
 
 	    const acceptedFiles = Array.from(e.dataTransfer.files);
 	    const acceptedItems = Array.from(e.dataTransfer.items);
@@ -177,23 +162,18 @@
 			let testHTML = items.getData("text/html");
 
 			if (testHTML) {
-				console.log("GOT HTML!", testHTML);
 				//gotten HTML, likely an IMG tag
-				let image = HTMLParser.parse(testHTML).querySelector('img');
-				let url = HTMLParser.parse(testHTML).querySelector('a');
-
-				console.log(image, url, "test123");
+				let parsedHTML = HTMLParser.parse(testHTML);
+				let image = parsedHTML.querySelector('img');
+				let url = parsedHTML.querySelector('a');
 
 				if (image) {
 					let srctext = image.getAttribute('src');
-
-					console.log("extracted src", srctext);
 
 					if (srctext.toLowerCase().startsWith("data")) {
 						ipcRenderer.send('file', srctext);
 					}
 					else if (srctext.toLowerCase().startsWith("http")) {
-						console.log("got html, sending")
 						ipcRenderer.send('file', srctext);
 					}
 				}
@@ -205,8 +185,6 @@
 			}
 			else {
 		    	let text = items.getData("text");
-
-				console.log("hi idk lmao", text);
 				ipcRenderer.send('file', text);
 			}
 	    }
@@ -225,7 +203,6 @@
 	};
 
 	ipcRenderer.on('deliver', (event, arg) => {
-		console.log("loading file!");
 		img.src = arg;
 		loading = false;
 		file = arg;
@@ -240,11 +217,20 @@
 		Add image selection by dropping text in
 	*/
 
+	function getIMG(blob){
+		let a = new FileReader();
+        a.onload = function(e) {
+			img.src = e.target.result;
+			file = e.target.result;
+        }
+        a.readAsDataURL(blob);
+	}
+
 	function handlePaste(event) {
 		if (!settings.overwrite && file || settingsOpen) return;
 
 		if (event.clipboardData.getData('Text') != "") {
-			console.log("test pasted! handle URL?");
+			console.log("text pasted! handle URL?");
 		}
 
 		let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
@@ -264,17 +250,6 @@
 
 		*/
 		getIMG(blob);
-	}
-
-	function getIMG(blob){
-		console.log("preparing img");
-
-		var a = new FileReader();
-        a.onload = function(e) {
-			img.src = e.target.result;
-			file = e.target.result;
-        }
-        a.readAsDataURL(blob);
 	}
 
 	/*
@@ -303,11 +278,9 @@
 		version={version}
 		on:clear={e => {
 			file = false;
-
 	    	backdropColor = "#2F2E33";
 
 		    try {
-		    	console.log("destroying");
 		    	instance.destroy();
 		    }
 		    catch(e) {
@@ -365,6 +338,7 @@
 
 				<div
 					class="canvas-container-inner"
+			    	style="opacity: {workAreaOpacity.a}"
 					class:pickingmode
 			    	on:click={() => {
 			    		setTimeout(() => {
@@ -374,8 +348,6 @@
 				    		}
 			    		}, 100);
 			    	}}
-
-			    	style="opacity: {workAreaOpacity.a}"
 				>
 				    <Canvas
 				    	width={width}
@@ -386,10 +358,8 @@
 				    	on:click={() => {
 				    		if (pickingmode) {
 				    			pickingmode = false;
-		  						instance.setOptions({disablePan:false});
+		  						instance.setOptions({ disablePan:false });
 				    			pickedColor = chosenColor;
-
-				    			console.log("COLOR UPDATE!", pickedColor);
 				    		}
 				    	}}
 				    >
@@ -400,12 +370,7 @@
 		{/if}
 
 		{#if !file && !loading}
-			<Dropfield
-				legacy={settings.theme}
-				on:select={e => {
-					alert("woop");
-				}}
-			/>
+			<Dropfield legacy={settings.theme} />
 		{/if}
 
 		<Actions />
@@ -468,7 +433,6 @@
 
 	main {
 		position: fixed;
-
 		box-sizing: border-box;
 		z-index: 2;
 		left: 0;
@@ -516,8 +480,6 @@
 			}
 
 			&.pickingmode :global(canvas) {
-				/*
-				cursor: url("data:image/x-icon;base64,AAACAAEAICAQAAAAAADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAAAAh4eHAL+/vwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////////////////////////////////////////////////////////////////////D////g///+AP///gD///8B////A////sP///0D///6M///9H///+j////R////o////0f///9P////H////w=="),auto;*/
 				cursor: none;
 			}
 		}

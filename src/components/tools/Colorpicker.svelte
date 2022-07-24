@@ -1,7 +1,9 @@
 <script>
+	const { ipcRenderer } = require('electron');
+
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import tinycolor from 'tinycolor2';
-	import Control from './Control.svelte';
+	import Control from '../common/Control.svelte';
 
 	export let legacy = false;
 	export let tips = false;
@@ -10,9 +12,6 @@
 
 	export let hex;
 	export let rgb = tinycolor(hex).toRgb();
-
-	$: console.log("Got color", rgb);
-	$: console.log("Got color", hex);
 </script>
 
 <div class="picker-wrapper">
@@ -44,15 +43,15 @@
 					<span>HEX:</span>
 					<input placeholder="Hex" type="text" bind:value={hex} disabled>
 					<Control
-						tips={tips}
-						legacy={legacy}
+						{tips}
+						{legacy}
 						size="12px"
 						tiptext="Copy"
 						on:click={e => {
 				            navigator.clipboard.writeText(hex).then(() => {
-							    console.log("Copied to clipboard");
+							    ipcRenderer.send('action', "Color copied!");
 							}, () => {
-							    console.log("Failed to copy");
+							    ipcRenderer.send('action', "Failed to copy color");
 							});
 						}}
 					>
@@ -60,13 +59,12 @@
 					</Control>
 					{#if reset}
 						<Control
-							tips={tips}
-							legacy={legacy}
+							{tips}
+							{legacy}
 							size="12px"
 							tiptext="Reset"
 							on:click={e => {
 								hex = reset;
-								console.log("clicked!", hex, reset);
 							}}
 						>
 							<i class="fas fa-redo"></i>

@@ -1,6 +1,6 @@
 {
-    "name": "svelte-app",
-    "version": "1.0.0",
+    "name": "refviewer",
+    "version": "4.0.34",
     "private": true,
     "main": "main.js",
     "scripts": {
