@@ -17,7 +17,7 @@
 </script>
 
 <button
-	style="font-size:{size};"
+	style='font-size:{legacy ? "14px" : size};'
 	use:popperRef
 	on:mouseenter={() => showTooltip = true}
 	on:mouseleave={() => showTooltip = false}

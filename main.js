@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, screen   } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, screen, shell } = require("electron");
 
 const os = require('os');
 const path = require('path');
@@ -7,7 +7,6 @@ const imageDataURI = require('image-data-uri');
 const screenshot = require('screenshot-desktop');
 const Jimp = require('jimp');
 const PSD = require('psd');
-const { shell } = require('electron');
 const Vibrant = require('node-vibrant');
 const sharp = require('sharp');
 
@@ -104,10 +103,7 @@ class settingsProcessor {
 class fileProcessor {
     handleDefault(filePath, event) {
         if (filePath.startsWith("http")) this.handleImage(filePath, event);
-        else {
-            console.log("hit default, returning: ", filePath);
-            event.sender.send('deliver', filePath);
-        }
+        else event.sender.send('deliver', filePath);
     }
     handleImage(filePath, event) {
         rp.writeRecent(filePath, (recents) => {
@@ -439,7 +435,6 @@ ipcMain.on('action', (event, arg) => {
 ipcMain.on('getPalette', (event, arg) => {
     if (generatedPalette) return event.sender.send('palette', generatedPalette);
 
-    console.log("Making a palette...");
     let filePath = path.join(os.tmpdir(), 'out.png');
     let base64Data = arg
                             .replace(/^data:image\/png;base64,/, "")
@@ -531,7 +526,7 @@ ipcMain.on('screenshot', (event, arg) => {
                 newWin.setFullScreen(true);
                 newWin.focus();
 
-                ipcMain.on('image_crop', (e, arg) => {
+                ipcMain.once('image_crop', (e, arg) => {
                     if (newWin) newWin.close();
 
                     Jimp.read(impath, (err, image) => {

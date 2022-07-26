@@ -52,6 +52,9 @@
 	<li>
 		The screenshot cropping process now highlights the area that is being cropped
 	</li>
+	<li>
+		Fixed the issue with the screenshotting window ringing back wrong windows
+	</li>
 </ul>
 <div class="about-text-title">
 	Misc

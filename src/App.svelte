@@ -12,23 +12,25 @@
 	import Panzoom from '@panzoom/panzoom';
 	import { Canvas, Layer, t } from "svelte-canvas";
 
-	const HTMLParser = require('node-html-parser');
+	import Helper from './scripts/helper.js';
+
 	const { ipcRenderer } = require('electron');
 	const { version } = require('../package.json');
+
+	const helper = new Helper();
 
 	let file = false;
 	let width;
 	let height;
 	let zoomed = false;
 	let settings = {};
+	let proxySettings;
 	let settingsOpen = false;
 	let pickingmode = false;
 
-	let proxySettings;
 	let recents;
 	let initUpdate = 0;
 	let instance;
-	//let version = "4.0.33";
 
 	let loading = false;
 
@@ -40,12 +42,15 @@
 
 	let backdropColor = "#2F2E33";
 
-	let readablefiletypes = ['img', 'png', 'bmp', 'gif', 'jpeg', 'jpg', 'psd', 'tif', 'tiff', 'dng', 'webp'];
+  	let workAreaOpacity = { a: 1 };
+	let m = { x: 0, y: 0 };
 
 	let img = new Image();
-  	let workAreaOpacity = {a:1};
+	img.onload = function(){
+	  	width = img.width;
+	  	height = img.height;
+	};
 
-	let m = { x: 0, y: 0 };
 	function handleCursor(event) {
 		m.x = event.clientX;
 		m.y = event.clientY;
@@ -69,12 +74,16 @@
 		}
 	});
 
+	ipcRenderer.on('deliver', (event, arg) => {
+		img.src = arg;
+		loading = false;
+		file = arg;
+	});
+
 	function initPan(element, customZoom = false) {
 		if (!element) return;
 
 	    try {
-	    	console.log("test");
-
 	    	instance.destroy();
 	    }
 	    catch(e) {/*console.log("errrrr", e);*/}
@@ -84,6 +93,7 @@
 			maxScale: 10000,
 			step: customZoom || settings.zoom
 		});
+
 		element.parentElement.addEventListener('wheel', instance.zoomWithWheel);
 		element.addEventListener('panzoomchange', (event) => {
 			zoomscale = Number(event.detail.scale).toFixed(1);
@@ -108,23 +118,6 @@
 		else workAreaOpacity = {a:1};
   	};
 
-	function verifyCompatibility(url) {
-		for (var i = 0; i < readablefiletypes.length; i++) {
-			if (url.toLowerCase().endsWith(readablefiletypes[i])) return true;
-		}
-
-		return false;
-	}
-
-    function getMousePos(canvas, evt, rect) {
-        return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
-    }
-
-    function scaleNumber(num, oldRange, newRange){
-        let a = oldRange[0], b = oldRange[1], c = newRange[0], d = newRange[1];
-        return (b*c - (a)*d)/(b-a) + (num)*(d/(b-a));
-    }
-
   	function handleMousemove(e) {
   		if (!pickingmode) return;
 
@@ -134,9 +127,9 @@
         let ctx = canvas.getContext('2d');
 
         let positionInfo = canvas.getBoundingClientRect();
-        let mousePos = getMousePos(canvas, e, positionInfo);
-        let newWidth = scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
-        let newHeight = scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
+        let mousePos = helper.getMousePos(canvas, e, positionInfo);
+        let newWidth = helper.scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
+        let newHeight = helper.scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
 
         let imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
         let pixel = imageData.data;
@@ -144,87 +137,6 @@
 
         chosenColor = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2] }).toHexString();
   	}
-
-	function handleFilesSelect(e) {
-		if (!settings.overwrite && file || settingsOpen) return;
-
-		loading = true;
-
-	    const acceptedFiles = Array.from(e.dataTransfer.files);
-	    const acceptedItems = Array.from(e.dataTransfer.items);
-
-	    if (acceptedFiles.length > 0) {
-	    	ipcRenderer.send('file', acceptedFiles[0].path);
-	    }
-	    else if (acceptedItems.length > 0) {
-		    let items = e.dataTransfer;
-
-			let testHTML = items.getData("text/html");
-
-			if (testHTML) {
-				//gotten HTML, likely an IMG tag
-				let parsedHTML = HTMLParser.parse(testHTML);
-				let image = parsedHTML.querySelector('img');
-				let url = parsedHTML.querySelector('a');
-
-				if (image) {
-					let srctext = image.getAttribute('src');
-
-					if (srctext.toLowerCase().startsWith("data")) {
-						ipcRenderer.send('file', srctext);
-					}
-					else if (srctext.toLowerCase().startsWith("http")) {
-						ipcRenderer.send('file', srctext);
-					}
-				}
-				else if (url) {
-					let srctext = url.getAttribute('href');
-
-					ipcRenderer.send('file', srctext);
-				}
-			}
-			else {
-		    	let text = items.getData("text");
-				ipcRenderer.send('file', text);
-			}
-	    }
-	    else {
-		    let items = e.dataTransfer;
-		    let text = items.getData("text");
-		    console.log(text, "gotten text");
-
-		    //HANDLE URL, DATA, AND WHATEVER ERRORS HERE
-	    }
-	}
-
-	img.onload = function(){
-	  	width = img.width;
-	  	height = img.height;
-	};
-
-	ipcRenderer.on('deliver', (event, arg) => {
-		img.src = arg;
-		loading = false;
-		file = arg;
-	});
-
-	/*
-		NOTE!!!
-
-		Maybe add a setting that separates clicking
-		into a separate button.
-
-		Add image selection by dropping text in
-	*/
-
-	function getIMG(blob){
-		let a = new FileReader();
-        a.onload = function(e) {
-			img.src = e.target.result;
-			file = e.target.result;
-        }
-        a.readAsDataURL(blob);
-	}
 
 	function handlePaste(event) {
 		if (!settings.overwrite && file || settingsOpen) return;
@@ -247,16 +159,12 @@
 		/*
 			Electron doesn't want us sending blob objects via ipc
 			so we'll handle it in-house instead.
-
 		*/
-		getIMG(blob);
+		helper.getIMG(blob, (result) => {
+			img.src = result;
+			file = result;
+		});
 	}
-
-	/*
-		 on:click={(e) => {
-			ipcRenderer.send('action', "test");
-		}}
-	*/
 </script>
 
 <svelte:window on:paste={handlePaste} />
@@ -270,27 +178,23 @@
 
 <main class:legacy={settings.theme}>
 	<Titlebar
+		{settingsOpen}
+		{version}
 		fileSelected={file}
-		settingsOpen={settingsOpen}
 		overwrite={settings.overwrite}
 		legacy={settings.theme}
 		tips={settings.tooltips}
-		version={version}
 		on:clear={e => {
 			file = false;
 	    	backdropColor = "#2F2E33";
 
-		    try {
-		    	instance.destroy();
-		    }
-		    catch(e) {
-		    	console.log("err", e)
-		    }
+		    try { instance.destroy(); }
+		    catch(e) { /*console.log("err", e);*/ }
 		}}
 		on:settingsOpen={e => { settingsOpen = e.detail; }}
 	/>
 	<Toolbox
-		settingsOpen={settingsOpen}
+		{settingsOpen}
 		fileSelected={file}
 		legacy={settings.theme}
 		tips={settings.tooltips}
@@ -298,20 +202,21 @@
 		bind:backdropColor
 		on:pickColor={e => {
 			pickingmode = true;
-	  		instance.setOptions({disablePan:true});
+	  		instance.setOptions({ disablePan: true });
 		}}
 	/>
 	<Desktop
-		{backdropColor}
 		legacy={settings.theme}
-		on:dragover={(e) => { e.preventDefault(); }}
-		on:drop={handleFilesSelect}
+		settings={proxySettings}
+		{backdropColor}
+		{settingsOpen}
+		bind:loading
 	>
 		{#if settingsOpen}
 			<Menu
 				settings={proxySettings}
-				recents={recents}
-				version={version}
+				{recents}
+				{version}
 				on:settingsOpen={e => { settingsOpen = e.detail; }}
 			/>
 		{/if}
@@ -344,7 +249,7 @@
 			    		setTimeout(() => {
 				    		if (pickingmode) {
 				    			pickingmode = false;
-		  						instance.setOptions({disablePan:false});
+		  						instance.setOptions({ disablePan: false });
 				    		}
 			    		}, 100);
 			    	}}
@@ -353,12 +258,12 @@
 				    	width={width}
 				    	height={height}
 				    	on:mousemove={handleMousemove}
-				    	on:mouseenter={() => {mouseincanvas=true;}}
-				    	on:mouseleave={() => {mouseincanvas=false;}}
+				    	on:mouseenter={() => { mouseincanvas = true; }}
+				    	on:mouseleave={() => { mouseincanvas = false; }}
 				    	on:click={() => {
 				    		if (pickingmode) {
 				    			pickingmode = false;
-		  						instance.setOptions({ disablePan:false });
+		  						instance.setOptions({ disablePan: false });
 				    			pickedColor = chosenColor;
 				    		}
 				    	}}

@@ -1,6 +1,6 @@
 {
     "name": "refviewer",
-    "version": "4.0.34",
+    "version": "4.0.37",
     "private": true,
     "main": "main.js",
     "scripts": {
