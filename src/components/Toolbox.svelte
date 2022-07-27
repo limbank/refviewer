@@ -14,24 +14,25 @@
 	export let legacy = false;
 	export let tips = false;
 	export let backdropColor = "#000000";
-	export let pickedColor;
+	export let hex;
 
 	function copyImage() {
 		let xhr = new XMLHttpRequest();
+
 		xhr.onload = () => {
 			try{
 				let response =  xhr.response.slice(0,  xhr.response.size, "image/png");
 				const item = new ClipboardItem({ "image/png": response });
 				navigator.clipboard.write([item]);
-				this.notify("Image copied!");
+
+				ipcRenderer.send('action', "Image copied!");
 			}
 			catch(e){ console.log(e); }
 		};
+
 		xhr.open('GET', fileSelected);
 		xhr.responseType = 'blob';
 		xhr.send();
-
-		ipcRenderer.send('action', "Image copied!");
 	}
 </script>
 
@@ -58,7 +59,7 @@
 		<Eyedropper
 			{tips}
 			{legacy}
-			bind:pickedColor
+			bind:hex
 			on:pickColor={() => dispatch("pickColor")}
 		/>
 		<Backdrop

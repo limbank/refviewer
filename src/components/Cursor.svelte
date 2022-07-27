@@ -1,5 +1,5 @@
 <script>
-	export let bg;
+	export let chosenColor;
 	export let x;
 	export let y;
 </script>
@@ -11,7 +11,7 @@
 	</div>
 	<div class="cursor-content">
 		<div class="cursor-pointer"></div>
-		<div class="cursor-color" style="background:{bg};"></div>
+		<div class="cursor-color" style="background:{chosenColor};"></div>
 	</div>
 </div>
 

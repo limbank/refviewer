@@ -19,10 +19,10 @@
 
 	const helper = new Helper();
 
-	let file = false;
+	let fileSelected = false;
 	let width;
 	let height;
-	let zoomed = false;
+	let pixelated = false;
 	let settings = {};
 	let proxySettings;
 	let settingsOpen = false;
@@ -34,7 +34,7 @@
 
 	let loading = false;
 
-	let pickedColor;
+	let hex;
 	let chosenColor;
 	let mouseincanvas = false;
 
@@ -42,7 +42,7 @@
 
 	let backdropColor = "#2F2E33";
 
-  	let workAreaOpacity = { a: 1 };
+  	let workAreaOpacity = 1;
 	let m = { x: 0, y: 0 };
 
 	let img = new Image();
@@ -50,11 +50,6 @@
 	  	width = img.width;
 	  	height = img.height;
 	};
-
-	function handleCursor(event) {
-		m.x = event.clientX;
-		m.y = event.clientY;
-	}
 
 	ipcRenderer.on('recents', (event, arg) => {
 		recents = arg;
@@ -68,25 +63,32 @@
 
 		settings = arg;
 		initUpdate++;
-		if (initUpdate<2) {
-			console.log("REPEATED UPDATE FAILED!", initUpdate);
-			proxySettings = settings;
-		}
+
+		if (initUpdate < 2) proxySettings = settings;
 	});
 
 	ipcRenderer.on('deliver', (event, arg) => {
 		img.src = arg;
 		loading = false;
-		file = arg;
+		fileSelected = arg;
 	});
 
-	function initPan(element, customZoom = false) {
-		if (!element) return;
-
+	function delInstance() {
 	    try {
 	    	instance.destroy();
 	    }
 	    catch(e) {/*console.log("errrrr", e);*/}
+	}
+
+	function handleCursor(event) {
+		m.x = event.clientX;
+		m.y = event.clientY;
+	}
+
+	function initPan(element, customZoom = false) {
+		if (!element) return;
+
+		delInstance();
 
 		// And pass it to panzoom
 		instance = Panzoom(element, {
@@ -98,8 +100,8 @@
 		element.addEventListener('panzoomchange', (event) => {
 			zoomscale = Number(event.detail.scale).toFixed(1);
 
-		  	if (event.detail.scale >= 10) zoomed = true;
-			else zoomed = false;
+		  	if (event.detail.scale >= 10) pixelated = true;
+			else pixelated = false;
 		})
 	};
 
@@ -110,12 +112,12 @@
 			let element = document.querySelector('.canvas-container-inner');
 		    initPan(element);
   		}
-	    catch(e) {console.log("errrrr", e);}
+	    catch(e) { console.log("err", e); }
   	};
 
   	$: {
-  		if(!settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb();
-		else workAreaOpacity = {a:1};
+  		if(!settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb().a;
+		else workAreaOpacity = 1;
   	};
 
   	function handleMousemove(e) {
@@ -139,7 +141,7 @@
   	}
 
 	function handlePaste(event) {
-		if (!settings.overwrite && file || settingsOpen) return;
+		if (!settings.overwrite && fileSelected || settingsOpen) return;
 
 		if (event.clipboardData.getData('Text') != "") {
 			console.log("text pasted! handle URL?");
@@ -160,9 +162,10 @@
 			Electron doesn't want us sending blob objects via ipc
 			so we'll handle it in-house instead.
 		*/
+
 		helper.getIMG(blob, (result) => {
 			img.src = result;
-			file = result;
+			fileSelected = result;
 		});
 	}
 </script>
@@ -180,25 +183,24 @@
 	<Titlebar
 		{settingsOpen}
 		{version}
-		fileSelected={file}
+		{fileSelected}
 		overwrite={settings.overwrite}
 		legacy={settings.theme}
 		tips={settings.tooltips}
 		on:clear={e => {
-			file = false;
+			fileSelected = false;
 	    	backdropColor = "#2F2E33";
 
-		    try { instance.destroy(); }
-		    catch(e) { /*console.log("err", e);*/ }
+		    delInstance();
 		}}
 		on:settingsOpen={e => { settingsOpen = e.detail; }}
 	/>
 	<Toolbox
 		{settingsOpen}
-		fileSelected={file}
+		{fileSelected}
+		{hex}
 		legacy={settings.theme}
 		tips={settings.tooltips}
-		bind:pickedColor
 		bind:backdropColor
 		on:pickColor={e => {
 			pickingmode = true;
@@ -225,17 +227,17 @@
 			<Loader />
 		{/if}
 
-		{#if file}
+		{#if fileSelected}
 			<div
 				class="canvas-container"
-				class:pixelated={zoomed}
+				class:pixelated
 				on:mousemove={handleCursor}
 			>
 				{#if pickingmode && mouseincanvas}
 					<Cursor
 						x={m.x}
 						y={m.y}
-						bg={chosenColor}
+						{chosenColor}
 					/>
 				{/if}
 
@@ -243,7 +245,7 @@
 
 				<div
 					class="canvas-container-inner"
-			    	style="opacity: {workAreaOpacity.a}"
+			    	style="opacity: {workAreaOpacity}"
 					class:pickingmode
 			    	on:click={() => {
 			    		setTimeout(() => {
@@ -264,7 +266,7 @@
 				    		if (pickingmode) {
 				    			pickingmode = false;
 		  						instance.setOptions({ disablePan: false });
-				    			pickedColor = chosenColor;
+				    			hex = chosenColor;
 				    		}
 				    	}}
 				    >
@@ -274,7 +276,7 @@
 			</div>
 		{/if}
 
-		{#if !file && !loading}
+		{#if !fileSelected && !loading}
 			<Dropfield legacy={settings.theme} />
 		{/if}
 
