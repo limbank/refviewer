@@ -24,7 +24,7 @@
 		flex-grow:1;
 
 		&.legacy &-inner-wrapper {
-			padding: 10px 0 0;
+			padding: 0;
 		}
 
 		&.legacy &-inner {

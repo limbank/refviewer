@@ -5,7 +5,7 @@
 	import Tool from './common/Tool.svelte';
 	import Eyedropper from './tools/Eyedropper.svelte';
 	import Palette from './tools/Palette.svelte';
-	import Backdrop from './Backdrop.svelte';
+	import Background from './tools/Background.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -36,7 +36,10 @@
 	}
 </script>
 
-<div class="toolbox">
+<div
+	class:legacy
+	class="toolbox"
+>
 	{#if fileSelected && !settingsOpen}
 		<Tool
 			{tips}
@@ -62,7 +65,7 @@
 			bind:hex
 			on:pickColor={() => dispatch("pickColor")}
 		/>
-		<Backdrop
+		<Background
 			{tips}
 			{legacy}
 			bind:backdropColor
@@ -100,6 +103,10 @@
 		flex-shrink: 0;
 		box-sizing: border-box;
 		margin-top: -1px;
+
+		&.legacy {
+			padding: 10px 10px 10px 0;
+		}
 	}
 
 	@media only screen and (max-width: 300px) {

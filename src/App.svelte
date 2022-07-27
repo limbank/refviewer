@@ -1,6 +1,7 @@
 <script>
 	import Titlebar from './components/Titlebar.svelte';
 	import Desktop from './components/Desktop.svelte';
+	import Backdrop from './components/Backdrop.svelte';
 	import Toolbox from './components/Toolbox.svelte';
 	import Actions from './components/Actions.svelte';
 	import Dropfield from './components/Dropfield.svelte';
@@ -118,6 +119,9 @@
   	$: {
   		if(!settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb().a;
 		else workAreaOpacity = 1;
+
+		if(settings.theme) backdropColor = "#111111";
+		else backdropColor = "#2F2E33";
   	};
 
   	function handleMousemove(e) {
@@ -172,12 +176,7 @@
 
 <svelte:window on:paste={handlePaste} />
 
-<div class="backdrop" class:legacy={settings.theme}>
-	<div class="backdrop-bg backdrop-top"></div>
-	<div class="backdrop-bg backdrop-right"></div>
-	<div class="backdrop-bg backdrop-bottom"></div>
-	<div class="backdrop-bg backdrop-left"></div>
-</div>
+<Backdrop legacy={settings.theme} />
 
 <main class:legacy={settings.theme}>
 	<Titlebar
@@ -217,6 +216,7 @@
 		{#if settingsOpen}
 			<Menu
 				settings={proxySettings}
+				legacy={settings.theme}
 				{recents}
 				{version}
 				on:settingsOpen={e => { settingsOpen = e.detail; }}
@@ -230,6 +230,7 @@
 		{#if fileSelected}
 			<div
 				class="canvas-container"
+				class:legacy={settings.theme}
 				class:pixelated
 				on:mousemove={handleCursor}
 			>
@@ -285,59 +286,6 @@
 </main>
 
 <style lang="scss">
-	.backdrop {
-		position: fixed;
-		left: 0;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 1;
-		border-radius: 5px;
-		overflow: hidden;
-		pointer-events: none;
-
-		&.legacy {
-			border-radius: 0PX;
-		}
-
-		&-bg {
-			background: #171719;
-			position: absolute;
-		}
-
-		&.legacy &-bg {
-			background: #111111;
-		}
-
-		&-top {
-			left: 0;
-			top: 0;
-			right: 0;
-			height: 42px;
-		}
-
-		&-bottom {
-			left: 0;
-			bottom: 0;
-			right: 0;
-			height: 17px;
-		}
-
-		&-left {
-			left: 0;
-			top: 0;
-			bottom: 0;
-			width: 52px;
-		}
-
-		&-right {
-			right: 0;
-			top: 0;
-			bottom: 0;
-			width: 17px;
-		}
-	}
-
 	main {
 		position: fixed;
 		box-sizing: border-box;
@@ -362,6 +310,13 @@
 		width: 100%;
 		height: 100%;
 		position: relative;
+
+		&.legacy {
+			padding: 20px;
+			border-radius: 3px;
+			border:2px dashed #3A3940;
+			box-sizing: border-box;
+		}
 
 		&-inner {
 			overflow: hidden;
@@ -389,6 +344,9 @@
 			&.pickingmode :global(canvas) {
 				cursor: none;
 			}
+		}
+
+		&.legacy &-inner {
 		}
 	}
 

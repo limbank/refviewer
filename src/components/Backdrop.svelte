@@ -1,53 +1,81 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
-	import { createPopperActions } from 'svelte-popperjs';
-
-	import Tool from './common/Tool.svelte';
-	import Dropdown from './common/Dropdown.svelte';
-	import Colorpicker from './tools/Colorpicker.svelte';
-
-	const dispatch = createEventDispatcher();
-
-	const [dropdownRef, dropdownContent] = createPopperActions({
-	    placement: 'right-start',
-	    strategy: 'fixed',
-	});
-
-	export let backdropColor = "#000000";
-
-	let showDropdown = false;
-
-	export let tips = false;
 	export let legacy = false;
 </script>
 
-<Tool
-	{tips}
-	{legacy}
-	size="12px"
-	tiptext={"Change background"}
-	on:click={e => {
-		showDropdown = true;
-	}}
->
-	<i class="fas fa-fill" use:dropdownRef></i>
-</Tool>
-
-{#if showDropdown}
-	<Dropdown
-		content={dropdownContent}
-		on:close={e => {
-			showDropdown = false;
-		}}
-	>
-		<Colorpicker
-			{tips}
-			{legacy}
-			bind:hex={backdropColor}
-			reset="#2F2E33"
-		/>
-	</Dropdown>
-{/if}
+<div class="backdrop" class:legacy>
+	<div class="backdrop-bg backdrop-top"></div>
+	<div class="backdrop-bg backdrop-right"></div>
+	<div class="backdrop-bg backdrop-bottom"></div>
+	<div class="backdrop-bg backdrop-left"></div>
+</div>
 
 <style lang="scss">
+	.backdrop {
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1;
+		border-radius: 5px;
+		overflow: hidden;
+		pointer-events: none;
+
+		&.legacy {
+			border-radius: 0PX;
+		}
+
+		&-bg {
+			background: #111111;
+			position: absolute;
+		}
+
+		&.legacy &-bg {
+			background: #111111;
+		}
+
+		&-top {
+			left: 0;
+			top: 0;
+			right: 0;
+			height: 42px;
+		}
+
+		&.legacy &-top {
+			height: 47px;
+		}
+
+		&-bottom {
+			left: 0;
+			bottom: 0;
+			right: 0;
+			height: 17px;
+		}
+
+		&.legacy &-bottom {
+			height: 12px;
+		}
+
+		&-left {
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 52px;
+		}
+
+		&.legacy &-left {
+			width: 47px;
+		}
+
+		&-right {
+			right: 0;
+			top: 0;
+			bottom: 0;
+			width: 17px;
+		}
+
+		&.legacy &-right {
+			width: 12px;
+		}
+	}
 </style>

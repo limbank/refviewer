@@ -9,12 +9,16 @@
 
 	let setWindow = "recent";
 
+	export let legacy = false;
 	export let settings;
 	export let recents;
 	export let version;
 </script>
 
-<div class="settings-container">
+<div
+	class:legacy
+	class="settings-container"
+>
 	<div class="settings-container-sidebar">
 		<ul class="settings-container-menu">
 			<li
@@ -81,6 +85,7 @@
 		&-sidebar {
 			flex-shrink: 0;
 			width: 150px;
+			background: #2F2E33;
 		}
 
 		&-main {
@@ -115,6 +120,14 @@
 					background: #3A3940;
 				}
 			}
+		}
+
+		&.legacy {
+			box-sizing: border-box;
+			background: #111111;
+			top: 10px;
+			overflow-y: hidden;
+			border-radius: 3px;
 		}
 	}
 

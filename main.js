@@ -260,8 +260,9 @@ class windowManager {
             w.loadFile("public/index.html");
 
             w.on("closed", () => {
-                w = null;
+                console.log("WINDOW CLOSED!");
                 this.windows.splice(this.windows.indexOf(w), 1);
+                w = null;
             });
 
             w.webContents.on('will-navigate', function (e, url) {

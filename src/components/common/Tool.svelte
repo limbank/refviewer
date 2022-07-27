@@ -16,7 +16,7 @@
 </script>
 
 <button
-	style="font-size:{size};"
+	style='font-size:{legacy ? "14px" : size};'
 	use:popperRef
 	on:mouseenter={() => showTooltip = true}
 	on:mouseleave={() => showTooltip = false}
@@ -63,11 +63,20 @@
 		&:hover {
 			background: #FAA916;
 		}
-		/*
+
 		&.legacy {
+			width: 25px;
+			height: 25px;
+			margin-bottom: 10px;
+			border: 2px solid #3F3F3F;
+			background: transparent;
+			color: #3F3F3F;
+
 		    &:hover {
+		    	border-color: black;
+			    color: black;
+			    background-color: #3F3F3F;
 		    }
 		}
-		*/
 	}
 </style>

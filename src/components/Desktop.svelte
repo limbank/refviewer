@@ -65,7 +65,7 @@
 		position: relative;
 
 		&.legacy {
-			background: #111111;
+			padding-top: 10px;
 		}
 	}
 </style>
