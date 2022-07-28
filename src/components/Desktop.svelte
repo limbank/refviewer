@@ -27,7 +27,7 @@
 				let url = parsedHTML.querySelector('a');
 
 				if (image) {
-					let srctext = image.getAttribute('src').toLowerCase();
+					let srctext = image.getAttribute('src');
 
 					if (srctext.startsWith("data")) ipcRenderer.send('file', srctext);
 					else if (srctext.startsWith("http")) ipcRenderer.send('file', srctext);

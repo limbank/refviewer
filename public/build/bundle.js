@@ -4865,7 +4865,7 @@ var app = (function () {
     			attr_dev(div, "class", "desktop svelte-1ei4s7n");
     			set_style(div, "background", /*backdropColor*/ ctx[1]);
     			toggle_class(div, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div, file_1, 47, 0, 1474);
+    			add_location(div, file_1, 47, 0, 1460);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4972,7 +4972,7 @@ var app = (function () {
     				let url = parsedHTML.querySelector('a');
 
     				if (image) {
-    					let srctext = image.getAttribute('src').toLowerCase();
+    					let srctext = image.getAttribute('src');
     					if (srctext.startsWith("data")) ipcRenderer.send('file', srctext); else if (srctext.startsWith("http")) ipcRenderer.send('file', srctext);
     				} else if (url) ipcRenderer.send('file', url.getAttribute('href'));
     			} else ipcRenderer.send('file', e.dataTransfer.getData("text"));
