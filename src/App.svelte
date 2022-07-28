@@ -207,10 +207,11 @@
 		}}
 	/>
 	<Desktop
-		legacy={settings.theme}
-		settings={proxySettings}
+		{fileSelected}
 		{backdropColor}
 		{settingsOpen}
+		legacy={settings.theme}
+		settings={proxySettings}
 		bind:loading
 	>
 		{#if settingsOpen}
