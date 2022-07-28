@@ -5,99 +5,20 @@ const path = require('path');
 const fs = require('fs-extra');
 const imageDataURI = require('image-data-uri');
 const screenshot = require('screenshot-desktop');
-const Jimp = require('jimp');
 const PSD = require('psd');
 const Vibrant = require('node-vibrant');
 const sharp = require('sharp');
+const fileFilter = require('./src/scripts/fileFilter.js')
+const recentsProcessor = require('./src/scripts/recentsProcessor.js')
+const settingsProcessor = require('./src/scripts/settingsProcessor.js')
 
 let mainWindow, newWin;
 let sp, rp;
 let generatedPalette;
 let processorsReady = false;
 
-const supportedExtensions = ['img', 'png', 'bmp', 'gif', 'jpeg', 'jpg', 'psd', 'tif', 'tiff', 'dng', 'webp'];
-
 function dataToBuffer(dataURI) {
     return new Buffer(dataURI.split(",")[1], 'base64');
-}
-
-class recentsProcessor {
-    constructor(data) {
-        this.home = data.home;
-        this.filename = data.filename;
-        this.file = path.join(this.home, this.filename);
-        this.recents = [];
-
-        fs.ensureFile(this.file, err => {
-            this.readRecents(data.ready);
-        });
-    }
-    readRecents(callback) {
-        fs.readJson(this.file, (err, packageObj) => {
-            let returnData = {};
-
-            if (!err) {
-                this.recents = packageObj;
-                returnData = packageObj;
-            }
-
-            if (callback && typeof callback == "function") callback(returnData);
-        });
-    }
-    writeRecent(item, callback) {
-        if (!item) return;
-
-        //get item in array and if it exists, move it to the front 
-        let index = this.recents.indexOf(item);
-
-        if (index >= 0) {
-            var [itemToMove] = this.recents.splice(index, 1);
-            this.recents.unshift(itemToMove);
-        }
-        else this.recents.unshift(item);
-
-        if (this.recents.length > 10) this.recents = this.recents.slice(0, 10);
-
-        fs.writeJson(this.file, this.recents, err => {
-            if (err) return console.error(err);
-
-            if (callback && typeof callback == "function") callback(this.recents);
-        });
-    }
-}
-
-class settingsProcessor {
-    constructor(data) {
-        this.home = data.home;
-        this.filename = data.filename;
-        this.file = path.join(this.home, this.filename);
-        this.settings = { zoom: 0.3 };
-
-        fs.ensureFile(this.file, err => {
-            this.readSettings(data.ready);
-        });
-    }
-    readSettings(callback) {
-        fs.readJson(this.file, (err, packageObj) => {
-            let returnData = {};
-
-            if (!err) {
-                this.settings = packageObj;
-                returnData = packageObj;
-            }
-
-            if (callback && typeof callback == "function") callback(returnData);
-        });
-    }
-    writeSettings(settings = {}, callback) {
-        this.settings = settings;
-
-        fs.writeJson(this.file, settings, err => {
-            if (err) return console.error(err);
-
-            if (callback && typeof callback == "function") callback();
-        });
-    }
 }
 
 class fileProcessor {
@@ -159,28 +80,6 @@ class fileProcessor {
                 });
         });
     }
-    handleTIFF (filePath, event) {
-        let senderID = event.sender.id;
-        let activeWindow = wm.getWindowByID(senderID);
-        
-        if (!activeWindow) return;
-        rp.writeRecent(filePath, (recents) => {
-            event.sender.send('recents', recents);
-        });
-
-        Jimp.read(filePath, (err, image) => {
-          if (err) throw err;
-          else {
-            image
-            .getBase64(Jimp.MIME_JPEG, function (err, src) {
-                //bakchere
-
-                fp.process(src, event);
-                activeWindow.show();
-            });
-          }
-        });
-    }
     process(file, event) {
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 
@@ -191,13 +90,13 @@ class fileProcessor {
                 this.handlePSD(file, event);
                 break;
             case "tif":
-                this.handleTIFF(file, event);
+                this.handleConversion(file, event);
                 break;
             case "tiff":
-                this.handleTIFF(file, event);
+                this.handleConversion(file, event);
                 break;
             case "dng":
-                this.handleTIFF(file, event);
+                this.handleConversion(file, event);
                 break;
             case "png": 
                 this.handleImage(file, event);
@@ -369,18 +268,23 @@ ipcMain.on('saveImage', (event, arg) => {
     if (!activeWindow) return;
     dialog.showSaveDialog(activeWindow, {
         title: "Save image",
-        defaultPath: "image.png"
+        defaultPath: "image",
+        filters: fileFilter.save
     }).then(result => {
-        let base64Data = arg
-                            .replace(/^data:image\/png;base64,/, "")
-                            .replace(/^data:image\/jpeg;base64,/, "");
+        let filePath = result.filePath;
+        var ext = filePath.substr(filePath.lastIndexOf(".") + 1);
 
-        fs.writeFile(result.filePath, base64Data, 'base64', err => {
-            if (err) console.error(err);
-
-            event.sender.send('action', "Image saved!");
-        });
-
+        sharp(dataToBuffer(arg))
+            .toFormat(ext)
+            .toFile(filePath)
+            .then(info => {
+                //console.log("info", info);
+                event.sender.send('action', "Image saved!");
+            })
+            .catch( err => {
+                console.log(err);
+                event.sender.send('action', "Failed to save image");
+            });
     }).catch(err => {
       console.log(err);
     });
@@ -391,18 +295,17 @@ ipcMain.on('flipImage', (event, arg) => {
     let activeWindow = wm.getWindowByID(senderID);
     
     if (!activeWindow) return;
-    Jimp.read(dataToBuffer(arg), (err, image) => {
-      if (err) throw err;
-      else {
-        image.mirror(true, false)
-        .getBase64(Jimp.MIME_JPEG, function (err, src) {
-            //bakchere
 
-            fp.process(src, event);
+    sharp(dataToBuffer(arg))
+        .flip()
+        .toBuffer()
+        .then(data => {
+            fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
             activeWindow.show();
+        })
+        .catch( err => {
+            console.log(err);
         });
-      }
-    });
 });
 
 ipcMain.on('rotateImage', (event, arg) => {
@@ -410,18 +313,17 @@ ipcMain.on('rotateImage', (event, arg) => {
     let activeWindow = wm.getWindowByID(senderID);
     
     if (!activeWindow) return;
-    Jimp.read(dataToBuffer(arg), (err, image) => {
-      if (err) throw err;
-      else {
-        image.rotate(-90)
-        .getBase64(Jimp.MIME_JPEG, function (err, src) {
-            //bakchere
 
-            fp.process(src, event);
+    sharp(dataToBuffer(arg))
+        .rotate(90)
+        .toBuffer()
+        .then(data => {
+            fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
             activeWindow.show();
+        })
+        .catch( err => {
+            console.log(err);
         });
-      }
-    });
 });
 
 ipcMain.on('file', (event, arg) => {
@@ -468,7 +370,7 @@ ipcMain.on('selectfile', (event, arg) => {
     if (!activeWindow) return;
     dialog.showOpenDialog(activeWindow, {
         title: "Open image",
-        filters: [{ name: 'Images', extensions: supportedExtensions }]
+        filters: fileFilter.open
     }).then(result => {
         if (!result.cancelled && result.filePaths.length > 0) {
             let files = result.filePaths;
@@ -530,19 +432,16 @@ ipcMain.on('screenshot', (event, arg) => {
                 ipcMain.once('image_crop', (e, arg) => {
                     if (newWin) newWin.close();
 
-                    Jimp.read(impath, (err, image) => {
-                      if (err) throw err;
-                      else {
-                        image.crop(arg.x, arg.y, arg.w, arg.h)
-                        .quality(100)
-                        .getBase64(Jimp.MIME_JPEG, function (err, src) {
-                            //bakchere
-
-                            fp.process(src, event);
+                    sharp(impath)
+                        .extract({ left: arg.x, top: arg.y, width: arg.w, height: arg.h })
+                        .toBuffer()
+                        .then( data => {
+                            fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
                             activeWindow.show();
+                        })
+                        .catch( err => {
+                            console.log(err);
                         });
-                      }
-                    });
                 });
             });
 

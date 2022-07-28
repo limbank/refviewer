@@ -1,6 +1,6 @@
 {
     "name": "refviewer",
-    "version": "4.0.40",
+    "version": "4.1.0",
     "private": true,
     "main": "main.js",
     "scripts": {
@@ -35,7 +35,6 @@
         "@panzoom/panzoom": "^4.4.4",
         "fs-extra": "^10.1.0",
         "image-data-uri": "^2.0.1",
-        "jimp": "^0.16.1",
         "node-html-parser": "^5.3.3",
         "node-vibrant": "^3.2.1-alpha.1",
         "patch-package": "^6.4.7",

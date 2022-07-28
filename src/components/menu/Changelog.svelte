@@ -26,11 +26,17 @@
 	<li>
 		Added the overwrite setting to prevent replacing active image
 	</li>
+	<li>
+		Added the ability to save in different image formats
+	</li>
 </ul>
 <div class="about-text-title">
 	Fixes/Updates
 </div>
 <ul class="change-list">
+	<li>
+		Switched to using Sharp which is a more performant alternative to Jimp and utif
+	</li>
 	<li>
 		The menu is no longer a dropdown, shows up over the workspace
 	</li>
