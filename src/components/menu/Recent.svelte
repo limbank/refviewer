@@ -17,6 +17,7 @@
 			    	on:click={(e) => {
 			    		e.preventDefault();
 			    		ipcRenderer.send('file', item);
+						ipcRenderer.send('loading', true);
 			    		dispatch('settingsOpen', false);
 			    	}}
 				>{item}</a>

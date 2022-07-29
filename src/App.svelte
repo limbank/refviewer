@@ -56,6 +56,10 @@
 		recents = arg;
 	});
 
+	ipcRenderer.on('loading', (event, arg) => {
+		loading = arg;
+	});
+
 	ipcRenderer.on('settings', (event, arg) => {
 		if (settings.zoom && settings.zoom != arg.zoom && instance) {
 			let element = document.querySelector('.canvas-container-inner');
@@ -368,17 +372,6 @@
 		    image-rendering: -webkit-crisp-edges;
 		    image-rendering: pixelated;
 		    image-rendering: crisp-edges;
-		}
-	}
-
-	@media only screen and (max-width: 300px) {
-		.backdrop {
-			&-left {
-				left: 0;
-				top: 0;
-				bottom: 0;
-				width: 17px;
-			}
 		}
 	}
 </style>

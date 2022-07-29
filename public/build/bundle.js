@@ -5367,15 +5367,15 @@ var app = (function () {
     			div2 = element("div");
     			t2 = space();
     			div3 = element("div");
-    			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-11t219s");
+    			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-3u4xdv");
     			add_location(div0, file$O, 5, 1, 90);
-    			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-11t219s");
+    			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-3u4xdv");
     			add_location(div1, file$O, 6, 1, 137);
-    			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-11t219s");
+    			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-3u4xdv");
     			add_location(div2, file$O, 7, 1, 186);
-    			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-11t219s");
+    			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-3u4xdv");
     			add_location(div3, file$O, 8, 1, 236);
-    			attr_dev(div4, "class", "backdrop svelte-11t219s");
+    			attr_dev(div4, "class", "backdrop svelte-3u4xdv");
     			toggle_class(div4, "legacy", /*legacy*/ ctx[0]);
     			add_location(div4, file$O, 4, 0, 52);
     		},
@@ -15909,7 +15909,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (25:1) {:else}
+    // (26:1) {:else}
     function create_else_block$4(ctx) {
     	let span;
 
@@ -15918,7 +15918,7 @@ var app = (function () {
     			span = element("span");
     			span.textContent = "No recent files found yet!";
     			attr_dev(span, "class", "recents-list-fallback svelte-1qi5rhg");
-    			add_location(span, file$r, 25, 2, 552);
+    			add_location(span, file$r, 26, 2, 594);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -15933,7 +15933,7 @@ var app = (function () {
     		block,
     		id: create_else_block$4.name,
     		type: "else",
-    		source: "(25:1) {:else}",
+    		source: "(26:1) {:else}",
     		ctx
     	});
 
@@ -16144,6 +16144,7 @@ var app = (function () {
     	const click_handler = (item, e) => {
     		e.preventDefault();
     		ipcRenderer.send('file', item);
+    		ipcRenderer.send('loading', true);
     		dispatch('settingsOpen', false);
     	};
 
@@ -27310,7 +27311,7 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file = "src\\App.svelte";
 
-    // (229:2) {#if settingsOpen}
+    // (233:2) {#if settingsOpen}
     function create_if_block_4(ctx) {
     	let menu;
     	let current;
@@ -27360,14 +27361,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(229:2) {#if settingsOpen}",
+    		source: "(233:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (239:2) {#if loading}
+    // (243:2) {#if loading}
     function create_if_block_3(ctx) {
     	let loader;
     	let current;
@@ -27399,14 +27400,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(239:2) {#if loading}",
+    		source: "(243:2) {#if loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (243:2) {#if fileSelected}
+    // (247:2) {#if fileSelected}
     function create_if_block_1(ctx) {
     	let div1;
     	let t0;
@@ -27451,14 +27452,14 @@ var app = (function () {
     			t1 = space();
     			div0 = element("div");
     			create_component(canvas.$$.fragment);
-    			attr_dev(div0, "class", "canvas-container-inner svelte-jtqcu0");
+    			attr_dev(div0, "class", "canvas-container-inner svelte-192f0hh");
     			set_style(div0, "opacity", /*workAreaOpacity*/ ctx[16]);
     			toggle_class(div0, "pickingmode", /*pickingmode*/ ctx[8]);
-    			add_location(div0, file, 259, 4, 6439);
-    			attr_dev(div1, "class", "canvas-container svelte-jtqcu0");
+    			add_location(div0, file, 263, 4, 6511);
+    			attr_dev(div1, "class", "canvas-container svelte-192f0hh");
     			toggle_class(div1, "legacy", /*settings*/ ctx[0].theme);
     			toggle_class(div1, "pixelated", /*pixelated*/ ctx[5]);
-    			add_location(div1, file, 243, 3, 6133);
+    			add_location(div1, file, 247, 3, 6205);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -27560,14 +27561,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(243:2) {#if fileSelected}",
+    		source: "(247:2) {#if fileSelected}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (250:4) {#if pickingmode && mouseincanvas}
+    // (254:4) {#if pickingmode && mouseincanvas}
     function create_if_block_2(ctx) {
     	let cursor;
     	let current;
@@ -27614,14 +27615,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(250:4) {#if pickingmode && mouseincanvas}",
+    		source: "(254:4) {#if pickingmode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (273:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >
+    // (277:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >
     function create_default_slot_1(ctx) {
     	let layer;
     	let current;
@@ -27662,14 +27663,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(273:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >",
+    		source: "(277:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (293:2) {#if !fileSelected && !loading}
+    // (297:2) {#if !fileSelected && !loading}
     function create_if_block(ctx) {
     	let dropfield;
     	let current;
@@ -27710,14 +27711,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(293:2) {#if !fileSelected && !loading}",
+    		source: "(297:2) {#if !fileSelected && !loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (221:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >
+    // (225:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >
     function create_default_slot(ctx) {
     	let t0;
     	let t1;
@@ -27880,7 +27881,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(221:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >",
+    		source: "(225:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >",
     		ctx
     	});
 
@@ -27973,9 +27974,9 @@ var app = (function () {
     			create_component(toolbox.$$.fragment);
     			t2 = space();
     			create_component(desktop.$$.fragment);
-    			attr_dev(main, "class", "svelte-jtqcu0");
+    			attr_dev(main, "class", "svelte-192f0hh");
     			toggle_class(main, "legacy", /*settings*/ ctx[0].theme);
-    			add_location(main, file, 192, 0, 5129);
+    			add_location(main, file, 196, 0, 5201);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -28117,6 +28118,10 @@ var app = (function () {
 
     	ipcRenderer.on('recents', (event, arg) => {
     		$$invalidate(9, recents = arg);
+    	});
+
+    	ipcRenderer.on('loading', (event, arg) => {
+    		$$invalidate(11, loading = arg);
     	});
 
     	ipcRenderer.on('settings', (event, arg) => {

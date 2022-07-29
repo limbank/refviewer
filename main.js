@@ -1,193 +1,29 @@
-const { app, BrowserWindow, ipcMain, dialog, screen, shell } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, screen } = require("electron");
 
 const os = require('os');
 const path = require('path');
 const fs = require('fs-extra');
-const imageDataURI = require('image-data-uri');
 const screenshot = require('screenshot-desktop');
-const PSD = require('psd');
 const Vibrant = require('node-vibrant');
 const sharp = require('sharp');
-const fileFilter = require('./src/scripts/fileFilter.js')
-const recentsProcessor = require('./src/scripts/recentsProcessor.js')
-const settingsProcessor = require('./src/scripts/settingsProcessor.js')
+const fileFilter = require('./scripts/main/fileFilter.js');
+const recentsProcessor = require('./scripts/main/recentsProcessor.js');
+const settingsProcessor = require('./scripts/main/settingsProcessor.js');
+const Lumberjack = require('./scripts/main/lumberjack.js');
+const windowManager = require('./scripts/main/windowManager.js');
+const fileProcessor = require('./scripts/main/fileProcessor.js');
 
+const jack = new Lumberjack();
 let mainWindow, newWin;
-let sp, rp;
-let generatedPalette;
+let sp, rp, wm, fp;
 let processorsReady = false;
 
 function dataToBuffer(dataURI) {
-    return new Buffer(dataURI.split(",")[1], 'base64');
+    return new Buffer.from(dataURI.split(",")[1], 'base64');
 }
-
-class fileProcessor {
-    handleDefault(filePath, event) {
-        if (filePath.startsWith("http")) this.handleImage(filePath, event);
-        else event.sender.send('deliver', filePath);
-    }
-    handleImage(filePath, event) {
-        rp.writeRecent(filePath, (recents) => {
-            event.sender.send('recents', recents);
-        });
-
-        if (filePath.startsWith("http")) {
-            imageDataURI.encodeFromURL(filePath)
-            .then(
-                (response) => {
-                    event.sender.send('deliver', response);
-                });
-        }
-        else {
-            imageDataURI.encodeFromFile(filePath)
-            .then((response) => {
-                event.sender.send('deliver', response);
-            })
-            .catch((error) => {
-                event.sender.send('action', "Error loading file!");
-            });
-        }
-    }
-    handleConversion (filePath, event) {
-        rp.writeRecent(filePath, (recents) => {
-            event.sender.send('recents', recents);
-        });
-
-        sharp(filePath)
-            .png()
-            .toBuffer()
-            .then( data => {
-                event.sender.send('deliver', `data:image/png;base64,${data.toString('base64')}`);
-            })
-            .catch( err => {
-                console.log(err);
-            });
-    }
-    handlePSD (filePath, event) {
-        rp.writeRecent(filePath, (recents) => {
-            event.sender.send('recents', recents);
-        });
-
-        let psdPath = path.join(os.tmpdir(), 'out.png');
-
-        PSD.open(filePath).then(function (psd) {
-            return psd.image.saveAsPng(psdPath);
-        }).then(() => {
-            imageDataURI.encodeFromFile(psdPath)
-            .then(
-                (response) => {
-                    event.sender.send('deliver', response);
-                });
-        });
-    }
-    process(file, event) {
-        let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
-
-        generatedPalette = null;
-
-        switch(ext) {
-            case "psd": 
-                this.handlePSD(file, event);
-                break;
-            case "tif":
-                this.handleConversion(file, event);
-                break;
-            case "tiff":
-                this.handleConversion(file, event);
-                break;
-            case "dng":
-                this.handleConversion(file, event);
-                break;
-            case "png": 
-                this.handleImage(file, event);
-                break;
-            case "jpeg": 
-                this.handleImage(file, event);
-                break;
-            case "jpg": 
-                this.handleImage(file, event);
-                break;
-            case "bmp": 
-                this.handleImage(file, event);
-                break;
-            case "webp": 
-                this.handleConversion(file, event);
-                break;
-            case "gif": 
-                this.handleConversion(file, event);
-                break;
-            default:
-                this.handleDefault(file, event);
-                break;
-        }
-    }
-}
-
-class windowManager {
-    constructor () {
-        this.windows = [];
-    }
-    waitForProcessors(callback) {
-        let interval = setInterval(() => {
-            if (processorsReady) {
-                clearInterval(interval);
-
-                if (callback && typeof callback == "function") callback();
-            }
-        }, 100);
-    }
-    createWindow() {
-        this.waitForProcessors(() => {
-            console.log("CREATING WINDOW!!");
-
-            this.windows.push(new BrowserWindow({
-                width: 550,
-                height: 400,
-                minWidth: 238,
-                minHeight: 238,
-                frame: false,
-                transparent: true,
-                webPreferences: {
-                    nodeIntegration: true,
-                    contextIsolation: false
-                },
-                icon: "public/favicon.png",
-            }));
-
-            let w = this.windows[this.windows.length-1];
-
-            w.loadFile("public/index.html");
-
-            w.on("closed", () => {
-                console.log("WINDOW CLOSED!");
-                this.windows.splice(this.windows.indexOf(w), 1);
-                w = null;
-            });
-
-            w.webContents.on('will-navigate', function (e, url) {
-                e.preventDefault();
-                shell.openExternal(url);
-            });
-
-            w.webContents.on('did-finish-load', () => {
-                w.webContents.send('settings', sp.settings);
-                w.webContents.send('recents', rp.recents);
-            });
-        });
-    }
-    getWindowByID(id) {
-        for (var i = 0; i < this.windows.length; i++) {
-            if (this.windows[i].id == id) return this.windows[i];
-        }
-
-        return false;
-    }
-}
-
-const fp = new fileProcessor();
-const wm = new windowManager();
 
 let gotTheLock;
+let wmReady = false;
 
 sp = new settingsProcessor({
     home: path.join(os.homedir(), '.refviewer'),
@@ -197,7 +33,17 @@ sp = new settingsProcessor({
             home: path.join(os.homedir(), '.refviewer'),
             filename: 'recents.json',
             ready: () => {
-                processorsReady = true;
+                wm = new windowManager({
+                    rp: rp,
+                    sp: sp,
+                    ready: () => {
+                        wmReady = true;
+                    }
+                });
+                
+                fp = new fileProcessor({
+                    rp: rp
+                });
             }
         });
     }
@@ -209,12 +55,15 @@ try {
 
 gotTheLock = app.requestSingleInstanceLock();
 
+function createWhenReady() {
+    if (!wmReady) setTimeout(createWhenReady, 100);
+    else return wm.createWindow();
+}
+
 if (!gotTheLock) {
     app.quit();
 } else {
-    app.on("ready", () => {
-        wm.createWindow();
-    });
+    app.on("ready", createWhenReady);
 }
 
 app.on("window-all-closed", function () {
@@ -222,7 +71,7 @@ app.on("window-all-closed", function () {
 });
 
 app.on("activate", function () {
-    if (wm.windows.length <= 0) wm.createWindow();
+    if (wm.windows.length <= 0) createWhenReady();
 });    
 
 ipcMain.on('settings:write', (event, arg) => {
@@ -232,12 +81,10 @@ ipcMain.on('settings:write', (event, arg) => {
 });
 
 ipcMain.on('window', (event, arg) => {
-    //console.log("GOT A WINDOW MESSAGE!");
     let senderID = event.sender.id;
     let activeWindow = wm.getWindowByID(senderID);
-    //console.log("SENDER ID!", senderID);
+
     if (!activeWindow) return;
-    //console.log("WINDOW FOUND!", activeWindow.id);
     switch (arg) {
         case "pin":
             if (activeWindow.isAlwaysOnTop()) activeWindow.setAlwaysOnTop(false);
@@ -262,8 +109,7 @@ ipcMain.on('window', (event, arg) => {
 });
 
 ipcMain.on('saveImage', (event, arg) => {
-    let senderID = event.sender.id;
-    let activeWindow = wm.getWindowByID(senderID);
+    let activeWindow = wm.getWindowByID(event.sender.id);
 
     if (!activeWindow) return;
     dialog.showSaveDialog(activeWindow, {
@@ -278,21 +124,20 @@ ipcMain.on('saveImage', (event, arg) => {
             .toFormat(ext)
             .toFile(filePath)
             .then(info => {
-                //console.log("info", info);
                 event.sender.send('action', "Image saved!");
             })
             .catch( err => {
-                console.log(err);
+                jack.log(err);
                 event.sender.send('action', "Failed to save image");
             });
     }).catch(err => {
-      console.log(err);
+        jack.log(err);
+        event.sender.send('action', "Failed to save image");
     });
 });
 
 ipcMain.on('flipImage', (event, arg) => {
-    let senderID = event.sender.id;
-    let activeWindow = wm.getWindowByID(senderID);
+    let activeWindow = wm.getWindowByID(event.sender.id);
     
     if (!activeWindow) return;
 
@@ -304,13 +149,13 @@ ipcMain.on('flipImage', (event, arg) => {
             activeWindow.show();
         })
         .catch( err => {
-            console.log(err);
+            jack.log(err);
+            event.sender.send('action', "Failed to flip the image");
         });
 });
 
 ipcMain.on('rotateImage', (event, arg) => {
-    let senderID = event.sender.id;
-    let activeWindow = wm.getWindowByID(senderID);
+    let activeWindow = wm.getWindowByID(event.sender.id);
     
     if (!activeWindow) return;
 
@@ -322,7 +167,8 @@ ipcMain.on('rotateImage', (event, arg) => {
             activeWindow.show();
         })
         .catch( err => {
-            console.log(err);
+            jack.log(err);
+            event.sender.send('action', "Failed to rotate image");
         });
 });
 
@@ -335,33 +181,24 @@ ipcMain.on('action', (event, arg) => {
     event.sender.send('action', arg);
 });
 
+ipcMain.on('loading', (event, arg) => {
+    event.sender.send('loading', arg);
+});
+
 ipcMain.on('getPalette', (event, arg) => {
-    if (generatedPalette) return event.sender.send('palette', generatedPalette);
+    if (fp.generatedPalette) return event.sender.send('palette', fp.generatedPalette);
 
     let filePath = path.join(os.tmpdir(), 'out.png');
-    let base64Data = arg
-                            .replace(/^data:image\/png;base64,/, "")
-                            .replace(/^data:image\/jpeg;base64,/, "");
-
-    fs.writeFile(filePath, base64Data, 'base64', err => {
-        if (err) {
-            console.error(err);
-        }
+    fs.writeFile(filePath, dataToBuffer(arg), 'base64', err => {
+        if (err) return jack.log(err);
 
         Vibrant.from(filePath).getPalette().then((palette) => {
-            generatedPalette = palette;
+            fp.generatedPalette = palette;
 
-            event.sender.send('palette', generatedPalette);
+            event.sender.send('palette', fp.generatedPalette);
         });
     });
 });
-/*
-ipcMain.on('recents:add', (event, arg) => {
-    rp.writeRecent(arg, (recents) => {
-        event.sender.send("recents", recents);
-    });
-});
-*/
 
 ipcMain.on('selectfile', (event, arg) => {
     let senderID = event.sender.id;
@@ -374,12 +211,10 @@ ipcMain.on('selectfile', (event, arg) => {
     }).then(result => {
         if (!result.cancelled && result.filePaths.length > 0) {
             let files = result.filePaths;
-
-
             fp.process(files[0], event);
         }
     }).catch(err => {
-        console.log(err);
+        jack.log(err);
     });
 });
 
@@ -440,7 +275,7 @@ ipcMain.on('screenshot', (event, arg) => {
                             activeWindow.show();
                         })
                         .catch( err => {
-                            console.log(err);
+                            jack.log(err);
                         });
                 });
             });
@@ -449,7 +284,8 @@ ipcMain.on('screenshot', (event, arg) => {
                 newWin = null;
             });
         }).catch((error) => {
-            console.log("error", error)
+            jack.log("error", error);
+            event.sender.send('action', "Failed to take a screenshot");
         });
     });
 });

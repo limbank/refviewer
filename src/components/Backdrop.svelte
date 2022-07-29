@@ -78,4 +78,15 @@
 			width: 12px;
 		}
 	}
+
+	@media only screen and (max-width: 300px) {
+		.backdrop {
+			&-left {
+				left: 0;
+				top: 0;
+				bottom: 0;
+				width: 17px;
+			}
+		}
+	}
 </style>
