@@ -96,6 +96,7 @@
 
 		&-menu {
 			padding: 8px;
+			box-sizing: border-box;
 			margin: 0;
 			list-style: none;
 			display: flex;
@@ -133,5 +134,7 @@
 
 	.settings-w-inner {
 		padding: 8px 14px;
+		box-sizing: border-box;
+		height: 100%;
 	}
 </style>

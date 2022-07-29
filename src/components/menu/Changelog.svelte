@@ -1,106 +1,40 @@
 <script>
+	import SvelteMarkdown from 'svelte-markdown';
+	import Loader from '../common/Loader.svelte';
+	const { version } = require('../package.json');
+
+	const fetchChangelog = (async () => {
+		const response = await fetch('https://api.github.com/repos/starbrat/refviewer/releases/tags/v' + version);
+
+    	if (response.status === 200) return await response.json();
+	    else throw new Error(response.statusText);
+	})();
 </script>
 
-<div class="about-text-title">
-	New features
+<div class="changelog-wrapper">
+	{#await fetchChangelog}
+		<Loader color="#B7B9BC" />
+	{:then data}
+		<SvelteMarkdown source={data.body} />
+	{:catch error}
+		<p>Failed to fetch the changelog... Maybe there is no changelog for v{version}?</p>
+	{/await}
 </div>
-<ul class="change-list">
-	<li>
-		Added a clickable badge with the zoom amount that resets the pan and zoom on click
-	</li>
-	<li>
-		Added the option to make the workspace area transparent
-	</li>
-	<li>
-		Added the option to make the image ignore workspace transparency
-	</li>
-	<li>
-		The cursor now shows colors when color picking instead of using the button's background
-	</li>
-	<li>
-		Added the option to reset the workspace color
-	</li>
-	<li>
-		Added the setting to disable  tooltips
-	</li>
-	<li>
-		Added the overwrite setting to prevent replacing active image
-	</li>
-	<li>
-		Added the ability to save in different image formats
-	</li>
-</ul>
-<div class="about-text-title">
-	Fixes/Updates
-</div>
-<ul class="change-list">
-	<li>
-		Switched to using Sharp which is a more performant alternative to Jimp and utif
-	</li>
-	<li>
-		The menu is no longer a dropdown, shows up over the workspace
-	</li>
-	<li>
-		The delete image button and tools now only show up when an image is selected
-	</li>
-	<li>
-		Added the setting to switch to the legacy theme
-	</li>
-	<li>
-		Replaced the eyedropper color info window with a color picker
-	</li>
-	<li>
-		Added the option to copy the color with a click to the color picker
-	</li>
-	<li>
-		Workspace color now resets when the image is cleared
-	</li>
-	<li>
-		The screenshot cropping process now highlights the area that is being cropped
-	</li>
-	<li>
-		Fixed the issue with the screenshotting window ringing back wrong windows
-	</li>
-</ul>
-<div class="about-text-title">
-	Misc
-</div>
-<ul class="change-list">
-	<li>
-		Removed support for untested .cr2 and .nef formats
-	</li>
-	<li>
-		Changed the theme
-	</li>
-	<li>
-		Changed the framework from jQuery to Svelte
-	</li>
-	<li>
-		The about window now opens inside the main window
-	</li>
-	<li>
-		The settings window now opens inside the main window
-	</li>
-</ul>
 
 <style lang="scss">
-	.about-text {
-		&-title {
-			font-size: 14px;
-			color: #B7B9BC;
-			border-bottom: 1px solid #2F2E33;
-		    padding: 5px 0;
-		    margin-bottom: 8px;
+	.changelog-wrapper {
+		height: 100%;
+		font-size: 14px;
+		color: #B7B9BC;
+		padding: 5px 0;
+		box-sizing: border-box;
+
+		:global(p) {
+			margin: 0 0 10px;
 		}
-	}
 
-	.change-list {
-		padding: 0 0 0 15px;
-		margin: 0;
-
-		li {
+		:global(a) {
 			color: #B7B9BC;
-			font-size: 12px;
 		}
 	}
 </style>

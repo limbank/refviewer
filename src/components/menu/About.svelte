@@ -16,7 +16,9 @@
 <div class="about-text">
 	GHOST<br>
 	Sade<br>
-	Ennoriel
+	Ennoriel<br>
+	hrfn<br>
+	Charalian
 </div>
 <div class="about-text-title">
 	Made with:

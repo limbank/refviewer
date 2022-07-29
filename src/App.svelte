@@ -147,8 +147,20 @@
 	function handlePaste(event) {
 		if (!settings.overwrite && fileSelected || settingsOpen) return;
 
-		if (event.clipboardData.getData('Text') != "") {
-			console.log("text pasted! handle URL?");
+		let text = event.clipboardData.getData('Text');
+		if (text != "") {
+			if (text.startsWith("data") && text.includes("image")) {
+				//text is a data string, try to process it
+				return ipcRenderer.send('file', text);
+			}
+			else if (text.startsWith("http")) {
+				//text is a url string, try to process it
+				return ipcRenderer.send('file', text);
+			}
+			else {
+				console.log("text pasted! text:", text);
+				//account for pastes of other types of text?
+			}
 		}
 
 		let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
@@ -160,7 +172,7 @@
 				//afaik you can't really paste PSD here
 			}
 		}
-		if (blob == null) return;
+		if (blob == null) return console.log("null blob");
 
 		/*
 			Electron doesn't want us sending blob objects via ipc

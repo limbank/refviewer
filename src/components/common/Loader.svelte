@@ -1,8 +1,12 @@
 <script>
+	export let color = "#3A3940";
 </script>
 
 <div class="loader">
-	<div class="lds-ripple"><div></div><div></div></div>
+	<div class="lds-ripple">
+		<div style="border-color: {color};"></div>
+		<div style="border-color: {color};"></div>
+	</div>
 </div>
 
 <style lang="scss">
@@ -21,7 +25,7 @@
 
 			div {
 				position: absolute;
-				border: 4px solid #3A3940;
+				border: 4px solid;
 				opacity: 1;
 				border-radius: 50%;
 				animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
