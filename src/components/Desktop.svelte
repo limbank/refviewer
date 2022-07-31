@@ -73,13 +73,17 @@
 						else if (srctext.startsWith("http")) ipcRenderer.send('file', srctext);
 					}
 					else if (url) ipcRenderer.send('file', url.getAttribute('href'));
+					else {
+						loading = false;
+						ipcRenderer.send('action', "Unrecognized format");
+					}
 				}
 			}
 			else ipcRenderer.send('file', e.dataTransfer.getData("text"));
 	    }
 	    else {
 		    let text = e.dataTransfer.getData("text");
-		    console.log(text, "gotten text");
+		    console.log("gotten text", text);
 
 		    //HANDLE URL, DATA, AND WHATEVER ERRORS HERE
 	    }

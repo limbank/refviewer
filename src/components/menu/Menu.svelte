@@ -13,6 +13,13 @@
 	export let settings;
 	export let recents;
 	export let version;
+
+	const fetchLatest = (async () => {
+		const response = await fetch('https://api.github.com/repos/starbrat/refviewer/releases/latest');
+
+    	if (response.status === 200) return await response.json();
+	    else throw new Error(response.statusText);
+	})();
 </script>
 
 <div
@@ -45,6 +52,21 @@
 			>
 				Changelog
 			</li>
+			{#await fetchLatest then data}
+				{#if data.tag_name != 'v' + version}
+					<li
+						class:active={setWindow=="changelog"}
+						on:click={e => {
+							window.location.href = data.html_url;
+						}}
+					>
+						Update
+					</li>
+
+				{/if}
+			{:catch error}
+				{ console.log(error) || '' }
+			{/await}
 		</ul>
 	</div>
 	<div class="settings-container-main">
@@ -65,7 +87,7 @@
 			</div>
 		{:else if setWindow=="changelog"}
 			<div class="settings-w-inner">
-				<Changelog />
+				<Changelog {version} />
 			</div>
 		{/if}
 	</div>
