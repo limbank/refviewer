@@ -6,7 +6,7 @@ const Lumberjack = require('./lumberjack.js');
 const http = require("http");
 const jack = new Lumberjack();
 const fs = require('fs-extra');
-const bmp = require("bmp-js");
+const bmp = require('bmpimagejs');
 
 class fileProcessor {
     constructor (args) {
@@ -30,11 +30,11 @@ class fileProcessor {
         fs.readFile(filePath, function (err, data) {
             if (err) return console.log(err);
 
-            let bmpData = bmp.decode(data);
-            sharp(bmpData.data, {
+            let img = bmp.decode(data.buffer); 
+            sharp(img.pixels, {
                     raw: {
-                        width: bmpData.width,
-                        height: bmpData.height,
+                        width: img.width,
+                        height: img.height,
                         channels: 4,
                     },
                 })

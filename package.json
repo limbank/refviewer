@@ -1,6 +1,6 @@
 {
     "name": "refviewer",
-    "version": "4.1.3",
+    "version": "4.1.4",
     "private": true,
     "main": "main.js",
     "scripts": {
@@ -33,7 +33,7 @@
     },
     "dependencies": {
         "@panzoom/panzoom": "^4.4.4",
-        "bmp-js": "^0.1.0",
+        "bmpimagejs": "^1.0.4",
         "fs-extra": "^10.1.0",
         "image-data-uri": "^2.0.1",
         "node-html-parser": "^5.3.3",

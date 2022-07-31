@@ -8,7 +8,6 @@ const fileFilter = {
 	save: [
 	    { name: 'PNG', extensions: ['png'] },
 	    { name: 'WEBP', extensions: ['webp'] },
-	    { name: 'BMP', extensions: ['bmp'] },
 	    { name: 'GIF', extensions: ['gif'] },
 	    { name: 'JPEG', extensions: ['jpeg'] },
 	    { name: 'JPG', extensions: ['jpg'] },
