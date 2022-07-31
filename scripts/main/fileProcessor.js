@@ -2,6 +2,11 @@ const sharp = require('sharp');
 const imageDataURI = require('image-data-uri');
 const PSD = require('psd');
 const path = require('path');
+const Lumberjack = require('./lumberjack.js');
+const http = require("http");
+const jack = new Lumberjack();
+const fs = require('fs-extra');
+const bmp = require("bmp-js");
 
 class fileProcessor {
     constructor (args) {
@@ -20,6 +25,30 @@ class fileProcessor {
         }
         else if (filePath.startsWith("data")) event.sender.send('deliver', filePath);
         else this.handleConversion(filePath, event);
+    }
+    handleBMP(filePath, event) {
+        fs.readFile(filePath, function (err, data) {
+            if (err) return console.log(err);
+
+            let bmpData = bmp.decode(data);
+            sharp(bmpData.data, {
+                    raw: {
+                        width: bmpData.width,
+                        height: bmpData.height,
+                        channels: 4,
+                    },
+                })
+                .png()
+                .toBuffer()
+                .then(data => {
+                    event.sender.send('deliver', `data:image/png;base64,${data.toString('base64')}`);
+                })
+                .catch(err => {
+                    jack.log(err);
+                    event.sender.send('loading', false);
+                    event.sender.send('action', "Failed to open image");
+                });
+        });
     }
     handleConversion (filePath, event, writeRP = true) {
         if(writeRP) this.rp.writeRecent(filePath, (recents) => {
@@ -54,6 +83,8 @@ class fileProcessor {
     process(file, event) {
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 
+        jack.log(file);
+
         this.generatedPalette = null;
 
         switch(ext) {
@@ -79,7 +110,7 @@ class fileProcessor {
                 this.handleDefault(file, event);
                 break;
             case "bmp": 
-                this.handleDefault(file, event);
+                this.handleBMP(file, event);
                 break;
             case "webp": 
                 this.handleConversion(file, event);
