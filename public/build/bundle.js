@@ -24990,7 +24990,7 @@ var app = (function () {
     const { Error: Error_1$1, console: console_1$1 } = globals;
     const file$5 = "src\\components\\menu\\Menu.svelte";
 
-    // (67:3) {:catch error}
+    // (66:3) {:catch error}
     function create_catch_block(ctx) {
     	let t_value = (console.log(/*error*/ ctx[14]) || '') + "";
     	let t;
@@ -25012,17 +25012,17 @@ var app = (function () {
     		block,
     		id: create_catch_block.name,
     		type: "catch",
-    		source: "(67:3) {:catch error}",
+    		source: "(66:3) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (55:33)       {#if data.tag_name != 'v' + version}
+    // (55:33)       {#if data[0].tag_name != 'v' + version}
     function create_then_block(ctx) {
     	let if_block_anchor;
-    	let if_block = /*data*/ ctx[13].tag_name != 'v' + /*version*/ ctx[3] && create_if_block_4$1(ctx);
+    	let if_block = /*data*/ ctx[13][0].tag_name != 'v' + /*version*/ ctx[3] && create_if_block_4$1(ctx);
 
     	const block = {
     		c: function create() {
@@ -25034,7 +25034,7 @@ var app = (function () {
     			insert_dev(target, if_block_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (/*data*/ ctx[13].tag_name != 'v' + /*version*/ ctx[3]) {
+    			if (/*data*/ ctx[13][0].tag_name != 'v' + /*version*/ ctx[3]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -25057,14 +25057,14 @@ var app = (function () {
     		block,
     		id: create_then_block.name,
     		type: "then",
-    		source: "(55:33)       {#if data.tag_name != 'v' + version}",
+    		source: "(55:33)       {#if data[0].tag_name != 'v' + version}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (56:4) {#if data.tag_name != 'v' + version}
+    // (56:4) {#if data[0].tag_name != 'v' + version}
     function create_if_block_4$1(ctx) {
     	let li;
     	let mounted;
@@ -25079,8 +25079,7 @@ var app = (function () {
     			li = element("li");
     			li.textContent = "Update";
     			attr_dev(li, "class", "svelte-10kljr3");
-    			toggle_class(li, "active", /*setWindow*/ ctx[4] == "changelog");
-    			add_location(li, file$5, 56, 5, 1392);
+    			add_location(li, file$5, 56, 5, 1388);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -25092,10 +25091,6 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-
-    			if (dirty & /*setWindow*/ 16) {
-    				toggle_class(li, "active", /*setWindow*/ ctx[4] == "changelog");
-    			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(li);
@@ -25108,7 +25103,7 @@ var app = (function () {
     		block,
     		id: create_if_block_4$1.name,
     		type: "if",
-    		source: "(56:4) {#if data.tag_name != 'v' + version}",
+    		source: "(56:4) {#if data[0].tag_name != 'v' + version}",
     		ctx
     	});
 
@@ -25130,7 +25125,7 @@ var app = (function () {
     	return block;
     }
 
-    // (88:35) 
+    // (87:35) 
     function create_if_block_3$1(ctx) {
     	let div;
     	let changelog;
@@ -25146,7 +25141,7 @@ var app = (function () {
     			div = element("div");
     			create_component(changelog.$$.fragment);
     			attr_dev(div, "class", "settings-w-inner svelte-10kljr3");
-    			add_location(div, file$5, 88, 3, 2129);
+    			add_location(div, file$5, 87, 3, 2083);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25177,14 +25172,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3$1.name,
     		type: "if",
-    		source: "(88:35) ",
+    		source: "(87:35) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (84:31) 
+    // (83:31) 
     function create_if_block_2$1(ctx) {
     	let div;
     	let about;
@@ -25200,7 +25195,7 @@ var app = (function () {
     			div = element("div");
     			create_component(about.$$.fragment);
     			attr_dev(div, "class", "settings-w-inner svelte-10kljr3");
-    			add_location(div, file$5, 84, 3, 2021);
+    			add_location(div, file$5, 83, 3, 1975);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25231,14 +25226,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(84:31) ",
+    		source: "(83:31) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (80:34) 
+    // (79:34) 
     function create_if_block_1$1(ctx) {
     	let div;
     	let settings_1;
@@ -25254,7 +25249,7 @@ var app = (function () {
     			div = element("div");
     			create_component(settings_1.$$.fragment);
     			attr_dev(div, "class", "settings-w-inner svelte-10kljr3");
-    			add_location(div, file$5, 80, 3, 1913);
+    			add_location(div, file$5, 79, 3, 1867);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25285,14 +25280,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(80:34) ",
+    		source: "(79:34) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (73:2) {#if setWindow=="recent"}
+    // (72:2) {#if setWindow=="recent"}
     function create_if_block$2(ctx) {
     	let div;
     	let recent;
@@ -25310,7 +25305,7 @@ var app = (function () {
     			div = element("div");
     			create_component(recent.$$.fragment);
     			attr_dev(div, "class", "settings-w-inner svelte-10kljr3");
-    			add_location(div, file$5, 73, 3, 1725);
+    			add_location(div, file$5, 72, 3, 1679);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25341,7 +25336,7 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(73:2) {#if setWindow==\\\"recent\\\"}",
+    		source: "(72:2) {#if setWindow==\\\"recent\\\"}",
     		ctx
     	});
 
@@ -25419,25 +25414,25 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(li0, "class", "svelte-10kljr3");
     			toggle_class(li0, "active", /*setWindow*/ ctx[4] == "recent");
-    			add_location(li0, file$5, 30, 3, 817);
+    			add_location(li0, file$5, 30, 3, 810);
     			attr_dev(li1, "class", "svelte-10kljr3");
     			toggle_class(li1, "active", /*setWindow*/ ctx[4] == "settings");
-    			add_location(li1, file$5, 36, 3, 938);
+    			add_location(li1, file$5, 36, 3, 931);
     			attr_dev(li2, "class", "svelte-10kljr3");
     			toggle_class(li2, "active", /*setWindow*/ ctx[4] == "about");
-    			add_location(li2, file$5, 42, 3, 1065);
+    			add_location(li2, file$5, 42, 3, 1058);
     			attr_dev(li3, "class", "svelte-10kljr3");
     			toggle_class(li3, "active", /*setWindow*/ ctx[4] == "changelog");
-    			add_location(li3, file$5, 48, 3, 1183);
+    			add_location(li3, file$5, 48, 3, 1176);
     			attr_dev(ul, "class", "settings-container-menu svelte-10kljr3");
-    			add_location(ul, file$5, 29, 2, 776);
+    			add_location(ul, file$5, 29, 2, 769);
     			attr_dev(div0, "class", "settings-container-sidebar svelte-10kljr3");
-    			add_location(div0, file$5, 28, 1, 732);
+    			add_location(div0, file$5, 28, 1, 725);
     			attr_dev(div1, "class", "settings-container-main svelte-10kljr3");
-    			add_location(div1, file$5, 71, 1, 1654);
+    			add_location(div1, file$5, 70, 1, 1608);
     			attr_dev(div2, "class", "settings-container svelte-10kljr3");
     			toggle_class(div2, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div2, file$5, 24, 0, 678);
+    			add_location(div2, file$5, 24, 0, 671);
     		},
     		l: function claim(nodes) {
     			throw new Error_1$1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -25582,7 +25577,7 @@ var app = (function () {
     	let { version } = $$props;
 
     	const fetchLatest = (async () => {
-    		const response = await fetch('https://api.github.com/repos/starbrat/refviewer/releases/latest');
+    		const response = await fetch('https://api.github.com/repos/starbrat/refviewer/releases');
     		if (response.status === 200) return await response.json(); else throw new Error(response.statusText);
     	})();
 
@@ -25609,7 +25604,7 @@ var app = (function () {
     	};
 
     	const click_handler_4 = (data, e) => {
-    		window.location.href = data.html_url;
+    		window.location.href = data[0].html_url;
     	};
 
     	const settingsOpen_handler = e => {

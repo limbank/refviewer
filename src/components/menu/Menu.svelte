@@ -15,7 +15,7 @@
 	export let version;
 
 	const fetchLatest = (async () => {
-		const response = await fetch('https://api.github.com/repos/starbrat/refviewer/releases/latest');
+		const response = await fetch('https://api.github.com/repos/starbrat/refviewer/releases');
 
     	if (response.status === 200) return await response.json();
 	    else throw new Error(response.statusText);
@@ -53,11 +53,10 @@
 				Changelog
 			</li>
 			{#await fetchLatest then data}
-				{#if data.tag_name != 'v' + version}
+				{#if data[0].tag_name != 'v' + version}
 					<li
-						class:active={setWindow=="changelog"}
 						on:click={e => {
-							window.location.href = data.html_url;
+							window.location.href = data[0].html_url;
 						}}
 					>
 						Update
