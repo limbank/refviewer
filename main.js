@@ -142,7 +142,7 @@ ipcMain.on('flipImage', (event, arg) => {
     if (!activeWindow) return;
 
     sharp(dataToBuffer(arg))
-        .flip()
+        .flop()
         .toBuffer()
         .then(data => {
             fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
