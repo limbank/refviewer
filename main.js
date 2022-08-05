@@ -117,6 +117,8 @@ ipcMain.on('saveImage', (event, arg) => {
         defaultPath: "image",
         filters: fileFilter.save
     }).then(result => {
+        if (result.canceled) return;
+
         let filePath = result.filePath;
         var ext = filePath.substr(filePath.lastIndexOf(".") + 1);
 

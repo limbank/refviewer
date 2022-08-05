@@ -1,5 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
+	import mousetrap from 'svelte-use-mousetrap';
 	const { ipcRenderer } = require('electron');
 
 	import Tool from './common/Tool.svelte';
@@ -16,7 +17,11 @@
 	export let backdropColor = "#000000";
 	export let hex;
 
-	function copyImage() {
+	function saveImage() {
+		ipcRenderer.send('saveImage', fileSelected);
+	}
+
+	export const copyImage = () => {
 		let xhr = new XMLHttpRequest();
 
 		xhr.onload = () => {
@@ -36,6 +41,11 @@
 	}
 </script>
 
+<svelte:window use:mousetrap={[
+  ['command+s', 'ctrl+s', saveImage],
+  ['command+c', 'ctrl+c', copyImage]
+]} />
+
 <div
 	class:legacy
 	class="toolbox"
@@ -46,7 +56,7 @@
 			{legacy}
 			size="13px"
 			tiptext={"Save image"}
-			on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}
+			on:click={saveImage}
 		>
 			<i class="far fa-save"></i>
 		</Tool>

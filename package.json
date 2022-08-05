@@ -1,6 +1,6 @@
 {
     "name": "refviewer",
-    "version": "4.1.5",
+    "version": "4.1.6",
     "private": true,
     "main": "main.js",
     "scripts": {
@@ -45,6 +45,7 @@
         "svelte-canvas": "^0.7.1",
         "svelte-markdown": "^0.2.2",
         "svelte-popperjs": "^1.2.10",
+        "svelte-use-mousetrap": "^1.0.1",
         "tinycolor2": "^1.4.2"
     }
 }

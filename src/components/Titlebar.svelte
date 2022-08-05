@@ -1,5 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
+	import mousetrap from 'svelte-use-mousetrap';
 	import Control from './common/Control.svelte';
 
 	const { ipcRenderer } = require('electron');
@@ -15,7 +16,26 @@
 	let pinned = false;
 
 	ipcRenderer.on('pin', (event, arg) => { pinned = arg; });
+
+	function openImage() {
+		ipcRenderer.send('selectfile');
+	}
+
+	function clearImage() {
+		dispatch('clear');
+	}
+
+	function cutImage() {
+		dispatch('copy');
+		dispatch('clear');
+	}
 </script>
+
+<svelte:window use:mousetrap={[
+  ['command+o', 'ctrl+o', openImage],
+  ['del', 'backspace', clearImage],
+  ['command+x', 'ctrl+x', cutImage]
+]} />
 
 <div class="titlebar" class:legacy>
 	<div class="titlebar-group">
@@ -43,7 +63,7 @@
 					{legacy}
 					size="12px"
 					tiptext="Select file"
-					on:click={e => { ipcRenderer.send('selectfile'); }}
+					on:click={openImage}
 				>
 					<i class="fas fa-file-upload"></i>
 				</Control>
@@ -64,7 +84,7 @@
 					{legacy}
 					size="12px"
 					tiptext="Clear"
-					on:click={e => { dispatch('clear'); }}
+					on:click={clearImage}
 				>
 			    	<i class="fas fa-trash"></i>
 				</Control>

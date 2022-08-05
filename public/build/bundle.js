@@ -210,7 +210,7 @@ var app = (function () {
     function empty() {
         return text('');
     }
-    function listen(node, event, handler, options) {
+    function listen$1(node, event, handler, options) {
         node.addEventListener(event, handler, options);
         return () => node.removeEventListener(event, handler, options);
     }
@@ -1150,7 +1150,7 @@ var app = (function () {
         if (has_stop_propagation)
             modifiers.push('stopPropagation');
         dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
-        const dispose = listen(node, event, handler, options);
+        const dispose = listen$1(node, event, handler, options);
         return () => {
             dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
             dispose();
@@ -1208,6 +1208,1126 @@ var app = (function () {
         }
         $capture_state() { }
         $inject_state() { }
+    }
+
+    var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+    function createCommonjsModule(fn) {
+      var module = { exports: {} };
+    	return fn(module, module.exports), module.exports;
+    }
+
+    /*global define:false */
+
+    var mousetrap = createCommonjsModule(function (module) {
+    /**
+     * Copyright 2012-2017 Craig Campbell
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     * http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     *
+     * Mousetrap is a simple keyboard shortcut library for Javascript with
+     * no external dependencies
+     *
+     * @version 1.6.5
+     * @url craig.is/killing/mice
+     */
+    (function(window, document, undefined$1) {
+
+        // Check if mousetrap is used inside browser, if not, return
+        if (!window) {
+            return;
+        }
+
+        /**
+         * mapping of special keycodes to their corresponding keys
+         *
+         * everything in this dictionary cannot use keypress events
+         * so it has to be here to map to the correct keycodes for
+         * keyup/keydown events
+         *
+         * @type {Object}
+         */
+        var _MAP = {
+            8: 'backspace',
+            9: 'tab',
+            13: 'enter',
+            16: 'shift',
+            17: 'ctrl',
+            18: 'alt',
+            20: 'capslock',
+            27: 'esc',
+            32: 'space',
+            33: 'pageup',
+            34: 'pagedown',
+            35: 'end',
+            36: 'home',
+            37: 'left',
+            38: 'up',
+            39: 'right',
+            40: 'down',
+            45: 'ins',
+            46: 'del',
+            91: 'meta',
+            93: 'meta',
+            224: 'meta'
+        };
+
+        /**
+         * mapping for special characters so they can support
+         *
+         * this dictionary is only used incase you want to bind a
+         * keyup or keydown event to one of these keys
+         *
+         * @type {Object}
+         */
+        var _KEYCODE_MAP = {
+            106: '*',
+            107: '+',
+            109: '-',
+            110: '.',
+            111 : '/',
+            186: ';',
+            187: '=',
+            188: ',',
+            189: '-',
+            190: '.',
+            191: '/',
+            192: '`',
+            219: '[',
+            220: '\\',
+            221: ']',
+            222: '\''
+        };
+
+        /**
+         * this is a mapping of keys that require shift on a US keypad
+         * back to the non shift equivelents
+         *
+         * this is so you can use keyup events with these keys
+         *
+         * note that this will only work reliably on US keyboards
+         *
+         * @type {Object}
+         */
+        var _SHIFT_MAP = {
+            '~': '`',
+            '!': '1',
+            '@': '2',
+            '#': '3',
+            '$': '4',
+            '%': '5',
+            '^': '6',
+            '&': '7',
+            '*': '8',
+            '(': '9',
+            ')': '0',
+            '_': '-',
+            '+': '=',
+            ':': ';',
+            '\"': '\'',
+            '<': ',',
+            '>': '.',
+            '?': '/',
+            '|': '\\'
+        };
+
+        /**
+         * this is a list of special strings you can use to map
+         * to modifier keys when you specify your keyboard shortcuts
+         *
+         * @type {Object}
+         */
+        var _SPECIAL_ALIASES = {
+            'option': 'alt',
+            'command': 'meta',
+            'return': 'enter',
+            'escape': 'esc',
+            'plus': '+',
+            'mod': /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? 'meta' : 'ctrl'
+        };
+
+        /**
+         * variable to store the flipped version of _MAP from above
+         * needed to check if we should use keypress or not when no action
+         * is specified
+         *
+         * @type {Object|undefined}
+         */
+        var _REVERSE_MAP;
+
+        /**
+         * loop through the f keys, f1 to f19 and add them to the map
+         * programatically
+         */
+        for (var i = 1; i < 20; ++i) {
+            _MAP[111 + i] = 'f' + i;
+        }
+
+        /**
+         * loop through to map numbers on the numeric keypad
+         */
+        for (i = 0; i <= 9; ++i) {
+
+            // This needs to use a string cause otherwise since 0 is falsey
+            // mousetrap will never fire for numpad 0 pressed as part of a keydown
+            // event.
+            //
+            // @see https://github.com/ccampbell/mousetrap/pull/258
+            _MAP[i + 96] = i.toString();
+        }
+
+        /**
+         * cross browser add event method
+         *
+         * @param {Element|HTMLDocument} object
+         * @param {string} type
+         * @param {Function} callback
+         * @returns void
+         */
+        function _addEvent(object, type, callback) {
+            if (object.addEventListener) {
+                object.addEventListener(type, callback, false);
+                return;
+            }
+
+            object.attachEvent('on' + type, callback);
+        }
+
+        /**
+         * takes the event and returns the key character
+         *
+         * @param {Event} e
+         * @return {string}
+         */
+        function _characterFromEvent(e) {
+
+            // for keypress events we should return the character as is
+            if (e.type == 'keypress') {
+                var character = String.fromCharCode(e.which);
+
+                // if the shift key is not pressed then it is safe to assume
+                // that we want the character to be lowercase.  this means if
+                // you accidentally have caps lock on then your key bindings
+                // will continue to work
+                //
+                // the only side effect that might not be desired is if you
+                // bind something like 'A' cause you want to trigger an
+                // event when capital A is pressed caps lock will no longer
+                // trigger the event.  shift+a will though.
+                if (!e.shiftKey) {
+                    character = character.toLowerCase();
+                }
+
+                return character;
+            }
+
+            // for non keypress events the special maps are needed
+            if (_MAP[e.which]) {
+                return _MAP[e.which];
+            }
+
+            if (_KEYCODE_MAP[e.which]) {
+                return _KEYCODE_MAP[e.which];
+            }
+
+            // if it is not in the special map
+
+            // with keydown and keyup events the character seems to always
+            // come in as an uppercase character whether you are pressing shift
+            // or not.  we should make sure it is always lowercase for comparisons
+            return String.fromCharCode(e.which).toLowerCase();
+        }
+
+        /**
+         * checks if two arrays are equal
+         *
+         * @param {Array} modifiers1
+         * @param {Array} modifiers2
+         * @returns {boolean}
+         */
+        function _modifiersMatch(modifiers1, modifiers2) {
+            return modifiers1.sort().join(',') === modifiers2.sort().join(',');
+        }
+
+        /**
+         * takes a key event and figures out what the modifiers are
+         *
+         * @param {Event} e
+         * @returns {Array}
+         */
+        function _eventModifiers(e) {
+            var modifiers = [];
+
+            if (e.shiftKey) {
+                modifiers.push('shift');
+            }
+
+            if (e.altKey) {
+                modifiers.push('alt');
+            }
+
+            if (e.ctrlKey) {
+                modifiers.push('ctrl');
+            }
+
+            if (e.metaKey) {
+                modifiers.push('meta');
+            }
+
+            return modifiers;
+        }
+
+        /**
+         * prevents default for this event
+         *
+         * @param {Event} e
+         * @returns void
+         */
+        function _preventDefault(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+                return;
+            }
+
+            e.returnValue = false;
+        }
+
+        /**
+         * stops propogation for this event
+         *
+         * @param {Event} e
+         * @returns void
+         */
+        function _stopPropagation(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+                return;
+            }
+
+            e.cancelBubble = true;
+        }
+
+        /**
+         * determines if the keycode specified is a modifier key or not
+         *
+         * @param {string} key
+         * @returns {boolean}
+         */
+        function _isModifier(key) {
+            return key == 'shift' || key == 'ctrl' || key == 'alt' || key == 'meta';
+        }
+
+        /**
+         * reverses the map lookup so that we can look for specific keys
+         * to see what can and can't use keypress
+         *
+         * @return {Object}
+         */
+        function _getReverseMap() {
+            if (!_REVERSE_MAP) {
+                _REVERSE_MAP = {};
+                for (var key in _MAP) {
+
+                    // pull out the numeric keypad from here cause keypress should
+                    // be able to detect the keys from the character
+                    if (key > 95 && key < 112) {
+                        continue;
+                    }
+
+                    if (_MAP.hasOwnProperty(key)) {
+                        _REVERSE_MAP[_MAP[key]] = key;
+                    }
+                }
+            }
+            return _REVERSE_MAP;
+        }
+
+        /**
+         * picks the best action based on the key combination
+         *
+         * @param {string} key - character for key
+         * @param {Array} modifiers
+         * @param {string=} action passed in
+         */
+        function _pickBestAction(key, modifiers, action) {
+
+            // if no action was picked in we should try to pick the one
+            // that we think would work best for this key
+            if (!action) {
+                action = _getReverseMap()[key] ? 'keydown' : 'keypress';
+            }
+
+            // modifier keys don't work as expected with keypress,
+            // switch to keydown
+            if (action == 'keypress' && modifiers.length) {
+                action = 'keydown';
+            }
+
+            return action;
+        }
+
+        /**
+         * Converts from a string key combination to an array
+         *
+         * @param  {string} combination like "command+shift+l"
+         * @return {Array}
+         */
+        function _keysFromString(combination) {
+            if (combination === '+') {
+                return ['+'];
+            }
+
+            combination = combination.replace(/\+{2}/g, '+plus');
+            return combination.split('+');
+        }
+
+        /**
+         * Gets info for a specific key combination
+         *
+         * @param  {string} combination key combination ("command+s" or "a" or "*")
+         * @param  {string=} action
+         * @returns {Object}
+         */
+        function _getKeyInfo(combination, action) {
+            var keys;
+            var key;
+            var i;
+            var modifiers = [];
+
+            // take the keys from this pattern and figure out what the actual
+            // pattern is all about
+            keys = _keysFromString(combination);
+
+            for (i = 0; i < keys.length; ++i) {
+                key = keys[i];
+
+                // normalize key names
+                if (_SPECIAL_ALIASES[key]) {
+                    key = _SPECIAL_ALIASES[key];
+                }
+
+                // if this is not a keypress event then we should
+                // be smart about using shift keys
+                // this will only work for US keyboards however
+                if (action && action != 'keypress' && _SHIFT_MAP[key]) {
+                    key = _SHIFT_MAP[key];
+                    modifiers.push('shift');
+                }
+
+                // if this key is a modifier then add it to the list of modifiers
+                if (_isModifier(key)) {
+                    modifiers.push(key);
+                }
+            }
+
+            // depending on what the key combination is
+            // we will try to pick the best event for it
+            action = _pickBestAction(key, modifiers, action);
+
+            return {
+                key: key,
+                modifiers: modifiers,
+                action: action
+            };
+        }
+
+        function _belongsTo(element, ancestor) {
+            if (element === null || element === document) {
+                return false;
+            }
+
+            if (element === ancestor) {
+                return true;
+            }
+
+            return _belongsTo(element.parentNode, ancestor);
+        }
+
+        function Mousetrap(targetElement) {
+            var self = this;
+
+            targetElement = targetElement || document;
+
+            if (!(self instanceof Mousetrap)) {
+                return new Mousetrap(targetElement);
+            }
+
+            /**
+             * element to attach key events to
+             *
+             * @type {Element}
+             */
+            self.target = targetElement;
+
+            /**
+             * a list of all the callbacks setup via Mousetrap.bind()
+             *
+             * @type {Object}
+             */
+            self._callbacks = {};
+
+            /**
+             * direct map of string combinations to callbacks used for trigger()
+             *
+             * @type {Object}
+             */
+            self._directMap = {};
+
+            /**
+             * keeps track of what level each sequence is at since multiple
+             * sequences can start out with the same sequence
+             *
+             * @type {Object}
+             */
+            var _sequenceLevels = {};
+
+            /**
+             * variable to store the setTimeout call
+             *
+             * @type {null|number}
+             */
+            var _resetTimer;
+
+            /**
+             * temporary state where we will ignore the next keyup
+             *
+             * @type {boolean|string}
+             */
+            var _ignoreNextKeyup = false;
+
+            /**
+             * temporary state where we will ignore the next keypress
+             *
+             * @type {boolean}
+             */
+            var _ignoreNextKeypress = false;
+
+            /**
+             * are we currently inside of a sequence?
+             * type of action ("keyup" or "keydown" or "keypress") or false
+             *
+             * @type {boolean|string}
+             */
+            var _nextExpectedAction = false;
+
+            /**
+             * resets all sequence counters except for the ones passed in
+             *
+             * @param {Object} doNotReset
+             * @returns void
+             */
+            function _resetSequences(doNotReset) {
+                doNotReset = doNotReset || {};
+
+                var activeSequences = false,
+                    key;
+
+                for (key in _sequenceLevels) {
+                    if (doNotReset[key]) {
+                        activeSequences = true;
+                        continue;
+                    }
+                    _sequenceLevels[key] = 0;
+                }
+
+                if (!activeSequences) {
+                    _nextExpectedAction = false;
+                }
+            }
+
+            /**
+             * finds all callbacks that match based on the keycode, modifiers,
+             * and action
+             *
+             * @param {string} character
+             * @param {Array} modifiers
+             * @param {Event|Object} e
+             * @param {string=} sequenceName - name of the sequence we are looking for
+             * @param {string=} combination
+             * @param {number=} level
+             * @returns {Array}
+             */
+            function _getMatches(character, modifiers, e, sequenceName, combination, level) {
+                var i;
+                var callback;
+                var matches = [];
+                var action = e.type;
+
+                // if there are no events related to this keycode
+                if (!self._callbacks[character]) {
+                    return [];
+                }
+
+                // if a modifier key is coming up on its own we should allow it
+                if (action == 'keyup' && _isModifier(character)) {
+                    modifiers = [character];
+                }
+
+                // loop through all callbacks for the key that was pressed
+                // and see if any of them match
+                for (i = 0; i < self._callbacks[character].length; ++i) {
+                    callback = self._callbacks[character][i];
+
+                    // if a sequence name is not specified, but this is a sequence at
+                    // the wrong level then move onto the next match
+                    if (!sequenceName && callback.seq && _sequenceLevels[callback.seq] != callback.level) {
+                        continue;
+                    }
+
+                    // if the action we are looking for doesn't match the action we got
+                    // then we should keep going
+                    if (action != callback.action) {
+                        continue;
+                    }
+
+                    // if this is a keypress event and the meta key and control key
+                    // are not pressed that means that we need to only look at the
+                    // character, otherwise check the modifiers as well
+                    //
+                    // chrome will not fire a keypress if meta or control is down
+                    // safari will fire a keypress if meta or meta+shift is down
+                    // firefox will fire a keypress if meta or control is down
+                    if ((action == 'keypress' && !e.metaKey && !e.ctrlKey) || _modifiersMatch(modifiers, callback.modifiers)) {
+
+                        // when you bind a combination or sequence a second time it
+                        // should overwrite the first one.  if a sequenceName or
+                        // combination is specified in this call it does just that
+                        //
+                        // @todo make deleting its own method?
+                        var deleteCombo = !sequenceName && callback.combo == combination;
+                        var deleteSequence = sequenceName && callback.seq == sequenceName && callback.level == level;
+                        if (deleteCombo || deleteSequence) {
+                            self._callbacks[character].splice(i, 1);
+                        }
+
+                        matches.push(callback);
+                    }
+                }
+
+                return matches;
+            }
+
+            /**
+             * actually calls the callback function
+             *
+             * if your callback function returns false this will use the jquery
+             * convention - prevent default and stop propogation on the event
+             *
+             * @param {Function} callback
+             * @param {Event} e
+             * @returns void
+             */
+            function _fireCallback(callback, e, combo, sequence) {
+
+                // if this event should not happen stop here
+                if (self.stopCallback(e, e.target || e.srcElement, combo, sequence)) {
+                    return;
+                }
+
+                if (callback(e, combo) === false) {
+                    _preventDefault(e);
+                    _stopPropagation(e);
+                }
+            }
+
+            /**
+             * handles a character key event
+             *
+             * @param {string} character
+             * @param {Array} modifiers
+             * @param {Event} e
+             * @returns void
+             */
+            self._handleKey = function(character, modifiers, e) {
+                var callbacks = _getMatches(character, modifiers, e);
+                var i;
+                var doNotReset = {};
+                var maxLevel = 0;
+                var processedSequenceCallback = false;
+
+                // Calculate the maxLevel for sequences so we can only execute the longest callback sequence
+                for (i = 0; i < callbacks.length; ++i) {
+                    if (callbacks[i].seq) {
+                        maxLevel = Math.max(maxLevel, callbacks[i].level);
+                    }
+                }
+
+                // loop through matching callbacks for this key event
+                for (i = 0; i < callbacks.length; ++i) {
+
+                    // fire for all sequence callbacks
+                    // this is because if for example you have multiple sequences
+                    // bound such as "g i" and "g t" they both need to fire the
+                    // callback for matching g cause otherwise you can only ever
+                    // match the first one
+                    if (callbacks[i].seq) {
+
+                        // only fire callbacks for the maxLevel to prevent
+                        // subsequences from also firing
+                        //
+                        // for example 'a option b' should not cause 'option b' to fire
+                        // even though 'option b' is part of the other sequence
+                        //
+                        // any sequences that do not match here will be discarded
+                        // below by the _resetSequences call
+                        if (callbacks[i].level != maxLevel) {
+                            continue;
+                        }
+
+                        processedSequenceCallback = true;
+
+                        // keep a list of which sequences were matches for later
+                        doNotReset[callbacks[i].seq] = 1;
+                        _fireCallback(callbacks[i].callback, e, callbacks[i].combo, callbacks[i].seq);
+                        continue;
+                    }
+
+                    // if there were no sequence matches but we are still here
+                    // that means this is a regular match so we should fire that
+                    if (!processedSequenceCallback) {
+                        _fireCallback(callbacks[i].callback, e, callbacks[i].combo);
+                    }
+                }
+
+                // if the key you pressed matches the type of sequence without
+                // being a modifier (ie "keyup" or "keypress") then we should
+                // reset all sequences that were not matched by this event
+                //
+                // this is so, for example, if you have the sequence "h a t" and you
+                // type "h e a r t" it does not match.  in this case the "e" will
+                // cause the sequence to reset
+                //
+                // modifier keys are ignored because you can have a sequence
+                // that contains modifiers such as "enter ctrl+space" and in most
+                // cases the modifier key will be pressed before the next key
+                //
+                // also if you have a sequence such as "ctrl+b a" then pressing the
+                // "b" key will trigger a "keypress" and a "keydown"
+                //
+                // the "keydown" is expected when there is a modifier, but the
+                // "keypress" ends up matching the _nextExpectedAction since it occurs
+                // after and that causes the sequence to reset
+                //
+                // we ignore keypresses in a sequence that directly follow a keydown
+                // for the same character
+                var ignoreThisKeypress = e.type == 'keypress' && _ignoreNextKeypress;
+                if (e.type == _nextExpectedAction && !_isModifier(character) && !ignoreThisKeypress) {
+                    _resetSequences(doNotReset);
+                }
+
+                _ignoreNextKeypress = processedSequenceCallback && e.type == 'keydown';
+            };
+
+            /**
+             * handles a keydown event
+             *
+             * @param {Event} e
+             * @returns void
+             */
+            function _handleKeyEvent(e) {
+
+                // normalize e.which for key events
+                // @see http://stackoverflow.com/questions/4285627/javascript-keycode-vs-charcode-utter-confusion
+                if (typeof e.which !== 'number') {
+                    e.which = e.keyCode;
+                }
+
+                var character = _characterFromEvent(e);
+
+                // no character found then stop
+                if (!character) {
+                    return;
+                }
+
+                // need to use === for the character check because the character can be 0
+                if (e.type == 'keyup' && _ignoreNextKeyup === character) {
+                    _ignoreNextKeyup = false;
+                    return;
+                }
+
+                self.handleKey(character, _eventModifiers(e), e);
+            }
+
+            /**
+             * called to set a 1 second timeout on the specified sequence
+             *
+             * this is so after each key press in the sequence you have 1 second
+             * to press the next key before you have to start over
+             *
+             * @returns void
+             */
+            function _resetSequenceTimer() {
+                clearTimeout(_resetTimer);
+                _resetTimer = setTimeout(_resetSequences, 1000);
+            }
+
+            /**
+             * binds a key sequence to an event
+             *
+             * @param {string} combo - combo specified in bind call
+             * @param {Array} keys
+             * @param {Function} callback
+             * @param {string=} action
+             * @returns void
+             */
+            function _bindSequence(combo, keys, callback, action) {
+
+                // start off by adding a sequence level record for this combination
+                // and setting the level to 0
+                _sequenceLevels[combo] = 0;
+
+                /**
+                 * callback to increase the sequence level for this sequence and reset
+                 * all other sequences that were active
+                 *
+                 * @param {string} nextAction
+                 * @returns {Function}
+                 */
+                function _increaseSequence(nextAction) {
+                    return function() {
+                        _nextExpectedAction = nextAction;
+                        ++_sequenceLevels[combo];
+                        _resetSequenceTimer();
+                    };
+                }
+
+                /**
+                 * wraps the specified callback inside of another function in order
+                 * to reset all sequence counters as soon as this sequence is done
+                 *
+                 * @param {Event} e
+                 * @returns void
+                 */
+                function _callbackAndReset(e) {
+                    _fireCallback(callback, e, combo);
+
+                    // we should ignore the next key up if the action is key down
+                    // or keypress.  this is so if you finish a sequence and
+                    // release the key the final key will not trigger a keyup
+                    if (action !== 'keyup') {
+                        _ignoreNextKeyup = _characterFromEvent(e);
+                    }
+
+                    // weird race condition if a sequence ends with the key
+                    // another sequence begins with
+                    setTimeout(_resetSequences, 10);
+                }
+
+                // loop through keys one at a time and bind the appropriate callback
+                // function.  for any key leading up to the final one it should
+                // increase the sequence. after the final, it should reset all sequences
+                //
+                // if an action is specified in the original bind call then that will
+                // be used throughout.  otherwise we will pass the action that the
+                // next key in the sequence should match.  this allows a sequence
+                // to mix and match keypress and keydown events depending on which
+                // ones are better suited to the key provided
+                for (var i = 0; i < keys.length; ++i) {
+                    var isFinal = i + 1 === keys.length;
+                    var wrappedCallback = isFinal ? _callbackAndReset : _increaseSequence(action || _getKeyInfo(keys[i + 1]).action);
+                    _bindSingle(keys[i], wrappedCallback, action, combo, i);
+                }
+            }
+
+            /**
+             * binds a single keyboard combination
+             *
+             * @param {string} combination
+             * @param {Function} callback
+             * @param {string=} action
+             * @param {string=} sequenceName - name of sequence if part of sequence
+             * @param {number=} level - what part of the sequence the command is
+             * @returns void
+             */
+            function _bindSingle(combination, callback, action, sequenceName, level) {
+
+                // store a direct mapped reference for use with Mousetrap.trigger
+                self._directMap[combination + ':' + action] = callback;
+
+                // make sure multiple spaces in a row become a single space
+                combination = combination.replace(/\s+/g, ' ');
+
+                var sequence = combination.split(' ');
+                var info;
+
+                // if this pattern is a sequence of keys then run through this method
+                // to reprocess each pattern one key at a time
+                if (sequence.length > 1) {
+                    _bindSequence(combination, sequence, callback, action);
+                    return;
+                }
+
+                info = _getKeyInfo(combination, action);
+
+                // make sure to initialize array if this is the first time
+                // a callback is added for this key
+                self._callbacks[info.key] = self._callbacks[info.key] || [];
+
+                // remove an existing match if there is one
+                _getMatches(info.key, info.modifiers, {type: info.action}, sequenceName, combination, level);
+
+                // add this call back to the array
+                // if it is a sequence put it at the beginning
+                // if not put it at the end
+                //
+                // this is important because the way these are processed expects
+                // the sequence ones to come first
+                self._callbacks[info.key][sequenceName ? 'unshift' : 'push']({
+                    callback: callback,
+                    modifiers: info.modifiers,
+                    action: info.action,
+                    seq: sequenceName,
+                    level: level,
+                    combo: combination
+                });
+            }
+
+            /**
+             * binds multiple combinations to the same callback
+             *
+             * @param {Array} combinations
+             * @param {Function} callback
+             * @param {string|undefined} action
+             * @returns void
+             */
+            self._bindMultiple = function(combinations, callback, action) {
+                for (var i = 0; i < combinations.length; ++i) {
+                    _bindSingle(combinations[i], callback, action);
+                }
+            };
+
+            // start!
+            _addEvent(targetElement, 'keypress', _handleKeyEvent);
+            _addEvent(targetElement, 'keydown', _handleKeyEvent);
+            _addEvent(targetElement, 'keyup', _handleKeyEvent);
+        }
+
+        /**
+         * binds an event to mousetrap
+         *
+         * can be a single key, a combination of keys separated with +,
+         * an array of keys, or a sequence of keys separated by spaces
+         *
+         * be sure to list the modifier keys first to make sure that the
+         * correct key ends up getting bound (the last key in the pattern)
+         *
+         * @param {string|Array} keys
+         * @param {Function} callback
+         * @param {string=} action - 'keypress', 'keydown', or 'keyup'
+         * @returns void
+         */
+        Mousetrap.prototype.bind = function(keys, callback, action) {
+            var self = this;
+            keys = keys instanceof Array ? keys : [keys];
+            self._bindMultiple.call(self, keys, callback, action);
+            return self;
+        };
+
+        /**
+         * unbinds an event to mousetrap
+         *
+         * the unbinding sets the callback function of the specified key combo
+         * to an empty function and deletes the corresponding key in the
+         * _directMap dict.
+         *
+         * TODO: actually remove this from the _callbacks dictionary instead
+         * of binding an empty function
+         *
+         * the keycombo+action has to be exactly the same as
+         * it was defined in the bind method
+         *
+         * @param {string|Array} keys
+         * @param {string} action
+         * @returns void
+         */
+        Mousetrap.prototype.unbind = function(keys, action) {
+            var self = this;
+            return self.bind.call(self, keys, function() {}, action);
+        };
+
+        /**
+         * triggers an event that has already been bound
+         *
+         * @param {string} keys
+         * @param {string=} action
+         * @returns void
+         */
+        Mousetrap.prototype.trigger = function(keys, action) {
+            var self = this;
+            if (self._directMap[keys + ':' + action]) {
+                self._directMap[keys + ':' + action]({}, keys);
+            }
+            return self;
+        };
+
+        /**
+         * resets the library back to its initial state.  this is useful
+         * if you want to clear out the current keyboard shortcuts and bind
+         * new ones - for example if you switch to another page
+         *
+         * @returns void
+         */
+        Mousetrap.prototype.reset = function() {
+            var self = this;
+            self._callbacks = {};
+            self._directMap = {};
+            return self;
+        };
+
+        /**
+         * should we stop this event before firing off callbacks
+         *
+         * @param {Event} e
+         * @param {Element} element
+         * @return {boolean}
+         */
+        Mousetrap.prototype.stopCallback = function(e, element) {
+            var self = this;
+
+            // if the element has the class "mousetrap" then no need to stop
+            if ((' ' + element.className + ' ').indexOf(' mousetrap ') > -1) {
+                return false;
+            }
+
+            if (_belongsTo(element, self.target)) {
+                return false;
+            }
+
+            // Events originating from a shadow DOM are re-targetted and `e.target` is the shadow host,
+            // not the initial event target in the shadow tree. Note that not all events cross the
+            // shadow boundary.
+            // For shadow trees with `mode: 'open'`, the initial event target is the first element in
+            // the event’s composed path. For shadow trees with `mode: 'closed'`, the initial event
+            // target cannot be obtained.
+            if ('composedPath' in e && typeof e.composedPath === 'function') {
+                // For open shadow trees, update `element` so that the following check works.
+                var initialEventTarget = e.composedPath()[0];
+                if (initialEventTarget !== e.target) {
+                    element = initialEventTarget;
+                }
+            }
+
+            // stop for input, select, and textarea
+            return element.tagName == 'INPUT' || element.tagName == 'SELECT' || element.tagName == 'TEXTAREA' || element.isContentEditable;
+        };
+
+        /**
+         * exposes _handleKey publicly so it can be overwritten by extensions
+         */
+        Mousetrap.prototype.handleKey = function() {
+            var self = this;
+            return self._handleKey.apply(self, arguments);
+        };
+
+        /**
+         * allow custom key mappings
+         */
+        Mousetrap.addKeycodes = function(object) {
+            for (var key in object) {
+                if (object.hasOwnProperty(key)) {
+                    _MAP[key] = object[key];
+                }
+            }
+            _REVERSE_MAP = null;
+        };
+
+        /**
+         * Init the global mousetrap functions
+         *
+         * This method is needed to allow the global mousetrap functions to work
+         * now that mousetrap is a constructor function.
+         */
+        Mousetrap.init = function() {
+            var documentMousetrap = Mousetrap(document);
+            for (var method in documentMousetrap) {
+                if (method.charAt(0) !== '_') {
+                    Mousetrap[method] = (function(method) {
+                        return function() {
+                            return documentMousetrap[method].apply(documentMousetrap, arguments);
+                        };
+                    } (method));
+                }
+            }
+        };
+
+        Mousetrap.init();
+
+        // expose mousetrap to the global object
+        window.Mousetrap = Mousetrap;
+
+        // expose as a common js module
+        if (module.exports) {
+            module.exports = Mousetrap;
+        }
+
+        // expose mousetrap as an AMD module
+        if (typeof undefined$1 === 'function' && undefined$1.amd) {
+            undefined$1(function() {
+                return Mousetrap;
+            });
+        }
+    }) (typeof window !== 'undefined' ? window : null, typeof  window !== 'undefined' ? document : null);
+    });
+
+    const isFunc = (v) => typeof v === 'function';
+    const isArr = Array.isArray;
+
+    const listen = (arr, mousetrap) => {
+      const result = [];
+      let v2, f1;
+      let i = 0;
+      arr.forEach((v1, k) => {
+        if (isArr(v1)) result.push(v1), ++i;
+        else {
+    (v2 = arr[k + 1]), (f1 = isFunc(v1));
+
+          if (!result[i]) result[i] = [[], []];
+          result[i][!f1 ? 0 : 1].push(v1);
+
+          if (v2 && f1 && !isFunc(v2)) ++i;
+        }
+      });
+
+      result.forEach((arr) => {
+        if (arr.length !== 2) listen(arr, mousetrap);
+        else {
+          const types = arr[0],
+            fns = isArr(arr[1]) ? arr[1] : [arr[1]];
+
+          mousetrap.bind(types, (...a) => fns.forEach((fn) => fn(...a)));
+        }
+      });
+    };
+
+    function use(
+      _node,
+      arr
+    )
+
+
+     {
+      const mousetrap$1 = new mousetrap(window.document);
+
+      const destroy = () => {
+        mousetrap$1.reset();
+      };
+
+      const update = (arr) => {
+        destroy(), listen(arr, mousetrap$1);
+      };
+
+      update(arr);
+      return { update, destroy }
     }
 
     var top = 'top';
@@ -3889,7 +5009,7 @@ var app = (function () {
     /* src\components\Titlebar.svelte generated by Svelte v3.49.0 */
     const file$Q = "src\\components\\Titlebar.svelte";
 
-    // (34:3) {:else}
+    // (54:3) {:else}
     function create_else_block$6(ctx) {
     	let i;
 
@@ -3897,7 +5017,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-bars");
-    			add_location(i, file$Q, 34, 7, 851);
+    			add_location(i, file$Q, 54, 7, 1247);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -3911,14 +5031,14 @@ var app = (function () {
     		block,
     		id: create_else_block$6.name,
     		type: "else",
-    		source: "(34:3) {:else}",
+    		source: "(54:3) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (32:3) {#if settingsOpen}
+    // (52:3) {#if settingsOpen}
     function create_if_block_4$4(ctx) {
     	let i;
 
@@ -3926,7 +5046,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$Q, 32, 7, 802);
+    			add_location(i, file$Q, 52, 7, 1198);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -3940,14 +5060,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4$4.name,
     		type: "if",
-    		source: "(32:3) {#if settingsOpen}",
+    		source: "(52:3) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (22:2) <Control     {tips}     {legacy}     size="12px"     tiptext={settingsOpen ? "Close menu" : "Main menu"}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >
+    // (42:2) <Control     {tips}     {legacy}     size="12px"     tiptext={settingsOpen ? "Close menu" : "Main menu"}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >
     function create_default_slot_8$1(ctx) {
     	let if_block_anchor;
 
@@ -3989,14 +5109,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_8$1.name,
     		type: "slot",
-    		source: "(22:2) <Control     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={settingsOpen ? \\\"Close menu\\\" : \\\"Main menu\\\"}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >",
+    		source: "(42:2) <Control     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={settingsOpen ? \\\"Close menu\\\" : \\\"Main menu\\\"}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (39:2) {#if !settingsOpen}
+    // (59:2) {#if !settingsOpen}
     function create_if_block_1$7(ctx) {
     	let t;
     	let if_block1_anchor;
@@ -4088,14 +5208,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$7.name,
     		type: "if",
-    		source: "(39:2) {#if !settingsOpen}",
+    		source: "(59:2) {#if !settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (40:3) {#if !fileSelected || overwrite}
+    // (60:3) {#if !fileSelected || overwrite}
     function create_if_block_3$4(ctx) {
     	let control0;
     	let t;
@@ -4114,7 +5234,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control0.$on("click", /*click_handler_1*/ ctx[10]);
+    	control0.$on("click", /*openImage*/ ctx[9]);
 
     	control1 = new Control({
     			props: {
@@ -4128,7 +5248,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control1.$on("click", /*click_handler_2*/ ctx[11]);
+    	control1.$on("click", /*click_handler_1*/ ctx[13]);
 
     	const block = {
     		c: function create() {
@@ -4147,7 +5267,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 8) control0_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) control0_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 262144) {
+    			if (dirty & /*$$scope*/ 524288) {
     				control0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4156,7 +5276,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 8) control1_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) control1_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 262144) {
+    			if (dirty & /*$$scope*/ 524288) {
     				control1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4184,14 +5304,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3$4.name,
     		type: "if",
-    		source: "(40:3) {#if !fileSelected || overwrite}",
+    		source: "(60:3) {#if !fileSelected || overwrite}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (41:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Select file"       on:click={e => { ipcRenderer.send('selectfile'); }}      >
+    // (61:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Select file"       on:click={openImage}      >
     function create_default_slot_7$1(ctx) {
     	let i;
 
@@ -4199,7 +5319,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-file-upload");
-    			add_location(i, file$Q, 47, 5, 1124);
+    			add_location(i, file$Q, 67, 5, 1489);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4214,14 +5334,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_7$1.name,
     		type: "slot",
-    		source: "(41:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Select file\\\"       on:click={e => { ipcRenderer.send('selectfile'); }}      >",
+    		source: "(61:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Select file\\\"       on:click={openImage}      >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (51:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Screenshot"       on:click={e => { ipcRenderer.send('screenshot'); }}      >
+    // (71:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Screenshot"       on:click={e => { ipcRenderer.send('screenshot'); }}      >
     function create_default_slot_6$1(ctx) {
     	let i;
 
@@ -4229,7 +5349,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-crosshairs");
-    			add_location(i, file$Q, 57, 8, 1338);
+    			add_location(i, file$Q, 77, 8, 1703);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4244,14 +5364,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_6$1.name,
     		type: "slot",
-    		source: "(51:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Screenshot\\\"       on:click={e => { ipcRenderer.send('screenshot'); }}      >",
+    		source: "(71:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Screenshot\\\"       on:click={e => { ipcRenderer.send('screenshot'); }}      >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (61:3) {#if fileSelected}
+    // (81:3) {#if fileSelected}
     function create_if_block_2$5(ctx) {
     	let control;
     	let current;
@@ -4268,7 +5388,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control.$on("click", /*click_handler_3*/ ctx[12]);
+    	control.$on("click", /*clearImage*/ ctx[10]);
 
     	const block = {
     		c: function create() {
@@ -4283,7 +5403,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 8) control_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) control_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 262144) {
+    			if (dirty & /*$$scope*/ 524288) {
     				control_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4307,14 +5427,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$5.name,
     		type: "if",
-    		source: "(61:3) {#if fileSelected}",
+    		source: "(81:3) {#if fileSelected}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (62:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Clear"       on:click={e => { dispatch('clear'); }}      >
+    // (82:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Clear"       on:click={clearImage}      >
     function create_default_slot_5$1(ctx) {
     	let i;
 
@@ -4322,7 +5442,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-trash");
-    			add_location(i, file$Q, 68, 8, 1564);
+    			add_location(i, file$Q, 88, 8, 1912);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4337,14 +5457,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_5$1.name,
     		type: "slot",
-    		source: "(62:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Clear\\\"       on:click={e => { dispatch('clear'); }}      >",
+    		source: "(82:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Clear\\\"       on:click={clearImage}      >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (75:2) {#if version}
+    // (95:2) {#if version}
     function create_if_block$j(ctx) {
     	let span;
     	let t0;
@@ -4356,7 +5476,7 @@ var app = (function () {
     			t0 = text("v. ");
     			t1 = text(/*version*/ ctx[5]);
     			attr_dev(span, "class", "version svelte-1y8gu7w");
-    			add_location(span, file$Q, 75, 3, 1689);
+    			add_location(span, file$Q, 95, 3, 2037);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -4375,14 +5495,14 @@ var app = (function () {
     		block,
     		id: create_if_block$j.name,
     		type: "if",
-    		source: "(75:2) {#if version}",
+    		source: "(95:2) {#if version}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (78:2) <Control     {tips}     {legacy}     size="12px"     tiptext="New window"      on:click={e => { ipcRenderer.send('window', 'new'); }}    >
+    // (98:2) <Control     {tips}     {legacy}     size="12px"     tiptext="New window"      on:click={e => { ipcRenderer.send('window', 'new'); }}    >
     function create_default_slot_4$1(ctx) {
     	let i;
 
@@ -4390,7 +5510,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-window");
-    			add_location(i, file$Q, 84, 6, 1889);
+    			add_location(i, file$Q, 104, 6, 2237);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4405,14 +5525,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_4$1.name,
     		type: "slot",
-    		source: "(78:2) <Control     {tips}     {legacy}     size=\\\"12px\\\"     tiptext=\\\"New window\\\"      on:click={e => { ipcRenderer.send('window', 'new'); }}    >",
+    		source: "(98:2) <Control     {tips}     {legacy}     size=\\\"12px\\\"     tiptext=\\\"New window\\\"      on:click={e => { ipcRenderer.send('window', 'new'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (87:2) <Control     {tips}     {legacy}     size="13px"     tiptext="Pin to top"      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >
+    // (107:2) <Control     {tips}     {legacy}     size="13px"     tiptext="Pin to top"      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >
     function create_default_slot_3$2(ctx) {
     	let i;
 
@@ -4421,7 +5541,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-thumbtack svelte-1y8gu7w");
     			toggle_class(i, "pinned", /*pinned*/ ctx[6]);
-    			add_location(i, file$Q, 93, 6, 2082);
+    			add_location(i, file$Q, 113, 6, 2430);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4440,14 +5560,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$2.name,
     		type: "slot",
-    		source: "(87:2) <Control     {tips}     {legacy}     size=\\\"13px\\\"     tiptext=\\\"Pin to top\\\"      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >",
+    		source: "(107:2) <Control     {tips}     {legacy}     size=\\\"13px\\\"     tiptext=\\\"Pin to top\\\"      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (96:2) <Control     {tips}     {legacy}     tiptext="Minimize"     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >
+    // (116:2) <Control     {tips}     {legacy}     tiptext="Minimize"     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >
     function create_default_slot_2$2(ctx) {
     	let i;
 
@@ -4455,7 +5575,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-minus");
-    			add_location(i, file$Q, 101, 6, 2277);
+    			add_location(i, file$Q, 121, 6, 2625);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4470,14 +5590,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$2.name,
     		type: "slot",
-    		source: "(96:2) <Control     {tips}     {legacy}     tiptext=\\\"Minimize\\\"     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >",
+    		source: "(116:2) <Control     {tips}     {legacy}     tiptext=\\\"Minimize\\\"     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (104:2) <Control     {tips}     {legacy}     tiptext="Maximize"     on:click={e => { ipcRenderer.send('window', 'maximize'); }}    >
+    // (124:2) <Control     {tips}     {legacy}     tiptext="Maximize"     on:click={e => { ipcRenderer.send('window', 'maximize'); }}    >
     function create_default_slot_1$7(ctx) {
     	let i;
 
@@ -4485,7 +5605,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-plus");
-    			add_location(i, file$Q, 109, 3, 2452);
+    			add_location(i, file$Q, 129, 3, 2800);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4500,14 +5620,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$7.name,
     		type: "slot",
-    		source: "(104:2) <Control     {tips}     {legacy}     tiptext=\\\"Maximize\\\"     on:click={e => { ipcRenderer.send('window', 'maximize'); }}    >",
+    		source: "(124:2) <Control     {tips}     {legacy}     tiptext=\\\"Maximize\\\"     on:click={e => { ipcRenderer.send('window', 'maximize'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (112:2) <Control     {tips}     {legacy}     persistent={true}     tiptext="Close"     on:click={e => { ipcRenderer.send('window', 'close'); }}    >
+    // (132:2) <Control     {tips}     {legacy}     persistent={true}     tiptext="Close"     on:click={e => { ipcRenderer.send('window', 'close'); }}    >
     function create_default_slot$c(ctx) {
     	let i;
 
@@ -4515,7 +5635,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$Q, 118, 6, 2645);
+    			add_location(i, file$Q, 138, 6, 2993);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4530,7 +5650,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$c.name,
     		type: "slot",
-    		source: "(112:2) <Control     {tips}     {legacy}     persistent={true}     tiptext=\\\"Close\\\"     on:click={e => { ipcRenderer.send('window', 'close'); }}    >",
+    		source: "(132:2) <Control     {tips}     {legacy}     persistent={true}     tiptext=\\\"Close\\\"     on:click={e => { ipcRenderer.send('window', 'close'); }}    >",
     		ctx
     	});
 
@@ -4555,6 +5675,8 @@ var app = (function () {
     	let t6;
     	let control5;
     	let current;
+    	let mounted;
+    	let dispose;
 
     	control0 = new Control({
     			props: {
@@ -4568,7 +5690,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control0.$on("click", /*click_handler*/ ctx[9]);
+    	control0.$on("click", /*click_handler*/ ctx[12]);
     	let if_block0 = !/*settingsOpen*/ ctx[0] && create_if_block_1$7(ctx);
     	let if_block1 = /*version*/ ctx[5] && create_if_block$j(ctx);
 
@@ -4584,7 +5706,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control1.$on("click", /*click_handler_4*/ ctx[13]);
+    	control1.$on("click", /*click_handler_2*/ ctx[14]);
 
     	control2 = new Control({
     			props: {
@@ -4598,7 +5720,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control2.$on("click", /*click_handler_5*/ ctx[14]);
+    	control2.$on("click", /*click_handler_3*/ ctx[15]);
 
     	control3 = new Control({
     			props: {
@@ -4611,7 +5733,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control3.$on("click", /*click_handler_6*/ ctx[15]);
+    	control3.$on("click", /*click_handler_4*/ ctx[16]);
 
     	control4 = new Control({
     			props: {
@@ -4624,7 +5746,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control4.$on("click", /*click_handler_7*/ ctx[16]);
+    	control4.$on("click", /*click_handler_5*/ ctx[17]);
 
     	control5 = new Control({
     			props: {
@@ -4638,7 +5760,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	control5.$on("click", /*click_handler_8*/ ctx[17]);
+    	control5.$on("click", /*click_handler_6*/ ctx[18]);
 
     	const block = {
     		c: function create() {
@@ -4661,12 +5783,12 @@ var app = (function () {
     			t6 = space();
     			create_component(control5.$$.fragment);
     			attr_dev(div0, "class", "titlebar-group svelte-1y8gu7w");
-    			add_location(div0, file$Q, 20, 1, 521);
+    			add_location(div0, file$Q, 40, 1, 917);
     			attr_dev(div1, "class", "titlebar-group svelte-1y8gu7w");
-    			add_location(div1, file$Q, 73, 1, 1639);
+    			add_location(div1, file$Q, 93, 1, 1987);
     			attr_dev(div2, "class", "titlebar svelte-1y8gu7w");
     			toggle_class(div2, "legacy", /*legacy*/ ctx[2]);
-    			add_location(div2, file$Q, 19, 0, 483);
+    			add_location(div2, file$Q, 39, 0, 879);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4691,6 +5813,16 @@ var app = (function () {
     			append_dev(div1, t6);
     			mount_component(control5, div1, null);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = action_destroyer(use.call(null, window, [
+    					['command+o', 'ctrl+o', /*openImage*/ ctx[9]],
+    					['del', 'backspace', /*clearImage*/ ctx[10]],
+    					['command+x', 'ctrl+x', /*cutImage*/ ctx[11]]
+    				]));
+
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
     			const control0_changes = {};
@@ -4698,7 +5830,7 @@ var app = (function () {
     			if (dirty & /*legacy*/ 4) control0_changes.legacy = /*legacy*/ ctx[2];
     			if (dirty & /*settingsOpen*/ 1) control0_changes.tiptext = /*settingsOpen*/ ctx[0] ? "Close menu" : "Main menu";
 
-    			if (dirty & /*$$scope, settingsOpen*/ 262145) {
+    			if (dirty & /*$$scope, settingsOpen*/ 524289) {
     				control0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4744,7 +5876,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 8) control1_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) control1_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 262144) {
+    			if (dirty & /*$$scope*/ 524288) {
     				control1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4753,7 +5885,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 8) control2_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) control2_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope, pinned*/ 262208) {
+    			if (dirty & /*$$scope, pinned*/ 524352) {
     				control2_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4762,7 +5894,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 8) control3_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) control3_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 262144) {
+    			if (dirty & /*$$scope*/ 524288) {
     				control3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4771,7 +5903,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 8) control4_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) control4_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 262144) {
+    			if (dirty & /*$$scope*/ 524288) {
     				control4_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4780,7 +5912,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 8) control5_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) control5_changes.legacy = /*legacy*/ ctx[2];
 
-    			if (dirty & /*$$scope*/ 262144) {
+    			if (dirty & /*$$scope*/ 524288) {
     				control5_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4821,6 +5953,8 @@ var app = (function () {
     			destroy_component(control3);
     			destroy_component(control4);
     			destroy_component(control5);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -4852,6 +5986,19 @@ var app = (function () {
     		$$invalidate(6, pinned = arg);
     	});
 
+    	function openImage() {
+    		ipcRenderer.send('selectfile');
+    	}
+
+    	function clearImage() {
+    		dispatch('clear');
+    	}
+
+    	function cutImage() {
+    		dispatch('copy');
+    		dispatch('clear');
+    	}
+
     	const writable_props = ['fileSelected', 'settingsOpen', 'legacy', 'tips', 'overwrite', 'version'];
 
     	Object.keys($$props).forEach(key => {
@@ -4864,34 +6011,26 @@ var app = (function () {
     	};
 
     	const click_handler_1 = e => {
-    		ipcRenderer.send('selectfile');
-    	};
-
-    	const click_handler_2 = e => {
     		ipcRenderer.send('screenshot');
     	};
 
-    	const click_handler_3 = e => {
-    		dispatch('clear');
-    	};
-
-    	const click_handler_4 = e => {
+    	const click_handler_2 = e => {
     		ipcRenderer.send('window', 'new');
     	};
 
-    	const click_handler_5 = e => {
+    	const click_handler_3 = e => {
     		ipcRenderer.send('window', 'pin');
     	};
 
-    	const click_handler_6 = e => {
+    	const click_handler_4 = e => {
     		ipcRenderer.send('window', 'minimize');
     	};
 
-    	const click_handler_7 = e => {
+    	const click_handler_5 = e => {
     		ipcRenderer.send('window', 'maximize');
     	};
 
-    	const click_handler_8 = e => {
+    	const click_handler_6 = e => {
     		ipcRenderer.send('window', 'close');
     	};
 
@@ -4906,6 +6045,7 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		createEventDispatcher,
+    		mousetrap: use,
     		Control,
     		ipcRenderer,
     		dispatch,
@@ -4915,7 +6055,10 @@ var app = (function () {
     		tips,
     		overwrite,
     		version,
-    		pinned
+    		pinned,
+    		openImage,
+    		clearImage,
+    		cutImage
     	});
 
     	$$self.$inject_state = $$props => {
@@ -4942,15 +6085,16 @@ var app = (function () {
     		pinned,
     		ipcRenderer,
     		dispatch,
+    		openImage,
+    		clearImage,
+    		cutImage,
     		click_handler,
     		click_handler_1,
     		click_handler_2,
     		click_handler_3,
     		click_handler_4,
     		click_handler_5,
-    		click_handler_6,
-    		click_handler_7,
-    		click_handler_8
+    		click_handler_6
     	];
     }
 
@@ -6105,13 +7249,6 @@ var app = (function () {
     	set options(value) {
     		throw new Error("<Dropdown>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
-    }
-
-    var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-    function createCommonjsModule(fn) {
-      var module = { exports: {} };
-    	return fn(module, module.exports), module.exports;
     }
 
     var umd = createCommonjsModule(function (module, exports) {
@@ -14073,7 +15210,7 @@ var app = (function () {
     const { console: console_1$2 } = globals;
     const file$w = "src\\components\\Toolbox.svelte";
 
-    // (43:1) {#if fileSelected && !settingsOpen}
+    // (53:1) {#if fileSelected && !settingsOpen}
     function create_if_block$a(ctx) {
     	let tool0;
     	let t0;
@@ -14105,7 +15242,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool0.$on("click", /*click_handler*/ ctx[9]);
+    	tool0.$on("click", /*saveImage*/ ctx[9]);
 
     	tool1 = new Tool({
     			props: {
@@ -14119,7 +15256,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool1.$on("click", /*copyImage*/ ctx[8]);
+    	tool1.$on("click", /*copyImage*/ ctx[6]);
 
     	function eyedropper_hex_binding(value) {
     		/*eyedropper_hex_binding*/ ctx[10](value);
@@ -14166,7 +15303,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool2.$on("click", /*click_handler_1*/ ctx[13]);
+    	tool2.$on("click", /*click_handler*/ ctx[13]);
 
     	tool3 = new Tool({
     			props: {
@@ -14180,7 +15317,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool3.$on("click", /*click_handler_2*/ ctx[14]);
+    	tool3.$on("click", /*click_handler_1*/ ctx[14]);
 
     	function palette_fileSelected_binding(value) {
     		/*palette_fileSelected_binding*/ ctx[15](value);
@@ -14343,14 +15480,14 @@ var app = (function () {
     		block,
     		id: create_if_block$a.name,
     		type: "if",
-    		source: "(43:1) {#if fileSelected && !settingsOpen}",
+    		source: "(53:1) {#if fileSelected && !settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (44:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Save image"}     on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}    >
+    // (54:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Save image"}     on:click={saveImage}    >
     function create_default_slot_3$1(ctx) {
     	let i;
 
@@ -14358,7 +15495,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "far fa-save");
-    			add_location(i, file$w, 50, 3, 1245);
+    			add_location(i, file$w, 60, 3, 1457);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14373,14 +15510,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(44:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={e => { ipcRenderer.send('saveImage', fileSelected); }}    >",
+    		source: "(54:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={saveImage}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (53:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Copy image"}     on:click={copyImage}    >
+    // (63:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Copy image"}     on:click={copyImage}    >
     function create_default_slot_2$1(ctx) {
     	let i;
 
@@ -14389,7 +15526,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-2px)");
-    			add_location(i, file$w, 59, 6, 1397);
+    			add_location(i, file$w, 69, 6, 1609);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14404,14 +15541,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$1.name,
     		type: "slot",
-    		source: "(53:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
+    		source: "(63:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (73:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={e => { ipcRenderer.send('flipImage', fileSelected); }}    >
+    // (83:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={e => { ipcRenderer.send('flipImage', fileSelected); }}    >
     function create_default_slot_1$2(ctx) {
     	let i;
 
@@ -14419,7 +15556,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-sync-alt");
-    			add_location(i, file$w, 79, 6, 1808);
+    			add_location(i, file$w, 89, 6, 2020);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14434,14 +15571,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(73:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={e => { ipcRenderer.send('flipImage', fileSelected); }}    >",
+    		source: "(83:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={e => { ipcRenderer.send('flipImage', fileSelected); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (82:2) <Tool     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={e => { ipcRenderer.send('rotateImage', fileSelected); }}    >
+    // (92:2) <Tool     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={e => { ipcRenderer.send('rotateImage', fileSelected); }}    >
     function create_default_slot$2(ctx) {
     	let i;
 
@@ -14449,7 +15586,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$w, 88, 6, 2012);
+    			add_location(i, file$w, 98, 6, 2224);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14464,7 +15601,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(82:2) <Tool     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={e => { ipcRenderer.send('rotateImage', fileSelected); }}    >",
+    		source: "(92:2) <Tool     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={e => { ipcRenderer.send('rotateImage', fileSelected); }}    >",
     		ctx
     	});
 
@@ -14474,6 +15611,8 @@ var app = (function () {
     function create_fragment$A(ctx) {
     	let div;
     	let current;
+    	let mounted;
+    	let dispose;
     	let if_block = /*fileSelected*/ ctx[0] && !/*settingsOpen*/ ctx[3] && create_if_block$a(ctx);
 
     	const block = {
@@ -14482,7 +15621,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-b7ouig");
     			toggle_class(div, "legacy", /*legacy*/ ctx[4]);
-    			add_location(div, file$w, 38, 0, 1012);
+    			add_location(div, file$w, 48, 0, 1268);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -14491,6 +15630,15 @@ var app = (function () {
     			insert_dev(target, div, anchor);
     			if (if_block) if_block.m(div, null);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = action_destroyer(use.call(null, window, [
+    					['command+s', 'ctrl+s', /*saveImage*/ ctx[9]],
+    					['command+c', 'ctrl+c', /*copyImage*/ ctx[6]]
+    				]));
+
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
     			if (/*fileSelected*/ ctx[0] && !/*settingsOpen*/ ctx[3]) {
@@ -14532,6 +15680,8 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			if (if_block) if_block.d();
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -14558,7 +15708,11 @@ var app = (function () {
     	let { backdropColor = "#000000" } = $$props;
     	let { hex } = $$props;
 
-    	function copyImage() {
+    	function saveImage() {
+    		ipcRenderer.send('saveImage', fileSelected);
+    	}
+
+    	const copyImage = () => {
     		let xhr = new XMLHttpRequest();
 
     		xhr.onload = () => {
@@ -14575,17 +15729,13 @@ var app = (function () {
     		xhr.open('GET', fileSelected);
     		xhr.responseType = 'blob';
     		xhr.send();
-    	}
+    	};
 
     	const writable_props = ['fileSelected', 'settingsOpen', 'legacy', 'tips', 'backdropColor', 'hex'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$2.warn(`<Toolbox> was created with unknown prop '${key}'`);
     	});
-
-    	const click_handler = e => {
-    		ipcRenderer.send('saveImage', fileSelected);
-    	};
 
     	function eyedropper_hex_binding(value) {
     		hex = value;
@@ -14599,11 +15749,11 @@ var app = (function () {
     		$$invalidate(1, backdropColor);
     	}
 
-    	const click_handler_1 = e => {
+    	const click_handler = e => {
     		ipcRenderer.send('flipImage', fileSelected);
     	};
 
-    	const click_handler_2 = e => {
+    	const click_handler_1 = e => {
     		ipcRenderer.send('rotateImage', fileSelected);
     	};
 
@@ -14623,6 +15773,7 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		createEventDispatcher,
+    		mousetrap: use,
     		ipcRenderer,
     		Tool,
     		Eyedropper,
@@ -14635,6 +15786,7 @@ var app = (function () {
     		tips,
     		backdropColor,
     		hex,
+    		saveImage,
     		copyImage
     	});
 
@@ -14658,15 +15810,15 @@ var app = (function () {
     		settingsOpen,
     		legacy,
     		tips,
+    		copyImage,
     		ipcRenderer,
     		dispatch,
-    		copyImage,
-    		click_handler,
+    		saveImage,
     		eyedropper_hex_binding,
     		pickColor_handler,
     		background_backdropColor_binding,
+    		click_handler,
     		click_handler_1,
-    		click_handler_2,
     		palette_fileSelected_binding
     	];
     }
@@ -14681,7 +15833,8 @@ var app = (function () {
     			legacy: 4,
     			tips: 5,
     			backdropColor: 1,
-    			hex: 2
+    			hex: 2,
+    			copyImage: 6
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -14744,6 +15897,14 @@ var app = (function () {
     	}
 
     	set hex(value) {
+    		throw new Error("<Toolbox>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get copyImage() {
+    		return this.$$.ctx[6];
+    	}
+
+    	set copyImage(value) {
     		throw new Error("<Toolbox>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -26879,7 +28040,7 @@ var app = (function () {
 
       return node => {
         const destructors = events.map(event =>
-          listen(node, event, e => bubble(component, e))
+          listen$1(node, event, e => bubble(component, e))
         );
 
         return {
@@ -27499,7 +28660,7 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file = "src\\App.svelte";
 
-    // (233:2) {#if settingsOpen}
+    // (237:2) {#if settingsOpen}
     function create_if_block_4(ctx) {
     	let menu;
     	let current;
@@ -27509,12 +28670,12 @@ var app = (function () {
     				settings: /*proxySettings*/ ctx[6],
     				legacy: /*settings*/ ctx[0].theme,
     				recents: /*recents*/ ctx[9],
-    				version: /*version*/ ctx[19]
+    				version: /*version*/ ctx[20]
     			},
     			$$inline: true
     		});
 
-    	menu.$on("settingsOpen", /*settingsOpen_handler_1*/ ctx[29]);
+    	menu.$on("settingsOpen", /*settingsOpen_handler_1*/ ctx[31]);
 
     	const block = {
     		c: function create() {
@@ -27549,14 +28710,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(233:2) {#if settingsOpen}",
+    		source: "(237:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (243:2) {#if loading}
+    // (247:2) {#if loading}
     function create_if_block_3(ctx) {
     	let loader;
     	let current;
@@ -27588,14 +28749,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(243:2) {#if loading}",
+    		source: "(247:2) {#if loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (247:2) {#if fileSelected}
+    // (251:2) {#if fileSelected}
     function create_if_block_1(ctx) {
     	let div1;
     	let t0;
@@ -27626,10 +28787,10 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	canvas.$on("mousemove", /*handleMousemove*/ ctx[22]);
-    	canvas.$on("mouseenter", /*mouseenter_handler*/ ctx[30]);
-    	canvas.$on("mouseleave", /*mouseleave_handler*/ ctx[31]);
-    	canvas.$on("click", /*click_handler*/ ctx[32]);
+    	canvas.$on("mousemove", /*handleMousemove*/ ctx[23]);
+    	canvas.$on("mouseenter", /*mouseenter_handler*/ ctx[32]);
+    	canvas.$on("mouseleave", /*mouseleave_handler*/ ctx[33]);
+    	canvas.$on("click", /*click_handler*/ ctx[34]);
 
     	const block = {
     		c: function create() {
@@ -27641,13 +28802,13 @@ var app = (function () {
     			div0 = element("div");
     			create_component(canvas.$$.fragment);
     			attr_dev(div0, "class", "canvas-container-inner svelte-192f0hh");
-    			set_style(div0, "opacity", /*workAreaOpacity*/ ctx[16]);
+    			set_style(div0, "opacity", /*workAreaOpacity*/ ctx[17]);
     			toggle_class(div0, "pickingmode", /*pickingmode*/ ctx[8]);
-    			add_location(div0, file, 263, 4, 6511);
+    			add_location(div0, file, 267, 4, 6570);
     			attr_dev(div1, "class", "canvas-container svelte-192f0hh");
     			toggle_class(div1, "legacy", /*settings*/ ctx[0].theme);
     			toggle_class(div1, "pixelated", /*pixelated*/ ctx[5]);
-    			add_location(div1, file, 247, 3, 6205);
+    			add_location(div1, file, 251, 3, 6264);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -27661,8 +28822,8 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div0, "click", /*click_handler_1*/ ctx[33], false, false, false),
-    					listen_dev(div1, "mousemove", /*handleCursor*/ ctx[21], false, false, false)
+    					listen_dev(div0, "click", /*click_handler_1*/ ctx[35], false, false, false),
+    					listen_dev(div1, "mousemove", /*handleCursor*/ ctx[22], false, false, false)
     				];
 
     				mounted = true;
@@ -27700,14 +28861,14 @@ var app = (function () {
     			if (dirty[0] & /*width*/ 8) canvas_changes.width = /*width*/ ctx[3];
     			if (dirty[0] & /*height*/ 16) canvas_changes.height = /*height*/ ctx[4];
 
-    			if (dirty[0] & /*render*/ 262144 | dirty[1] & /*$$scope*/ 256) {
+    			if (dirty[0] & /*render*/ 524288 | dirty[1] & /*$$scope*/ 1024) {
     				canvas_changes.$$scope = { dirty, ctx };
     			}
 
     			canvas.$set(canvas_changes);
 
-    			if (!current || dirty[0] & /*workAreaOpacity*/ 65536) {
-    				set_style(div0, "opacity", /*workAreaOpacity*/ ctx[16]);
+    			if (!current || dirty[0] & /*workAreaOpacity*/ 131072) {
+    				set_style(div0, "opacity", /*workAreaOpacity*/ ctx[17]);
     			}
 
     			if (dirty[0] & /*pickingmode*/ 256) {
@@ -27749,22 +28910,22 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(247:2) {#if fileSelected}",
+    		source: "(251:2) {#if fileSelected}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (254:4) {#if pickingmode && mouseincanvas}
+    // (258:4) {#if pickingmode && mouseincanvas}
     function create_if_block_2(ctx) {
     	let cursor;
     	let current;
 
     	cursor = new Cursor({
     			props: {
-    				x: /*m*/ ctx[17].x,
-    				y: /*m*/ ctx[17].y,
+    				x: /*m*/ ctx[18].x,
+    				y: /*m*/ ctx[18].y,
     				chosenColor: /*chosenColor*/ ctx[13]
     			},
     			$$inline: true
@@ -27780,8 +28941,8 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const cursor_changes = {};
-    			if (dirty[0] & /*m*/ 131072) cursor_changes.x = /*m*/ ctx[17].x;
-    			if (dirty[0] & /*m*/ 131072) cursor_changes.y = /*m*/ ctx[17].y;
+    			if (dirty[0] & /*m*/ 262144) cursor_changes.x = /*m*/ ctx[18].x;
+    			if (dirty[0] & /*m*/ 262144) cursor_changes.y = /*m*/ ctx[18].y;
     			if (dirty[0] & /*chosenColor*/ 8192) cursor_changes.chosenColor = /*chosenColor*/ ctx[13];
     			cursor.$set(cursor_changes);
     		},
@@ -27803,20 +28964,20 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(254:4) {#if pickingmode && mouseincanvas}",
+    		source: "(258:4) {#if pickingmode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (277:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >
+    // (281:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >
     function create_default_slot_1(ctx) {
     	let layer;
     	let current;
 
     	layer = new Layer({
-    			props: { render: /*render*/ ctx[18] },
+    			props: { render: /*render*/ ctx[19] },
     			$$inline: true
     		});
 
@@ -27830,7 +28991,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const layer_changes = {};
-    			if (dirty[0] & /*render*/ 262144) layer_changes.render = /*render*/ ctx[18];
+    			if (dirty[0] & /*render*/ 524288) layer_changes.render = /*render*/ ctx[19];
     			layer.$set(layer_changes);
     		},
     		i: function intro(local) {
@@ -27851,14 +29012,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(277:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >",
+    		source: "(281:8) <Canvas           width={width}           height={height}           on:mousemove={handleMousemove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingmode) {             pickingmode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (297:2) {#if !fileSelected && !loading}
+    // (301:2) {#if !fileSelected && !loading}
     function create_if_block(ctx) {
     	let dropfield;
     	let current;
@@ -27899,14 +29060,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(297:2) {#if !fileSelected && !loading}",
+    		source: "(301:2) {#if !fileSelected && !loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (225:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >
+    // (229:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >
     function create_default_slot(ctx) {
     	let t0;
     	let t1;
@@ -28069,7 +29230,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(225:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >",
+    		source: "(229:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >",
     		ctx
     	});
 
@@ -28099,7 +29260,7 @@ var app = (function () {
     	titlebar = new Titlebar({
     			props: {
     				settingsOpen: /*settingsOpen*/ ctx[7],
-    				version: /*version*/ ctx[19],
+    				version: /*version*/ ctx[20],
     				fileSelected: /*fileSelected*/ ctx[2],
     				overwrite: /*settings*/ ctx[0].overwrite,
     				legacy: /*settings*/ ctx[0].theme,
@@ -28108,11 +29269,16 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	titlebar.$on("clear", /*clear_handler*/ ctx[25]);
-    	titlebar.$on("settingsOpen", /*settingsOpen_handler*/ ctx[26]);
+    	titlebar.$on("clear", /*clear_handler*/ ctx[26]);
+
+    	titlebar.$on("copy", function () {
+    		if (is_function(/*tbx*/ ctx[16].copyImage)) /*tbx*/ ctx[16].copyImage.apply(this, arguments);
+    	});
+
+    	titlebar.$on("settingsOpen", /*settingsOpen_handler*/ ctx[27]);
 
     	function toolbox_backdropColor_binding(value) {
-    		/*toolbox_backdropColor_binding*/ ctx[27](value);
+    		/*toolbox_backdropColor_binding*/ ctx[29](value);
     	}
 
     	let toolbox_props = {
@@ -28128,11 +29294,12 @@ var app = (function () {
     	}
 
     	toolbox = new Toolbox({ props: toolbox_props, $$inline: true });
+    	/*toolbox_binding*/ ctx[28](toolbox);
     	binding_callbacks.push(() => bind(toolbox, 'backdropColor', toolbox_backdropColor_binding));
-    	toolbox.$on("pickColor", /*pickColor_handler*/ ctx[28]);
+    	toolbox.$on("pickColor", /*pickColor_handler*/ ctx[30]);
 
     	function desktop_loading_binding(value) {
-    		/*desktop_loading_binding*/ ctx[34](value);
+    		/*desktop_loading_binding*/ ctx[36](value);
     	}
 
     	let desktop_props = {
@@ -28164,7 +29331,7 @@ var app = (function () {
     			create_component(desktop.$$.fragment);
     			attr_dev(main, "class", "svelte-192f0hh");
     			toggle_class(main, "legacy", /*settings*/ ctx[0].theme);
-    			add_location(main, file, 196, 0, 5201);
+    			add_location(main, file, 198, 0, 5214);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -28181,11 +29348,12 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(window, "paste", /*handlePaste*/ ctx[23], false, false, false);
+    				dispose = listen_dev(window, "paste", /*handlePaste*/ ctx[24], false, false, false);
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, dirty) {
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
     			const backdrop_changes = {};
     			if (dirty[0] & /*settings*/ 1) backdrop_changes.legacy = /*settings*/ ctx[0].theme;
     			backdrop.$set(backdrop_changes);
@@ -28217,7 +29385,7 @@ var app = (function () {
     			if (dirty[0] & /*settings*/ 1) desktop_changes.legacy = /*settings*/ ctx[0].theme;
     			if (dirty[0] & /*proxySettings*/ 64) desktop_changes.settings = /*proxySettings*/ ctx[6];
 
-    			if (dirty[0] & /*settings, fileSelected, loading, pixelated, workAreaOpacity, pickingmode, instance, width, height, mouseincanvas, hex, chosenColor, render, zoomscale, m, proxySettings, recents, settingsOpen*/ 524285 | dirty[1] & /*$$scope*/ 256) {
+    			if (dirty[0] & /*settings, fileSelected, loading, pixelated, workAreaOpacity, pickingmode, instance, width, height, mouseincanvas, hex, chosenColor, render, zoomscale, m, proxySettings, recents, settingsOpen*/ 983037 | dirty[1] & /*$$scope*/ 1024) {
     				desktop_changes.$$scope = { dirty, ctx };
     			}
 
@@ -28253,6 +29421,7 @@ var app = (function () {
     			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(main);
     			destroy_component(titlebar);
+    			/*toolbox_binding*/ ctx[28](null);
     			destroy_component(toolbox);
     			destroy_component(desktop);
     			mounted = false;
@@ -28294,6 +29463,7 @@ var app = (function () {
     	let chosenColor;
     	let mouseincanvas = false;
     	let zoomscale = 1;
+    	let tbx;
     	let backdropColor = "#2F2E33";
     	let workAreaOpacity = 1;
     	let m = { x: 0, y: 0 };
@@ -28324,7 +29494,7 @@ var app = (function () {
     	});
 
     	ipcRenderer.on('deliver', (event, arg) => {
-    		$$invalidate(24, img.src = arg, img);
+    		$$invalidate(25, img.src = arg, img);
     		$$invalidate(11, loading = false);
     		$$invalidate(2, fileSelected = arg);
     	});
@@ -28338,8 +29508,8 @@ var app = (function () {
     	}
 
     	function handleCursor(event) {
-    		$$invalidate(17, m.x = event.clientX, m);
-    		$$invalidate(17, m.y = event.clientY, m);
+    		$$invalidate(18, m.x = event.clientX, m);
+    		$$invalidate(18, m.y = event.clientY, m);
     	}
 
     	function initPan(element, customZoom = false) {
@@ -28405,7 +29575,7 @@ var app = (function () {
     	so we'll handle it in-house instead.
     */
     		helper.getIMG(blob, result => {
-    			$$invalidate(24, img.src = result, img);
+    			$$invalidate(25, img.src = result, img);
     			$$invalidate(2, fileSelected = result);
     		});
     	}
@@ -28425,6 +29595,13 @@ var app = (function () {
     	const settingsOpen_handler = e => {
     		$$invalidate(7, settingsOpen = e.detail);
     	};
+
+    	function toolbox_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			tbx = $$value;
+    			$$invalidate(16, tbx);
+    		});
+    	}
 
     	function toolbox_backdropColor_binding(value) {
     		backdropColor = value;
@@ -28509,6 +29686,7 @@ var app = (function () {
     		chosenColor,
     		mouseincanvas,
     		zoomscale,
+    		tbx,
     		backdropColor,
     		workAreaOpacity,
     		m,
@@ -28538,11 +29716,12 @@ var app = (function () {
     		if ('chosenColor' in $$props) $$invalidate(13, chosenColor = $$props.chosenColor);
     		if ('mouseincanvas' in $$props) $$invalidate(14, mouseincanvas = $$props.mouseincanvas);
     		if ('zoomscale' in $$props) $$invalidate(15, zoomscale = $$props.zoomscale);
+    		if ('tbx' in $$props) $$invalidate(16, tbx = $$props.tbx);
     		if ('backdropColor' in $$props) $$invalidate(1, backdropColor = $$props.backdropColor);
-    		if ('workAreaOpacity' in $$props) $$invalidate(16, workAreaOpacity = $$props.workAreaOpacity);
-    		if ('m' in $$props) $$invalidate(17, m = $$props.m);
-    		if ('img' in $$props) $$invalidate(24, img = $$props.img);
-    		if ('render' in $$props) $$invalidate(18, render = $$props.render);
+    		if ('workAreaOpacity' in $$props) $$invalidate(17, workAreaOpacity = $$props.workAreaOpacity);
+    		if ('m' in $$props) $$invalidate(18, m = $$props.m);
+    		if ('img' in $$props) $$invalidate(25, img = $$props.img);
+    		if ('render' in $$props) $$invalidate(19, render = $$props.render);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -28550,8 +29729,8 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*img*/ 16777216) {
-    			$$invalidate(18, render = ({ context }) => {
+    		if ($$self.$$.dirty[0] & /*img*/ 33554432) {
+    			$$invalidate(19, render = ({ context }) => {
     				try {
     					context.drawImage(img, 0, 0);
     					let element = document.querySelector('.canvas-container-inner');
@@ -28564,7 +29743,7 @@ var app = (function () {
 
     		if ($$self.$$.dirty[0] & /*settings, backdropColor*/ 3) {
     			{
-    				if (!settings.transparency) $$invalidate(16, workAreaOpacity = tinycolor(backdropColor).toRgb().a); else $$invalidate(16, workAreaOpacity = 1);
+    				if (!settings.transparency) $$invalidate(17, workAreaOpacity = tinycolor(backdropColor).toRgb().a); else $$invalidate(17, workAreaOpacity = 1);
     				if (settings.theme) $$invalidate(1, backdropColor = "#111111"); else $$invalidate(1, backdropColor = "#2F2E33");
     			}
     		}
@@ -28587,6 +29766,7 @@ var app = (function () {
     		chosenColor,
     		mouseincanvas,
     		zoomscale,
+    		tbx,
     		workAreaOpacity,
     		m,
     		render,
@@ -28598,6 +29778,7 @@ var app = (function () {
     		img,
     		clear_handler,
     		settingsOpen_handler,
+    		toolbox_binding,
     		toolbox_backdropColor_binding,
     		pickColor_handler,
     		settingsOpen_handler_1,

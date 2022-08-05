@@ -41,6 +41,8 @@
 
 	let zoomscale = 1;
 
+	let tbx;
+
 	let backdropColor = "#2F2E33";
 
   	let workAreaOpacity = 1;
@@ -208,6 +210,7 @@
 
 		    delInstance();
 		}}
+		on:copy={tbx.copyImage}
 		on:settingsOpen={e => { settingsOpen = e.detail; }}
 	/>
 	<Toolbox
@@ -216,6 +219,7 @@
 		{hex}
 		legacy={settings.theme}
 		tips={settings.tooltips}
+		bind:this={tbx}
 		bind:backdropColor
 		on:pickColor={e => {
 			pickingmode = true;
