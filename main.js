@@ -8,12 +8,11 @@ const sharp = require('sharp');
 const fileFilter = require('./scripts/main/fileFilter.js');
 const recentsProcessor = require('./scripts/main/recentsProcessor.js');
 const settingsProcessor = require('./scripts/main/settingsProcessor.js');
-const Lumberjack = require('./scripts/main/lumberjack.js');
 const windowManager = require('./scripts/main/windowManager.js');
 const fileProcessor = require('./scripts/main/fileProcessor.js');
 const imageEditor = require('./scripts/main/imageEditor.js');
+const Lumberjack = require('./scripts/main/lumberjack.js');
 
-const jack = new Lumberjack();
 let mainWindow, newWin;
 let sp, rp, wm, fp, ie;
 let processorsReady = false;
@@ -21,12 +20,16 @@ let processorsReady = false;
 let gotTheLock;
 let wmReady = false;
 
+const homeDir = path.join(os.homedir(), '.refviewer');
+
+const jack = new Lumberjack();
+
 sp = new settingsProcessor({
-    home: path.join(os.homedir(), '.refviewer'),
+    home:homeDir,
     filename: 'config.json',
     ready: () => {
         rp = new recentsProcessor({
-            home: path.join(os.homedir(), '.refviewer'),
+            home: homeDir,
             filename: 'recents.json',
             ready: () => {
                 wm = new windowManager({
@@ -144,7 +147,7 @@ ipcMain.on('selectfile', (event, arg) => {
             fp.process(files[0], event);
         }
     }).catch(err => {
-        jack.log(err);
+        jack.log("Error opening file: ", err);
     });
 });
 
@@ -165,7 +168,6 @@ ipcMain.on('screenshot', (event, arg) => {
     activeWindow.hide();
 
     screenshot.listDisplays().then((displays) => {
-
         screenshot({
             screen: displays[index].id,
             filename: path.join(os.tmpdir(), 'screenshot.png')
@@ -205,7 +207,7 @@ ipcMain.on('screenshot', (event, arg) => {
                             activeWindow.show();
                         })
                         .catch( err => {
-                            jack.log(err);
+                            jack.log("Error processing screenshot: ", err);
                         });
                 });
             });
@@ -214,7 +216,9 @@ ipcMain.on('screenshot', (event, arg) => {
                 newWin = null;
             });
         }).catch((error) => {
-            jack.log("error", error);
+            activeWindow.show();
+
+            jack.log("Error screenshotting: ", error);
             event.sender.send('action', "Failed to take a screenshot");
         });
     });
