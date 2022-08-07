@@ -14319,7 +14319,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (29:0) <Tool   {tips}   {legacy}   size="12px"   tiptext={"Generate palette"}   on:click={e => {    ipcRenderer.send('getPalette', fileSelected);    showDropdown = true;   }}  >
+    // (29:0) <Tool   {tips}   {legacy}   size="12px"   tiptext={"Generate palette"}   on:click={e => {    ipcRenderer.send('editImage', {     type: 'getPalette',     image: fileSelected    });      showDropdown = true;   }}  >
     function create_default_slot_1$4(ctx) {
     	let i;
     	let mounted;
@@ -14329,7 +14329,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-palette");
-    			add_location(i, file$y, 38, 1, 881);
+    			add_location(i, file$y, 42, 1, 924);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14351,14 +14351,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$4.name,
     		type: "slot",
-    		source: "(29:0) <Tool   {tips}   {legacy}   size=\\\"12px\\\"   tiptext={\\\"Generate palette\\\"}   on:click={e => {    ipcRenderer.send('getPalette', fileSelected);    showDropdown = true;   }}  >",
+    		source: "(29:0) <Tool   {tips}   {legacy}   size=\\\"12px\\\"   tiptext={\\\"Generate palette\\\"}   on:click={e => {    ipcRenderer.send('editImage', {     type: 'getPalette',     image: fileSelected    });      showDropdown = true;   }}  >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (42:0) {#if showDropdown}
+    // (46:0) {#if showDropdown}
     function create_if_block$c(ctx) {
     	let dropdown;
     	let current;
@@ -14409,14 +14409,14 @@ var app = (function () {
     		block,
     		id: create_if_block$c.name,
     		type: "if",
-    		source: "(42:0) {#if showDropdown}",
+    		source: "(46:0) {#if showDropdown}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (50:3) {#each Object.entries(palette) as [color_name, color_number]}
+    // (54:3) {#each Object.entries(palette) as [color_name, color_number]}
     function create_each_block$3(ctx) {
     	let div2;
     	let div0;
@@ -14454,12 +14454,12 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = space();
     			attr_dev(div0, "class", "item-detail svelte-1k3hh6i");
-    			add_location(div0, file$y, 61, 5, 1548);
+    			add_location(div0, file$y, 65, 5, 1591);
     			attr_dev(div1, "class", "item-detail svelte-1k3hh6i");
-    			add_location(div1, file$y, 66, 5, 1742);
+    			add_location(div1, file$y, 70, 5, 1785);
     			attr_dev(div2, "class", "item svelte-1k3hh6i");
     			set_style(div2, "background", "rgb(" + /*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb + ")");
-    			add_location(div2, file$y, 50, 4, 1152);
+    			add_location(div2, file$y, 54, 4, 1195);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -14501,14 +14501,14 @@ var app = (function () {
     		block,
     		id: create_each_block$3.name,
     		type: "each",
-    		source: "(50:3) {#each Object.entries(palette) as [color_name, color_number]}",
+    		source: "(54:3) {#each Object.entries(palette) as [color_name, color_number]}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (43:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >
+    // (47:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >
     function create_default_slot$4(ctx) {
     	let div;
     	let each_value = Object.entries(/*palette*/ ctx[4]);
@@ -14528,7 +14528,7 @@ var app = (function () {
     			}
 
     			attr_dev(div, "class", "palette svelte-1k3hh6i");
-    			add_location(div, file$y, 48, 2, 1059);
+    			add_location(div, file$y, 52, 2, 1102);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -14572,7 +14572,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$4.name,
     		type: "slot",
-    		source: "(43:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >",
+    		source: "(47:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >",
     		ctx
     	});
 
@@ -14710,7 +14710,7 @@ var app = (function () {
     	});
 
     	const click_handler = e => {
-    		ipcRenderer.send('getPalette', fileSelected);
+    		ipcRenderer.send('editImage', { type: 'getPalette', image: fileSelected });
     		$$invalidate(3, showDropdown = true);
     	};
 
@@ -15210,7 +15210,7 @@ var app = (function () {
     const { console: console_1$2 } = globals;
     const file$w = "src\\components\\Toolbox.svelte";
 
-    // (53:1) {#if fileSelected && !settingsOpen}
+    // (60:1) {#if fileSelected && !settingsOpen}
     function create_if_block$a(ctx) {
     	let tool0;
     	let t0;
@@ -15242,7 +15242,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool0.$on("click", /*saveImage*/ ctx[9]);
+    	tool0.$on("click", /*click_handler*/ ctx[14]);
 
     	tool1 = new Tool({
     			props: {
@@ -15259,7 +15259,7 @@ var app = (function () {
     	tool1.$on("click", /*copyImage*/ ctx[6]);
 
     	function eyedropper_hex_binding(value) {
-    		/*eyedropper_hex_binding*/ ctx[10](value);
+    		/*eyedropper_hex_binding*/ ctx[15](value);
     	}
 
     	let eyedropper_props = {
@@ -15273,10 +15273,10 @@ var app = (function () {
 
     	eyedropper = new Eyedropper({ props: eyedropper_props, $$inline: true });
     	binding_callbacks.push(() => bind(eyedropper, 'hex', eyedropper_hex_binding));
-    	eyedropper.$on("pickColor", /*pickColor_handler*/ ctx[11]);
+    	eyedropper.$on("pickColor", /*pickColor_handler*/ ctx[16]);
 
     	function background_backdropColor_binding(value) {
-    		/*background_backdropColor_binding*/ ctx[12](value);
+    		/*background_backdropColor_binding*/ ctx[17](value);
     	}
 
     	let background_props = {
@@ -15303,7 +15303,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool2.$on("click", /*click_handler*/ ctx[13]);
+    	tool2.$on("click", /*click_handler_1*/ ctx[18]);
 
     	tool3 = new Tool({
     			props: {
@@ -15317,10 +15317,10 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool3.$on("click", /*click_handler_1*/ ctx[14]);
+    	tool3.$on("click", /*click_handler_2*/ ctx[19]);
 
     	function palette_fileSelected_binding(value) {
-    		/*palette_fileSelected_binding*/ ctx[15](value);
+    		/*palette_fileSelected_binding*/ ctx[20](value);
     	}
 
     	let palette_props = {
@@ -15372,7 +15372,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 32) tool0_changes.tips = /*tips*/ ctx[5];
     			if (dirty & /*legacy*/ 16) tool0_changes.legacy = /*legacy*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 65536) {
+    			if (dirty & /*$$scope*/ 4194304) {
     				tool0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15381,7 +15381,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 32) tool1_changes.tips = /*tips*/ ctx[5];
     			if (dirty & /*legacy*/ 16) tool1_changes.legacy = /*legacy*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 65536) {
+    			if (dirty & /*$$scope*/ 4194304) {
     				tool1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15412,7 +15412,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 32) tool2_changes.tips = /*tips*/ ctx[5];
     			if (dirty & /*legacy*/ 16) tool2_changes.legacy = /*legacy*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 65536) {
+    			if (dirty & /*$$scope*/ 4194304) {
     				tool2_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15421,7 +15421,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 32) tool3_changes.tips = /*tips*/ ctx[5];
     			if (dirty & /*legacy*/ 16) tool3_changes.legacy = /*legacy*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 65536) {
+    			if (dirty & /*$$scope*/ 4194304) {
     				tool3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15480,14 +15480,14 @@ var app = (function () {
     		block,
     		id: create_if_block$a.name,
     		type: "if",
-    		source: "(53:1) {#if fileSelected && !settingsOpen}",
+    		source: "(60:1) {#if fileSelected && !settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (54:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Save image"}     on:click={saveImage}    >
+    // (61:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Save image"}     on:click={() => editImage("save")}    >
     function create_default_slot_3$1(ctx) {
     	let i;
 
@@ -15495,7 +15495,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "far fa-save");
-    			add_location(i, file$w, 60, 3, 1457);
+    			add_location(i, file$w, 67, 3, 1694);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15510,14 +15510,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(54:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={saveImage}    >",
+    		source: "(61:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={() => editImage(\\\"save\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (63:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Copy image"}     on:click={copyImage}    >
+    // (70:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Copy image"}     on:click={copyImage}    >
     function create_default_slot_2$1(ctx) {
     	let i;
 
@@ -15526,7 +15526,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-2px)");
-    			add_location(i, file$w, 69, 6, 1609);
+    			add_location(i, file$w, 76, 6, 1846);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15541,14 +15541,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$1.name,
     		type: "slot",
-    		source: "(63:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
+    		source: "(70:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (83:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={e => { ipcRenderer.send('flipImage', fileSelected); }}    >
+    // (90:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={() => editImage("flipHorizontal")}    >
     function create_default_slot_1$2(ctx) {
     	let i;
 
@@ -15556,7 +15556,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-sync-alt");
-    			add_location(i, file$w, 89, 6, 2020);
+    			add_location(i, file$w, 96, 6, 2237);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15571,14 +15571,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(83:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={e => { ipcRenderer.send('flipImage', fileSelected); }}    >",
+    		source: "(90:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={() => editImage(\\\"flipHorizontal\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (92:2) <Tool     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={e => { ipcRenderer.send('rotateImage', fileSelected); }}    >
+    // (99:2) <Tool     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={() => editImage("rotateRight")}    >
     function create_default_slot$2(ctx) {
     	let i;
 
@@ -15586,7 +15586,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$w, 98, 6, 2224);
+    			add_location(i, file$w, 105, 6, 2416);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15601,7 +15601,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(92:2) <Tool     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={e => { ipcRenderer.send('rotateImage', fileSelected); }}    >",
+    		source: "(99:2) <Tool     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={() => editImage(\\\"rotateRight\\\")}    >",
     		ctx
     	});
 
@@ -15621,7 +15621,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-b7ouig");
     			toggle_class(div, "legacy", /*legacy*/ ctx[4]);
-    			add_location(div, file$w, 48, 0, 1268);
+    			add_location(div, file$w, 55, 0, 1491);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -15633,8 +15633,12 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = action_destroyer(use.call(null, window, [
-    					['command+s', 'ctrl+s', /*saveImage*/ ctx[9]],
-    					['command+c', 'ctrl+c', /*copyImage*/ ctx[6]]
+    					['command+s', 'ctrl+s', /*mousetrap_function*/ ctx[9]],
+    					['command+c', 'ctrl+c', /*copyImage*/ ctx[6]],
+    					[']', /*mousetrap_function_1*/ ctx[10]],
+    					['[', /*mousetrap_function_2*/ ctx[11]],
+    					['.', /*mousetrap_function_3*/ ctx[12]],
+    					[',', /*mousetrap_function_4*/ ctx[13]]
     				]));
 
     				mounted = true;
@@ -15708,8 +15712,8 @@ var app = (function () {
     	let { backdropColor = "#000000" } = $$props;
     	let { hex } = $$props;
 
-    	function saveImage() {
-    		ipcRenderer.send('saveImage', fileSelected);
+    	function editImage(type) {
+    		ipcRenderer.send('editImage', { type, image: fileSelected });
     	}
 
     	const copyImage = () => {
@@ -15737,6 +15741,13 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$2.warn(`<Toolbox> was created with unknown prop '${key}'`);
     	});
 
+    	const mousetrap_function = () => editImage("save");
+    	const mousetrap_function_1 = () => editImage("rotateRight");
+    	const mousetrap_function_2 = () => editImage("rotateLeft");
+    	const mousetrap_function_3 = () => editImage("flipHorizontal");
+    	const mousetrap_function_4 = () => editImage("flipVertical");
+    	const click_handler = () => editImage("save");
+
     	function eyedropper_hex_binding(value) {
     		hex = value;
     		$$invalidate(2, hex);
@@ -15749,13 +15760,8 @@ var app = (function () {
     		$$invalidate(1, backdropColor);
     	}
 
-    	const click_handler = e => {
-    		ipcRenderer.send('flipImage', fileSelected);
-    	};
-
-    	const click_handler_1 = e => {
-    		ipcRenderer.send('rotateImage', fileSelected);
-    	};
+    	const click_handler_1 = () => editImage("flipHorizontal");
+    	const click_handler_2 = () => editImage("rotateRight");
 
     	function palette_fileSelected_binding(value) {
     		fileSelected = value;
@@ -15786,7 +15792,7 @@ var app = (function () {
     		tips,
     		backdropColor,
     		hex,
-    		saveImage,
+    		editImage,
     		copyImage
     	});
 
@@ -15811,14 +15817,19 @@ var app = (function () {
     		legacy,
     		tips,
     		copyImage,
-    		ipcRenderer,
     		dispatch,
-    		saveImage,
+    		editImage,
+    		mousetrap_function,
+    		mousetrap_function_1,
+    		mousetrap_function_2,
+    		mousetrap_function_3,
+    		mousetrap_function_4,
+    		click_handler,
     		eyedropper_hex_binding,
     		pickColor_handler,
     		background_backdropColor_binding,
-    		click_handler,
     		click_handler_1,
+    		click_handler_2,
     		palette_fileSelected_binding
     	];
     }

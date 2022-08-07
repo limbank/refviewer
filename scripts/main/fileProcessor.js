@@ -12,9 +12,12 @@ class fileProcessor {
     constructor (args) {
         this.rp = args.rp;
         this.generatedPalette;
+        this.name;
     }
     handleDefault(filePath, event) {
         if (filePath.startsWith("http")) {
+            this.name = "image";
+
             this.rp.writeRecent(filePath, (recents) => {
                 event.sender.send('recents', recents);
             });
@@ -23,7 +26,10 @@ class fileProcessor {
                 event.sender.send('deliver', response);
             });
         }
-        else if (filePath.startsWith("data")) event.sender.send('deliver', filePath);
+        else if (filePath.startsWith("data")) {
+            this.name = "image";
+            event.sender.send('deliver', filePath);
+        }
         else this.handleConversion(filePath, event);
     }
     handleBMP(filePath, event) {
@@ -80,12 +86,15 @@ class fileProcessor {
             this.handleConversion(psdPath, event, false);
         });
     }
+    pathInfo(s) {
+        s = s.match(/(.*?[\\/:])?(([^\\/:]*?)(\.[^\\/.]+?)?)(?:[?#].*)?$/);
+        return { path:s[1], file:s[2], name:s[3], ext:s[4] };
+    }
     process(file, event) {
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 
-        jack.log(file);
-
         this.generatedPalette = null;
+        this.name = this.pathInfo(file).name || "image";
 
         switch(ext) {
             case "psd": 

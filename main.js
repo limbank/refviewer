@@ -4,7 +4,6 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs-extra');
 const screenshot = require('screenshot-desktop');
-const Vibrant = require('node-vibrant');
 const sharp = require('sharp');
 const fileFilter = require('./scripts/main/fileFilter.js');
 const recentsProcessor = require('./scripts/main/recentsProcessor.js');
@@ -12,15 +11,12 @@ const settingsProcessor = require('./scripts/main/settingsProcessor.js');
 const Lumberjack = require('./scripts/main/lumberjack.js');
 const windowManager = require('./scripts/main/windowManager.js');
 const fileProcessor = require('./scripts/main/fileProcessor.js');
+const imageEditor = require('./scripts/main/imageEditor.js');
 
 const jack = new Lumberjack();
 let mainWindow, newWin;
-let sp, rp, wm, fp;
+let sp, rp, wm, fp, ie;
 let processorsReady = false;
-
-function dataToBuffer(dataURI) {
-    return new Buffer.from(dataURI.split(",")[1], 'base64');
-}
 
 let gotTheLock;
 let wmReady = false;
@@ -43,6 +39,10 @@ sp = new settingsProcessor({
                 
                 fp = new fileProcessor({
                     rp: rp
+                });
+
+                ie = new imageEditor( {
+                    fp: fp
                 });
             }
         });
@@ -108,72 +108,6 @@ ipcMain.on('window', (event, arg) => {
     }
 });
 
-ipcMain.on('saveImage', (event, arg) => {
-    let activeWindow = wm.getWindowByID(event.sender.id);
-
-    if (!activeWindow) return;
-    dialog.showSaveDialog(activeWindow, {
-        title: "Save image",
-        defaultPath: "image",
-        filters: fileFilter.save
-    }).then(result => {
-        if (result.canceled) return;
-
-        let filePath = result.filePath;
-        var ext = filePath.substr(filePath.lastIndexOf(".") + 1);
-
-        sharp(dataToBuffer(arg))
-            .toFormat(ext)
-            .toFile(filePath)
-            .then(info => {
-                event.sender.send('action', "Image saved!");
-            })
-            .catch( err => {
-                jack.log(err);
-                event.sender.send('action', "Failed to save image");
-            });
-    }).catch(err => {
-        jack.log(err);
-        event.sender.send('action', "Failed to save image");
-    });
-});
-
-ipcMain.on('flipImage', (event, arg) => {
-    let activeWindow = wm.getWindowByID(event.sender.id);
-    
-    if (!activeWindow) return;
-
-    sharp(dataToBuffer(arg))
-        .flop()
-        .toBuffer()
-        .then(data => {
-            fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
-            activeWindow.show();
-        })
-        .catch( err => {
-            jack.log(err);
-            event.sender.send('action', "Failed to flip the image");
-        });
-});
-
-ipcMain.on('rotateImage', (event, arg) => {
-    let activeWindow = wm.getWindowByID(event.sender.id);
-    
-    if (!activeWindow) return;
-
-    sharp(dataToBuffer(arg))
-        .rotate(90)
-        .toBuffer()
-        .then(data => {
-            fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
-            activeWindow.show();
-        })
-        .catch( err => {
-            jack.log(err);
-            event.sender.send('action', "Failed to rotate image");
-        });
-});
-
 ipcMain.on('file', (event, arg) => {
     fp.process(arg, event);
     if (newWin) newWin.close();
@@ -187,19 +121,13 @@ ipcMain.on('loading', (event, arg) => {
     event.sender.send('loading', arg);
 });
 
-ipcMain.on('getPalette', (event, arg) => {
-    if (fp.generatedPalette) return event.sender.send('palette', fp.generatedPalette);
+ipcMain.on('editImage', (event, arg) => {
+    let activeWindow = wm.getWindowByID(event.sender.id);
+    
+    if (!activeWindow) return;
+    if (!arg.image) return;
 
-    let filePath = path.join(os.tmpdir(), 'out.png');
-    fs.writeFile(filePath, dataToBuffer(arg), 'base64', err => {
-        if (err) return jack.log(err);
-
-        Vibrant.from(filePath).getPalette().then((palette) => {
-            fp.generatedPalette = palette;
-
-            event.sender.send('palette', fp.generatedPalette);
-        });
-    });
+    ie.edit(arg.image, arg.type, event, activeWindow);
 });
 
 ipcMain.on('selectfile', (event, arg) => {

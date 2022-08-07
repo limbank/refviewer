@@ -32,7 +32,11 @@
 	size="12px"
 	tiptext={"Generate palette"}
 	on:click={e => {
-		ipcRenderer.send('getPalette', fileSelected);
+		ipcRenderer.send('editImage', {
+			type: 'getPalette',
+			image: fileSelected
+		});
+
 		showDropdown = true;
 	}}
 >	

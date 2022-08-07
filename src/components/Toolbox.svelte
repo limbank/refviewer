@@ -17,8 +17,11 @@
 	export let backdropColor = "#000000";
 	export let hex;
 
-	function saveImage() {
-		ipcRenderer.send('saveImage', fileSelected);
+	function editImage(type) {
+		ipcRenderer.send('editImage', {
+			type: type,
+			image: fileSelected
+		});
 	}
 
 	export const copyImage = () => {
@@ -42,8 +45,12 @@
 </script>
 
 <svelte:window use:mousetrap={[
-  ['command+s', 'ctrl+s', saveImage],
-  ['command+c', 'ctrl+c', copyImage]
+  ['command+s', 'ctrl+s', () => editImage("save")],
+  ['command+c', 'ctrl+c', copyImage],
+  [']', () => editImage("rotateRight")],
+  ['[', () => editImage("rotateLeft")],
+  ['.', () => editImage("flipHorizontal")],
+  [',', () => editImage("flipVertical")]
 ]} />
 
 <div
@@ -56,7 +63,7 @@
 			{legacy}
 			size="13px"
 			tiptext={"Save image"}
-			on:click={saveImage}
+			on:click={() => editImage("save")}
 		>
 			<i class="far fa-save"></i>
 		</Tool>
@@ -85,7 +92,7 @@
 			{legacy}
 			size="13px"
 			tiptext={"Flip image"}
-			on:click={e => { ipcRenderer.send('flipImage', fileSelected); }}
+			on:click={() => editImage("flipHorizontal")}
 		>
 	    	<i class="fas fa-sync-alt"></i>
 		</Tool>
@@ -94,7 +101,7 @@
 			{legacy}
 			size="12px"
 			tiptext={"Rotate image"}
-			on:click={e => { ipcRenderer.send('rotateImage', fileSelected); }}
+			on:click={() => editImage("rotateRight")}
 		>
 	    	<i class="fas fa-redo"></i>
 		</Tool>
