@@ -2,11 +2,11 @@ const sharp = require('sharp');
 const imageDataURI = require('image-data-uri');
 const PSD = require('psd');
 const path = require('path');
-const Lumberjack = require('./lumberjack.js');
 const http = require("http");
-const jack = new Lumberjack();
 const fs = require('fs-extra');
 const bmp = require('bmpimagejs');
+const Lumberjack = require('./lumberjack.js');
+const jack = new Lumberjack();
 
 class fileProcessor {
     constructor (args) {
@@ -14,9 +14,9 @@ class fileProcessor {
         this.generatedPalette;
         this.name;
     }
-    handleDefault(filePath, event) {
+    handleDefault(filePath, event, retain = false) {
         if (filePath.startsWith("http")) {
-            this.name = "image";
+            if (!retain) this.name = "image";
 
             this.rp.writeRecent(filePath, (recents) => {
                 event.sender.send('recents', recents);
@@ -27,7 +27,7 @@ class fileProcessor {
             });
         }
         else if (filePath.startsWith("data")) {
-            this.name = "image";
+            if (!retain) this.name = "image";
             event.sender.send('deliver', filePath);
         }
         else this.handleConversion(filePath, event);
@@ -90,13 +90,15 @@ class fileProcessor {
         s = s.match(/(.*?[\\/:])?(([^\\/:]*?)(\.[^\\/.]+?)?)(?:[?#].*)?$/);
         return { path:s[1], file:s[2], name:s[3], ext:s[4] };
     }
-    process(file, event) {
+    process(file, event, retain = false, history = true) {
+        if (!file) return jack.log("Missing file");
+
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 
         this.generatedPalette = null;
-        this.name = this.pathInfo(file).name || "image";
+        this.name = retain ? this.name : (this.pathInfo(file).name || "image");
 
-        switch(ext) {
+        switch (ext) {
             case "psd": 
                 this.handlePSD(file, event);
                 break;
@@ -128,7 +130,7 @@ class fileProcessor {
                 this.handleConversion(file, event);
                 break;
             default:
-                this.handleDefault(file, event);
+                this.handleDefault(file, event, retain);
                 break;
         }
     }

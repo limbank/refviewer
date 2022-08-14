@@ -15210,7 +15210,7 @@ var app = (function () {
     const { console: console_1$2 } = globals;
     const file$w = "src\\components\\Toolbox.svelte";
 
-    // (60:1) {#if fileSelected && !settingsOpen}
+    // (61:1) {#if fileSelected && !settingsOpen}
     function create_if_block$a(ctx) {
     	let tool0;
     	let t0;
@@ -15242,7 +15242,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool0.$on("click", /*click_handler*/ ctx[14]);
+    	tool0.$on("click", /*click_handler*/ ctx[16]);
 
     	tool1 = new Tool({
     			props: {
@@ -15259,7 +15259,7 @@ var app = (function () {
     	tool1.$on("click", /*copyImage*/ ctx[6]);
 
     	function eyedropper_hex_binding(value) {
-    		/*eyedropper_hex_binding*/ ctx[15](value);
+    		/*eyedropper_hex_binding*/ ctx[17](value);
     	}
 
     	let eyedropper_props = {
@@ -15273,10 +15273,10 @@ var app = (function () {
 
     	eyedropper = new Eyedropper({ props: eyedropper_props, $$inline: true });
     	binding_callbacks.push(() => bind(eyedropper, 'hex', eyedropper_hex_binding));
-    	eyedropper.$on("pickColor", /*pickColor_handler*/ ctx[16]);
+    	eyedropper.$on("pickColor", /*pickColor_handler*/ ctx[18]);
 
     	function background_backdropColor_binding(value) {
-    		/*background_backdropColor_binding*/ ctx[17](value);
+    		/*background_backdropColor_binding*/ ctx[19](value);
     	}
 
     	let background_props = {
@@ -15303,7 +15303,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool2.$on("click", /*click_handler_1*/ ctx[18]);
+    	tool2.$on("click", /*click_handler_1*/ ctx[20]);
 
     	tool3 = new Tool({
     			props: {
@@ -15317,10 +15317,10 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool3.$on("click", /*click_handler_2*/ ctx[19]);
+    	tool3.$on("click", /*click_handler_2*/ ctx[21]);
 
     	function palette_fileSelected_binding(value) {
-    		/*palette_fileSelected_binding*/ ctx[20](value);
+    		/*palette_fileSelected_binding*/ ctx[22](value);
     	}
 
     	let palette_props = {
@@ -15372,7 +15372,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 32) tool0_changes.tips = /*tips*/ ctx[5];
     			if (dirty & /*legacy*/ 16) tool0_changes.legacy = /*legacy*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 4194304) {
+    			if (dirty & /*$$scope*/ 8388608) {
     				tool0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15381,7 +15381,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 32) tool1_changes.tips = /*tips*/ ctx[5];
     			if (dirty & /*legacy*/ 16) tool1_changes.legacy = /*legacy*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 4194304) {
+    			if (dirty & /*$$scope*/ 8388608) {
     				tool1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15412,7 +15412,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 32) tool2_changes.tips = /*tips*/ ctx[5];
     			if (dirty & /*legacy*/ 16) tool2_changes.legacy = /*legacy*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 4194304) {
+    			if (dirty & /*$$scope*/ 8388608) {
     				tool2_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15421,7 +15421,7 @@ var app = (function () {
     			if (dirty & /*tips*/ 32) tool3_changes.tips = /*tips*/ ctx[5];
     			if (dirty & /*legacy*/ 16) tool3_changes.legacy = /*legacy*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 4194304) {
+    			if (dirty & /*$$scope*/ 8388608) {
     				tool3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15480,14 +15480,14 @@ var app = (function () {
     		block,
     		id: create_if_block$a.name,
     		type: "if",
-    		source: "(60:1) {#if fileSelected && !settingsOpen}",
+    		source: "(61:1) {#if fileSelected && !settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (61:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Save image"}     on:click={() => editImage("save")}    >
+    // (62:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Save image"}     on:click={() => editImage("save")}    >
     function create_default_slot_3$1(ctx) {
     	let i;
 
@@ -15495,7 +15495,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "far fa-save");
-    			add_location(i, file$w, 67, 3, 1694);
+    			add_location(i, file$w, 68, 3, 1768);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15510,14 +15510,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(61:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={() => editImage(\\\"save\\\")}    >",
+    		source: "(62:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={() => editImage(\\\"save\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (70:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Copy image"}     on:click={copyImage}    >
+    // (71:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Copy image"}     on:click={copyImage}    >
     function create_default_slot_2$1(ctx) {
     	let i;
 
@@ -15526,7 +15526,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-2px)");
-    			add_location(i, file$w, 76, 6, 1846);
+    			add_location(i, file$w, 77, 6, 1920);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15541,14 +15541,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$1.name,
     		type: "slot",
-    		source: "(70:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
+    		source: "(71:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (90:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={() => editImage("flipHorizontal")}    >
+    // (91:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={() => editImage("flipHorizontal")}    >
     function create_default_slot_1$2(ctx) {
     	let i;
 
@@ -15556,7 +15556,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-sync-alt");
-    			add_location(i, file$w, 96, 6, 2237);
+    			add_location(i, file$w, 97, 6, 2311);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15571,14 +15571,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(90:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={() => editImage(\\\"flipHorizontal\\\")}    >",
+    		source: "(91:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={() => editImage(\\\"flipHorizontal\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (99:2) <Tool     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={() => editImage("rotateRight")}    >
+    // (100:2) <Tool     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={() => editImage("rotateRight")}    >
     function create_default_slot$2(ctx) {
     	let i;
 
@@ -15586,7 +15586,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$w, 105, 6, 2416);
+    			add_location(i, file$w, 106, 6, 2490);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15601,7 +15601,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(99:2) <Tool     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={() => editImage(\\\"rotateRight\\\")}    >",
+    		source: "(100:2) <Tool     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={() => editImage(\\\"rotateRight\\\")}    >",
     		ctx
     	});
 
@@ -15609,6 +15609,7 @@ var app = (function () {
     }
 
     function create_fragment$A(ctx) {
+    	let mousetrap_action;
     	let div;
     	let current;
     	let mounted;
@@ -15621,7 +15622,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-b7ouig");
     			toggle_class(div, "legacy", /*legacy*/ ctx[4]);
-    			add_location(div, file$w, 55, 0, 1491);
+    			add_location(div, file$w, 56, 0, 1565);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -15632,19 +15633,30 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = action_destroyer(use.call(null, window, [
-    					['command+s', 'ctrl+s', /*mousetrap_function*/ ctx[9]],
+    				dispose = action_destroyer(mousetrap_action = use.call(null, window, [
+    					['command+s', 'ctrl+s', /*mousetrap_function*/ ctx[10]],
     					['command+c', 'ctrl+c', /*copyImage*/ ctx[6]],
-    					[']', /*mousetrap_function_1*/ ctx[10]],
-    					['[', /*mousetrap_function_2*/ ctx[11]],
-    					['.', /*mousetrap_function_3*/ ctx[12]],
-    					[',', /*mousetrap_function_4*/ ctx[13]]
+    					[']', /*mousetrap_function_1*/ ctx[11]],
+    					['[', /*mousetrap_function_2*/ ctx[12]],
+    					['.', /*mousetrap_function_3*/ ctx[13]],
+    					[',', /*mousetrap_function_4*/ ctx[14]],
+    					['command+z', 'ctrl+z', /*mousetrap_function_5*/ ctx[15]]
     				]));
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
+    			if (mousetrap_action && is_function(mousetrap_action.update) && dirty & /*fileSelected*/ 1) mousetrap_action.update.call(null, [
+    				['command+s', 'ctrl+s', /*mousetrap_function*/ ctx[10]],
+    				['command+c', 'ctrl+c', /*copyImage*/ ctx[6]],
+    				[']', /*mousetrap_function_1*/ ctx[11]],
+    				['[', /*mousetrap_function_2*/ ctx[12]],
+    				['.', /*mousetrap_function_3*/ ctx[13]],
+    				[',', /*mousetrap_function_4*/ ctx[14]],
+    				['command+z', 'ctrl+z', /*mousetrap_function_5*/ ctx[15]]
+    			]);
+
     			if (/*fileSelected*/ ctx[0] && !/*settingsOpen*/ ctx[3]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
@@ -15746,6 +15758,7 @@ var app = (function () {
     	const mousetrap_function_2 = () => editImage("rotateLeft");
     	const mousetrap_function_3 = () => editImage("flipHorizontal");
     	const mousetrap_function_4 = () => editImage("flipVertical");
+    	const mousetrap_function_5 = () => ipcRenderer.send('undo', fileSelected);
     	const click_handler = () => editImage("save");
 
     	function eyedropper_hex_binding(value) {
@@ -15817,6 +15830,7 @@ var app = (function () {
     		legacy,
     		tips,
     		copyImage,
+    		ipcRenderer,
     		dispatch,
     		editImage,
     		mousetrap_function,
@@ -15824,6 +15838,7 @@ var app = (function () {
     		mousetrap_function_2,
     		mousetrap_function_3,
     		mousetrap_function_4,
+    		mousetrap_function_5,
     		click_handler,
     		eyedropper_hex_binding,
     		pickColor_handler,

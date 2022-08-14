@@ -10,11 +10,12 @@ const recentsProcessor = require('./scripts/main/recentsProcessor.js');
 const settingsProcessor = require('./scripts/main/settingsProcessor.js');
 const windowManager = require('./scripts/main/windowManager.js');
 const fileProcessor = require('./scripts/main/fileProcessor.js');
+const historyProcessor = require('./scripts/main/historyProcessor.js');
 const imageEditor = require('./scripts/main/imageEditor.js');
 const Lumberjack = require('./scripts/main/lumberjack.js');
 
 let mainWindow, newWin;
-let sp, rp, wm, fp, ie;
+let sp, rp, wm, fp, ie, hp;
 let processorsReady = false;
 
 let gotTheLock;
@@ -39,12 +40,17 @@ sp = new settingsProcessor({
                         wmReady = true;
                     }
                 });
+
+                hp = new historyProcessor({
+                    limit: 15
+                });
                 
                 fp = new fileProcessor({
-                    rp: rp
+                    rp: rp,
+                    hp: hp
                 });
 
-                ie = new imageEditor( {
+                ie = new imageEditor({
                     fp: fp
                 });
             }
@@ -112,6 +118,7 @@ ipcMain.on('window', (event, arg) => {
 });
 
 ipcMain.on('file', (event, arg) => {
+    hp.flush();
     fp.process(arg, event);
     if (newWin) newWin.close();
 });
@@ -124,11 +131,19 @@ ipcMain.on('loading', (event, arg) => {
     event.sender.send('loading', arg);
 });
 
+ipcMain.on('undo', (event, arg) => {
+    hp.undo(event, (file) => {
+        fp.process(file, event, true, false);
+    });
+});
+
 ipcMain.on('editImage', (event, arg) => {
     let activeWindow = wm.getWindowByID(event.sender.id);
     
     if (!activeWindow) return;
     if (!arg.image) return;
+
+    hp.history(arg.image);
 
     ie.edit(arg.image, arg.type, event, activeWindow);
 });

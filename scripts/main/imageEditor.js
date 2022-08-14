@@ -21,7 +21,7 @@ class imageEditor {
             .rotate(direction == "right" ? 90 : -90)
             .toBuffer()
             .then(data => {
-                this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
+                this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event, true);
                 win.show();
             })
             .catch( err => {
@@ -63,7 +63,7 @@ class imageEditor {
 
         output.toBuffer()
         .then(data => {
-            this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
+            this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event, true);
             win.show();
         })
         .catch( err => {
@@ -85,6 +85,8 @@ class imageEditor {
         });
     }
     edit(file, type, event, win) {
+        if (!file) return event.sender.send('action', "Select an image first");;
+
         switch (type) {
             case "rotateRight":
                 this.rotateImage(file, "right", event, win);

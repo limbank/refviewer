@@ -50,7 +50,8 @@
   [']', () => editImage("rotateRight")],
   ['[', () => editImage("rotateLeft")],
   ['.', () => editImage("flipHorizontal")],
-  [',', () => editImage("flipVertical")]
+  [',', () => editImage("flipVertical")],
+  ['command+z', 'ctrl+z', () => ipcRenderer.send('undo', fileSelected)]
 ]} />
 
 <div
