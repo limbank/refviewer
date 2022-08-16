@@ -16,9 +16,10 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 500, 
     height: 400,
-    minHeight: 250,
-    minWidth: 350,
-    frame: false
+    frame: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   })
 
   mainWindow.setBackgroundColor('#111111')
