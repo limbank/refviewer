@@ -2,15 +2,20 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <!--
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self' data:;">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    -->
     <title>RefViewer</title>
-    <link rel="stylesheet" href="assets/fontawesome/css/all.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="./assets/fontawesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
   </head>
   <body>
     <nav>
       <ul>
         <li class="controls" id="pick"><i class="fas fa-upload"></i></li>
         <li class="controls" id="clear"><i class="fas fa-trash"></i></li>
+        <li class="controls" id="scrn"><i class="fas fa-crosshairs"></i></li>
         <li class="controls dropdown">
             <button class="dropbtn"><i class="fas fa-bars"></i></button>
             <div id="myDropdown" class="dropdown-content">
@@ -19,6 +24,11 @@
               <a href="#" id="colormode">Color mode</a>
               <a href="#" id="saveimage">Save image</a>
               <a href="#" id="copyimage">Copy image</a>
+              <a href="#" class="subdropdown" id="recent">
+                Recent
+                <span class="dropdown-content" id="recent-elements">
+                </span>
+              </a>
               <a href="#" id="new_window">New window</a>
               <a href="#" id="settings">Settings</a>
               <a href="#" id="about">About</a>
@@ -31,16 +41,19 @@
         <li class="controls" id="close-btn"><i class="fas fa-times"></i></li>
       </ul>
     </nav>
+    <div class="image-controls-container">
+      <ul class="image-controls">
+        <li class="image-control" id="modify-flip"><i class="fas fa-sync-alt"></i></li>
+        <li class="image-control" id="modify-rotate"><i class="fas fa-redo"></i></li>
+      </ul>
+    </div>
     <div class="grow main">
       <div class="pick-image" id="drop">
         <h3 id="placeholder">Drop image here</h3>
       </div>
     </div>
     <div id="copy-notif">Image copied!</div>
-    <script src='panzoom.min.js'></script>
-    <script>
-      // You can also require other files to run in this process
-      require('./renderer.js');
-    </script>
+    <script src='./assets/js/panzoom.min.js'></script>
+    <script src="./renderer.js"></script>
   </body>
 </html>

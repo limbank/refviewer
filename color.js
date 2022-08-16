@@ -1,15 +1,15 @@
+const {ipcRenderer} = require('electron');
 const remote = require('electron').remote;
 var Vibrant = require('node-vibrant');
+var fs = require('fs');
+
 //remote.getCurrentWindow().toggleDevTools();
 
 new ClipboardJS('.colorbox');
 
 document.addEventListener("keydown", function (e) {
-    if (e.which === 123) {
-       remote.getCurrentWindow().toggleDevTools();
-    } else if (e.which === 116) {
-        location.reload();
-    }
+    if (e.which === 123)  remote.getCurrentWindow().toggleDevTools();
+    else if (e.which === 116) location.reload();
 });
 
 var eyedropperMode = false;
@@ -22,12 +22,10 @@ function init() {
         });
     });
 
-    // Close the dropdown menu if the user clicks outside of it
     window.onclick = function(event) {
       if (!event.target.matches('.dropbtn')) {
         var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
+        for (var i = 0; i < dropdowns.length; i++) {
           var openDropdown = dropdowns[i];
           if (openDropdown.classList.contains('show')) {
             openDropdown.classList.remove('show');
@@ -55,14 +53,7 @@ function init() {
 
 document.onreadystatechange = function () { if (document.readyState == "complete") init(); };
 
-const {ipcRenderer} = require('electron');
-var fs = require('fs');
-
-window.onresize = function(event) {
-    //console.log("Test")
-};
-
-fs.readFile(__dirname + '/settings/config.json', 'utf8', function readFileCallback(err, data){
+fs.readFile(__dirname + '/data/config.json', 'utf8', function readFileCallback(err, data){
     if (err) console.log(err);
     else {
         var settings = JSON.parse(data);
@@ -73,36 +64,34 @@ fs.readFile(__dirname + '/settings/config.json', 'utf8', function readFileCallba
             zoomSpeed: settings.zoomspeed
         };
 
-        function onmove(event){
-           // console.log(event);
-        }
-
         function rgb2hex(rgb){
-         rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-         return (rgb && rgb.length === 4) ? "#" +
-          ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-          ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-          ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+            rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+            return (rgb && rgb.length === 4) ? "#" +
+                   ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+                   ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+                   ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
         }
 
-        function percent(b, a){
-            return (Number(b)/Number(a))*100;
+        function scaleNumber(num, oldRange, newRange){
+            var a = oldRange[0];
+            var b = oldRange[1];
+            var c = newRange[0];
+            var d = newRange[1];
+
+            return (b*c - (a)*d)/(b-a) + (num)*(d/(b-a));
         }
 
-        function percentOf(b, a){
-            return Number(a)*(Number(b)/100);
-        }
+        let main_window = remote.getGlobal('mainWindow');
+        if (main_window) main_window.webContents.send ('custom-dom-ready', "Message from Window 2");
 
         ipcRenderer.on('image',(event,arg)=>{
-            //console.log(arg);
-
             var defaultDims;
 
             function getMousePos(canvas, evt) {
                 var rect = canvas.getBoundingClientRect();
                 return {
-                  x: evt.clientX - rect.left,
-                  y: evt.clientY - rect.top
+                    x: evt.clientX - rect.left,
+                    y: evt.clientY - rect.top
                 };
             }
             var canvas = document.getElementById('panel');
@@ -110,41 +99,23 @@ fs.readFile(__dirname + '/settings/config.json', 'utf8', function readFileCallba
             ctx.imageSmoothingEnabled = false;
 
             function mousemovehandler(evt) {
-                if (eyedropperMode) {
-                    var mousePos = getMousePos(canvas, evt);
-                    //console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
-                    var positionInfo = canvas.getBoundingClientRect();
-                    var heightn = positionInfo.height;
-                    var widthn = positionInfo.width;
-                    //console.log(heightn, widthn);
+                if (!eyedropperMode) return;
+                var mousePos = getMousePos(canvas, evt);
+                var positionInfo = canvas.getBoundingClientRect();
 
-                    //console.log(percent(mousePos.x, widthn) + "%");
-                    //console.log(percent(mousePos.y, heightn) + "%");
+                var newWidth = scaleNumber(mousePos.x, [0, positionInfo.width], [0, defaultDims.width]);
+                var newHeight = scaleNumber(mousePos.y, [0, positionInfo.height], [0, defaultDims.height]);
 
-                    var newheight = percentOf(percent(mousePos.y, heightn), defaultDims.height);
-                    var newwidth =  percentOf(percent(mousePos.x, widthn), defaultDims.width);
+                var imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
+                var pixel = imageData.data;
+                var pixelColor = "rgba("+pixel[0]+", "+pixel[1]+", "+pixel[2]+", "+pixel[3]+")";
 
-                    var imageData = ctx.getImageData(newwidth, newheight, 1, 1);
-                    var pixel = imageData.data;
-                    var pixelColor = "rgba("+pixel[0]+", "+pixel[1]+", "+pixel[2]+", "+pixel[3]+")";
-
-                    document.getElementById("preview").style.backgroundColor = pixelColor;
-                    document.getElementById("preview").style.color = pixelColor;
-
-                    document.getElementById("preview-desc").innerHTML = rgb2hex(pixelColor);
-                }
+                document.getElementById("preview").style.backgroundColor = pixelColor;
+                document.getElementById("preview").style.color = pixelColor;
+                document.getElementById("preview-desc").innerHTML = rgb2hex(pixelColor);
             }
 
             zoomInstance = panzoom(document.getElementById("color-container"), zoomOpts);
-
-            zoomInstance.on('zoom', function(e) {
-                //canvas.removeEventListener('mousemove', mousemovehandler, false);
-                //canvas.addEventListener('mousemove', mousemovehandler, false);
-
-                //console.log(canvas.scrollWidth)
-            });
-            
-            console.log("Trying to load the image");
 
             var image = new Image();
             image.onload = function () {
@@ -159,13 +130,12 @@ fs.readFile(__dirname + '/settings/config.json', 'utf8', function readFileCallba
                     height: image.height
                 };
 
-                ctx.drawImage(image, 0, 0, image.width, image.height); // draw the image on the canvas
+                ctx.drawImage(image, 0, 0, image.width, image.height);
 
                 canvas.addEventListener('mousemove', mousemovehandler, false);
 
                 function toggleEyeDropper(){
                     eyedropperMode==false?eyedropperMode=true:eyedropperMode=false;
-
                     canvas.classList.toggle('eyedropper-cursor');
                 }
                 document.getElementById("eyedropper").addEventListener("click", toggleEyeDropper); 

@@ -2,10 +2,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self' data:;">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <title>Color mode</title>
-    <link rel="stylesheet" href="assets/fontawesome/css/all.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/color.css">
+    <link rel="stylesheet" href="./assets/fontawesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/color.css">
 </head>
 <body>
     <nav>
@@ -56,11 +58,9 @@
             </div>
         </div>
     </div>
-    <script src='panzoom.min.js'></script>
-    <script src='clipboard.min.js'></script>
-    <script>
-        require('./color.js');
-    </script>
+    <script src='./assets/js/panzoom.min.js'></script>
+    <script src='./assets/js/clipboard.min.js'></script>
+    <script src="./color.js"></script>
   </body>
 </body>
 </html>
