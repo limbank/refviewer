@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>RefViewer</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li class="controls" id="pick"><i class="fas fa-upload"></i></li>
+        <li class="controls" id="clear"><i class="fas fa-trash"></i></li>
+        <li class="controls" id="about"><i class="fas fa-question"></i></li>
+        <li class="grow"></li>
+        <li class="controls" id="pin"><i class="fas fa-thumbtack"></i></li>
+        <li class="controls" id="min-btn"><i class="fas fa-minus"></i></li>
+        <li class="controls" id="max-btn"><i class="fas fa-plus"></i></li>
+        <li class="controls" id="close-btn"><i class="fas fa-times"></i></li>
+      </ul>
+    </nav>
+    <div class="grow main">
+      <div class="pick-image" id="drop">
+        <h3 id="placeholder">Drop image here</h3>
+      </div>
+    </div>
+    <script>
+      // You can also require other files to run in this process
+      require('./renderer.js')
+    </script>
+  </body>
+</html>

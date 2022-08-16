@@ -1,240 +1,68 @@
-const { app, BrowserWindow, ipcMain, dialog, screen } = require("electron");
+const electron = require('electron')
+// Module to control application life.
+const app = electron.app
+// Module to create native browser window.
+const BrowserWindow = electron.BrowserWindow
 
-const os = require('os');
-const path = require('path');
-const fs = require('fs-extra');
-const screenshot = require('screenshot-desktop');
-const sharp = require('sharp');
-const fileFilter = require('./scripts/main/fileFilter.js');
-const recentsProcessor = require('./scripts/main/recentsProcessor.js');
-const settingsProcessor = require('./scripts/main/settingsProcessor.js');
-const windowManager = require('./scripts/main/windowManager.js');
-const fileProcessor = require('./scripts/main/fileProcessor.js');
-const historyProcessor = require('./scripts/main/historyProcessor.js');
-const imageEditor = require('./scripts/main/imageEditor.js');
-const Lumberjack = require('./scripts/main/lumberjack.js');
+const path = require('path')
+const url = require('url')
 
-let mainWindow, newWin;
-let sp, rp, wm, fp, ie, hp;
-let processorsReady = false;
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let mainWindow
 
-let gotTheLock;
-let wmReady = false;
+function createWindow () {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    width: 500, 
+    height: 400,
+    minHeight: 250,
+    minWidth: 350,
+    frame: false
+  })
 
-const homeDir = path.join(os.homedir(), '.refviewer');
+  mainWindow.setBackgroundColor('#111111')
 
-const jack = new Lumberjack();
+  // and load the index.html of the app.
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
 
-sp = new settingsProcessor({
-    home:homeDir,
-    filename: 'config.json',
-    ready: () => {
-        rp = new recentsProcessor({
-            home: homeDir,
-            filename: 'recents.json',
-            ready: () => {
-                wm = new windowManager({
-                    rp: rp,
-                    sp: sp,
-                    ready: () => {
-                        wmReady = true;
-                    }
-                });
+  // Open the DevTools.
+  // mainWindow.webContents.openDevTools()
 
-                hp = new historyProcessor({
-                    limit: 15
-                });
-                
-                fp = new fileProcessor({
-                    rp: rp,
-                    hp: hp
-                });
-
-                ie = new imageEditor({
-                    fp: fp
-                });
-            }
-        });
-    }
-});
-
-try {
-    require("electron-reloader")(module);
-} catch (_) {}
-
-gotTheLock = app.requestSingleInstanceLock();
-
-function createWhenReady() {
-    if (!wmReady) setTimeout(createWhenReady, 100);
-    else return wm.createWindow();
+  // Emitted when the window is closed.
+  mainWindow.on('closed', function () {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null
+  })
 }
 
-if (!gotTheLock) {
-    app.quit();
-} else {
-    app.on("ready", createWhenReady);
-}
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', createWindow)
 
-app.on("window-all-closed", function () {
-    if (process.platform !== "darwin") app.quit();
-});
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
 
-app.on("activate", function () {
-    if (wm.windows.length <= 0) createWhenReady();
-});    
+app.on('activate', function () {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    createWindow()
+  }
+})
 
-ipcMain.on('settings:write', (event, arg) => {
-    sp.writeSettings(arg, () => {
-        event.sender.send('settings', sp.settings);
-    });
-});
-
-ipcMain.on('window', (event, arg) => {
-    let senderID = event.sender.id;
-    let activeWindow = wm.getWindowByID(senderID);
-
-    if (!activeWindow) return;
-    switch (arg) {
-        case "pin":
-            if (activeWindow.isAlwaysOnTop()) activeWindow.setAlwaysOnTop(false);
-            else activeWindow.setAlwaysOnTop(true);
-            event.sender.send('pin', activeWindow.isAlwaysOnTop());
-            break;
-        case "close":
-            activeWindow.close();
-            break;
-        case "maximize":
-            if (activeWindow.isMaximized()) activeWindow.unmaximize();
-            else activeWindow.maximize();
-            break;
-        case "minimize":
-            activeWindow.minimize();
-            break;
-        case "new":
-            wm.createWindow();
-            break;
-        default: break;
-    }
-});
-
-ipcMain.on('file', (event, arg) => {
-    hp.flush();
-    fp.process(arg, event);
-    if (newWin) newWin.close();
-});
-
-ipcMain.on('action', (event, arg) => {
-    event.sender.send('action', arg);
-});
-
-ipcMain.on('loading', (event, arg) => {
-    event.sender.send('loading', arg);
-});
-
-ipcMain.on('undo', (event, arg) => {
-    hp.undo(event, (file) => {
-        fp.process(file, event, true, false);
-    });
-});
-
-ipcMain.on('editImage', (event, arg) => {
-    let activeWindow = wm.getWindowByID(event.sender.id);
-    
-    if (!activeWindow) return;
-    if (!arg.image) return;
-
-    hp.history(arg.image);
-
-    ie.edit(arg.image, arg.type, event, activeWindow);
-});
-
-ipcMain.on('selectfile', (event, arg) => {
-    let senderID = event.sender.id;
-    let activeWindow = wm.getWindowByID(senderID);
-    
-    if (!activeWindow) return;
-    dialog.showOpenDialog(activeWindow, {
-        title: "Open image",
-        filters: fileFilter.open
-    }).then(result => {
-        if (!result.cancelled && result.filePaths.length > 0) {
-            let files = result.filePaths;
-            fp.process(files[0], event);
-        }
-    }).catch(err => {
-        jack.log("Error opening file: ", err);
-    });
-});
-
-ipcMain.on('screenshot', (event, arg) => {
-    let senderID = event.sender.id;
-    let activeWindow = wm.getWindowByID(senderID);
-    
-    if (!activeWindow) return;
-    let windowPOS = activeWindow.getPosition();
-
-    let currentScreen = screen.getDisplayNearestPoint({
-        x: windowPOS[0],
-        y: windowPOS[1]
-    });
-
-    let allDisplays = screen.getAllDisplays();
-    let index = allDisplays.map(e => e.id).indexOf(currentScreen.id);;
-    activeWindow.hide();
-
-    screenshot.listDisplays().then((displays) => {
-        screenshot({
-            screen: displays[index].id,
-            filename: path.join(os.tmpdir(), 'screenshot.png')
-        }).then((imgPath) => {
-            impath = imgPath;
-
-            activeWindow.show();
-            
-            newWin = new BrowserWindow({
-                x: currentScreen.bounds.x,
-                y: currentScreen.bounds.y,
-                width: currentScreen.size.width,
-                height: currentScreen.size.height,
-                webPreferences: {
-                    nodeIntegration: true,
-                    contextIsolation: false
-                },
-                frame:false,
-                show: false
-            });
-
-            newWin.loadFile('public/screen.html');
-
-            newWin.once('ready-to-show', () => {
-                newWin.show();
-                newWin.setFullScreen(true);
-                newWin.focus();
-
-                ipcMain.once('image_crop', (e, arg) => {
-                    if (newWin) newWin.close();
-
-                    sharp(impath)
-                        .extract({ left: arg.x, top: arg.y, width: arg.w, height: arg.h })
-                        .toBuffer()
-                        .then( data => {
-                            fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
-                            activeWindow.show();
-                        })
-                        .catch( err => {
-                            jack.log("Error processing screenshot: ", err);
-                        });
-                });
-            });
-
-            newWin.on('close', function(e){
-                newWin = null;
-            });
-        }).catch((error) => {
-            activeWindow.show();
-
-            jack.log("Error screenshotting: ", error);
-            event.sender.send('action', "Failed to take a screenshot");
-        });
-    });
-});
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.

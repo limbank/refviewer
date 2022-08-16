@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li class="grow"></li>
+        <li class="controls" id="close-btn2"><i class="fas fa-times"></i></li>
+      </ul>
+    </nav>
+    beep
+    <script type="text/javascript">
+      (function () {
+            
+        const remote = require('electron').remote;
+
+        function init() {
+          document.getElementById("close-btn2").addEventListener("click", function (e) {
+            const window = remote.getCurrentWindow();
+            window.close();
+          }); 
+
+        };
+
+        window.addEventListener("dragover",function(e){
+          e = e || event;
+          e.preventDefault();
+        },false);
+        window.addEventListener("drop",function(e){
+          e = e || event;
+          e.preventDefault();
+        },false);
+      })();
+    </script>
+  </body>
+</html>
