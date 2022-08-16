@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <link rel="stylesheet" href="assets/fontawesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/settings.css">
+</head>
+<body>
+    <nav>
+      <ul>
+        <li class="grow"></li>
+        <li class="controls" id="close-btn"><i class="fas fa-times"></i></li>
+      </ul>
+    </nav>
+    <div class="grow main">
+		<div class="settings-item">
+			<span>Scroll sensitivity</span>
+			<div class="value-split">
+				<input type="range" name="" min="0.01" max="1" step="0.01" id="sensrange">
+				<input type="text" name="" id="sensval">
+			</div>
+		</div>
+		<div class="center-button">
+			<button id="save">Save settings</button>
+		</div>
+    </div>
+    <script>
+		const remote = require('electron').remote;
+
+		function init() { 
+			document.getElementById("close-btn").addEventListener("click", function (e) {
+			  const window = remote.getCurrentWindow();
+			  window.close();
+			}); 
+		}; 
+
+		document.onreadystatechange = function () { if (document.readyState == "complete") init(); };
+
+		document.getElementById("sensrange").addEventListener("input",function (e) {
+			document.getElementById("sensval").value = Number(document.getElementById("sensrange").value);
+		});
+
+		document.getElementById("sensval").addEventListener("input",function (e) {
+			document.getElementById("sensrange").value = Number(document.getElementById("sensval").value);
+		});
+
+		var fs = require('fs');
+
+		fs.readFile(__dirname + '/settings/config.json', 'utf8', function readFileCallback(err, data){
+		    if (err) console.log(err);
+		    else {
+		    	var obj = JSON.parse(data);
+
+		    	document.getElementById("sensrange").value = Number(obj.zoomspeed);
+		    	document.getElementById("sensval").value = Number(obj.zoomspeed);
+
+				document.getElementById("save").addEventListener("click",function (e) {
+				    obj.zoomspeed = Number(document.getElementById("sensrange").value);
+
+				    json = JSON.stringify(obj);
+
+				    fs.writeFile(__dirname + '/settings/config.json', json, 'utf8', function(e){
+				    	console.log("Hi2");
+				    });
+				});
+			}
+		});
+    </script>
+  </body>
+</body>
+</html>
