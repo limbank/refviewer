@@ -3,27 +3,15 @@
   <head>
     <meta charset="UTF-8">
     <title>RefViewer</title>
-    <link rel="stylesheet" href="assets/fontawesome/css/all.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <nav>
       <ul>
         <li class="controls" id="pick"><i class="fas fa-upload"></i></li>
         <li class="controls" id="clear"><i class="fas fa-trash"></i></li>
-        <li class="controls dropdown">
-            <button class="dropbtn"><i class="fas fa-bars"></i></button>
-            <div id="myDropdown" class="dropdown-content">
-              <a href="#" id="pick_mobile">Open image</a>
-              <a href="#" id="clear_mobile">Clear file</a>
-              <a href="#" id="colormode">Color mode</a>
-              <a href="#" id="saveimage">Save image</a>
-              <a href="#" id="copyimage">Copy image</a>
-              <a href="#" id="new_window">New window</a>
-              <a href="#" id="settings">Settings</a>
-              <a href="#" id="about">About</a>
-            </div>
-        </li> 
+        <li class="controls" id="about"><i class="fas fa-question"></i></li>
         <li class="grow"></li>
         <li class="controls" id="pin"><i class="fas fa-thumbtack"></i></li>
         <li class="controls" id="min-btn"><i class="fas fa-minus"></i></li>
@@ -36,11 +24,9 @@
         <h3 id="placeholder">Drop image here</h3>
       </div>
     </div>
-    <div id="copy-notif">Image copied!</div>
-    <script src='panzoom.min.js'></script>
     <script>
       // You can also require other files to run in this process
-      require('./renderer.js');
+      require('./renderer.js')
     </script>
   </body>
 </html>
