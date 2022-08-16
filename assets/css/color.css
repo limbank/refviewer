@@ -1,0 +1,77 @@
+.main{
+    display:flex;
+    flex-direction:row;
+}
+.colordata{
+    border:2px dashed #3F3F3F;
+    border-radius:5px;
+    margin-right:20px;
+    width:60px;
+    padding:6px;
+    justify-content:flex-start;
+    align-items:flex-start;
+    flex-direction:column;
+    box-sizing:border-box;
+    display:flex;
+}
+.pick-image{
+    flex-grow:1;
+    overflow:hidden;
+    outline:none;
+}
+canvas{
+    max-width:100%;
+    max-height: 100%;
+    object-fit:contain;
+    /*background-color:red;*/
+    z-index:9999 !important;
+    pointer-events:all !important;
+
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+.eyedropper-cursor{
+    cursor: url('data:image/x-icon;base64,AAACAAEAICAQAAAAAADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAAAAh4eHAL+/vwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////////////////////////////////////////////////////////////////////D////g///+AP///gD///8B////A////sP///0D///6M///9H///+j////R////o////0f///9P////H////w=='), auto;
+}
+#panel{
+    display:none;
+}
+.inner-data{
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    height:100%;
+    color:inherit;
+    filter:invert(1);
+    display:none;
+    cursor:pointer;
+}
+.colorbox{
+    width:40px;
+    height:40px;
+}
+.colorbox:hover>.inner-data{
+    display:flex;
+}
+.descriptor{
+    text-align:center;
+    color:#3F3F3F;
+    font-size:10px;
+    padding-top:3px;
+    padding-bottom:5px;
+    font-family:Helvetica, sans-serif;
+}
+#loader{
+    text-align:center;
+    pointer-events:none;
+    user-select:none;
+}
+.descriptor::selection { 
+    background:rgba(63,63,63, 0.996);
+    color:black;
+    /*text-shadow: 1px 1px 0 #27ae60;*/
+}
+.colordata>.descriptor:last-child{
+    padding-bottom:0px;
+}

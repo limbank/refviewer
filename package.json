@@ -1,12 +1,12 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "refviewer",
+  "version": "2.0.0",
+  "description": "A simple image viewer",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "",
   "keywords": [
     "Electron",
     "quick",
@@ -17,6 +17,13 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^1.7.16"
+    "electron": "^6.0.10"
+  },
+  "dependencies": {
+    "jimp": "^0.9.3",
+    "node-vibrant": "^3.1.5",
+    "psd": "^3.2.0",
+    "screenshot-desktop": "^1.12.3",
+    "utif": "^3.1.0"
   }
 }
