@@ -110,7 +110,7 @@
 		position: relative;
 
 		&.legacy {
-			padding-top: 10px;
+			margin-top: 10px;
 		}
 	}
 </style>

@@ -14,7 +14,7 @@
 	export let settingsOpen = false;
 	export let legacy = false;
 	export let tips = false;
-	export let backdropColor = "#000000";
+	export let backdropColor = legacy ? "#111111" : "#2F2E33";
 	export let hex;
 
 	function editImage(type) {

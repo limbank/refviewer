@@ -43,7 +43,7 @@
 
 	let tbx;
 
-	let backdropColor = "#2F2E33";
+	let backdropColor = settings.theme ? "#111111" : "#2F2E33";
 
   	let workAreaOpacity = 1;
 	let m = { x: 0, y: 0 };
@@ -70,6 +70,8 @@
 
 		settings = arg;
 		initUpdate++;
+
+		backdropColor = settings.theme ? "#111111" : "#2F2E33";
 
 		if (initUpdate < 2) proxySettings = settings;
 	});
@@ -125,9 +127,6 @@
   	$: {
   		if(!settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb().a;
 		else workAreaOpacity = 1;
-
-		if(settings.theme) backdropColor = "#111111";
-		else backdropColor = "#2F2E33";
   	};
 
   	function handleMousemove(e) {
@@ -206,7 +205,8 @@
 		tips={settings.tooltips}
 		on:clear={e => {
 			fileSelected = false;
-	    	backdropColor = "#2F2E33";
+			console.log("resetting!!!", settings.theme);
+	    	backdropColor = settings.theme ? "#111111" : "#2F2E33";
 
 		    delInstance();
 		}}

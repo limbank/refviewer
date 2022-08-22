@@ -13,7 +13,7 @@
 	    strategy: 'fixed',
 	});
 
-	export let backdropColor = "#000000";
+	export let backdropColor = legacy ? "#111111" : "#2F2E33";
 
 	let showDropdown = false;
 
@@ -44,7 +44,7 @@
 			{tips}
 			{legacy}
 			bind:hex={backdropColor}
-			reset="#2F2E33"
+			reset={legacy ? "#111111" : "#2F2E33"}
 		/>
 	</Dropdown>
 {/if}

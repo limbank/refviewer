@@ -6192,7 +6192,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "desktop svelte-1ei4s7n");
+    			attr_dev(div, "class", "desktop svelte-18danl4");
     			set_style(div, "background", /*backdropColor*/ ctx[1]);
     			toggle_class(div, "legacy", /*legacy*/ ctx[0]);
     			add_location(div, file$P, 92, 0, 3115);
@@ -14831,7 +14831,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-fill");
-    			add_location(i, file$x, 32, 1, 707);
+    			add_location(i, file$x, 32, 1, 728);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14931,7 +14931,7 @@ var app = (function () {
     	let colorpicker_props = {
     		tips: /*tips*/ ctx[1],
     		legacy: /*legacy*/ ctx[2],
-    		reset: "#2F2E33"
+    		reset: /*legacy*/ ctx[2] ? "#111111" : "#2F2E33"
     	};
 
     	if (/*backdropColor*/ ctx[0] !== void 0) {
@@ -14953,6 +14953,7 @@ var app = (function () {
     			const colorpicker_changes = {};
     			if (dirty & /*tips*/ 2) colorpicker_changes.tips = /*tips*/ ctx[1];
     			if (dirty & /*legacy*/ 4) colorpicker_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*legacy*/ 4) colorpicker_changes.reset = /*legacy*/ ctx[2] ? "#111111" : "#2F2E33";
 
     			if (!updating_hex && dirty & /*backdropColor*/ 1) {
     				updating_hex = true;
@@ -15099,7 +15100,7 @@ var app = (function () {
     		strategy: 'fixed'
     	});
 
-    	let { backdropColor = "#000000" } = $$props;
+    	let { backdropColor = legacy ? "#111111" : "#2F2E33" } = $$props;
     	let showDropdown = false;
     	let { tips = false } = $$props;
     	let { legacy = false } = $$props;
@@ -15495,7 +15496,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "far fa-save");
-    			add_location(i, file$w, 68, 3, 1768);
+    			add_location(i, file$w, 68, 3, 1789);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15526,7 +15527,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-2px)");
-    			add_location(i, file$w, 77, 6, 1920);
+    			add_location(i, file$w, 77, 6, 1941);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15556,7 +15557,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-sync-alt");
-    			add_location(i, file$w, 97, 6, 2311);
+    			add_location(i, file$w, 97, 6, 2332);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15586,7 +15587,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$w, 106, 6, 2490);
+    			add_location(i, file$w, 106, 6, 2511);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15622,7 +15623,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-b7ouig");
     			toggle_class(div, "legacy", /*legacy*/ ctx[4]);
-    			add_location(div, file$w, 56, 0, 1565);
+    			add_location(div, file$w, 56, 0, 1586);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -15721,7 +15722,7 @@ var app = (function () {
     	let { settingsOpen = false } = $$props;
     	let { legacy = false } = $$props;
     	let { tips = false } = $$props;
-    	let { backdropColor = "#000000" } = $$props;
+    	let { backdropColor = legacy ? "#111111" : "#2F2E33" } = $$props;
     	let { hex } = $$props;
 
     	function editImage(type) {
@@ -28830,11 +28831,11 @@ var app = (function () {
     			attr_dev(div0, "class", "canvas-container-inner svelte-192f0hh");
     			set_style(div0, "opacity", /*workAreaOpacity*/ ctx[17]);
     			toggle_class(div0, "pickingmode", /*pickingmode*/ ctx[8]);
-    			add_location(div0, file, 267, 4, 6570);
+    			add_location(div0, file, 267, 4, 6652);
     			attr_dev(div1, "class", "canvas-container svelte-192f0hh");
     			toggle_class(div1, "legacy", /*settings*/ ctx[0].theme);
     			toggle_class(div1, "pixelated", /*pixelated*/ ctx[5]);
-    			add_location(div1, file, 251, 3, 6264);
+    			add_location(div1, file, 251, 3, 6346);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -29357,7 +29358,7 @@ var app = (function () {
     			create_component(desktop.$$.fragment);
     			attr_dev(main, "class", "svelte-192f0hh");
     			toggle_class(main, "legacy", /*settings*/ ctx[0].theme);
-    			add_location(main, file, 198, 0, 5214);
+    			add_location(main, file, 197, 0, 5218);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -29490,7 +29491,7 @@ var app = (function () {
     	let mouseincanvas = false;
     	let zoomscale = 1;
     	let tbx;
-    	let backdropColor = "#2F2E33";
+    	let backdropColor = settings.theme ? "#111111" : "#2F2E33";
     	let workAreaOpacity = 1;
     	let m = { x: 0, y: 0 };
     	let img = new Image();
@@ -29516,6 +29517,7 @@ var app = (function () {
 
     		$$invalidate(0, settings = arg);
     		initUpdate++;
+    		$$invalidate(1, backdropColor = settings.theme ? "#111111" : "#2F2E33");
     		if (initUpdate < 2) $$invalidate(6, proxySettings = settings);
     	});
 
@@ -29614,7 +29616,8 @@ var app = (function () {
 
     	const clear_handler = e => {
     		$$invalidate(2, fileSelected = false);
-    		$$invalidate(1, backdropColor = "#2F2E33");
+    		console.log("resetting!!!", settings.theme);
+    		$$invalidate(1, backdropColor = settings.theme ? "#111111" : "#2F2E33");
     		delInstance();
     	};
 
@@ -29631,7 +29634,7 @@ var app = (function () {
 
     	function toolbox_backdropColor_binding(value) {
     		backdropColor = value;
-    		($$invalidate(1, backdropColor), $$invalidate(0, settings));
+    		$$invalidate(1, backdropColor);
     	}
 
     	const pickColor_handler = e => {
@@ -29770,7 +29773,6 @@ var app = (function () {
     		if ($$self.$$.dirty[0] & /*settings, backdropColor*/ 3) {
     			{
     				if (!settings.transparency) $$invalidate(17, workAreaOpacity = tinycolor(backdropColor).toRgb().a); else $$invalidate(17, workAreaOpacity = 1);
-    				if (settings.theme) $$invalidate(1, backdropColor = "#111111"); else $$invalidate(1, backdropColor = "#2F2E33");
     			}
     		}
     	};
