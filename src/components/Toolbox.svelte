@@ -18,6 +18,8 @@
 	export let hex;
 
 	function editImage(type) {
+		if (!fileSelected) return;
+
 		ipcRenderer.send('editImage', {
 			type: type,
 			image: fileSelected
@@ -25,6 +27,8 @@
 	}
 
 	export const copyImage = () => {
+		if (!fileSelected) return;
+
 		let xhr = new XMLHttpRequest();
 
 		xhr.onload = () => {
@@ -51,7 +55,10 @@
   ['[', () => editImage("rotateLeft")],
   ['.', () => editImage("flipHorizontal")],
   [',', () => editImage("flipVertical")],
-  ['command+z', 'ctrl+z', () => ipcRenderer.send('undo', fileSelected)]
+  ['command+z', 'ctrl+z', () => {
+  	if (!fileSelected) return;
+  	ipcRenderer.send('undo', fileSelected);
+  }]
 ]} />
 
 <div
@@ -88,6 +95,11 @@
 			{legacy}
 			bind:backdropColor
 		/>
+		<Palette
+			{tips}
+			{legacy}
+			bind:fileSelected
+		/>
 		<Tool
 			{tips}
 			{legacy}
@@ -106,11 +118,6 @@
 		>
 	    	<i class="fas fa-redo"></i>
 		</Tool>
-		<Palette
-			{tips}
-			{legacy}
-			bind:fileSelected
-		/>
 	{/if}
 </div>
 

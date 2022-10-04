@@ -207,6 +207,7 @@
 			fileSelected = false;
 			console.log("resetting!!!", settings.theme);
 	    	backdropColor = settings.theme ? "#111111" : "#2F2E33";
+	    	hex = undefined;
 
 		    delInstance();
 		}}

@@ -147,7 +147,6 @@
 		&.legacy {
 			box-sizing: border-box;
 			background: #111111;
-			top: 10px;
 			overflow-y: hidden;
 			border-radius: 3px;
 		}

@@ -106,6 +106,7 @@ ipcMain.on('window', (event, arg) => {
         case "maximize":
             if (activeWindow.isMaximized()) activeWindow.unmaximize();
             else activeWindow.maximize();
+            event.sender.send('max', activeWindow.isMaximized());
             break;
         case "minimize":
             activeWindow.minimize();
@@ -187,8 +188,6 @@ ipcMain.on('screenshot', (event, arg) => {
             screen: displays[index].id,
             filename: path.join(os.tmpdir(), 'screenshot.png')
         }).then((imgPath) => {
-            impath = imgPath;
-
             activeWindow.show();
             
             newWin = new BrowserWindow({
@@ -214,7 +213,7 @@ ipcMain.on('screenshot', (event, arg) => {
                 ipcMain.once('image_crop', (e, arg) => {
                     if (newWin) newWin.close();
 
-                    sharp(impath)
+                    sharp(imgPath)
                         .extract({ left: arg.x, top: arg.y, width: arg.w, height: arg.h })
                         .toBuffer()
                         .then( data => {
@@ -225,6 +224,21 @@ ipcMain.on('screenshot', (event, arg) => {
                             jack.log("Error processing screenshot: ", err);
                         });
                 });
+
+                ipcMain.once('image_full', (e, arg) => {
+                    if (newWin) newWin.close();
+
+                    sharp(imgPath)
+                        .toBuffer()
+                        .then( data => {
+                            fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
+                            activeWindow.show();
+                        })
+                        .catch( err => {
+                            jack.log("Error processing screenshot: ", err);
+                        });
+                });
+
             });
 
             newWin.on('close', function(e){

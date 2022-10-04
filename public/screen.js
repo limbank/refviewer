@@ -10,7 +10,7 @@ let src = path.join(os.tmpdir(), 'screenshot.png');
 
 setTimeout(function() {
     document.addEventListener('keydown', function(e) {
-        if(e.keyCode == 27) ipcRenderer.send('file', src);
+        if(e.keyCode == 27) ipcRenderer.send('image_full', src);
     });
 
     canvas.width = window.innerWidth;
@@ -47,7 +47,12 @@ setTimeout(function() {
         returnObject.x = rect.w < 0 ? rect.startX + rect.w : rect.startX;
         returnObject.y = rect.h < 0 ? rect.startY + rect.h : rect.startY;
 
-        if (isNaN(returnObject.w) || isNaN(returnObject.h)) ipcRenderer.send('file', src);
+        if (
+            isNaN(returnObject.w) || 
+            isNaN(returnObject.h) || 
+            returnObject.w == 0 ||
+            returnObject.h == 0
+            ) ipcRenderer.send('image_full', src);
         else ipcRenderer.send('image_crop', returnObject);
     }
 

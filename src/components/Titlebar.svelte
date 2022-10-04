@@ -14,8 +14,10 @@
 	export let overwrite = false;
 	export let version;
 	let pinned = false;
+	let maximized = false;
 
 	ipcRenderer.on('pin', (event, arg) => { pinned = arg; });
+	ipcRenderer.on('max', (event, arg) => { maximized = arg; });
 
 	function openImage() {
 		ipcRenderer.send('selectfile');
@@ -124,7 +126,7 @@
 		<Control
 			{tips}
 			{legacy}
-			tiptext="Maximize"
+			tiptext={maximized ? "Restore" : "Maximize"}
 			on:click={e => { ipcRenderer.send('window', 'maximize'); }}
 		>
 			<i class="fas fa-plus"></i>
