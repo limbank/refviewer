@@ -11,7 +11,6 @@
 
 	export let legacy = false;
 	export let settings;
-	export let recents;
 	export let version;
 
 	const fetchLatest = (async () => {
@@ -71,10 +70,7 @@
 	<div class="settings-container-main">
 		{#if setWindow=="recent"}
 			<div class="settings-w-inner">
-				<Recent
-					{recents}
-					on:settingsOpen={e => { dispatch('settingsOpen', e.detail); }}
-				/>
+				<Recent on:settingsOpen={e => { dispatch('settingsOpen', e.detail); }} />
 			</div>
 		{:else if setWindow=="settings"}
 			<div class="settings-w-inner">

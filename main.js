@@ -31,29 +31,28 @@ sp = new settingsProcessor({
     ready: () => {
         rp = new recentsProcessor({
             home: homeDir,
-            filename: 'recents.json',
+            filename: 'recents.json'
+        });
+
+        wm = new windowManager({
+            rp: rp,
+            sp: sp,
             ready: () => {
-                wm = new windowManager({
-                    rp: rp,
-                    sp: sp,
-                    ready: () => {
-                        wmReady = true;
-                    }
-                });
-
-                hp = new historyProcessor({
-                    limit: 15
-                });
-                
-                fp = new fileProcessor({
-                    rp: rp,
-                    hp: hp
-                });
-
-                ie = new imageEditor({
-                    fp: fp
-                });
+                wmReady = true;
             }
+        });
+
+        hp = new historyProcessor({
+            limit: 15
+        });
+        
+        fp = new fileProcessor({
+            rp: rp,
+            hp: hp
+        });
+
+        ie = new imageEditor({
+            fp: fp
         });
     }
 });
@@ -116,6 +115,12 @@ ipcMain.on('window', (event, arg) => {
             break;
         default: break;
     }
+});
+
+ipcMain.on('getRecents', (event, arg) => {
+    rp.readRecents((data) => {
+        event.sender.send('recents', data);
+    });
 });
 
 ipcMain.on('file', (event, arg) => {
@@ -186,8 +191,8 @@ ipcMain.on('screenshot', (event, arg) => {
     screenshot.listDisplays().then((displays) => {
         screenshot({
             screen: displays[index].id,
-            filename: path.join(os.tmpdir(), 'screenshot.png')
-        }).then((imgPath) => {
+            format: 'png'
+        }).then((img) => {
             activeWindow.show();
             
             newWin = new BrowserWindow({
@@ -205,6 +210,10 @@ ipcMain.on('screenshot', (event, arg) => {
 
             newWin.loadFile('public/screen.html');
 
+            newWin.webContents.on('did-finish-load', () => {
+                newWin.webContents.send('screenshot', img);
+            });
+
             newWin.once('ready-to-show', () => {
                 newWin.show();
                 newWin.setFullScreen(true);
@@ -213,7 +222,7 @@ ipcMain.on('screenshot', (event, arg) => {
                 ipcMain.once('image_crop', (e, arg) => {
                     if (newWin) newWin.close();
 
-                    sharp(imgPath)
+                    sharp(img)
                         .extract({ left: arg.x, top: arg.y, width: arg.w, height: arg.h })
                         .toBuffer()
                         .then( data => {
@@ -228,7 +237,7 @@ ipcMain.on('screenshot', (event, arg) => {
                 ipcMain.once('image_full', (e, arg) => {
                     if (newWin) newWin.close();
 
-                    sharp(imgPath)
+                    sharp(img)
                         .toBuffer()
                         .then( data => {
                             fp.process(`data:image/png;base64,${data.toString('base64')}`, event);

@@ -6,9 +6,10 @@ let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d'),
     rect = {},
     drag = false;
-let src = path.join(os.tmpdir(), 'screenshot.png');
 
-setTimeout(function() {
+ipcRenderer.on('screenshot', (event, arg) => {
+    let src = "data:image/png;base64," + Buffer.from(arg).toString('base64');
+
     document.addEventListener('keydown', function(e) {
         if(e.keyCode == 27) ipcRenderer.send('image_full', src);
     });
@@ -81,4 +82,4 @@ setTimeout(function() {
     }
 
     image.onload = init;
-}, 100);
+});

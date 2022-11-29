@@ -1,32 +1,45 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	const { ipcRenderer } = require('electron');
+	import Loader from '../common/Loader.svelte';
 
 	const dispatch = createEventDispatcher();
 
-	export let recents;
+	let recents;
+
+	ipcRenderer.on('recents', (event, arg) => {
+		recents = arg;
+	});
+
+	onMount(async () => {
+		ipcRenderer.send('getRecents');
+	});
 </script>
 
 <ul class="recents-list">
-	{#if recents && recents.length}
-		{#each recents as item}
-			<li>
-				<a
-					class="recents-list-item"
-					href="{item}"
-			    	on:click={(e) => {
-			    		e.preventDefault();
-			    		ipcRenderer.send('file', item);
-						ipcRenderer.send('loading', true);
-			    		dispatch('settingsOpen', false);
-			    	}}
-				>{item}</a>
-			</li>
-		{/each}
+	{#if recents}
+		{#if recents.length}
+			{#each recents as item}
+				<li>
+					<a
+						class="recents-list-item"
+						href="{item}"
+				    	on:click={(e) => {
+				    		e.preventDefault();
+				    		ipcRenderer.send('file', item);
+							ipcRenderer.send('loading', true);
+				    		dispatch('settingsOpen', false);
+				    	}}
+					>{item}</a>
+				</li>
+			{/each}
+		{:else}
+			<span class="recents-list-fallback">
+				No recent files found yet!
+			</span>
+		{/if}
 	{:else}
-		<span class="recents-list-fallback">
-			No recent files found yet!
-		</span>
+		<Loader color="#B7B9BC" />
 	{/if}
 </ul>
 
@@ -37,6 +50,7 @@
 		margin: 0;
 		padding: 0;
 		list-style: none;
+		height: 100%;
 
 		li, a {
 			width: 100%;

@@ -29,7 +29,6 @@
 	let settingsOpen = false;
 	let pickingmode = false;
 
-	let recents;
 	let initUpdate = 0;
 	let instance;
 
@@ -53,10 +52,6 @@
 	  	width = img.width;
 	  	height = img.height;
 	};
-
-	ipcRenderer.on('recents', (event, arg) => {
-		recents = arg;
-	});
 
 	ipcRenderer.on('loading', (event, arg) => {
 		loading = arg;
@@ -239,7 +234,6 @@
 			<Menu
 				settings={proxySettings}
 				legacy={settings.theme}
-				{recents}
 				{version}
 				on:settingsOpen={e => { settingsOpen = e.detail; }}
 			/>
