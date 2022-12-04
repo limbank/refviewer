@@ -26,8 +26,18 @@
 		});
 	}
 
+	function getSelectedText() {
+    var text = "";
+    if (typeof window.getSelection != "undefined") {
+        text = window.getSelection().toString();
+    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+        text = document.selection.createRange().text;
+    }
+    return text;
+	}
+
 	export const copyImage = () => {
-		if (!fileSelected) return;
+		if (!fileSelected || getSelectedText() != "") return;
 
 		let xhr = new XMLHttpRequest();
 
@@ -83,6 +93,15 @@
 			on:click={copyImage}
 		>
 	    	<i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
+		</Tool>
+		<Tool
+			{tips}
+			{legacy}
+			size="13px"
+			tiptext={"Crop image"}
+			on:click={() => dispatch("cropImage")}
+		>
+	    	<i class="far fa-crop-alt" style=""></i>
 		</Tool>
 		<Eyedropper
 			{tips}

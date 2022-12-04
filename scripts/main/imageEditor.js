@@ -16,6 +16,21 @@ class imageEditor {
     dataToBuffer(dataURI) {
         return new Buffer.from(dataURI.split(",")[1], 'base64');
     }
+    cropImage(file, coords, event, win) {
+        console.log("HI!", coords);
+
+        sharp(this.dataToBuffer(file))
+            .extract(coords)
+            .toBuffer()
+            .then(data => {
+                this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event, true);
+                win.show();
+            })
+            .catch( err => {
+                jack.log(err);
+                event.sender.send('action', "Failed to crop image");
+            });
+    }
     rotateImage(file, direction, event, win) {
         sharp(this.dataToBuffer(file))
             .rotate(direction == "right" ? 90 : -90)
@@ -28,6 +43,25 @@ class imageEditor {
                 jack.log(err);
                 event.sender.send('action', "Failed to rotate image");
             });
+    }
+    saveImageAuto (file, args, event, win) {
+        let filePath = path.join(args.dir, args.name + ".png");
+
+        sharp(this.dataToBuffer(file))
+                .toFormat("png")
+                .toFile(filePath, {
+                    adaptiveFiltering: true,
+                    compressionLevel: 9,
+                    progressive: true,
+                    force: true
+                })
+                .then(info => {
+                    event.sender.send('action', "Image saved!");
+                })
+                .catch( err => {
+                    jack.log(err);
+                    event.sender.send('action', "Failed to save image");
+                });
     }
     saveImage (file, event, win) {
         dialog.showSaveDialog(win, {
@@ -42,7 +76,12 @@ class imageEditor {
 
             sharp(this.dataToBuffer(file))
                 .toFormat(ext)
-                .toFile(filePath)
+                .toFile(filePath, {
+                    adaptiveFiltering: true,
+                    compressionLevel: 9,
+                    progressive: true,
+                    force: true
+                })
                 .then(info => {
                     event.sender.send('action', "Image saved!");
                 })
@@ -84,8 +123,8 @@ class imageEditor {
             });
         });
     }
-    edit(file, type, event, win) {
-        if (!file) return event.sender.send('action', "Select an image first");;
+    edit(file, args = {}, type, event, win) {
+        if (!file) return event.sender.send('action', "Select an image first");
 
         switch (type) {
             case "rotateRight":
@@ -105,6 +144,12 @@ class imageEditor {
                 break;
             case "save":
                 this.saveImage(file, event, win);
+                break;
+            case "saveAuto":
+                this.saveImageAuto(file, args, event, win);
+                break;
+            case "crop":
+                this.cropImage(file, args, event, win);
                 break;
             default: break;
         }

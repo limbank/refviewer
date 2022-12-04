@@ -26,6 +26,10 @@
     	resetConfirmed = false;
     	resetText = "Reset";
     }
+
+    ipcRenderer.on('getDirectory', (event, arg) => {
+    	settings.savedir = arg;
+	});
 </script>
 
 <div class="setting">
@@ -102,23 +106,6 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Reset settings
-		</div>
-		<div class="setting-control">
-			<button class="button" on:click={handleReset}>{resetText}</button>
-		</div>
-	</div>
-	<div class="setting-description">
-		Reset the settings back to their defaults
-	</div>
-</div>
-
-
-
-<!--
-<div class="setting">
-	<div class="setting-inner">
-		<div class="setting-title">
 			Auto-save screenshots
 		</div>
 		<div class="setting-control">
@@ -129,22 +116,35 @@
 		</div>
 	</div>
 </div>
-{#if settings.autosave}
-<div class="setting">
+<div class="setting" class:disabled={!settings.autosave}>
 	<div class="setting-inner">
 		<div class="setting-title">
 			Auto-save directory
 		</div>
 		<div class="setting-control">
-			<button class="button">Browse</button>
+			<input type="hidden" bind:value={settings.savedir}>
+			<button class="button" on:click={() => ipcRenderer.send('select:saveDirectory')}>
+				{settings.savedir ? "Change" : "Browse"}
+			</button>
 		</div>
 	</div>
 	<div class="setting-description">
 		Choose the directory where to save screenshots
 	</div>
 </div>
-{/if}
--->
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			Reset settings
+		</div>
+		<div class="setting-control">
+			<button class="button" on:click={handleReset}>{resetText}</button>
+		</div>
+	</div>
+	<div class="setting-description">
+		Reset the settings back to their defaults
+	</div>
+</div>
 
 
 
@@ -184,6 +184,11 @@
 		border-bottom: 1px solid #2F2E33;
 		padding: 8px 0 14px;
 		margin-bottom: 5px;
+
+		&.disabled {
+			opacity: 0.5;
+			pointer-events: none;
+		}
 
 		&-inner {
 			display: flex;

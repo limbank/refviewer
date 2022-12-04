@@ -97,7 +97,7 @@
 	on:drop={handleFilesSelect}
 	style="background:{backdropColor};"
 >
-	<slot ></slot>
+	<slot></slot>
 </div>
 
 <style lang="scss">

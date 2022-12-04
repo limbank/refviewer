@@ -25,7 +25,8 @@
 </div>
 <div class="about-text">
 	Electron<br>
-	Svelte
+	Svelte<br>
+	Sharp
 </div>
 <div class="about-text-title">
 	Links:

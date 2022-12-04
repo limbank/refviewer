@@ -11,19 +11,21 @@
 	})();
 </script>
 
-<div class="changelog-wrapper">
-	{#await fetchChangelog}
-		<Loader color="#B7B9BC" />
-	{:then data}
+{#await fetchChangelog}
+	<Loader color="#B7B9BC" />
+{:then data}
+	<div class="changelog-wrapper">
 		<SvelteMarkdown source={data.body} />
-	{:catch error}
+	</div>
+{:catch error}
+	<div class="changelog-wrapper">
 		<p>Failed to fetch the changelog... Maybe there is no changelog for v{version}?</p>
-	{/await}
-</div>
+	</div>
+{/await}
 
 <style lang="scss">
 	.changelog-wrapper {
-		height: 100%;
+		height: auto;
 		font-size: 14px;
 		color: #B7B9BC;
 		padding: 5px 0;
