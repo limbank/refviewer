@@ -143,6 +143,26 @@ ipcMain.on('undo', (event, arg) => {
     });
 });
 
+ipcMain.on('select:saveDirectory', (event, arg) => {
+    let senderID = event.sender.id;
+    let activeWindow = wm.getWindowByID(senderID);
+    
+    if (!activeWindow) return;
+    dialog.showOpenDialog(activeWindow, {
+        title: "Select screenshot directory",
+        properties: ['openDirectory']
+    }).then(result => {
+        if (!result.cancelled && result.filePaths.length > 0) {
+            let files = result.filePaths;
+
+            event.sender.send('getDirectory', files[0]);
+            event.sender.send('action', "Selected a directory");
+        }
+    }).catch(err => {
+        jack.log("Error selecting directory: ", err);
+    });
+});
+
 ipcMain.on('editImage', (event, arg) => {
     let activeWindow = wm.getWindowByID(event.sender.id);
     
@@ -151,7 +171,7 @@ ipcMain.on('editImage', (event, arg) => {
 
     hp.history(arg.image);
 
-    ie.edit(arg.image, arg.type, event, activeWindow);
+    ie.edit(arg.image, arg.args, arg.type, event, activeWindow);
 });
 
 ipcMain.on('selectfile', (event, arg) => {
@@ -187,6 +207,14 @@ ipcMain.on('screenshot', (event, arg) => {
     let allDisplays = screen.getAllDisplays();
     let index = allDisplays.map(e => e.id).indexOf(currentScreen.id);;
     activeWindow.hide();
+
+    let currentDate = new Date(); 
+    let timestamp = currentDate.getDate() + ""
+                + (currentDate.getMonth()+1)
+                + currentDate.getFullYear() + "-"
+                + currentDate.getHours()
+                + currentDate.getMinutes()
+                + currentDate.getSeconds();
 
     screenshot.listDisplays().then((displays) => {
         screenshot({
@@ -225,11 +253,18 @@ ipcMain.on('screenshot', (event, arg) => {
                     sharp(img)
                         .extract({ left: arg.x, top: arg.y, width: arg.w, height: arg.h })
                         .toBuffer()
-                        .then( data => {
+                        .then(data => {
                             fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
                             activeWindow.show();
+
+                            if (sp.settings.autosave && sp.settings.savedir) {
+                                ie.edit(`data:image/png;base64,${data.toString('base64')}`, {
+                                    name: timestamp,
+                                    dir: sp.settings.savedir
+                                }, "saveAuto", event, activeWindow);
+                            }
                         })
-                        .catch( err => {
+                        .catch(err => {
                             jack.log("Error processing screenshot: ", err);
                         });
                 });
@@ -239,15 +274,21 @@ ipcMain.on('screenshot', (event, arg) => {
 
                     sharp(img)
                         .toBuffer()
-                        .then( data => {
+                        .then(data => {
                             fp.process(`data:image/png;base64,${data.toString('base64')}`, event);
                             activeWindow.show();
+
+                            if (sp.settings.autosave && sp.settings.savedir) {
+                                ie.edit(`data:image/png;base64,${data.toString('base64')}`, {
+                                    name: timestamp,
+                                    dir: sp.settings.savedir
+                                }, "saveAuto", event, activeWindow);
+                            }
                         })
                         .catch( err => {
                             jack.log("Error processing screenshot: ", err);
                         });
                 });
-
             });
 
             newWin.on('close', function(e){

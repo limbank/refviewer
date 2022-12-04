@@ -76,8 +76,9 @@ ipcRenderer.on('screenshot', (event, arg) => {
     function draw() {
         ctx.globalAlpha = 1.0;
         ctx.drawImage(image, rect.startX, rect.startY, rect.w, rect.h, rect.startX, rect.startY, rect.w, rect.h);
-        ctx.setLineDash([6]);
-        ctx.strokeStyle = 'red';
+        ctx.setLineDash([6, 3]);
+        ctx.strokeStyle = '#FAA916';
+        ctx.lineWidth = 2;
         ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
     }
 
