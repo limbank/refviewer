@@ -22,7 +22,16 @@
     		return;
     	}
 
-    	settings = { zoom: 0.3 };
+    	//settings = { zoom: 0.3 };
+
+    	settings.zoom = 0.3;
+    	settings.overwrite = false;
+    	settings.theme = false;
+    	settings.tooltips = false;
+    	settings.transparency = false;
+    	settings.autosave = false;
+    	settings.savedir = false;
+
     	resetConfirmed = false;
     	resetText = "Reset";
     }
@@ -145,8 +154,6 @@
 		Reset the settings back to their defaults
 	</div>
 </div>
-
-
 
 <!--
 <div class="setting">

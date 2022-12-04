@@ -4399,14 +4399,14 @@ var app = (function () {
     			t = space();
     			div1 = element("div");
     			attr_dev(div0, "class", "tooltip-content");
-    			add_location(div0, file$S, 29, 2, 470);
+    			add_location(div0, file$S, 29, 2, 499);
     			attr_dev(div1, "id", "arrow");
     			attr_dev(div1, "class", "arrow");
     			attr_dev(div1, "data-popper-arrow", "");
-    			add_location(div1, file$S, 32, 2, 528);
+    			add_location(div1, file$S, 32, 2, 560);
     			attr_dev(div2, "id", "tooltip");
     			attr_dev(div2, "class", "tooltip");
-    			add_location(div2, file$S, 22, 1, 335);
+    			add_location(div2, file$S, 22, 1, 357);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -4758,7 +4758,7 @@ var app = (function () {
     			attr_dev(button, "class", "control svelte-emr3ky");
     			toggle_class(button, "legacy", /*legacy*/ ctx[1]);
     			toggle_class(button, "persistent", /*persistent*/ ctx[4]);
-    			add_location(button, file$R, 18, 0, 397);
+    			add_location(button, file$R, 18, 0, 415);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5017,7 +5017,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-bars");
-    			add_location(i, file$Q, 56, 7, 1279);
+    			add_location(i, file$Q, 56, 7, 1335);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5046,7 +5046,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$Q, 54, 7, 1232);
+    			add_location(i, file$Q, 54, 7, 1286);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5067,7 +5067,7 @@ var app = (function () {
     	return block;
     }
 
-    // (44:2) <Control    {tips}    {legacy}    size="12px"    tiptext={settingsOpen ? "Close menu" : "Main menu"}    on:click={e => {     settingsOpen = !settingsOpen;     dispatch('settingsOpen', settingsOpen);    }}   >
+    // (44:2) <Control     {tips}     {legacy}     size="12px"     tiptext={settingsOpen ? "Close menu" : "Main menu"}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >
     function create_default_slot_8$1(ctx) {
     	let if_block_anchor;
 
@@ -5109,7 +5109,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_8$1.name,
     		type: "slot",
-    		source: "(44:2) <Control    {tips}    {legacy}    size=\\\"12px\\\"    tiptext={settingsOpen ? \\\"Close menu\\\" : \\\"Main menu\\\"}    on:click={e => {     settingsOpen = !settingsOpen;     dispatch('settingsOpen', settingsOpen);    }}   >",
+    		source: "(44:2) <Control     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={settingsOpen ? \\\"Close menu\\\" : \\\"Main menu\\\"}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >",
     		ctx
     	});
 
@@ -5311,7 +5311,7 @@ var app = (function () {
     	return block;
     }
 
-    // (63:4) <Control      {tips}      {legacy}      size="12px"      tiptext="Select file"      on:click={openImage}     >
+    // (63:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Select file"       on:click={openImage}      >
     function create_default_slot_7$1(ctx) {
     	let i;
 
@@ -5319,7 +5319,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-file-upload");
-    			add_location(i, file$Q, 69, 5, 1508);
+    			add_location(i, file$Q, 69, 5, 1577);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5334,14 +5334,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_7$1.name,
     		type: "slot",
-    		source: "(63:4) <Control      {tips}      {legacy}      size=\\\"12px\\\"      tiptext=\\\"Select file\\\"      on:click={openImage}     >",
+    		source: "(63:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Select file\\\"       on:click={openImage}      >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (73:4) <Control      {tips}      {legacy}      size="12px"      tiptext="Screenshot"      on:click={e => { ipcRenderer.send('screenshot'); }}     >
+    // (73:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Screenshot"       on:click={e => { ipcRenderer.send('screenshot'); }}      >
     function create_default_slot_6$1(ctx) {
     	let i;
 
@@ -5349,7 +5349,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-crosshairs");
-    			add_location(i, file$Q, 79, 8, 1712);
+    			add_location(i, file$Q, 79, 8, 1791);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5364,7 +5364,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_6$1.name,
     		type: "slot",
-    		source: "(73:4) <Control      {tips}      {legacy}      size=\\\"12px\\\"      tiptext=\\\"Screenshot\\\"      on:click={e => { ipcRenderer.send('screenshot'); }}     >",
+    		source: "(73:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Screenshot\\\"       on:click={e => { ipcRenderer.send('screenshot'); }}      >",
     		ctx
     	});
 
@@ -5434,7 +5434,7 @@ var app = (function () {
     	return block;
     }
 
-    // (84:4) <Control      {tips}      {legacy}      size="12px"      tiptext="Clear"      on:click={clearImage}     >
+    // (84:4) <Control       {tips}       {legacy}       size="12px"       tiptext="Clear"       on:click={clearImage}      >
     function create_default_slot_5$1(ctx) {
     	let i;
 
@@ -5442,7 +5442,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-trash");
-    			add_location(i, file$Q, 90, 8, 1910);
+    			add_location(i, file$Q, 90, 8, 2000);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5457,7 +5457,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_5$1.name,
     		type: "slot",
-    		source: "(84:4) <Control      {tips}      {legacy}      size=\\\"12px\\\"      tiptext=\\\"Clear\\\"      on:click={clearImage}     >",
+    		source: "(84:4) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Clear\\\"       on:click={clearImage}      >",
     		ctx
     	});
 
@@ -5476,7 +5476,7 @@ var app = (function () {
     			t0 = text("v. ");
     			t1 = text(/*version*/ ctx[5]);
     			attr_dev(span, "class", "version svelte-1y8gu7w");
-    			add_location(span, file$Q, 97, 3, 2028);
+    			add_location(span, file$Q, 97, 3, 2125);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -5502,7 +5502,7 @@ var app = (function () {
     	return block;
     }
 
-    // (100:2) <Control    {tips}    {legacy}    size="12px"    tiptext="New window"     on:click={e => { ipcRenderer.send('window', 'new'); }}   >
+    // (100:2) <Control     {tips}     {legacy}     size="12px"     tiptext="New window"      on:click={e => { ipcRenderer.send('window', 'new'); }}    >
     function create_default_slot_4$2(ctx) {
     	let i;
 
@@ -5510,7 +5510,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-window");
-    			add_location(i, file$Q, 106, 6, 2219);
+    			add_location(i, file$Q, 106, 6, 2325);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5525,14 +5525,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_4$2.name,
     		type: "slot",
-    		source: "(100:2) <Control    {tips}    {legacy}    size=\\\"12px\\\"    tiptext=\\\"New window\\\"     on:click={e => { ipcRenderer.send('window', 'new'); }}   >",
+    		source: "(100:2) <Control     {tips}     {legacy}     size=\\\"12px\\\"     tiptext=\\\"New window\\\"      on:click={e => { ipcRenderer.send('window', 'new'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (109:2) <Control    {tips}    {legacy}    size="13px"    tiptext="Pin to top"     on:click={e => { ipcRenderer.send('window', 'pin'); }}   >
+    // (109:2) <Control     {tips}     {legacy}     size="13px"     tiptext="Pin to top"      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >
     function create_default_slot_3$2(ctx) {
     	let i;
 
@@ -5541,7 +5541,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-thumbtack svelte-1y8gu7w");
     			toggle_class(i, "pinned", /*pinned*/ ctx[6]);
-    			add_location(i, file$Q, 115, 6, 2403);
+    			add_location(i, file$Q, 115, 6, 2518);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5560,14 +5560,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$2.name,
     		type: "slot",
-    		source: "(109:2) <Control    {tips}    {legacy}    size=\\\"13px\\\"    tiptext=\\\"Pin to top\\\"     on:click={e => { ipcRenderer.send('window', 'pin'); }}   >",
+    		source: "(109:2) <Control     {tips}     {legacy}     size=\\\"13px\\\"     tiptext=\\\"Pin to top\\\"      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (118:2) <Control    {tips}    {legacy}    tiptext="Minimize"    on:click={e => { ipcRenderer.send('window', 'minimize'); }}   >
+    // (118:2) <Control     {tips}     {legacy}     tiptext="Minimize"     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >
     function create_default_slot_2$2(ctx) {
     	let i;
 
@@ -5575,7 +5575,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-minus");
-    			add_location(i, file$Q, 123, 6, 2590);
+    			add_location(i, file$Q, 123, 6, 2713);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5590,14 +5590,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$2.name,
     		type: "slot",
-    		source: "(118:2) <Control    {tips}    {legacy}    tiptext=\\\"Minimize\\\"    on:click={e => { ipcRenderer.send('window', 'minimize'); }}   >",
+    		source: "(118:2) <Control     {tips}     {legacy}     tiptext=\\\"Minimize\\\"     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (126:2) <Control    {tips}    {legacy}    tiptext={maximized ? "Restore" : "Maximize"}    on:click={e => { ipcRenderer.send('window', 'maximize'); }}   >
+    // (126:2) <Control     {tips}     {legacy}     tiptext={maximized ? "Restore" : "Maximize"}     on:click={e => { ipcRenderer.send('window', 'maximize'); }}    >
     function create_default_slot_1$7(ctx) {
     	let i;
 
@@ -5605,7 +5605,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-plus");
-    			add_location(i, file$Q, 131, 3, 2783);
+    			add_location(i, file$Q, 131, 3, 2914);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5620,14 +5620,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$7.name,
     		type: "slot",
-    		source: "(126:2) <Control    {tips}    {legacy}    tiptext={maximized ? \\\"Restore\\\" : \\\"Maximize\\\"}    on:click={e => { ipcRenderer.send('window', 'maximize'); }}   >",
+    		source: "(126:2) <Control     {tips}     {legacy}     tiptext={maximized ? \\\"Restore\\\" : \\\"Maximize\\\"}     on:click={e => { ipcRenderer.send('window', 'maximize'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (134:2) <Control    {tips}    {legacy}    persistent={true}    tiptext="Close"    on:click={e => { ipcRenderer.send('window', 'close'); }}   >
+    // (134:2) <Control     {tips}     {legacy}     persistent={true}     tiptext="Close"     on:click={e => { ipcRenderer.send('window', 'close'); }}    >
     function create_default_slot$c(ctx) {
     	let i;
 
@@ -5635,7 +5635,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$Q, 140, 6, 2967);
+    			add_location(i, file$Q, 140, 6, 3107);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5650,7 +5650,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$c.name,
     		type: "slot",
-    		source: "(134:2) <Control    {tips}    {legacy}    persistent={true}    tiptext=\\\"Close\\\"    on:click={e => { ipcRenderer.send('window', 'close'); }}   >",
+    		source: "(134:2) <Control     {tips}     {legacy}     persistent={true}     tiptext=\\\"Close\\\"     on:click={e => { ipcRenderer.send('window', 'close'); }}    >",
     		ctx
     	});
 
@@ -5783,12 +5783,12 @@ var app = (function () {
     			t6 = space();
     			create_component(control5.$$.fragment);
     			attr_dev(div0, "class", "titlebar-group svelte-1y8gu7w");
-    			add_location(div0, file$Q, 42, 1, 963);
+    			add_location(div0, file$Q, 42, 1, 1005);
     			attr_dev(div1, "class", "titlebar-group svelte-1y8gu7w");
-    			add_location(div1, file$Q, 95, 1, 1980);
+    			add_location(div1, file$Q, 95, 1, 2075);
     			attr_dev(div2, "class", "titlebar svelte-1y8gu7w");
     			toggle_class(div2, "legacy", /*legacy*/ ctx[2]);
-    			add_location(div2, file$Q, 41, 0, 926);
+    			add_location(div2, file$Q, 41, 0, 967);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6204,7 +6204,7 @@ var app = (function () {
     			attr_dev(div, "class", "desktop svelte-18danl4");
     			set_style(div, "background", /*backdropColor*/ ctx[1]);
     			toggle_class(div, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div, file$P, 92, 0, 3023);
+    			add_location(div, file$P, 92, 0, 3115);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6524,16 +6524,16 @@ var app = (function () {
     			t2 = space();
     			div3 = element("div");
     			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-3u4xdv");
-    			add_location(div0, file$O, 5, 1, 85);
+    			add_location(div0, file$O, 5, 1, 90);
     			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-3u4xdv");
-    			add_location(div1, file$O, 6, 1, 131);
+    			add_location(div1, file$O, 6, 1, 137);
     			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-3u4xdv");
-    			add_location(div2, file$O, 7, 1, 179);
+    			add_location(div2, file$O, 7, 1, 186);
     			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-3u4xdv");
-    			add_location(div3, file$O, 8, 1, 228);
+    			add_location(div3, file$O, 8, 1, 236);
     			attr_dev(div4, "class", "backdrop svelte-3u4xdv");
     			toggle_class(div4, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div4, file$O, 4, 0, 48);
+    			add_location(div4, file$O, 4, 0, 52);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6730,7 +6730,7 @@ var app = (function () {
     			set_style(button, "font-size", /*legacy*/ ctx[1] ? "14px" : /*size*/ ctx[2]);
     			attr_dev(button, "class", "control svelte-4zshi9");
     			toggle_class(button, "legacy", /*legacy*/ ctx[1]);
-    			add_location(button, file$N, 17, 0, 364);
+    			add_location(button, file$N, 17, 0, 381);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6999,14 +6999,14 @@ var app = (function () {
     			t = space();
     			div1 = element("div");
     			attr_dev(div0, "class", "dropdown-content");
-    			add_location(div0, file$M, 39, 2, 730);
+    			add_location(div0, file$M, 39, 2, 769);
     			attr_dev(div1, "id", "arrow");
     			attr_dev(div1, "class", "arrow");
     			attr_dev(div1, "data-popper-arrow", "");
-    			add_location(div1, file$M, 42, 2, 789);
+    			add_location(div1, file$M, 42, 2, 831);
     			attr_dev(div2, "id", "dropdown");
     			attr_dev(div2, "class", "dropdown");
-    			add_location(div2, file$M, 24, 1, 462);
+    			add_location(div2, file$M, 24, 1, 486);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -13230,11 +13230,11 @@ var app = (function () {
     			span.textContent = "A:";
     			t1 = space();
     			input = element("input");
-    			add_location(span, file$A, 35, 6, 948);
+    			add_location(span, file$A, 35, 6, 983);
     			attr_dev(input, "placeholder", "A");
     			attr_dev(input, "type", "number");
-    			add_location(input, file$A, 36, 6, 970);
-    			add_location(label, file$A, 34, 5, 934);
+    			add_location(input, file$A, 36, 6, 1006);
+    			add_location(label, file$A, 34, 5, 968);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -13271,7 +13271,7 @@ var app = (function () {
     	return block;
     }
 
-    // (45:5) <Control       {tips}       {legacy}       size="12px"       tiptext="Copy"       on:click={e => {                 navigator.clipboard.writeText(hex).then(() => {            ipcRenderer.send('action', "Color copied!");        }, () => {            ipcRenderer.send('action', "Failed to copy color");        });       }}      >
+    // (45:5) <Control        {tips}        {legacy}        size="12px"        tiptext="Copy"        on:click={e => {                  navigator.clipboard.writeText(hex).then(() => {             ipcRenderer.send('action', "Color copied!");         }, () => {             ipcRenderer.send('action', "Failed to copy color");         });        }}       >
     function create_default_slot_1$6(ctx) {
     	let i;
 
@@ -13280,7 +13280,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-1px)");
-    			add_location(i, file$A, 57, 6, 1540);
+    			add_location(i, file$A, 57, 6, 1597);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -13295,7 +13295,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$6.name,
     		type: "slot",
-    		source: "(45:5) <Control       {tips}       {legacy}       size=\\\"12px\\\"       tiptext=\\\"Copy\\\"       on:click={e => {                 navigator.clipboard.writeText(hex).then(() => {            ipcRenderer.send('action', \\\"Color copied!\\\");        }, () => {            ipcRenderer.send('action', \\\"Failed to copy color\\\");        });       }}      >",
+    		source: "(45:5) <Control        {tips}        {legacy}        size=\\\"12px\\\"        tiptext=\\\"Copy\\\"        on:click={e => {                  navigator.clipboard.writeText(hex).then(() => {             ipcRenderer.send('action', \\\"Color copied!\\\");         }, () => {             ipcRenderer.send('action', \\\"Failed to copy color\\\");         });        }}       >",
     		ctx
     	});
 
@@ -13365,7 +13365,7 @@ var app = (function () {
     	return block;
     }
 
-    // (61:6) <Control        {tips}        {legacy}        size="12px"        tiptext="Reset"        on:click={e => {         hex = reset;        }}       >
+    // (61:6) <Control         {tips}         {legacy}         size="12px"         tiptext="Reset"         on:click={e => {          hex = reset;         }}        >
     function create_default_slot$6(ctx) {
     	let i;
 
@@ -13373,7 +13373,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$A, 69, 7, 1800);
+    			add_location(i, file$A, 69, 7, 1869);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -13388,7 +13388,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$6.name,
     		type: "slot",
-    		source: "(61:6) <Control        {tips}        {legacy}        size=\\\"12px\\\"        tiptext=\\\"Reset\\\"        on:click={e => {         hex = reset;        }}       >",
+    		source: "(61:6) <Control         {tips}         {legacy}         size=\\\"12px\\\"         tiptext=\\\"Reset\\\"         on:click={e => {          hex = reset;         }}        >",
     		ctx
     	});
 
@@ -13513,37 +13513,37 @@ var app = (function () {
     			create_component(control.$$.fragment);
     			t14 = space();
     			if (if_block1) if_block1.c();
-    			add_location(span0, file$A, 22, 5, 606);
+    			add_location(span0, file$A, 22, 5, 628);
     			attr_dev(input0, "placeholder", "R");
     			attr_dev(input0, "type", "number");
-    			add_location(input0, file$A, 23, 5, 627);
-    			add_location(label0, file$A, 21, 4, 593);
-    			add_location(span1, file$A, 26, 5, 714);
+    			add_location(input0, file$A, 23, 5, 650);
+    			add_location(label0, file$A, 21, 4, 614);
+    			add_location(span1, file$A, 26, 5, 740);
     			attr_dev(input1, "placeholder", "G");
     			attr_dev(input1, "type", "number");
-    			add_location(input1, file$A, 27, 5, 735);
-    			add_location(label1, file$A, 25, 4, 701);
-    			add_location(span2, file$A, 30, 5, 822);
+    			add_location(input1, file$A, 27, 5, 762);
+    			add_location(label1, file$A, 25, 4, 726);
+    			add_location(span2, file$A, 30, 5, 852);
     			attr_dev(input2, "placeholder", "B");
     			attr_dev(input2, "type", "number");
-    			add_location(input2, file$A, 31, 5, 843);
-    			add_location(label2, file$A, 29, 4, 809);
+    			add_location(input2, file$A, 31, 5, 874);
+    			add_location(label2, file$A, 29, 4, 838);
     			attr_dev(div0, "class", "picker-controls-row");
-    			add_location(div0, file$A, 20, 3, 555);
-    			add_location(span3, file$A, 42, 5, 1115);
+    			add_location(div0, file$A, 20, 3, 575);
+    			add_location(span3, file$A, 42, 5, 1157);
     			attr_dev(input3, "placeholder", "Hex");
     			attr_dev(input3, "type", "text");
     			input3.disabled = true;
-    			add_location(input3, file$A, 43, 5, 1138);
-    			add_location(label3, file$A, 41, 4, 1102);
+    			add_location(input3, file$A, 43, 5, 1181);
+    			add_location(label3, file$A, 41, 4, 1143);
     			attr_dev(div1, "class", "picker-controls-row");
-    			add_location(div1, file$A, 40, 3, 1064);
+    			add_location(div1, file$A, 40, 3, 1104);
     			attr_dev(div2, "class", "picker-controls");
-    			add_location(div2, file$A, 19, 2, 522);
+    			add_location(div2, file$A, 19, 2, 541);
     			attr_dev(div3, "class", "picker-split");
-    			add_location(div3, file$A, 18, 1, 493);
+    			add_location(div3, file$A, 18, 1, 511);
     			attr_dev(div4, "class", "picker-wrapper");
-    			add_location(div4, file$A, 16, 0, 369);
+    			add_location(div4, file$A, 16, 0, 385);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -13918,7 +13918,7 @@ var app = (function () {
     /* src\components\tools\Eyedropper.svelte generated by Svelte v3.49.0 */
     const file$z = "src\\components\\tools\\Eyedropper.svelte";
 
-    // (25:0) <Tool  tips={tips}  size="12px"  legacy={legacy}  tiptext={"Pick a color"}  on:click={e => {   dispatch('pickColor');  }} >
+    // (25:0) <Tool   tips={tips}   size="12px"   legacy={legacy}   tiptext={"Pick a color"}   on:click={e => {    dispatch('pickColor');   }}  >
     function create_default_slot_1$5(ctx) {
     	let i;
     	let mounted;
@@ -13928,7 +13928,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-eye-dropper");
-    			add_location(i, file$z, 33, 1, 688);
+    			add_location(i, file$z, 33, 1, 721);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -13950,7 +13950,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$5.name,
     		type: "slot",
-    		source: "(25:0) <Tool  tips={tips}  size=\\\"12px\\\"  legacy={legacy}  tiptext={\\\"Pick a color\\\"}  on:click={e => {   dispatch('pickColor');  }} >",
+    		source: "(25:0) <Tool   tips={tips}   size=\\\"12px\\\"   legacy={legacy}   tiptext={\\\"Pick a color\\\"}   on:click={e => {    dispatch('pickColor');   }}  >",
     		ctx
     	});
 
@@ -14015,7 +14015,7 @@ var app = (function () {
     	return block;
     }
 
-    // (38:1) <Dropdown   {content}   on:close={e => { showDropdown = false; }}  >
+    // (38:1) <Dropdown    {content}    on:close={e => { showDropdown = false; }}   >
     function create_default_slot$5(ctx) {
     	let colorpicker;
     	let updating_hex;
@@ -14077,7 +14077,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$5.name,
     		type: "slot",
-    		source: "(38:1) <Dropdown   {content}   on:close={e => { showDropdown = false; }}  >",
+    		source: "(38:1) <Dropdown    {content}    on:close={e => { showDropdown = false; }}   >",
     		ctx
     	});
 
@@ -14328,7 +14328,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (29:0) <Tool  {tips}  {legacy}  size="12px"  tiptext={"Generate palette"}  on:click={e => {   ipcRenderer.send('editImage', {    type: 'getPalette',    image: fileSelected   });    showDropdown = true;  }} >
+    // (29:0) <Tool   {tips}   {legacy}   size="12px"   tiptext={"Generate palette"}   on:click={e => {    ipcRenderer.send('editImage', {     type: 'getPalette',     image: fileSelected    });      showDropdown = true;   }}  >
     function create_default_slot_1$4(ctx) {
     	let i;
     	let mounted;
@@ -14338,7 +14338,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-palette");
-    			add_location(i, file$y, 42, 1, 882);
+    			add_location(i, file$y, 42, 1, 924);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14360,7 +14360,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$4.name,
     		type: "slot",
-    		source: "(29:0) <Tool  {tips}  {legacy}  size=\\\"12px\\\"  tiptext={\\\"Generate palette\\\"}  on:click={e => {   ipcRenderer.send('editImage', {    type: 'getPalette',    image: fileSelected   });    showDropdown = true;  }} >",
+    		source: "(29:0) <Tool   {tips}   {legacy}   size=\\\"12px\\\"   tiptext={\\\"Generate palette\\\"}   on:click={e => {    ipcRenderer.send('editImage', {     type: 'getPalette',     image: fileSelected    });      showDropdown = true;   }}  >",
     		ctx
     	});
 
@@ -14454,21 +14454,21 @@ var app = (function () {
     			div2 = element("div");
     			div0 = element("div");
     			t0 = text(t0_value);
-    			t1 = text(",\n\t\t\t\t\t\t");
+    			t1 = text(",\r\n\t\t\t\t\t\t");
     			t2 = text(t2_value);
-    			t3 = text(",\n\t\t\t\t\t\t");
+    			t3 = text(",\r\n\t\t\t\t\t\t");
     			t4 = text(t4_value);
     			t5 = space();
     			div1 = element("div");
     			t6 = text(t6_value);
     			t7 = space();
     			attr_dev(div0, "class", "item-detail svelte-1k3hh6i");
-    			add_location(div0, file$y, 65, 5, 1526);
+    			add_location(div0, file$y, 65, 5, 1591);
     			attr_dev(div1, "class", "item-detail svelte-1k3hh6i");
-    			add_location(div1, file$y, 70, 5, 1715);
+    			add_location(div1, file$y, 70, 5, 1785);
     			attr_dev(div2, "class", "item svelte-1k3hh6i");
     			set_style(div2, "background", "rgb(" + /*palette*/ ctx[4][/*color_name*/ ctx[13]]._rgb + ")");
-    			add_location(div2, file$y, 54, 4, 1141);
+    			add_location(div2, file$y, 54, 4, 1195);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -14517,7 +14517,7 @@ var app = (function () {
     	return block;
     }
 
-    // (47:1) <Dropdown   content={dropdownContent}   on:close={e => {    showDropdown = false;   }}  >
+    // (47:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >
     function create_default_slot$4(ctx) {
     	let div;
     	let each_value = Object.entries(/*palette*/ ctx[4]);
@@ -14537,7 +14537,7 @@ var app = (function () {
     			}
 
     			attr_dev(div, "class", "palette svelte-1k3hh6i");
-    			add_location(div, file$y, 52, 2, 1050);
+    			add_location(div, file$y, 52, 2, 1102);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -14581,7 +14581,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$4.name,
     		type: "slot",
-    		source: "(47:1) <Dropdown   content={dropdownContent}   on:close={e => {    showDropdown = false;   }}  >",
+    		source: "(47:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >",
     		ctx
     	});
 
@@ -14830,7 +14830,7 @@ var app = (function () {
     /* src\components\tools\Background.svelte generated by Svelte v3.49.0 */
     const file$x = "src\\components\\tools\\Background.svelte";
 
-    // (24:0) <Tool  {tips}  {legacy}  size="12px"  tiptext={"Change background"}  on:click={e => {   showDropdown = true;  }} >
+    // (24:0) <Tool   {tips}   {legacy}   size="12px"   tiptext={"Change background"}   on:click={e => {    showDropdown = true;   }}  >
     function create_default_slot_1$3(ctx) {
     	let i;
     	let mounted;
@@ -14840,7 +14840,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-fill");
-    			add_location(i, file$x, 32, 1, 696);
+    			add_location(i, file$x, 32, 1, 728);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14862,7 +14862,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$3.name,
     		type: "slot",
-    		source: "(24:0) <Tool  {tips}  {legacy}  size=\\\"12px\\\"  tiptext={\\\"Change background\\\"}  on:click={e => {   showDropdown = true;  }} >",
+    		source: "(24:0) <Tool   {tips}   {legacy}   size=\\\"12px\\\"   tiptext={\\\"Change background\\\"}   on:click={e => {    showDropdown = true;   }}  >",
     		ctx
     	});
 
@@ -14927,7 +14927,7 @@ var app = (function () {
     	return block;
     }
 
-    // (37:1) <Dropdown   content={dropdownContent}   on:close={e => {    showDropdown = false;   }}  >
+    // (37:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >
     function create_default_slot$3(ctx) {
     	let colorpicker;
     	let updating_hex;
@@ -14990,7 +14990,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$3.name,
     		type: "slot",
-    		source: "(37:1) <Dropdown   content={dropdownContent}   on:close={e => {    showDropdown = false;   }}  >",
+    		source: "(37:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >",
     		ctx
     	});
 
@@ -15530,7 +15530,7 @@ var app = (function () {
     	return block;
     }
 
-    // (79:2) <Tool    {tips}    {legacy}    size="13px"    tiptext={"Save image"}    on:click={() => editImage("save")}   >
+    // (79:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Save image"}     on:click={() => editImage("save")}    >
     function create_default_slot_4$1(ctx) {
     	let i;
 
@@ -15538,7 +15538,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "far fa-save");
-    			add_location(i, file$w, 85, 3, 2176);
+    			add_location(i, file$w, 85, 3, 2261);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15553,14 +15553,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_4$1.name,
     		type: "slot",
-    		source: "(79:2) <Tool    {tips}    {legacy}    size=\\\"13px\\\"    tiptext={\\\"Save image\\\"}    on:click={() => editImage(\\\"save\\\")}   >",
+    		source: "(79:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={() => editImage(\\\"save\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (88:2) <Tool    {tips}    {legacy}    size="13px"    tiptext={"Copy image"}    on:click={copyImage}   >
+    // (88:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Copy image"}     on:click={copyImage}    >
     function create_default_slot_3$1(ctx) {
     	let i;
 
@@ -15569,7 +15569,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-2px)");
-    			add_location(i, file$w, 94, 6, 2319);
+    			add_location(i, file$w, 94, 6, 2413);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15584,14 +15584,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(88:2) <Tool    {tips}    {legacy}    size=\\\"13px\\\"    tiptext={\\\"Copy image\\\"}    on:click={copyImage}   >",
+    		source: "(88:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (97:2) <Tool    {tips}    {legacy}    size="13px"    tiptext={"Crop image"}    on:click={() => dispatch("cropImage")}   >
+    // (97:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Crop image"}     on:click={() => dispatch("cropImage")}    >
     function create_default_slot_2$1(ctx) {
     	let i;
 
@@ -15600,7 +15600,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-crop-alt");
     			attr_dev(i, "style", "");
-    			add_location(i, file$w, 103, 6, 2522);
+    			add_location(i, file$w, 103, 6, 2625);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15615,14 +15615,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$1.name,
     		type: "slot",
-    		source: "(97:2) <Tool    {tips}    {legacy}    size=\\\"13px\\\"    tiptext={\\\"Crop image\\\"}    on:click={() => dispatch(\\\"cropImage\\\")}   >",
+    		source: "(97:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Crop image\\\"}     on:click={() => dispatch(\\\"cropImage\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (122:2) <Tool    {tips}    {legacy}    size="13px"    tiptext={"Flip image"}    on:click={() => editImage("flipHorizontal")}   >
+    // (122:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={() => editImage("flipHorizontal")}    >
     function create_default_slot_1$2(ctx) {
     	let i;
 
@@ -15630,7 +15630,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-sync-alt");
-    			add_location(i, file$w, 128, 6, 2923);
+    			add_location(i, file$w, 128, 6, 3051);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15645,14 +15645,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(122:2) <Tool    {tips}    {legacy}    size=\\\"13px\\\"    tiptext={\\\"Flip image\\\"}    on:click={() => editImage(\\\"flipHorizontal\\\")}   >",
+    		source: "(122:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={() => editImage(\\\"flipHorizontal\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (131:2) <Tool    {tips}    {legacy}    size="12px"    tiptext={"Rotate image"}    on:click={() => editImage("rotateRight")}   >
+    // (131:2) <Tool     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={() => editImage("rotateRight")}    >
     function create_default_slot$2(ctx) {
     	let i;
 
@@ -15660,7 +15660,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$w, 137, 6, 3093);
+    			add_location(i, file$w, 137, 6, 3230);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -15675,7 +15675,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(131:2) <Tool    {tips}    {legacy}    size=\\\"12px\\\"    tiptext={\\\"Rotate image\\\"}    on:click={() => editImage(\\\"rotateRight\\\")}   >",
+    		source: "(131:2) <Tool     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={() => editImage(\\\"rotateRight\\\")}    >",
     		ctx
     	});
 
@@ -15696,7 +15696,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-b7ouig");
     			toggle_class(div, "legacy", /*legacy*/ ctx[4]);
-    			add_location(div, file$w, 73, 0, 1985);
+    			add_location(div, file$w, 73, 0, 2058);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -16095,7 +16095,7 @@ var app = (function () {
     			t0 = text(t0_value);
     			t1 = space();
     			attr_dev(div, "class", "actions-item svelte-1slud6k");
-    			add_location(div, file$v, 12, 8, 351);
+    			add_location(div, file$v, 12, 8, 363);
     			this.first = div;
     		},
     		m: function mount(target, anchor) {
@@ -16165,7 +16165,7 @@ var app = (function () {
     			}
 
     			attr_dev(div, "class", "actions svelte-1slud6k");
-    			add_location(div, file$v, 10, 0, 260);
+    			add_location(div, file$v, 10, 0, 270);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -16281,9 +16281,9 @@ var app = (function () {
     			div = element("div");
     			i = element("i");
     			attr_dev(i, "class", "fas fa-upload");
-    			add_location(i, file$u, 9, 5, 226);
+    			add_location(i, file$u, 9, 5, 235);
     			attr_dev(div, "class", "dropfield-inner-icon svelte-1imzacy");
-    			add_location(div, file$u, 8, 4, 186);
+    			add_location(div, file$u, 8, 4, 194);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -16325,16 +16325,16 @@ var app = (function () {
     			div0 = element("div");
     			div0.textContent = "Drop image here";
     			attr_dev(div0, "class", "dropfield-inner-text-line");
-    			add_location(div0, file$u, 13, 4, 318);
+    			add_location(div0, file$u, 13, 4, 331);
     			attr_dev(div1, "class", "dropfield-inner-text svelte-1imzacy");
-    			add_location(div1, file$u, 12, 3, 279);
+    			add_location(div1, file$u, 12, 3, 291);
     			attr_dev(div2, "class", "dropfield-inner svelte-1imzacy");
-    			add_location(div2, file$u, 6, 2, 135);
+    			add_location(div2, file$u, 6, 2, 141);
     			attr_dev(div3, "class", "dropfield-inner-wrapper svelte-1imzacy");
-    			add_location(div3, file$u, 5, 1, 95);
+    			add_location(div3, file$u, 5, 1, 100);
     			attr_dev(div4, "class", "dropfield svelte-1imzacy");
     			toggle_class(div4, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div4, file$u, 4, 0, 48);
+    			add_location(div4, file$u, 4, 0, 52);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -16629,129 +16629,129 @@ var app = (function () {
     			div35 = element("div");
     			div35.textContent = "Reset the settings back to their defaults";
     			attr_dev(div0, "class", "setting-title svelte-183mina");
-    			add_location(div0, file$t, 36, 2, 693);
+    			add_location(div0, file$t, 36, 2, 729);
     			attr_dev(span0, "class", "setting-control-info svelte-183mina");
-    			add_location(span0, file$t, 40, 3, 780);
+    			add_location(span0, file$t, 40, 3, 820);
     			attr_dev(div1, "class", "setting-control svelte-183mina");
-    			add_location(div1, file$t, 39, 2, 747);
+    			add_location(div1, file$t, 39, 2, 786);
     			attr_dev(input0, "type", "range");
     			attr_dev(input0, "step", "0.1");
     			attr_dev(input0, "max", "1");
     			attr_dev(input0, "min", "0.1");
     			attr_dev(input0, "class", "svelte-183mina");
-    			add_location(input0, file$t, 43, 3, 888);
+    			add_location(input0, file$t, 43, 3, 931);
     			attr_dev(div2, "class", "setting-control-large svelte-183mina");
-    			add_location(div2, file$t, 42, 2, 849);
+    			add_location(div2, file$t, 42, 2, 891);
     			attr_dev(div3, "class", "setting-inner svelte-183mina");
-    			add_location(div3, file$t, 35, 1, 663);
+    			add_location(div3, file$t, 35, 1, 698);
     			attr_dev(div4, "class", "setting svelte-183mina");
-    			add_location(div4, file$t, 34, 0, 640);
+    			add_location(div4, file$t, 34, 0, 674);
     			attr_dev(div5, "class", "setting-title svelte-183mina");
-    			add_location(div5, file$t, 49, 2, 1042);
+    			add_location(div5, file$t, 49, 2, 1091);
     			attr_dev(input1, "type", "checkbox");
     			attr_dev(input1, "class", "svelte-183mina");
-    			add_location(input1, file$t, 54, 4, 1160);
+    			add_location(input1, file$t, 54, 4, 1214);
     			attr_dev(span1, "class", "slider svelte-183mina");
-    			add_location(span1, file$t, 55, 4, 1222);
+    			add_location(span1, file$t, 55, 4, 1277);
     			attr_dev(label0, "class", "switch svelte-183mina");
-    			add_location(label0, file$t, 53, 3, 1133);
+    			add_location(label0, file$t, 53, 3, 1186);
     			attr_dev(div6, "class", "setting-control svelte-183mina");
-    			add_location(div6, file$t, 52, 2, 1100);
+    			add_location(div6, file$t, 52, 2, 1152);
     			attr_dev(div7, "class", "setting-inner svelte-183mina");
-    			add_location(div7, file$t, 48, 1, 1012);
+    			add_location(div7, file$t, 48, 1, 1060);
     			attr_dev(div8, "class", "setting-description svelte-183mina");
-    			add_location(div8, file$t, 59, 1, 1281);
+    			add_location(div8, file$t, 59, 1, 1340);
     			attr_dev(div9, "class", "setting svelte-183mina");
-    			add_location(div9, file$t, 47, 0, 989);
+    			add_location(div9, file$t, 47, 0, 1036);
     			attr_dev(div10, "class", "setting-title svelte-183mina");
-    			add_location(div10, file$t, 65, 2, 1444);
+    			add_location(div10, file$t, 65, 2, 1509);
     			attr_dev(input2, "type", "checkbox");
     			attr_dev(input2, "class", "svelte-183mina");
-    			add_location(input2, file$t, 70, 4, 1559);
+    			add_location(input2, file$t, 70, 4, 1629);
     			attr_dev(span2, "class", "slider svelte-183mina");
-    			add_location(span2, file$t, 71, 4, 1617);
+    			add_location(span2, file$t, 71, 4, 1688);
     			attr_dev(label1, "class", "switch svelte-183mina");
-    			add_location(label1, file$t, 69, 3, 1532);
+    			add_location(label1, file$t, 69, 3, 1601);
     			attr_dev(div11, "class", "setting-control svelte-183mina");
-    			add_location(div11, file$t, 68, 2, 1499);
+    			add_location(div11, file$t, 68, 2, 1567);
     			attr_dev(div12, "class", "setting-inner svelte-183mina");
-    			add_location(div12, file$t, 64, 1, 1414);
+    			add_location(div12, file$t, 64, 1, 1478);
     			attr_dev(div13, "class", "setting svelte-183mina");
-    			add_location(div13, file$t, 63, 0, 1391);
+    			add_location(div13, file$t, 63, 0, 1454);
     			attr_dev(div14, "class", "setting-title svelte-183mina");
-    			add_location(div14, file$t, 78, 2, 1735);
+    			add_location(div14, file$t, 78, 2, 1813);
     			attr_dev(input3, "type", "checkbox");
     			attr_dev(input3, "class", "svelte-183mina");
-    			add_location(input3, file$t, 83, 4, 1854);
+    			add_location(input3, file$t, 83, 4, 1937);
     			attr_dev(span3, "class", "slider svelte-183mina");
-    			add_location(span3, file$t, 84, 4, 1915);
+    			add_location(span3, file$t, 84, 4, 1999);
     			attr_dev(label2, "class", "switch svelte-183mina");
-    			add_location(label2, file$t, 82, 3, 1827);
+    			add_location(label2, file$t, 82, 3, 1909);
     			attr_dev(div15, "class", "setting-control svelte-183mina");
-    			add_location(div15, file$t, 81, 2, 1794);
+    			add_location(div15, file$t, 81, 2, 1875);
     			attr_dev(div16, "class", "setting-inner svelte-183mina");
-    			add_location(div16, file$t, 77, 1, 1705);
+    			add_location(div16, file$t, 77, 1, 1782);
     			attr_dev(div17, "class", "setting svelte-183mina");
-    			add_location(div17, file$t, 76, 0, 1682);
+    			add_location(div17, file$t, 76, 0, 1758);
     			attr_dev(div18, "class", "setting-title svelte-183mina");
-    			add_location(div18, file$t, 91, 2, 2033);
+    			add_location(div18, file$t, 91, 2, 2124);
     			attr_dev(input4, "type", "checkbox");
     			attr_dev(input4, "class", "svelte-183mina");
-    			add_location(input4, file$t, 96, 4, 2155);
+    			add_location(input4, file$t, 96, 4, 2251);
     			attr_dev(span4, "class", "slider svelte-183mina");
-    			add_location(span4, file$t, 97, 4, 2220);
+    			add_location(span4, file$t, 97, 4, 2317);
     			attr_dev(label3, "class", "switch svelte-183mina");
-    			add_location(label3, file$t, 95, 3, 2128);
+    			add_location(label3, file$t, 95, 3, 2223);
     			attr_dev(div19, "class", "setting-control svelte-183mina");
-    			add_location(div19, file$t, 94, 2, 2095);
+    			add_location(div19, file$t, 94, 2, 2189);
     			attr_dev(div20, "class", "setting-inner svelte-183mina");
-    			add_location(div20, file$t, 90, 1, 2003);
+    			add_location(div20, file$t, 90, 1, 2093);
     			attr_dev(div21, "class", "setting-description svelte-183mina");
-    			add_location(div21, file$t, 101, 1, 2279);
+    			add_location(div21, file$t, 101, 1, 2380);
     			attr_dev(div22, "class", "setting svelte-183mina");
-    			add_location(div22, file$t, 89, 0, 1980);
+    			add_location(div22, file$t, 89, 0, 2069);
     			attr_dev(div23, "class", "setting-title svelte-183mina");
-    			add_location(div23, file$t, 107, 2, 2446);
+    			add_location(div23, file$t, 107, 2, 2553);
     			attr_dev(input5, "type", "checkbox");
     			attr_dev(input5, "class", "svelte-183mina");
-    			add_location(input5, file$t, 112, 4, 2570);
+    			add_location(input5, file$t, 112, 4, 2682);
     			attr_dev(span5, "class", "slider svelte-183mina");
-    			add_location(span5, file$t, 113, 4, 2631);
+    			add_location(span5, file$t, 113, 4, 2744);
     			attr_dev(label4, "class", "switch svelte-183mina");
-    			add_location(label4, file$t, 111, 3, 2543);
+    			add_location(label4, file$t, 111, 3, 2654);
     			attr_dev(div24, "class", "setting-control svelte-183mina");
-    			add_location(div24, file$t, 110, 2, 2510);
+    			add_location(div24, file$t, 110, 2, 2620);
     			attr_dev(div25, "class", "setting-inner svelte-183mina");
-    			add_location(div25, file$t, 106, 1, 2416);
+    			add_location(div25, file$t, 106, 1, 2522);
     			attr_dev(div26, "class", "setting svelte-183mina");
-    			add_location(div26, file$t, 105, 0, 2393);
+    			add_location(div26, file$t, 105, 0, 2498);
     			attr_dev(div27, "class", "setting-title svelte-183mina");
-    			add_location(div27, file$t, 120, 2, 2785);
+    			add_location(div27, file$t, 120, 2, 2905);
     			attr_dev(input6, "type", "hidden");
-    			add_location(input6, file$t, 124, 3, 2880);
+    			add_location(input6, file$t, 124, 3, 3004);
     			attr_dev(button0, "class", "button svelte-183mina");
-    			add_location(button0, file$t, 125, 3, 2935);
+    			add_location(button0, file$t, 125, 3, 3060);
     			attr_dev(div28, "class", "setting-control svelte-183mina");
-    			add_location(div28, file$t, 123, 2, 2847);
+    			add_location(div28, file$t, 123, 2, 2970);
     			attr_dev(div29, "class", "setting-inner svelte-183mina");
-    			add_location(div29, file$t, 119, 1, 2755);
+    			add_location(div29, file$t, 119, 1, 2874);
     			attr_dev(div30, "class", "setting-description svelte-183mina");
-    			add_location(div30, file$t, 130, 1, 3093);
+    			add_location(div30, file$t, 130, 1, 3223);
     			attr_dev(div31, "class", "setting svelte-183mina");
     			toggle_class(div31, "disabled", !/*settings*/ ctx[0].autosave);
-    			add_location(div31, file$t, 118, 0, 2696);
+    			add_location(div31, file$t, 118, 0, 2814);
     			attr_dev(div32, "class", "setting-title svelte-183mina");
-    			add_location(div32, file$t, 136, 2, 3244);
+    			add_location(div32, file$t, 136, 2, 3380);
     			attr_dev(button1, "class", "button svelte-183mina");
-    			add_location(button1, file$t, 140, 3, 3334);
+    			add_location(button1, file$t, 140, 3, 3474);
     			attr_dev(div33, "class", "setting-control svelte-183mina");
-    			add_location(div33, file$t, 139, 2, 3301);
+    			add_location(div33, file$t, 139, 2, 3440);
     			attr_dev(div34, "class", "setting-inner svelte-183mina");
-    			add_location(div34, file$t, 135, 1, 3214);
+    			add_location(div34, file$t, 135, 1, 3349);
     			attr_dev(div35, "class", "setting-description svelte-183mina");
-    			add_location(div35, file$t, 143, 1, 3419);
+    			add_location(div35, file$t, 143, 1, 3562);
     			attr_dev(div36, "class", "setting svelte-183mina");
-    			add_location(div36, file$t, 134, 0, 3191);
+    			add_location(div36, file$t, 134, 0, 3325);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17103,7 +17103,7 @@ var app = (function () {
     			t0 = text("v. ");
     			t1 = text(/*version*/ ctx[0]);
     			attr_dev(div, "class", "about-text svelte-fc0wla");
-    			add_location(div, file$s, 5, 1, 56);
+    			add_location(div, file$s, 5, 1, 61);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -17185,13 +17185,13 @@ var app = (function () {
     			div2 = element("div");
     			t5 = text("GHOST");
     			br0 = element("br");
-    			t6 = text("\n\tSade");
+    			t6 = text("\r\n\tSade");
     			br1 = element("br");
-    			t7 = text("\n\tEnnoriel");
+    			t7 = text("\r\n\tEnnoriel");
     			br2 = element("br");
-    			t8 = text("\n\thrfn");
+    			t8 = text("\r\n\thrfn");
     			br3 = element("br");
-    			t9 = text("\n\tCharalian");
+    			t9 = text("\r\n\tCharalian");
     			t10 = space();
     			div3 = element("div");
     			div3.textContent = "Made with:";
@@ -17199,9 +17199,9 @@ var app = (function () {
     			div4 = element("div");
     			t13 = text("Electron");
     			br4 = element("br");
-    			t14 = text("\n\tSvelte");
+    			t14 = text("\r\n\tSvelte");
     			br5 = element("br");
-    			t15 = text("\n\tSharp");
+    			t15 = text("\r\n\tSharp");
     			t16 = space();
     			div5 = element("div");
     			div5.textContent = "Links:";
@@ -17220,48 +17220,48 @@ var app = (function () {
     			a2 = element("a");
     			i2 = element("i");
     			attr_dev(div0, "class", "about-text svelte-fc0wla");
-    			add_location(div0, file$s, 9, 0, 110);
+    			add_location(div0, file$s, 9, 0, 119);
     			attr_dev(div1, "class", "about-text-title svelte-fc0wla");
-    			add_location(div1, file$s, 12, 0, 171);
-    			add_location(br0, file$s, 16, 6, 260);
-    			add_location(br1, file$s, 17, 5, 270);
-    			add_location(br2, file$s, 18, 9, 284);
-    			add_location(br3, file$s, 19, 5, 294);
+    			add_location(div1, file$s, 12, 0, 183);
+    			add_location(br0, file$s, 16, 6, 276);
+    			add_location(br1, file$s, 17, 5, 287);
+    			add_location(br2, file$s, 18, 9, 302);
+    			add_location(br3, file$s, 19, 5, 313);
     			attr_dev(div2, "class", "about-text svelte-fc0wla");
-    			add_location(div2, file$s, 15, 0, 229);
+    			add_location(div2, file$s, 15, 0, 244);
     			attr_dev(div3, "class", "about-text-title svelte-fc0wla");
-    			add_location(div3, file$s, 22, 0, 317);
-    			add_location(br4, file$s, 26, 9, 401);
-    			add_location(br5, file$s, 27, 7, 413);
+    			add_location(div3, file$s, 22, 0, 339);
+    			add_location(br4, file$s, 26, 9, 427);
+    			add_location(br5, file$s, 27, 7, 440);
     			attr_dev(div4, "class", "about-text svelte-fc0wla");
-    			add_location(div4, file$s, 25, 0, 367);
+    			add_location(div4, file$s, 25, 0, 392);
     			attr_dev(div5, "class", "about-text-title svelte-fc0wla");
-    			add_location(div5, file$s, 30, 0, 432);
+    			add_location(div5, file$s, 30, 0, 462);
     			attr_dev(i0, "class", "fab fa-trello");
-    			add_location(i0, file$s, 36, 53, 612);
+    			add_location(i0, file$s, 36, 53, 648);
     			attr_dev(a0, "href", "https://trello.com/b/NlCLf8lW/refviewer");
     			attr_dev(a0, "class", "svelte-fc0wla");
-    			add_location(a0, file$s, 36, 3, 562);
+    			add_location(a0, file$s, 36, 3, 598);
     			attr_dev(li0, "class", "about-list-icon svelte-fc0wla");
-    			add_location(li0, file$s, 35, 2, 530);
+    			add_location(li0, file$s, 35, 2, 565);
     			attr_dev(i1, "class", "fab fa-github-square");
-    			add_location(i1, file$s, 39, 57, 742);
+    			add_location(i1, file$s, 39, 57, 781);
     			attr_dev(a1, "href", "https://github.com/atomic-addison/refviewer");
     			attr_dev(a1, "class", "svelte-fc0wla");
-    			add_location(a1, file$s, 39, 3, 688);
+    			add_location(a1, file$s, 39, 3, 727);
     			attr_dev(li1, "class", "about-list-icon svelte-fc0wla");
-    			add_location(li1, file$s, 38, 2, 656);
+    			add_location(li1, file$s, 38, 2, 694);
     			attr_dev(i2, "class", "fas fa-home");
-    			add_location(i2, file$s, 42, 32, 854);
+    			add_location(i2, file$s, 42, 32, 896);
     			attr_dev(a2, "href", "https://source.dog");
     			attr_dev(a2, "class", "svelte-fc0wla");
-    			add_location(a2, file$s, 42, 3, 825);
+    			add_location(a2, file$s, 42, 3, 867);
     			attr_dev(li2, "class", "about-list-icon svelte-fc0wla");
-    			add_location(li2, file$s, 41, 2, 793);
+    			add_location(li2, file$s, 41, 2, 834);
     			attr_dev(ul, "class", "about-list svelte-fc0wla");
-    			add_location(ul, file$s, 34, 1, 504);
+    			add_location(ul, file$s, 34, 1, 538);
     			attr_dev(div6, "class", "about-text svelte-fc0wla");
-    			add_location(div6, file$s, 33, 0, 478);
+    			add_location(div6, file$s, 33, 0, 511);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17431,14 +17431,14 @@ var app = (function () {
     			div1 = element("div");
     			set_style(div0, "border-color", /*color*/ ctx[0]);
     			attr_dev(div0, "class", "svelte-1asu0hl");
-    			add_location(div0, file$r, 6, 2, 100);
+    			add_location(div0, file$r, 6, 2, 106);
     			set_style(div1, "border-color", /*color*/ ctx[0]);
     			attr_dev(div1, "class", "svelte-1asu0hl");
-    			add_location(div1, file$r, 7, 2, 145);
+    			add_location(div1, file$r, 7, 2, 152);
     			attr_dev(div2, "class", "lds-ripple svelte-1asu0hl");
-    			add_location(div2, file$r, 5, 1, 73);
+    			add_location(div2, file$r, 5, 1, 78);
     			attr_dev(div3, "class", "loader svelte-1asu0hl");
-    			add_location(div3, file$r, 4, 0, 51);
+    			add_location(div3, file$r, 4, 0, 55);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17641,7 +17641,7 @@ var app = (function () {
     			span = element("span");
     			span.textContent = "No recent files found yet!";
     			attr_dev(span, "class", "recents-list-fallback svelte-8d22wi");
-    			add_location(span, file$q, 36, 3, 769);
+    			add_location(span, file$q, 36, 3, 805);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -17754,9 +17754,9 @@ var app = (function () {
     			t1 = space();
     			attr_dev(a, "class", "recents-list-item svelte-8d22wi");
     			attr_dev(a, "href", a_href_value = /*item*/ ctx[4]);
-    			add_location(a, file$q, 23, 5, 466);
+    			add_location(a, file$q, 23, 5, 489);
     			attr_dev(li, "class", "svelte-8d22wi");
-    			add_location(li, file$q, 22, 4, 456);
+    			add_location(li, file$q, 22, 4, 478);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -17816,7 +17816,7 @@ var app = (function () {
     			ul = element("ul");
     			if_block.c();
     			attr_dev(ul, "class", "recents-list svelte-8d22wi");
-    			add_location(ul, file$q, 18, 0, 361);
+    			add_location(ul, file$q, 18, 0, 379);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -26387,9 +26387,9 @@ var app = (function () {
     			div = element("div");
     			p = element("p");
     			p.textContent = `Failed to fetch the changelog... Maybe there is no changelog for v${/*version*/ ctx[0]}?`;
-    			add_location(p, file$6, 21, 2, 628);
+    			add_location(p, file$6, 21, 2, 649);
     			attr_dev(div, "class", "changelog-wrapper svelte-1me2c3m");
-    			add_location(div, file$6, 20, 1, 594);
+    			add_location(div, file$6, 20, 1, 614);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26430,7 +26430,7 @@ var app = (function () {
     			div = element("div");
     			create_component(sveltemarkdown.$$.fragment);
     			attr_dev(div, "class", "changelog-wrapper svelte-1me2c3m");
-    			add_location(div, file$6, 16, 1, 498);
+    			add_location(div, file$6, 16, 1, 514);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26464,7 +26464,7 @@ var app = (function () {
     	return block;
     }
 
-    // (14:23)   <Loader color="#B7B9BC" /> {:then data}
+    // (14:23)    <Loader color="#B7B9BC" />  {:then data}
     function create_pending_block$1(ctx) {
     	let loader;
     	let current;
@@ -26501,7 +26501,7 @@ var app = (function () {
     		block,
     		id: create_pending_block$1.name,
     		type: "pending",
-    		source: "(14:23)   <Loader color=\\\"#B7B9BC\\\" /> {:then data}",
+    		source: "(14:23)    <Loader color=\\\"#B7B9BC\\\" />  {:then data}",
     		ctx
     	});
 
@@ -26652,7 +26652,7 @@ var app = (function () {
     	return block;
     }
 
-    // (54:33)      {#if data[0].tag_name != 'v' + version}
+    // (54:33)       {#if data[0].tag_name != 'v' + version}
     function create_then_block(ctx) {
     	let if_block_anchor;
     	let if_block = /*data*/ ctx[12][0].tag_name != 'v' + /*version*/ ctx[2] && create_if_block_4$1(ctx);
@@ -26690,7 +26690,7 @@ var app = (function () {
     		block,
     		id: create_then_block.name,
     		type: "then",
-    		source: "(54:33)      {#if data[0].tag_name != 'v' + version}",
+    		source: "(54:33)       {#if data[0].tag_name != 'v' + version}",
     		ctx
     	});
 
@@ -26712,7 +26712,7 @@ var app = (function () {
     			li = element("li");
     			li.textContent = "Update";
     			attr_dev(li, "class", "svelte-i7rdg0");
-    			add_location(li, file$5, 55, 5, 1311);
+    			add_location(li, file$5, 55, 5, 1366);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -26743,7 +26743,7 @@ var app = (function () {
     	return block;
     }
 
-    // (1:0) <script>  import { createEventDispatcher }
+    // (1:0) <script>   import { createEventDispatcher }
     function create_pending_block(ctx) {
     	const block = { c: noop$1, m: noop$1, p: noop$1, d: noop$1 };
 
@@ -26751,7 +26751,7 @@ var app = (function () {
     		block,
     		id: create_pending_block.name,
     		type: "pending",
-    		source: "(1:0) <script>  import { createEventDispatcher }",
+    		source: "(1:0) <script>   import { createEventDispatcher }",
     		ctx
     	});
 
@@ -26774,7 +26774,7 @@ var app = (function () {
     			div = element("div");
     			create_component(changelog.$$.fragment);
     			attr_dev(div, "class", "settings-w-inner svelte-i7rdg0");
-    			add_location(div, file$5, 83, 3, 1951);
+    			add_location(div, file$5, 83, 3, 2034);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26828,7 +26828,7 @@ var app = (function () {
     			div = element("div");
     			create_component(about.$$.fragment);
     			attr_dev(div, "class", "settings-w-inner svelte-i7rdg0");
-    			add_location(div, file$5, 79, 3, 1847);
+    			add_location(div, file$5, 79, 3, 1926);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26882,7 +26882,7 @@ var app = (function () {
     			div = element("div");
     			create_component(settings_1.$$.fragment);
     			attr_dev(div, "class", "settings-w-inner svelte-i7rdg0");
-    			add_location(div, file$5, 75, 3, 1743);
+    			add_location(div, file$5, 75, 3, 1818);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26933,7 +26933,7 @@ var app = (function () {
     			div = element("div");
     			create_component(recent.$$.fragment);
     			attr_dev(div, "class", "settings-w-inner svelte-i7rdg0");
-    			add_location(div, file$5, 71, 3, 1586);
+    			add_location(div, file$5, 71, 3, 1657);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -27038,25 +27038,25 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(li0, "class", "svelte-i7rdg0");
     			toggle_class(li0, "active", /*setWindow*/ ctx[3] == "recent");
-    			add_location(li0, file$5, 29, 3, 759);
+    			add_location(li0, file$5, 29, 3, 788);
     			attr_dev(li1, "class", "svelte-i7rdg0");
     			toggle_class(li1, "active", /*setWindow*/ ctx[3] == "settings");
-    			add_location(li1, file$5, 35, 3, 874);
+    			add_location(li1, file$5, 35, 3, 909);
     			attr_dev(li2, "class", "svelte-i7rdg0");
     			toggle_class(li2, "active", /*setWindow*/ ctx[3] == "about");
-    			add_location(li2, file$5, 41, 3, 995);
+    			add_location(li2, file$5, 41, 3, 1036);
     			attr_dev(li3, "class", "svelte-i7rdg0");
     			toggle_class(li3, "active", /*setWindow*/ ctx[3] == "changelog");
-    			add_location(li3, file$5, 47, 3, 1107);
+    			add_location(li3, file$5, 47, 3, 1154);
     			attr_dev(ul, "class", "settings-container-menu svelte-i7rdg0");
-    			add_location(ul, file$5, 28, 2, 719);
+    			add_location(ul, file$5, 28, 2, 747);
     			attr_dev(div0, "class", "settings-container-sidebar svelte-i7rdg0");
-    			add_location(div0, file$5, 27, 1, 676);
+    			add_location(div0, file$5, 27, 1, 703);
     			attr_dev(div1, "class", "settings-container-main svelte-i7rdg0");
-    			add_location(div1, file$5, 69, 1, 1517);
+    			add_location(div1, file$5, 69, 1, 1586);
     			attr_dev(div2, "class", "settings-container svelte-i7rdg0");
     			toggle_class(div2, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div2, file$5, 23, 0, 626);
+    			add_location(div2, file$5, 23, 0, 649);
     		},
     		l: function claim(nodes) {
     			throw new Error_1$1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -27359,22 +27359,22 @@ var app = (function () {
     			t2 = space();
     			div4 = element("div");
     			attr_dev(div0, "class", "cursor-pointer svelte-1bquivv");
-    			add_location(div0, file$4, 8, 2, 159);
+    			add_location(div0, file$4, 8, 2, 167);
     			attr_dev(div1, "class", "cursor-color svelte-1bquivv");
-    			add_location(div1, file$4, 9, 2, 196);
+    			add_location(div1, file$4, 9, 2, 205);
     			attr_dev(div2, "class", "cursor-backdrop svelte-1bquivv");
-    			add_location(div2, file$4, 7, 1, 127);
+    			add_location(div2, file$4, 7, 1, 134);
     			attr_dev(div3, "class", "cursor-pointer svelte-1bquivv");
-    			add_location(div3, file$4, 12, 2, 269);
+    			add_location(div3, file$4, 12, 2, 281);
     			attr_dev(div4, "class", "cursor-color svelte-1bquivv");
     			set_style(div4, "background", /*chosenColor*/ ctx[0]);
-    			add_location(div4, file$4, 13, 2, 306);
+    			add_location(div4, file$4, 13, 2, 319);
     			attr_dev(div5, "class", "cursor-content svelte-1bquivv");
-    			add_location(div5, file$4, 11, 1, 238);
+    			add_location(div5, file$4, 11, 1, 249);
     			attr_dev(div6, "class", "cursor svelte-1bquivv");
     			set_style(div6, "top", /*y*/ ctx[2] + "px");
     			set_style(div6, "left", /*x*/ ctx[1] + "px");
-    			add_location(div6, file$4, 6, 0, 75);
+    			add_location(div6, file$4, 6, 0, 81);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -27526,7 +27526,7 @@ var app = (function () {
     			t0 = text("x");
     			t1 = text(/*zoomscale*/ ctx[1]);
     			attr_dev(div, "class", "zoomscale svelte-1ey8ynp");
-    			add_location(div, file$3, 6, 1, 87);
+    			add_location(div, file$3, 6, 1, 93);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -29100,7 +29100,7 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file = "src\\App.svelte";
 
-    // (355:2) {#if settingsOpen}
+    // (357:2) {#if settingsOpen}
     function create_if_block_5(ctx) {
     	let menu;
     	let current;
@@ -29148,14 +29148,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(355:2) {#if settingsOpen}",
+    		source: "(357:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (364:2) {#if loading}
+    // (366:2) {#if loading}
     function create_if_block_4(ctx) {
     	let loader;
     	let current;
@@ -29187,14 +29187,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(364:2) {#if loading}",
+    		source: "(366:2) {#if loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (368:2) {#if fileSelected}
+    // (370:2) {#if fileSelected}
     function create_if_block_1(ctx) {
     	let div1;
     	let t0;
@@ -29245,11 +29245,11 @@ var app = (function () {
     			set_style(div0, "opacity", /*workAreaOpacity*/ ctx[17]);
     			toggle_class(div0, "pickingMode", /*pickingMode*/ ctx[8]);
     			toggle_class(div0, "croppingMode", /*croppingMode*/ ctx[9]);
-    			add_location(div0, file, 384, 4, 9508);
+    			add_location(div0, file, 386, 4, 9944);
     			attr_dev(div1, "class", "canvas-container svelte-nv5cfc");
     			toggle_class(div1, "legacy", /*settings*/ ctx[2].theme);
     			toggle_class(div1, "pixelated", /*pixelated*/ ctx[5]);
-    			add_location(div1, file, 368, 3, 9218);
+    			add_location(div1, file, 370, 3, 9638);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -29355,14 +29355,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(368:2) {#if fileSelected}",
+    		source: "(370:2) {#if fileSelected}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (375:4) {#if pickingMode && mouseincanvas}
+    // (377:4) {#if pickingMode && mouseincanvas}
     function create_if_block_3(ctx) {
     	let cursor;
     	let current;
@@ -29409,14 +29409,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(375:4) {#if pickingMode && mouseincanvas}",
+    		source: "(377:4) {#if pickingMode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (417:6) {#if croppingMode}
+    // (419:6) {#if croppingMode}
     function create_if_block_2(ctx) {
     	let layer;
     	let current;
@@ -29457,14 +29457,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(417:6) {#if croppingMode}",
+    		source: "(419:6) {#if croppingMode}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (399:8) <Canvas          width={width}          height={height}          on:mousedown={handleMouseDown}          on:mouseup={handleMouseUp}          on:mousemove={handleMouseMove}          on:mouseenter={() => { mouseincanvas = true; }}          on:mouseleave={() => { mouseincanvas = false; }}          on:click={() => {           if (pickingMode) {            pickingMode = false;           instance.setOptions({ disablePan: false });            hex = chosenColor;           }          }}         >
+    // (401:8) <Canvas           width={width}           height={height}           on:mousedown={handleMouseDown}           on:mouseup={handleMouseUp}           on:mousemove={handleMouseMove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingMode) {             pickingMode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >
     function create_default_slot_1(ctx) {
     	let layer;
     	let t_1;
@@ -29543,14 +29543,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(399:8) <Canvas          width={width}          height={height}          on:mousedown={handleMouseDown}          on:mouseup={handleMouseUp}          on:mousemove={handleMouseMove}          on:mouseenter={() => { mouseincanvas = true; }}          on:mouseleave={() => { mouseincanvas = false; }}          on:click={() => {           if (pickingMode) {            pickingMode = false;           instance.setOptions({ disablePan: false });            hex = chosenColor;           }          }}         >",
+    		source: "(401:8) <Canvas           width={width}           height={height}           on:mousedown={handleMouseDown}           on:mouseup={handleMouseUp}           on:mousemove={handleMouseMove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingMode) {             pickingMode = false;            instance.setOptions({ disablePan: false });             hex = chosenColor;            }           }}          >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (425:2) {#if !fileSelected && !loading}
+    // (427:2) {#if !fileSelected && !loading}
     function create_if_block(ctx) {
     	let dropfield;
     	let current;
@@ -29591,14 +29591,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(425:2) {#if !fileSelected && !loading}",
+    		source: "(427:2) {#if !fileSelected && !loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (347:1) <Desktop   {fileSelected}   {backdropColor}   {settingsOpen}   legacy={settings.theme}   settings={proxySettings}   bind:loading  >
+    // (349:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >
     function create_default_slot(ctx) {
     	let t0;
     	let t1;
@@ -29761,7 +29761,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(347:1) <Desktop   {fileSelected}   {backdropColor}   {settingsOpen}   legacy={settings.theme}   settings={proxySettings}   bind:loading  >",
+    		source: "(349:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >",
     		ctx
     	});
 
@@ -29863,7 +29863,7 @@ var app = (function () {
     			create_component(desktop.$$.fragment);
     			attr_dev(main, "class", "svelte-nv5cfc");
     			toggle_class(main, "legacy", /*settings*/ ctx[2].theme);
-    			add_location(main, file, 305, 0, 7888);
+    			add_location(main, file, 307, 0, 8245);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -30022,6 +30022,7 @@ var app = (function () {
     		initUpdate++;
     		$$invalidate(3, backdropColor = settings.theme ? "#111111" : "#2F2E33");
     		if (initUpdate < 2) $$invalidate(6, proxySettings = settings);
+    		console.log("Testing initUpdate", initUpdate);
     	});
 
     	ipcRenderer.on('deliver', (event, arg) => {
