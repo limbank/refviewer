@@ -24,6 +24,11 @@ class fileProcessor {
 
             imageDataURI.encodeFromURL(filePath).then((response) => {
                 event.sender.send('deliver', response);
+            }).catch((error) => {
+                if (error) {
+                    jack.log("Error loading image!", error);
+                    event.sender.send('action', "Failed to open image");
+                }
             });
         }
         else if (filePath.startsWith("data")) {

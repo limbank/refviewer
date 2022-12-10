@@ -1,14 +1,14 @@
 {
     "name": "refviewer",
-    "version": "4.2.1",
+    "version": "4.2.2",
     "description" : "RefViewer is an image viewer designed to aid artists and developers alike in their creative process.",
     "author": "starbrat",
     "main": "main.js",
-    "homepage": "https://starbrat.github.io/refviewer/",
+    "homepage": "https://limbank.github.io/refviewer/",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/starbrat/refviewer.git"
+        "url": "https://github.com/limbank/refviewer"
     },
     "scripts": {
         "build:svelte": "rollup -c",

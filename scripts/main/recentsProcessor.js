@@ -12,6 +12,15 @@ class recentsProcessor {
             this.readRecents(data.ready);
         });
     }
+    clearRecents(callback) {
+        this.recents = [];
+        
+        fs.writeJson(this.file, this.recents, err => {
+            if (err) return console.error(err);
+
+            if (callback && typeof callback == "function") callback(this.recents);
+        });
+    }
     readRecents(callback) {
         fs.readJson(this.file, (err, packageObj) => {
             let returnData = {};

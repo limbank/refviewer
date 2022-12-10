@@ -17,8 +17,6 @@ class imageEditor {
         return new Buffer.from(dataURI.split(",")[1], 'base64');
     }
     cropImage(file, coords, event, win) {
-        console.log("HI!", coords);
-
         sharp(this.dataToBuffer(file))
             .extract(coords)
             .toBuffer()

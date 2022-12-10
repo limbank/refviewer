@@ -7,6 +7,22 @@
 
 	let recents;
 
+    let resetConfirmed = false;
+    let resetText = "Clear";
+
+    function handleReset() {
+    	if (!resetConfirmed) {
+    		resetText = "Are you sure?";
+    		resetConfirmed = true;
+    		return;
+    	}
+
+    	ipcRenderer.send('clearRecents');
+
+    	resetConfirmed = false;
+    	resetText = "Clear";
+    }
+
 	ipcRenderer.on('recents', (event, arg) => {
 		recents = arg;
 	});
@@ -33,6 +49,10 @@
 					>{item}</a>
 				</li>
 			{/each}
+
+			<li class="list-button">
+				<button on:click={handleReset}>{resetText}</button>
+			</li>
 		{:else}
 			<span class="recents-list-fallback">
 				No recent files found yet!
@@ -85,6 +105,31 @@
 			padding: 15px;
 			justify-content: center;
 			box-sizing: border-box;
+		}
+
+		.list-button {
+			justify-content: center;
+			padding: 5px 0 10px;
+
+			button {
+				min-height: 25px;
+				border-radius: 3px;
+				background-color: #2F2E33;
+				cursor: pointer;
+				border: 0;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 5px 10px;
+			    color: #B7B9BC;
+			    font-size: 12px;
+			    font-weight: 600;
+
+			    &:hover {
+		  			background-color: #FAA916;
+		  			color: #171719;
+			    }
+			}
 		}
 	}
 </style>

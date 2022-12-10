@@ -37,6 +37,19 @@
 
 		:global(a) {
 			color: #B7B9BC;
+			font-weight: 600;
+
+			&:hover {
+				color: #FAA916;
+			}
+		}
+
+		:global(code) {
+			padding: 2px 4px;
+			margin: 0;
+			font-size: 85%;
+			background-color: #2F2E33;
+			border-radius: 3px;
 		}
 	}
 </style>

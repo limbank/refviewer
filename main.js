@@ -123,6 +123,12 @@ ipcMain.on('getRecents', (event, arg) => {
     });
 });
 
+ipcMain.on('clearRecents', (event, arg) => {
+    rp.clearRecents((data) => {
+        event.sender.send('recents', data);
+    });
+});
+
 ipcMain.on('file', (event, arg) => {
     hp.flush();
     fp.process(arg, event);
@@ -205,8 +211,13 @@ ipcMain.on('screenshot', (event, arg) => {
     });
 
     let allDisplays = screen.getAllDisplays();
-    let index = allDisplays.map(e => e.id).indexOf(currentScreen.id);;
+    let index = allDisplays.map(e => e.id).indexOf(currentScreen.id);
+
     activeWindow.hide();
+
+    let errTimeout = setTimeout(() => {
+        activeWindow.show();
+    }, 5000);
 
     let currentDate = new Date(); 
     let timestamp = currentDate.getDate() + ""
@@ -216,11 +227,16 @@ ipcMain.on('screenshot', (event, arg) => {
                 + currentDate.getMinutes()
                 + currentDate.getSeconds();
 
+    jack.log("Preparing to take a screenshot...");
     screenshot.listDisplays().then((displays) => {
+        jack.log("Listing displays...");
         screenshot({
             screen: displays[index].id,
             format: 'png'
         }).then((img) => {
+            jack.log("Took the screenshot!");
+
+            clearTimeout(errTimeout);
             activeWindow.show();
             
             newWin = new BrowserWindow({
@@ -238,7 +254,7 @@ ipcMain.on('screenshot', (event, arg) => {
 
             newWin.loadFile('public/screen.html');
 
-            newWin.webContents.on('did-finish-load', () => {
+            newWin.webContents.once('did-finish-load', () => {
                 newWin.webContents.send('screenshot', img);
             });
 
@@ -247,6 +263,7 @@ ipcMain.on('screenshot', (event, arg) => {
                 newWin.setFullScreen(true);
                 newWin.focus();
 
+                ipcMain.removeAllListeners('image_crop');
                 ipcMain.once('image_crop', (e, arg) => {
                     if (newWin) newWin.close();
 
@@ -269,6 +286,7 @@ ipcMain.on('screenshot', (event, arg) => {
                         });
                 });
 
+                ipcMain.removeAllListeners('image_full');
                 ipcMain.once('image_full', (e, arg) => {
                     if (newWin) newWin.close();
 
@@ -291,9 +309,7 @@ ipcMain.on('screenshot', (event, arg) => {
                 });
             });
 
-            newWin.on('close', function(e){
-                newWin = null;
-            });
+            newWin.once('close', () => { newWin = null; });
         }).catch((error) => {
             activeWindow.show();
 

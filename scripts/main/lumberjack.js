@@ -16,9 +16,20 @@ class Lumberjack {
     colorString(string) {
         return `\x1b[36m${string}\x1b[0m`;
     }
+    pad(n) {
+        return String(n).padStart(2, '0');
+    }
     get time() {
         let d = new Date;
-        return this.colorString(`[${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}]`);
+        return this.colorString(
+            `[${
+                this.pad(d.getHours())
+                }:${
+                    this.pad(d.getMinutes())
+                    }:${
+                        this.pad(d.getSeconds())
+                        }]`
+        );
     }
     log() {
         console.log(`${this.time}`, ...arguments);
