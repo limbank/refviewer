@@ -1,6 +1,7 @@
 const sharp = require('sharp');
 const imageDataURI = require('image-data-uri');
 const PSD = require('psd');
+const os = require('os');
 const path = require('path');
 const http = require("http");
 const fs = require('fs-extra');
@@ -28,6 +29,8 @@ class fileProcessor {
                 if (error) {
                     jack.log("Error loading image!", error);
                     event.sender.send('action', "Failed to open image");
+
+                    event.sender.send('loading', false);
                 }
             });
         }
@@ -99,6 +102,8 @@ class fileProcessor {
         if (!file) return jack.log("Missing file");
 
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
+
+        event.sender.send('loading', true);
 
         this.generatedPalette = null;
         this.name = retain ? this.name : (this.pathInfo(file).name || "image");

@@ -101,6 +101,15 @@
 			{tips}
 			{legacy}
 			size="12px"
+			tiptext="Make click-through"
+			 on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}
+		>
+	    	<i class="fas fa-ghost"></i>
+		</Control>
+		<Control
+			{tips}
+			{legacy}
+			size="12px"
 			tiptext="New window"
 			 on:click={e => { ipcRenderer.send('window', 'new'); }}
 		>

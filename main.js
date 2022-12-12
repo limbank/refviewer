@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, screen } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, screen, globalShortcut } = require("electron");
 
 const os = require('os');
 const path = require('path');
@@ -24,6 +24,8 @@ let wmReady = false;
 const homeDir = path.join(os.homedir(), '.refviewer');
 
 const jack = new Lumberjack();
+
+let lastActiveWindows = [];
 
 sp = new settingsProcessor({
     home:homeDir,
@@ -65,14 +67,28 @@ gotTheLock = app.requestSingleInstanceLock();
 
 function createWhenReady() {
     if (!wmReady) setTimeout(createWhenReady, 100);
-    else return wm.createWindow();
+    else wm.createWindow();
+
+    // Register a 'CommandOrControl+X' shortcut listener.
+    const ret = globalShortcut.register('CommandOrControl+M', () => {
+        jack.log('CommandOrControl+M is pressed');
+
+        for (var i = 0; i < lastActiveWindows.length; i++) {
+            lastActiveWindows[i].setIgnoreMouseEvents(false);
+            lastActiveWindows[i].setFocusable(true);
+        }
+
+        lastActiveWindows = [];
+    });
+
+    if (!ret) jack.log('registration failed');
+
+    // Check whether a shortcut is registered.
+    jack.log(globalShortcut.isRegistered('CommandOrControl+M'));
 }
 
-if (!gotTheLock) {
-    app.quit();
-} else {
-    app.on("ready", createWhenReady);
-}
+if (!gotTheLock) app.quit();
+else app.on("ready", createWhenReady);
 
 app.on("window-all-closed", function () {
     if (process.platform !== "darwin") app.quit();
@@ -80,7 +96,15 @@ app.on("window-all-closed", function () {
 
 app.on("activate", function () {
     if (wm.windows.length <= 0) createWhenReady();
-});    
+});
+
+app.on('will-quit', () => {
+  // Unregister a shortcut.
+  globalShortcut.unregister('CommandOrControl+X')
+
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll()
+});
 
 ipcMain.on('settings:write', (event, arg) => {
     sp.writeSettings(arg, () => {
@@ -113,6 +137,14 @@ ipcMain.on('window', (event, arg) => {
         case "new":
             wm.createWindow();
             break;
+        case "clickthrough":
+            activeWindow.setIgnoreMouseEvents(true);
+            activeWindow.setFocusable(false);
+
+            event.sender.send('action', "Enabled click-through mode!");
+            event.sender.send('action', "Use CTRL or CMD + M to exit");
+
+            lastActiveWindows.push(activeWindow);
         default: break;
     }
 });
