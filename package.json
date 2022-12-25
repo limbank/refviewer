@@ -1,7 +1,7 @@
 {
     "name": "refviewer",
     "version": "4.2.3",
-    "description" : "RefViewer is an image viewer designed to aid artists and developers alike in their creative process.",
+    "description": "RefViewer is an image viewer designed to aid artists and developers alike in their creative process.",
     "author": "starbrat",
     "main": "main.js",
     "homepage": "https://limbank.github.io/refviewer/",
