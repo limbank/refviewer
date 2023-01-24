@@ -17716,7 +17716,7 @@ var app = (function () {
     			span = element("span");
     			span.textContent = "No recent files found yet!";
     			attr_dev(span, "class", "recents-list-fallback svelte-xakwss");
-    			add_location(span, file$q, 56, 3, 1170);
+    			add_location(span, file$q, 56, 3, 1226);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -17765,9 +17765,9 @@ var app = (function () {
     			button = element("button");
     			t1 = text(/*resetText*/ ctx[1]);
     			attr_dev(button, "class", "svelte-xakwss");
-    			add_location(button, file$q, 53, 4, 1096);
+    			add_location(button, file$q, 53, 4, 1149);
     			attr_dev(li, "class", "list-button svelte-xakwss");
-    			add_location(li, file$q, 52, 3, 1067);
+    			add_location(li, file$q, 52, 3, 1119);
     		},
     		m: function mount(target, anchor) {
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -17852,9 +17852,9 @@ var app = (function () {
     			t = text(t_value);
     			attr_dev(a, "class", "recents-list-item svelte-xakwss");
     			attr_dev(a, "href", a_href_value = /*item*/ ctx[7]);
-    			add_location(a, file$q, 39, 5, 773);
+    			add_location(a, file$q, 39, 5, 812);
     			attr_dev(li, "class", "svelte-xakwss");
-    			add_location(li, file$q, 38, 4, 763);
+    			add_location(li, file$q, 38, 4, 801);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -17913,7 +17913,7 @@ var app = (function () {
     			ul = element("ul");
     			if_block.c();
     			attr_dev(ul, "class", "recents-list svelte-xakwss");
-    			add_location(ul, file$q, 34, 0, 668);
+    			add_location(ul, file$q, 34, 0, 702);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -26503,9 +26503,9 @@ var app = (function () {
     			div = element("div");
     			p = element("p");
     			p.textContent = `Failed to fetch the changelog... Maybe there is no changelog for v${/*version*/ ctx[0]}?`;
-    			add_location(p, file$6, 21, 2, 628);
+    			add_location(p, file$6, 21, 2, 649);
     			attr_dev(div, "class", "changelog-wrapper svelte-14da7td");
-    			add_location(div, file$6, 20, 1, 594);
+    			add_location(div, file$6, 20, 1, 614);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26546,7 +26546,7 @@ var app = (function () {
     			div = element("div");
     			create_component(sveltemarkdown.$$.fragment);
     			attr_dev(div, "class", "changelog-wrapper svelte-14da7td");
-    			add_location(div, file$6, 16, 1, 498);
+    			add_location(div, file$6, 16, 1, 514);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26580,7 +26580,7 @@ var app = (function () {
     	return block;
     }
 
-    // (14:23)   <Loader color="#B7B9BC" /> {:then data}
+    // (14:23)    <Loader color="#B7B9BC" />  {:then data}
     function create_pending_block$1(ctx) {
     	let loader;
     	let current;
@@ -26617,7 +26617,7 @@ var app = (function () {
     		block,
     		id: create_pending_block$1.name,
     		type: "pending",
-    		source: "(14:23)   <Loader color=\\\"#B7B9BC\\\" /> {:then data}",
+    		source: "(14:23)    <Loader color=\\\"#B7B9BC\\\" />  {:then data}",
     		ctx
     	});
 

@@ -52,7 +52,7 @@
         "patch-package": "^6.4.7",
         "psd": "^3.4.0",
         "screenshot-desktop": "^1.12.7",
-        "sharp": "^0.30.7",
+        "sharp": "^0.31.3",
         "svelte-canvas": "^0.7.1",
         "svelte-markdown": "^0.2.2",
         "svelte-popperjs": "^1.2.10",
