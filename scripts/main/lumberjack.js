@@ -5,7 +5,7 @@ const path = require('path');
 
 class Lumberjack {
     constructor(args) {
-        this.home = path.join(os.homedir(), '.refviewer');
+        this.home = args.home;
         this.file = path.join(this.home, 'log.txt');
         this.logFile;
 

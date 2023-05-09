@@ -21,9 +21,12 @@ let processorsReady = false;
 let gotTheLock;
 let wmReady = false;
 
-const homeDir = path.join(os.homedir(), '.refviewer');
+const { name } = require('./package.json');
+const homeDir = path.join(os.homedir(), '.' + name);
 
-const jack = new Lumberjack();
+const jack = new Lumberjack({
+    home: homeDir
+});
 
 let lastActiveWindows = [];
 

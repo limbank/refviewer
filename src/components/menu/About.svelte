@@ -8,7 +8,7 @@
 	</div>
 {/if}
 <div class="about-text">
-	source.dog &copy; 2018-2022
+	limbank.org &copy; 2018-2022
 </div>
 <div class="about-text-title">
 	Special thanks to:
@@ -37,10 +37,10 @@
 			<a href="https://trello.com/b/NlCLf8lW/refviewer"><i class="fab fa-trello"></i></a>
 		</li>
 		<li class="about-list-icon">
-			<a href="https://github.com/atomic-addison/refviewer"><i class="fab fa-github-square"></i></a>
+			<a href="https://limbank.github.io/refviewer/"><i class="fab fa-github-square"></i></a>
 		</li>
 		<li class="about-list-icon">
-			<a href="https://source.dog"><i class="fas fa-home"></i></a>
+			<a href="http://limbank.org"><i class="fas fa-home"></i></a>
 		</li>
 	</ul>
 </div>
