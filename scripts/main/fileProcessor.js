@@ -19,12 +19,12 @@ class fileProcessor {
         if (filePath.startsWith("http")) {
             if (!retain) this.name = "image";
 
-            this.rp.writeRecent(filePath, (recents) => {
-                event.sender.send('recents', recents);
-            });
-
             imageDataURI.encodeFromURL(filePath).then((response) => {
                 event.sender.send('deliver', response);
+                
+                this.rp.writeRecent(filePath, (recents) => {
+                    event.sender.send('recents', recents);
+                });
             }).catch((error) => {
                 if (error) {
                     jack.log("Error loading image!", error);
@@ -65,14 +65,14 @@ class fileProcessor {
         });
     }
     handleConversion (filePath, event, writeRP = true) {
-        if(writeRP) this.rp.writeRecent(filePath, (recents) => {
-            event.sender.send('recents', recents);
-        });
-
         sharp(filePath)
             .png()
             .toBuffer()
             .then(data => {
+                if(writeRP) this.rp.writeRecent(filePath, (recents) => {
+                    event.sender.send('recents', recents);
+                });
+
                 event.sender.send('deliver', `data:image/png;base64,${data.toString('base64')}`);
             })
             .catch(err => {
@@ -82,15 +82,15 @@ class fileProcessor {
             });
     }
     handlePSD (filePath, event) {
-        this.rp.writeRecent(filePath, (recents) => {
-            event.sender.send('recents', recents);
-        });
-
         let psdPath = path.join(os.tmpdir(), 'out.png');
 
         PSD.open(filePath).then((psd) => {
             return psd.image.saveAsPng(psdPath);
         }).then(() => {
+            this.rp.writeRecent(filePath, (recents) => {
+                event.sender.send('recents', recents);
+            });
+
             this.handleConversion(psdPath, event, false);
         });
     }

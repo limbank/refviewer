@@ -12,6 +12,7 @@ const jack = new Lumberjack();
 class imageEditor {
     constructor (args) {
         this.fp = args.fp;
+        this.rp = args.rp;
     }
     dataToBuffer(dataURI) {
         return new Buffer.from(dataURI.split(",")[1], 'base64');
@@ -55,6 +56,10 @@ class imageEditor {
                 })
                 .then(info => {
                     event.sender.send('action', "Image saved!");
+
+                    this.rp.writeRecent(filePath, (recents) => {
+                        event.sender.send('recents', recents);
+                    });
                 })
                 .catch( err => {
                     jack.log(err);

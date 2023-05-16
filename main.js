@@ -57,7 +57,8 @@ sp = new settingsProcessor({
         });
 
         ie = new imageEditor({
-            fp: fp
+            fp: fp,
+            rp: rp
         });
     }
 });
@@ -314,6 +315,7 @@ ipcMain.on('screenshot', (event, arg) => {
                                     name: timestamp,
                                     dir: sp.settings.savedir
                                 }, "saveAuto", event, activeWindow);
+                                
                             }
                         })
                         .catch(err => {
