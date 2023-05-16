@@ -49,6 +49,7 @@
 		align-items: center;
 		width: 30px;
 		transition: color 0.1s ease-out;
+		-webkit-app-region: no-drag;
 		margin-bottom: 5px;
 		font-size: 14px;
 

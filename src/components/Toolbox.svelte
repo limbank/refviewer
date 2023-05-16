@@ -147,6 +147,7 @@
 		flex-shrink: 0;
 		box-sizing: border-box;
 		margin-top: -1px;
+		-webkit-app-region: drag;
 
 		&.legacy {
 			padding: 10px 10px 10px 0;
