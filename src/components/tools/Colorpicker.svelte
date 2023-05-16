@@ -10,12 +10,25 @@
 	export let reset;
 	export let alpha = true;
 
+	let hexIntermediate;
+
+	$: if(hexIntermediate) {
+		hex = hexIntermediate;
+	}
+	
+	function hexInput() {
+		if(tinycolor(hex).isValid()) {
+			//console.log("VALID HEX! ASSIGNING...");
+			hexIntermediate = hex;
+		}
+	}
+
 	export let hex;
 	export let rgb = tinycolor(hex).toRgb();
 </script>
 
 <div class="picker-wrapper">
-	<ColorPicker bind:rgb bind:hex isOpen isInput={false} isAlpha={alpha} isTextInput={false} />
+	<ColorPicker bind:rgb bind:hex={hexIntermediate} isOpen isInput={false} isAlpha={alpha} isTextInput={false} />
 	<div class="picker-split">
 		<div class="picker-controls">
 			<div class="picker-controls-row">
@@ -41,7 +54,7 @@
 			<div class="picker-controls-row">
 				<label>
 					<span>HEX:</span>
-					<input placeholder="Hex" type="text" bind:value={hex} disabled>
+					<input placeholder="Hex" type="text" bind:value={hex} on:input={hexInput}>
 					<Control
 						{tips}
 						{legacy}
