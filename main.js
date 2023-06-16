@@ -80,6 +80,8 @@ function createWhenReady() {
         for (var i = 0; i < lastActiveWindows.length; i++) {
             lastActiveWindows[i].setIgnoreMouseEvents(false);
             lastActiveWindows[i].setFocusable(true);
+            lastActiveWindows[i].show();
+            lastActiveWindows[i].focus();
         }
 
         lastActiveWindows = [];
