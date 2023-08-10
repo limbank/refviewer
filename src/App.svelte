@@ -2,7 +2,7 @@
 	import Titlebar from './components/Titlebar.svelte';
 	import Desktop from './components/Desktop.svelte';
 	import Backdrop from './components/Backdrop.svelte';
-	import Toolbox from './components/Toolbox.svelte';
+	import Toolbar from './components/Toolbar.svelte';
 	import Actions from './components/Actions.svelte';
 	import Dropfield from './components/Dropfield.svelte';
 	import Menu from './components/menu/Menu.svelte';
@@ -322,7 +322,7 @@
 		on:copy={tbx.copyImage}
 		on:settingsOpen={e => { settingsOpen = e.detail; }}
 	/>
-	<Toolbox
+	<Toolbar
 		{settingsOpen}
 		{fileSelected}
 		{hex}
@@ -365,7 +365,7 @@
 			<Loader />
 		{/if}
 
-		{#if fileSelected}
+		{#if fileSelected && !loading}
 			<div
 				class="canvas-container"
 				class:legacy={settings.theme}

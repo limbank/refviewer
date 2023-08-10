@@ -75,7 +75,7 @@ function createWhenReady() {
 
     // Register a 'CommandOrControl+X' shortcut listener.
     const ret = globalShortcut.register('CommandOrControl+M', () => {
-        jack.log('CommandOrControl+M is pressed');
+        sp.settings.devmode ? jack.log('CommandOrControl+M is pressed') : '';
 
         for (var i = 0; i < lastActiveWindows.length; i++) {
             lastActiveWindows[i].setIgnoreMouseEvents(false);
@@ -87,10 +87,9 @@ function createWhenReady() {
         lastActiveWindows = [];
     });
 
-    if (!ret) jack.log('registration failed');
-
     // Check whether a shortcut is registered.
-    jack.log(globalShortcut.isRegistered('CommandOrControl+M'));
+    sp.settings.devmode ? 
+        jack.log("Registered shortcut?", globalShortcut.isRegistered('CommandOrControl+M')) : '';
 }
 
 if (!gotTheLock) app.quit();
@@ -113,6 +112,15 @@ app.on('will-quit', () => {
 });
 
 ipcMain.on('settings:write', (event, arg) => {
+    //check autosave issue here
+    //jack.log("WRITING SETTINGS!");
+
+    if (arg.autosave && !arg.savedir) {
+        //jack.log("No savedir selected, setting default");
+        let defScreenshotDir = path.join(sp.home, 'screenshots');
+        arg.savedir = defScreenshotDir;
+    }
+
     sp.writeSettings(arg, () => {
         event.sender.send('settings', sp.settings);
     });
@@ -317,7 +325,6 @@ ipcMain.on('screenshot', (event, arg) => {
                                     name: timestamp,
                                     dir: sp.settings.savedir
                                 }, "saveAuto", event, activeWindow);
-                                
                             }
                         })
                         .catch(err => {

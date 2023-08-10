@@ -17,8 +17,10 @@
 
 	let showDropdown = false;
 
+	export let closeDropdowns = false;
 	export let tips = false;
 	export let legacy = false;
+	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Tool

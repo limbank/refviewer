@@ -46,25 +46,30 @@ class imageEditor {
     saveImageAuto (file, args, event, win) {
         let filePath = path.join(args.dir, args.name + ".png");
 
-        sharp(this.dataToBuffer(file))
-                .toFormat("png")
-                .toFile(filePath, {
-                    adaptiveFiltering: true,
-                    compressionLevel: 9,
-                    progressive: true,
-                    force: true
-                })
-                .then(info => {
-                    event.sender.send('action', "Image saved!");
+        jack.log("Saving image automatically to", args.dir);
+        fs.ensureDir(args.dir, err => {
+            if (err) return jack.log("Error creating screenshot directory", err); 
 
-                    this.rp.writeRecent(filePath, (recents) => {
-                        event.sender.send('recents', recents);
+            sharp(this.dataToBuffer(file))
+                    .toFormat("png")
+                    .toFile(filePath, {
+                        adaptiveFiltering: true,
+                        compressionLevel: 9,
+                        progressive: true,
+                        force: true
+                    })
+                    .then(info => {
+                        event.sender.send('action', "Image saved!");
+
+                        this.rp.writeRecent(filePath, (recents) => {
+                            event.sender.send('recents', recents);
+                        });
+                    })
+                    .catch( err => {
+                        jack.log(err);
+                        event.sender.send('action', "Failed to save image");
                     });
-                })
-                .catch( err => {
-                    jack.log(err);
-                    event.sender.send('action', "Failed to save image");
-                });
+        });
     }
     saveImage (file, event, win) {
         dialog.showSaveDialog(win, {
@@ -75,7 +80,9 @@ class imageEditor {
             if (result.canceled) return;
 
             let filePath = result.filePath;
-            var ext = filePath.substr(filePath.lastIndexOf(".") + 1);
+            let ext = filePath.substr(filePath.lastIndexOf(".") + 1);
+
+            if (!ext) ext = "png";
 
             sharp(this.dataToBuffer(file))
                 .toFormat(ext)

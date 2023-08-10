@@ -17,6 +17,8 @@
 	export let backdropColor = legacy ? "#111111" : "#2F2E33";
 	export let hex;
 
+	let closeDropdowns = false;
+
 	function editImage(type) {
 		if (!fileSelected) return;
 
@@ -56,6 +58,9 @@
 		xhr.responseType = 'blob';
 		xhr.send();
 	}
+
+	//close all dropdowns when settings open
+	$: if (settingsOpen) closeDropdowns = true;
 </script>
 
 <svelte:window use:mousetrap={[
@@ -106,17 +111,20 @@
 		<Eyedropper
 			{tips}
 			{legacy}
+			{closeDropdowns}
 			bind:hex
 			on:pickColor={() => dispatch("pickColor")}
 		/>
 		<Background
 			{tips}
 			{legacy}
+			{closeDropdowns}
 			bind:backdropColor
 		/>
 		<Palette
 			{tips}
 			{legacy}
+			{closeDropdowns}
 			bind:fileSelected
 		/>
 		<Tool

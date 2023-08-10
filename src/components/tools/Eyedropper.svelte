@@ -15,11 +15,13 @@
 
 	let showDropdown = false;
 
+	export let closeDropdowns = false;
 	export let hex;
 	export let tips = false;
 	export let legacy = false;
 
 	$: if (hex) showDropdown = true;
+	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Tool

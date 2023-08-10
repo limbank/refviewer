@@ -108,6 +108,9 @@ class fileProcessor {
         this.generatedPalette = null;
         this.name = retain ? this.name : (this.pathInfo(file).name || "image");
 
+        //temp fix to handle non default image URLs
+        if (file.startsWith('http')) return this.handleDefault(file, event);
+
         switch (ext) {
             case "psd": 
                 this.handlePSD(file, event);

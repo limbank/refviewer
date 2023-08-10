@@ -27,7 +27,7 @@ class settingsProcessor {
     writeSettings(settings = {}, callback) {
         this.settings = settings;
 
-        fs.writeJson(this.file, settings, err => {
+        fs.writeJson(this.file, settings, { spaces: 4 }, err => {
             if (err) return console.error(err);
 
             if (callback && typeof callback == "function") callback();

@@ -108,7 +108,7 @@
 				margin: 0;
 				background: transparent;
 				border: 0px;
-				padding: 15px 12px 6px;
+				padding: 12px 12px 6px;
 				position: static;
 			    box-sizing: border-box;
 
@@ -120,7 +120,7 @@
 
 	    &-split {
 	    	display: flex;
-			padding: 0 15px 15px;
+			padding: 0 12px 12px;
 			box-sizing: border-box;
 			width: 100%;
 			overflow: hidden;
@@ -149,7 +149,7 @@
 				margin: 0 3px 0;
 
 				&:first-child {
-					margin-left: -5px;
+					margin-left: -3px;
 				}
 
 				&:last-child {
@@ -165,6 +165,7 @@
 				    margin-right: 2px;
 			    	box-sizing: border-box;
 				    height: 20px;
+				    flex-shrink: 0;
 			    }
 
 				input {

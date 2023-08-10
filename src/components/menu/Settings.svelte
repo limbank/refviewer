@@ -31,6 +31,7 @@
     	settings.transparency = false;
     	settings.autosave = false;
     	settings.savedir = false;
+    	settings.devmode = false;
 
     	resetConfirmed = false;
     	resetText = "Reset";
@@ -144,6 +145,22 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
+			Developer mode
+		</div>
+		<div class="setting-control">
+			<label class="switch">
+				<input type="checkbox" bind:checked={settings.devmode}>
+				<span class="slider"></span>
+			</label>
+		</div>
+	</div>
+	<div class="setting-description">
+		Enable additional debugging features
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
 			Reset settings
 		</div>
 		<div class="setting-control">
@@ -154,37 +171,6 @@
 		Reset the settings back to their defaults
 	</div>
 </div>
-
-<!--
-<div class="setting">
-	<div class="setting-inner">
-		<div class="setting-title">
-			Legacy file select
-		</div>
-		<div class="setting-control">
-			<label class="switch">
-				<input type="checkbox" bind:checked={settings.select}>
-				<span class="slider"></span>
-			</label>
-		</div>
-	</div>
-	<div class="setting-description">
-		Enable a separate button for clicking to select a file
-	</div>
-</div>
-<div class="setting">
-	<div class="setting-inner">
-		<div class="setting-title">
-			Developer mode
-		</div>
-		<div class="setting-control">
-			<label class="switch">
-				<input type="checkbox" bind:checked={settings.devmode}>
-				<span class="slider"></span>
-			</label>
-		</div>
-	</div>
-</div>-->
 
 <style lang="scss">
 	.setting {

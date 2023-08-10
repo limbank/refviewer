@@ -17,6 +17,7 @@
 	let showDropdown = false;
 	let palette = {};
 
+	export let closeDropdowns = false;
 	export let fileSelected = false;
 	export let tips = false;
 	export let legacy = false;
@@ -24,6 +25,8 @@
 	ipcRenderer.on('palette', (event, arg) => {
 		palette = arg;
 	});
+	
+	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Tool
@@ -79,7 +82,7 @@
 
 <style lang="scss">
 	.palette {
-		padding: 15px;
+		padding: 12px;
 		display: grid;
 		grid-template-columns: 70px 70px 70px;
 		grid-template-rows: 70px 70px;
