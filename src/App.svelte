@@ -9,6 +9,7 @@
 	import Loader from './components/common/Loader.svelte';
 	import Cursor from './components/Cursor.svelte';
 	import Zoomscale from './components/Zoomscale.svelte';
+	import Zoomslider from './components/Zoomslider.svelte';
 	import tinycolor from 'tinycolor2';
 	import Panzoom from '@panzoom/panzoom';
 	import { Canvas, Layer, t } from "svelte-canvas";
@@ -214,22 +215,24 @@
 			top: Math.ceil(cropStartingPointY)
 		};
 
-		console.log(args);
+		//console.log(args);
 
-  		ipcRenderer.send('editImage', {
-			type: "crop",
-			image: fileSelected,
-			args: args
-		});
+		if (croppingMode) {
+	  		ipcRenderer.send('editImage', {
+				type: "crop",
+				image: fileSelected,
+				args: args
+			});
 
-  		cropStartingPointX = 0;
-  		cropStartingPointY = 0;
-  		cropWidth = 0;
-  		cropHeight = 0;
-  		pixelWidth = 0
+	  		cropStartingPointX = 0;
+	  		cropStartingPointY = 0;
+	  		cropWidth = 0;
+	  		cropHeight = 0;
+	  		pixelWidth = 0
 
-  		cropping = false;
-  		croppingMode = false;
+	  		cropping = false;
+	  		croppingMode = false;
+		}
   	}
 
   	function handleMouseMove(e) {
