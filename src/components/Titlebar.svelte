@@ -163,10 +163,10 @@
 		height: 30px;
 		display: flex;
 		justify-content: space-between;
-	   	user-select: none;
-	   	-webkit-user-select: none;
-   		-webkit-app-region: drag;
-   		padding: 5px;
+		user-select: none;
+		-webkit-user-select: none;
+		-webkit-app-region: drag;
+		padding: 5px;
 		box-sizing: border-box;
 
    		&.legacy {

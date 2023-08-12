@@ -300,9 +300,14 @@
 			fileSelected = result;
 		});
 	}
+
+	$: if (settingsOpen) {
+		croppingMode = false;
+		pickingMode = false;
+	}
 </script>
 
-<svelte:window on:paste={handlePaste} />
+<svelte:window on:paste={handlePaste} on:mouseup={() => document.activeElement.blur()} />
 
 <Backdrop legacy={settings.theme} />
 

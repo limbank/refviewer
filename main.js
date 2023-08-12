@@ -14,7 +14,7 @@ const historyProcessor = require('./scripts/main/historyProcessor.js');
 const imageEditor = require('./scripts/main/imageEditor.js');
 const Lumberjack = require('./scripts/main/lumberjack.js');
 
-let mainWindow, newWin;
+let mainWindow, newWin, loadingWin;
 let sp, rp, wm, fp, ie, hp;
 let processorsReady = false;
 
@@ -23,6 +23,27 @@ let wmReady = false;
 
 const { name } = require('./package.json');
 const homeDir = path.join(os.homedir(), '.' + name);
+
+/* CREATE LOADING WINDOW! */
+function createLoadingWindow() {
+    loadingWin = new BrowserWindow({
+        width: 200,
+        height: 300,
+        frame: false,
+        transparent: true,
+        resize: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        },
+        icon: "public/favicon.png",
+    });
+
+    loadingWin.loadFile('public/loading.html');
+
+    loadingWin.once('close', () => { loadingWin = null; });
+}
+/* END CREATE LOADING WINDOW*/
 
 const jack = new Lumberjack({
     home: homeDir
@@ -42,6 +63,7 @@ sp = new settingsProcessor({
         wm = new windowManager({
             rp: rp,
             sp: sp,
+            lw: loadingWin,
             ready: () => {
                 wmReady = true;
             }
@@ -70,6 +92,8 @@ try {
 gotTheLock = app.requestSingleInstanceLock();
 
 function createWhenReady() {
+    createLoadingWindow();
+    
     if (!wmReady) setTimeout(createWhenReady, 100);
     else wm.createWindow();
 

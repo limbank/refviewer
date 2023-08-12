@@ -7,10 +7,13 @@ class windowManager {
         this.windows = [];
         this.sp = args.sp;
         this.rp = args.rp;
+        this.lw = args.lw;
         if (args.ready && typeof args.ready == "function") args.ready();
     }
     createWindow() {
         jack.log("CREATING WINDOW!!");
+
+        this.lw.close();
 
         this.windows.push(new BrowserWindow({
             width: 550,

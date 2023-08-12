@@ -29619,21 +29619,21 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file = "src/App.svelte";
 
-    // (358:2) {#if settingsOpen}
+    // (363:2) {#if settingsOpen}
     function create_if_block_5(ctx) {
     	let menu;
     	let current;
 
     	menu = new Menu({
     			props: {
-    				settings: /*proxySettings*/ ctx[6],
+    				settings: /*proxySettings*/ ctx[7],
     				legacy: /*settings*/ ctx[2].theme,
     				version: /*version*/ ctx[21]
     			},
     			$$inline: true
     		});
 
-    	menu.$on("settingsOpen", /*settingsOpen_handler_1*/ ctx[41]);
+    	menu.$on("settingsOpen", /*settingsOpen_handler_1*/ ctx[42]);
 
     	const block = {
     		c: function create() {
@@ -29645,7 +29645,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const menu_changes = {};
-    			if (dirty[0] & /*proxySettings*/ 64) menu_changes.settings = /*proxySettings*/ ctx[6];
+    			if (dirty[0] & /*proxySettings*/ 128) menu_changes.settings = /*proxySettings*/ ctx[7];
     			if (dirty[0] & /*settings*/ 4) menu_changes.legacy = /*settings*/ ctx[2].theme;
     			menu.$set(menu_changes);
     		},
@@ -29667,14 +29667,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(358:2) {#if settingsOpen}",
+    		source: "(363:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (367:2) {#if loading}
+    // (372:2) {#if loading}
     function create_if_block_4(ctx) {
     	let loader;
     	let current;
@@ -29706,14 +29706,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(367:2) {#if loading}",
+    		source: "(372:2) {#if loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (371:2) {#if fileSelected && !loading}
+    // (376:2) {#if fileSelected && !loading}
     function create_if_block_1(ctx) {
     	let div1;
     	let t0;
@@ -29747,9 +29747,9 @@ var app = (function () {
     	canvas.$on("mousedown", /*handleMouseDown*/ ctx[24]);
     	canvas.$on("mouseup", /*handleMouseUp*/ ctx[25]);
     	canvas.$on("mousemove", /*handleMouseMove*/ ctx[26]);
-    	canvas.$on("mouseenter", /*mouseenter_handler*/ ctx[42]);
-    	canvas.$on("mouseleave", /*mouseleave_handler*/ ctx[43]);
-    	canvas.$on("click", /*click_handler*/ ctx[44]);
+    	canvas.$on("mouseenter", /*mouseenter_handler*/ ctx[43]);
+    	canvas.$on("mouseleave", /*mouseleave_handler*/ ctx[44]);
+    	canvas.$on("click", /*click_handler*/ ctx[45]);
 
     	const block = {
     		c: function create() {
@@ -29764,11 +29764,11 @@ var app = (function () {
     			set_style(div0, "opacity", /*workAreaOpacity*/ ctx[17]);
     			toggle_class(div0, "pickingMode", /*pickingMode*/ ctx[8]);
     			toggle_class(div0, "croppingMode", /*croppingMode*/ ctx[9]);
-    			add_location(div0, file, 387, 4, 9618);
+    			add_location(div0, file, 392, 4, 9742);
     			attr_dev(div1, "class", "canvas-container svelte-nv5cfc");
     			toggle_class(div1, "legacy", /*settings*/ ctx[2].theme);
-    			toggle_class(div1, "pixelated", /*pixelated*/ ctx[5]);
-    			add_location(div1, file, 371, 3, 9328);
+    			toggle_class(div1, "pixelated", /*pixelated*/ ctx[6]);
+    			add_location(div1, file, 376, 3, 9452);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -29782,7 +29782,7 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div0, "click", /*click_handler_1*/ ctx[45], false, false, false),
+    					listen_dev(div0, "click", /*click_handler_1*/ ctx[46], false, false, false),
     					listen_dev(div1, "mousemove", /*handleCursor*/ ctx[22], false, false, false)
     				];
 
@@ -29821,7 +29821,7 @@ var app = (function () {
     			if (dirty[0] & /*width*/ 1) canvas_changes.width = /*width*/ ctx[0];
     			if (dirty[0] & /*height*/ 2) canvas_changes.height = /*height*/ ctx[1];
 
-    			if (dirty[0] & /*testRender, croppingMode, render*/ 1573376 | dirty[1] & /*$$scope*/ 8388608) {
+    			if (dirty[0] & /*testRender, croppingMode, render*/ 1573376 | dirty[1] & /*$$scope*/ 16777216) {
     				canvas_changes.$$scope = { dirty, ctx };
     			}
 
@@ -29843,8 +29843,8 @@ var app = (function () {
     				toggle_class(div1, "legacy", /*settings*/ ctx[2].theme);
     			}
 
-    			if (dirty[0] & /*pixelated*/ 32) {
-    				toggle_class(div1, "pixelated", /*pixelated*/ ctx[5]);
+    			if (dirty[0] & /*pixelated*/ 64) {
+    				toggle_class(div1, "pixelated", /*pixelated*/ ctx[6]);
     			}
     		},
     		i: function intro(local) {
@@ -29874,14 +29874,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(371:2) {#if fileSelected && !loading}",
+    		source: "(376:2) {#if fileSelected && !loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (378:4) {#if pickingMode && mouseincanvas}
+    // (383:4) {#if pickingMode && mouseincanvas}
     function create_if_block_3(ctx) {
     	let cursor;
     	let current;
@@ -29928,14 +29928,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(378:4) {#if pickingMode && mouseincanvas}",
+    		source: "(383:4) {#if pickingMode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (420:6) {#if croppingMode}
+    // (425:6) {#if croppingMode}
     function create_if_block_2(ctx) {
     	let layer;
     	let current;
@@ -29976,14 +29976,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(420:6) {#if croppingMode}",
+    		source: "(425:6) {#if croppingMode}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (402:8) <Canvas          width={width}          height={height}          on:mousedown={handleMouseDown}          on:mouseup={handleMouseUp}          on:mousemove={handleMouseMove}          on:mouseenter={() => { mouseincanvas = true; }}          on:mouseleave={() => { mouseincanvas = false; }}          on:click={() => {           if (pickingMode) {            pickingMode = false;           instance.setOptions({ disablePan: false });            hex = chosenColor;           }          }}         >
+    // (407:8) <Canvas          width={width}          height={height}          on:mousedown={handleMouseDown}          on:mouseup={handleMouseUp}          on:mousemove={handleMouseMove}          on:mouseenter={() => { mouseincanvas = true; }}          on:mouseleave={() => { mouseincanvas = false; }}          on:click={() => {           if (pickingMode) {            pickingMode = false;           instance.setOptions({ disablePan: false });            hex = chosenColor;           }          }}         >
     function create_default_slot_1(ctx) {
     	let layer;
     	let t_1;
@@ -30062,14 +30062,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(402:8) <Canvas          width={width}          height={height}          on:mousedown={handleMouseDown}          on:mouseup={handleMouseUp}          on:mousemove={handleMouseMove}          on:mouseenter={() => { mouseincanvas = true; }}          on:mouseleave={() => { mouseincanvas = false; }}          on:click={() => {           if (pickingMode) {            pickingMode = false;           instance.setOptions({ disablePan: false });            hex = chosenColor;           }          }}         >",
+    		source: "(407:8) <Canvas          width={width}          height={height}          on:mousedown={handleMouseDown}          on:mouseup={handleMouseUp}          on:mousemove={handleMouseMove}          on:mouseenter={() => { mouseincanvas = true; }}          on:mouseleave={() => { mouseincanvas = false; }}          on:click={() => {           if (pickingMode) {            pickingMode = false;           instance.setOptions({ disablePan: false });            hex = chosenColor;           }          }}         >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (428:2) {#if !fileSelected && !loading}
+    // (433:2) {#if !fileSelected && !loading}
     function create_if_block(ctx) {
     	let dropfield;
     	let current;
@@ -30110,14 +30110,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(428:2) {#if !fileSelected && !loading}",
+    		source: "(433:2) {#if !fileSelected && !loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (350:1) <Desktop   {fileSelected}   {backdropColor}   {settingsOpen}   legacy={settings.theme}   settings={proxySettings}   bind:loading  >
+    // (355:1) <Desktop   {fileSelected}   {backdropColor}   {settingsOpen}   legacy={settings.theme}   settings={proxySettings}   bind:loading  >
     function create_default_slot(ctx) {
     	let t0;
     	let t1;
@@ -30125,10 +30125,10 @@ var app = (function () {
     	let t3;
     	let actions;
     	let current;
-    	let if_block0 = /*settingsOpen*/ ctx[7] && create_if_block_5(ctx);
+    	let if_block0 = /*settingsOpen*/ ctx[3] && create_if_block_5(ctx);
     	let if_block1 = /*loading*/ ctx[11] && create_if_block_4(ctx);
-    	let if_block2 = /*fileSelected*/ ctx[4] && !/*loading*/ ctx[11] && create_if_block_1(ctx);
-    	let if_block3 = !/*fileSelected*/ ctx[4] && !/*loading*/ ctx[11] && create_if_block(ctx);
+    	let if_block2 = /*fileSelected*/ ctx[5] && !/*loading*/ ctx[11] && create_if_block_1(ctx);
+    	let if_block3 = !/*fileSelected*/ ctx[5] && !/*loading*/ ctx[11] && create_if_block(ctx);
     	actions = new Actions({ $$inline: true });
 
     	const block = {
@@ -30156,11 +30156,11 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (/*settingsOpen*/ ctx[7]) {
+    			if (/*settingsOpen*/ ctx[3]) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
 
-    					if (dirty[0] & /*settingsOpen*/ 128) {
+    					if (dirty[0] & /*settingsOpen*/ 8) {
     						transition_in(if_block0, 1);
     					}
     				} else {
@@ -30200,11 +30200,11 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (/*fileSelected*/ ctx[4] && !/*loading*/ ctx[11]) {
+    			if (/*fileSelected*/ ctx[5] && !/*loading*/ ctx[11]) {
     				if (if_block2) {
     					if_block2.p(ctx, dirty);
 
-    					if (dirty[0] & /*fileSelected, loading*/ 2064) {
+    					if (dirty[0] & /*fileSelected, loading*/ 2080) {
     						transition_in(if_block2, 1);
     					}
     				} else {
@@ -30223,11 +30223,11 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (!/*fileSelected*/ ctx[4] && !/*loading*/ ctx[11]) {
+    			if (!/*fileSelected*/ ctx[5] && !/*loading*/ ctx[11]) {
     				if (if_block3) {
     					if_block3.p(ctx, dirty);
 
-    					if (dirty[0] & /*fileSelected, loading*/ 2064) {
+    					if (dirty[0] & /*fileSelected, loading*/ 2080) {
     						transition_in(if_block3, 1);
     					}
     				} else {
@@ -30280,7 +30280,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(350:1) <Desktop   {fileSelected}   {backdropColor}   {settingsOpen}   legacy={settings.theme}   settings={proxySettings}   bind:loading  >",
+    		source: "(355:1) <Desktop   {fileSelected}   {backdropColor}   {settingsOpen}   legacy={settings.theme}   settings={proxySettings}   bind:loading  >",
     		ctx
     	});
 
@@ -30309,9 +30309,9 @@ var app = (function () {
 
     	titlebar = new Titlebar({
     			props: {
-    				settingsOpen: /*settingsOpen*/ ctx[7],
+    				settingsOpen: /*settingsOpen*/ ctx[3],
     				version: /*version*/ ctx[21],
-    				fileSelected: /*fileSelected*/ ctx[4],
+    				fileSelected: /*fileSelected*/ ctx[5],
     				overwrite: /*settings*/ ctx[2].overwrite,
     				legacy: /*settings*/ ctx[2].theme,
     				tips: /*settings*/ ctx[2].tooltips
@@ -30319,46 +30319,46 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	titlebar.$on("clear", /*clear_handler*/ ctx[35]);
+    	titlebar.$on("clear", /*clear_handler*/ ctx[36]);
 
     	titlebar.$on("copy", function () {
     		if (is_function(/*tbx*/ ctx[16].copyImage)) /*tbx*/ ctx[16].copyImage.apply(this, arguments);
     	});
 
-    	titlebar.$on("settingsOpen", /*settingsOpen_handler*/ ctx[36]);
+    	titlebar.$on("settingsOpen", /*settingsOpen_handler*/ ctx[37]);
 
     	function toolbar_backdropColor_binding(value) {
-    		/*toolbar_backdropColor_binding*/ ctx[38](value);
+    		/*toolbar_backdropColor_binding*/ ctx[39](value);
     	}
 
     	let toolbar_props = {
-    		settingsOpen: /*settingsOpen*/ ctx[7],
-    		fileSelected: /*fileSelected*/ ctx[4],
+    		settingsOpen: /*settingsOpen*/ ctx[3],
+    		fileSelected: /*fileSelected*/ ctx[5],
     		hex: /*hex*/ ctx[12],
     		legacy: /*settings*/ ctx[2].theme,
     		tips: /*settings*/ ctx[2].tooltips
     	};
 
-    	if (/*backdropColor*/ ctx[3] !== void 0) {
-    		toolbar_props.backdropColor = /*backdropColor*/ ctx[3];
+    	if (/*backdropColor*/ ctx[4] !== void 0) {
+    		toolbar_props.backdropColor = /*backdropColor*/ ctx[4];
     	}
 
     	toolbar = new Toolbar({ props: toolbar_props, $$inline: true });
-    	/*toolbar_binding*/ ctx[37](toolbar);
+    	/*toolbar_binding*/ ctx[38](toolbar);
     	binding_callbacks.push(() => bind(toolbar, 'backdropColor', toolbar_backdropColor_binding));
-    	toolbar.$on("cropImage", /*cropImage_handler*/ ctx[39]);
-    	toolbar.$on("pickColor", /*pickColor_handler*/ ctx[40]);
+    	toolbar.$on("cropImage", /*cropImage_handler*/ ctx[40]);
+    	toolbar.$on("pickColor", /*pickColor_handler*/ ctx[41]);
 
     	function desktop_loading_binding(value) {
-    		/*desktop_loading_binding*/ ctx[46](value);
+    		/*desktop_loading_binding*/ ctx[47](value);
     	}
 
     	let desktop_props = {
-    		fileSelected: /*fileSelected*/ ctx[4],
-    		backdropColor: /*backdropColor*/ ctx[3],
-    		settingsOpen: /*settingsOpen*/ ctx[7],
+    		fileSelected: /*fileSelected*/ ctx[5],
+    		backdropColor: /*backdropColor*/ ctx[4],
+    		settingsOpen: /*settingsOpen*/ ctx[3],
     		legacy: /*settings*/ ctx[2].theme,
-    		settings: /*proxySettings*/ ctx[6],
+    		settings: /*proxySettings*/ ctx[7],
     		$$slots: { default: [create_default_slot] },
     		$$scope: { ctx }
     	};
@@ -30382,7 +30382,7 @@ var app = (function () {
     			create_component(desktop.$$.fragment);
     			attr_dev(main, "class", "svelte-nv5cfc");
     			toggle_class(main, "legacy", /*settings*/ ctx[2].theme);
-    			add_location(main, file, 308, 0, 7986);
+    			add_location(main, file, 313, 0, 8110);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -30399,7 +30399,11 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(window, "paste", /*handlePaste*/ ctx[27], false, false, false);
+    				dispose = [
+    					listen_dev(window, "paste", /*handlePaste*/ ctx[27], false, false, false),
+    					listen_dev(window, "mouseup", /*mouseup_handler*/ ctx[35], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
@@ -30409,34 +30413,34 @@ var app = (function () {
     			if (dirty[0] & /*settings*/ 4) backdrop_changes.legacy = /*settings*/ ctx[2].theme;
     			backdrop.$set(backdrop_changes);
     			const titlebar_changes = {};
-    			if (dirty[0] & /*settingsOpen*/ 128) titlebar_changes.settingsOpen = /*settingsOpen*/ ctx[7];
-    			if (dirty[0] & /*fileSelected*/ 16) titlebar_changes.fileSelected = /*fileSelected*/ ctx[4];
+    			if (dirty[0] & /*settingsOpen*/ 8) titlebar_changes.settingsOpen = /*settingsOpen*/ ctx[3];
+    			if (dirty[0] & /*fileSelected*/ 32) titlebar_changes.fileSelected = /*fileSelected*/ ctx[5];
     			if (dirty[0] & /*settings*/ 4) titlebar_changes.overwrite = /*settings*/ ctx[2].overwrite;
     			if (dirty[0] & /*settings*/ 4) titlebar_changes.legacy = /*settings*/ ctx[2].theme;
     			if (dirty[0] & /*settings*/ 4) titlebar_changes.tips = /*settings*/ ctx[2].tooltips;
     			titlebar.$set(titlebar_changes);
     			const toolbar_changes = {};
-    			if (dirty[0] & /*settingsOpen*/ 128) toolbar_changes.settingsOpen = /*settingsOpen*/ ctx[7];
-    			if (dirty[0] & /*fileSelected*/ 16) toolbar_changes.fileSelected = /*fileSelected*/ ctx[4];
+    			if (dirty[0] & /*settingsOpen*/ 8) toolbar_changes.settingsOpen = /*settingsOpen*/ ctx[3];
+    			if (dirty[0] & /*fileSelected*/ 32) toolbar_changes.fileSelected = /*fileSelected*/ ctx[5];
     			if (dirty[0] & /*hex*/ 4096) toolbar_changes.hex = /*hex*/ ctx[12];
     			if (dirty[0] & /*settings*/ 4) toolbar_changes.legacy = /*settings*/ ctx[2].theme;
     			if (dirty[0] & /*settings*/ 4) toolbar_changes.tips = /*settings*/ ctx[2].tooltips;
 
-    			if (!updating_backdropColor && dirty[0] & /*backdropColor*/ 8) {
+    			if (!updating_backdropColor && dirty[0] & /*backdropColor*/ 16) {
     				updating_backdropColor = true;
-    				toolbar_changes.backdropColor = /*backdropColor*/ ctx[3];
+    				toolbar_changes.backdropColor = /*backdropColor*/ ctx[4];
     				add_flush_callback(() => updating_backdropColor = false);
     			}
 
     			toolbar.$set(toolbar_changes);
     			const desktop_changes = {};
-    			if (dirty[0] & /*fileSelected*/ 16) desktop_changes.fileSelected = /*fileSelected*/ ctx[4];
-    			if (dirty[0] & /*backdropColor*/ 8) desktop_changes.backdropColor = /*backdropColor*/ ctx[3];
-    			if (dirty[0] & /*settingsOpen*/ 128) desktop_changes.settingsOpen = /*settingsOpen*/ ctx[7];
+    			if (dirty[0] & /*fileSelected*/ 32) desktop_changes.fileSelected = /*fileSelected*/ ctx[5];
+    			if (dirty[0] & /*backdropColor*/ 16) desktop_changes.backdropColor = /*backdropColor*/ ctx[4];
+    			if (dirty[0] & /*settingsOpen*/ 8) desktop_changes.settingsOpen = /*settingsOpen*/ ctx[3];
     			if (dirty[0] & /*settings*/ 4) desktop_changes.legacy = /*settings*/ ctx[2].theme;
-    			if (dirty[0] & /*proxySettings*/ 64) desktop_changes.settings = /*proxySettings*/ ctx[6];
+    			if (dirty[0] & /*proxySettings*/ 128) desktop_changes.settings = /*proxySettings*/ ctx[7];
 
-    			if (dirty[0] & /*settings, fileSelected, loading, pixelated, workAreaOpacity, pickingMode, croppingMode, instance, width, height, mouseincanvas, hex, chosenColor, testRender, render, zoomscale, m, proxySettings, settingsOpen*/ 2031607 | dirty[1] & /*$$scope*/ 8388608) {
+    			if (dirty[0] & /*settings, fileSelected, loading, pixelated, workAreaOpacity, pickingMode, croppingMode, instance, width, height, mouseincanvas, hex, chosenColor, testRender, render, zoomscale, m, proxySettings, settingsOpen*/ 2031599 | dirty[1] & /*$$scope*/ 16777216) {
     				desktop_changes.$$scope = { dirty, ctx };
     			}
 
@@ -30472,11 +30476,11 @@ var app = (function () {
     			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(main);
     			destroy_component(titlebar);
-    			/*toolbar_binding*/ ctx[37](null);
+    			/*toolbar_binding*/ ctx[38](null);
     			destroy_component(toolbar);
     			destroy_component(desktop);
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -30539,14 +30543,14 @@ var app = (function () {
 
     		$$invalidate(2, settings = arg);
     		initUpdate++;
-    		$$invalidate(3, backdropColor = settings.theme ? "#111111" : "#2F2E33");
-    		if (initUpdate < 2) $$invalidate(6, proxySettings = settings);
+    		$$invalidate(4, backdropColor = settings.theme ? "#111111" : "#2F2E33");
+    		if (initUpdate < 2) $$invalidate(7, proxySettings = settings);
     	});
 
     	ipcRenderer.on('deliver', (event, arg) => {
     		$$invalidate(28, img.src = arg, img);
     		$$invalidate(11, loading = false);
-    		$$invalidate(4, fileSelected = arg);
+    		$$invalidate(5, fileSelected = arg);
     	});
 
     	function handleCursor(event) {
@@ -30561,7 +30565,7 @@ var app = (function () {
 
     	function changeEvent(event) {
     		$$invalidate(15, zoomscale = Number(event.detail.scale).toFixed(1));
-    		if (event.detail.scale >= 10) $$invalidate(5, pixelated = true); else $$invalidate(5, pixelated = false);
+    		if (event.detail.scale >= 10) $$invalidate(6, pixelated = true); else $$invalidate(6, pixelated = false);
     	}
 
     	function delInstance() {
@@ -30687,7 +30691,7 @@ var app = (function () {
     */
     		helper.getIMG(blob, result => {
     			$$invalidate(28, img.src = result, img);
-    			$$invalidate(4, fileSelected = result);
+    			$$invalidate(5, fileSelected = result);
     		});
     	}
 
@@ -30697,9 +30701,11 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
+    	const mouseup_handler = () => document.activeElement.blur();
+
     	const clear_handler = e => {
-    		$$invalidate(4, fileSelected = false);
-    		$$invalidate(3, backdropColor = settings.theme ? "#111111" : "#2F2E33");
+    		$$invalidate(5, fileSelected = false);
+    		$$invalidate(4, backdropColor = settings.theme ? "#111111" : "#2F2E33");
     		$$invalidate(12, hex = undefined);
     		$$invalidate(8, pickingMode = false);
     		$$invalidate(9, croppingMode = false);
@@ -30707,7 +30713,7 @@ var app = (function () {
     	};
 
     	const settingsOpen_handler = e => {
-    		$$invalidate(7, settingsOpen = e.detail);
+    		$$invalidate(3, settingsOpen = e.detail);
     	};
 
     	function toolbar_binding($$value) {
@@ -30719,7 +30725,7 @@ var app = (function () {
 
     	function toolbar_backdropColor_binding(value) {
     		backdropColor = value;
-    		$$invalidate(3, backdropColor);
+    		$$invalidate(4, backdropColor);
     	}
 
     	const cropImage_handler = e => {
@@ -30738,7 +30744,7 @@ var app = (function () {
     	};
 
     	const settingsOpen_handler_1 = e => {
-    		$$invalidate(7, settingsOpen = e.detail);
+    		$$invalidate(3, settingsOpen = e.detail);
     	};
 
     	const mouseenter_handler = () => {
@@ -30837,13 +30843,13 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('fileSelected' in $$props) $$invalidate(4, fileSelected = $$props.fileSelected);
+    		if ('fileSelected' in $$props) $$invalidate(5, fileSelected = $$props.fileSelected);
     		if ('width' in $$props) $$invalidate(0, width = $$props.width);
     		if ('height' in $$props) $$invalidate(1, height = $$props.height);
-    		if ('pixelated' in $$props) $$invalidate(5, pixelated = $$props.pixelated);
+    		if ('pixelated' in $$props) $$invalidate(6, pixelated = $$props.pixelated);
     		if ('settings' in $$props) $$invalidate(2, settings = $$props.settings);
-    		if ('proxySettings' in $$props) $$invalidate(6, proxySettings = $$props.proxySettings);
-    		if ('settingsOpen' in $$props) $$invalidate(7, settingsOpen = $$props.settingsOpen);
+    		if ('proxySettings' in $$props) $$invalidate(7, proxySettings = $$props.proxySettings);
+    		if ('settingsOpen' in $$props) $$invalidate(3, settingsOpen = $$props.settingsOpen);
     		if ('pickingMode' in $$props) $$invalidate(8, pickingMode = $$props.pickingMode);
     		if ('croppingMode' in $$props) $$invalidate(9, croppingMode = $$props.croppingMode);
     		if ('initUpdate' in $$props) initUpdate = $$props.initUpdate;
@@ -30855,7 +30861,7 @@ var app = (function () {
     		if ('mouseincanvas' in $$props) $$invalidate(14, mouseincanvas = $$props.mouseincanvas);
     		if ('zoomscale' in $$props) $$invalidate(15, zoomscale = $$props.zoomscale);
     		if ('tbx' in $$props) $$invalidate(16, tbx = $$props.tbx);
-    		if ('backdropColor' in $$props) $$invalidate(3, backdropColor = $$props.backdropColor);
+    		if ('backdropColor' in $$props) $$invalidate(4, backdropColor = $$props.backdropColor);
     		if ('workAreaOpacity' in $$props) $$invalidate(17, workAreaOpacity = $$props.workAreaOpacity);
     		if ('m' in $$props) $$invalidate(18, m = $$props.m);
     		if ('img' in $$props) $$invalidate(28, img = $$props.img);
@@ -30886,7 +30892,7 @@ var app = (function () {
     			});
     		}
 
-    		if ($$self.$$.dirty[0] & /*settings, backdropColor*/ 12) {
+    		if ($$self.$$.dirty[0] & /*settings, backdropColor*/ 20) {
     			{
     				if (!settings.transparency) $$invalidate(17, workAreaOpacity = tinycolor(backdropColor).toRgb().a); else $$invalidate(17, workAreaOpacity = 1);
     			}
@@ -30915,17 +30921,24 @@ var app = (function () {
     				}
     			});
     		}
+
+    		if ($$self.$$.dirty[0] & /*settingsOpen*/ 8) {
+    			if (settingsOpen) {
+    				$$invalidate(9, croppingMode = false);
+    				$$invalidate(8, pickingMode = false);
+    			}
+    		}
     	};
 
     	return [
     		width,
     		height,
     		settings,
+    		settingsOpen,
     		backdropColor,
     		fileSelected,
     		pixelated,
     		proxySettings,
-    		settingsOpen,
     		pickingMode,
     		croppingMode,
     		instance,
@@ -30953,6 +30966,7 @@ var app = (function () {
     		cropHeight,
     		cropping,
     		pixelWidth,
+    		mouseup_handler,
     		clear_handler,
     		settingsOpen_handler,
     		toolbar_binding,
