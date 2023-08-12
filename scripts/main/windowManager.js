@@ -13,8 +13,6 @@ class windowManager {
     createWindow() {
         jack.log("CREATING WINDOW!!");
 
-        this.lw.close();
-
         this.windows.push(new BrowserWindow({
             width: 550,
             height: 400,
