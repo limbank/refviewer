@@ -53,6 +53,12 @@
 		margin-bottom: 5px;
 		font-size: 14px;
 
+		&:focus {
+			box-shadow: none;
+			outline: none;
+			border: 1px solid #FAA916;
+		}
+
 		&:first-child {
 			margin-top: 0px;
 		}

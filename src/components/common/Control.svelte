@@ -67,6 +67,12 @@
 			background: #FAA916;
 		}
 
+		&:focus {
+			box-shadow: none;
+			outline: none;
+			border: 1px solid #FAA916;
+		}
+
 		&.legacy {
 		    border: 2px solid #3F3F3F;
 		    border-top: unset;
