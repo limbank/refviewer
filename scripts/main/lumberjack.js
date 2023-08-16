@@ -8,11 +8,15 @@ const { name } = require('../../package.json');
 class Lumberjack {
     constructor(args) {
         this.home = path.join(os.homedir(), '.' + name);
-        this.file = path.join(this.home, 'log.txt');
+        this.logDir = path.join(this.home, "/logs");
+        this.file = path.join(this.logDir, `log-${this.logDate}.txt`);
         this.logFile;
 
-        fs.ensureFile(this.file, err => {
-            this.logFile = fs.createWriteStream(this.file, { flags: 'a' });
+        fs.ensureDir(this.logDir, err => {
+            //do something with the errors?
+            fs.ensureFile(this.file, err => {
+                this.logFile = fs.createWriteStream(this.file, { flags: 'a' });
+            });
         });
     }
     colorString(string) {
@@ -20,6 +24,16 @@ class Lumberjack {
     }
     pad(n) {
         return String(n).padStart(2, '0');
+    }
+    get logDate() {
+        let d = new Date;
+        return `${
+                    this.pad(d.getDay())
+                        }${
+                            this.pad(d.getMonth())
+                            }${
+                                this.pad(d.getYear())
+                                }`;
     }
     get time() {
         let d = new Date;

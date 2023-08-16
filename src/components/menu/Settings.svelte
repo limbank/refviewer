@@ -178,6 +178,10 @@
 		padding: 8px 0 14px;
 		margin-bottom: 5px;
 
+		&:last-child {
+			border-bottom: 0;
+		}
+
 		&.disabled {
 			opacity: 0.5;
 			pointer-events: none;
