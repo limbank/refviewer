@@ -28,6 +28,7 @@
 	tiptext={"Image effects"}
 	on:click={e => {
 		showDropdown = true;
+		setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 100);
 	}}
 >
 	<i class={icon} use:dropdownRef></i>

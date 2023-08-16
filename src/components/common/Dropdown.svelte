@@ -7,10 +7,23 @@
 	const dispatch = createEventDispatcher();
 
 	export let content;
+
 	export let options = {
 		modifiers: [
-			{ name: 'offset', options: { offset: [-12, 15] } }
-		],
+		    {
+		      name: 'offset',
+		      options: {
+		        offset: ({ placement, reference, popper }) => {
+		        	if (popper.y > 0) {
+		        		return [12, 15]
+		        	}
+		        	else {
+		        		return [-12, 15];
+		        	}
+		        },
+		      },
+		    },
+	  	],
 	};
 
 	let show;
