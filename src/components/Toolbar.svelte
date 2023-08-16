@@ -158,19 +158,19 @@
 				{tips}
 				{legacy}
 				size="13px"
-				tiptext={"Flip image"}
-				on:click={() => editImage("flipHorizontal")}
+				tiptext={"Greyscale"}
+				on:click={() => editImage("greyImage")}
 			>
-		    	<i class="fas fa-sync-alt"></i>
+		    	<i class="fas fa-adjust"></i>
 			</Tool>
 			<Tool
 				{tips}
 				{legacy}
-				size="12px"
-				tiptext={"Rotate image"}
-				on:click={() => editImage("rotateRight")}
+				size="13px"
+				tiptext={"Negative"}
+				on:click={() => editImage("negateImage")}
 			>
-		    	<i class="fas fa-redo"></i>
+		    	<i class="fas fa-minus-circle"></i>
 			</Tool>
 		</Dropout>
 	{/if}

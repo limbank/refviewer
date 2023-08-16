@@ -17,6 +17,32 @@ class imageEditor {
     dataToBuffer(dataURI) {
         return new Buffer.from(dataURI.split(",")[1], 'base64');
     }
+    negateImage(file, coords, event, win) {
+        sharp(this.dataToBuffer(file))
+            .negate()
+            .toBuffer()
+            .then(data => {
+                this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event, true);
+                win.show();
+            })
+            .catch( err => {
+                jack.log(err);
+                event.sender.send('action', "Failed to apply greyscale");
+            });
+    }
+    greyImage(file, coords, event, win) {
+        sharp(this.dataToBuffer(file))
+            .greyscale()
+            .toBuffer()
+            .then(data => {
+                this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event, true);
+                win.show();
+            })
+            .catch( err => {
+                jack.log(err);
+                event.sender.send('action', "Failed to apply greyscale");
+            });
+    }
     cropImage(file, coords, event, win) {
         sharp(this.dataToBuffer(file))
             .extract(coords)
@@ -157,6 +183,12 @@ class imageEditor {
                 break;
             case "saveAuto":
                 this.saveImageAuto(file, args, event, win);
+                break;
+            case "greyImage":
+                this.greyImage(file, args, event, win);
+                break;
+            case "negateImage":
+                this.negateImage(file, args, event, win);
                 break;
             case "crop":
                 this.cropImage(file, args, event, win);
