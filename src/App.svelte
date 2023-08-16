@@ -51,6 +51,8 @@
   	let workAreaOpacity = 1;
 	let m = { x: 0, y: 0 };
 
+	let showDropdown = false;
+
 	let img = new Image();
 	img.onload = function(){
 	  	width = img.width;
@@ -233,6 +235,8 @@
 	  		cropping = false;
 	  		croppingMode = false;
 		}
+
+		//close dropdowns here but be careful not to close ones that just opened
   	}
 
   	function handleMouseMove(e) {
@@ -338,6 +342,7 @@
 		tips={settings.tooltips}
 		bind:this={tbx}
 		bind:backdropColor
+		bind:showDropdown
 		on:cropImage={e => {
 			pickingMode = false;
 			croppingMode = true;
@@ -416,6 +421,10 @@
 				    		if (pickingMode) {
 				    			pickingMode = false;
 		  						instance.setOptions({ disablePan: false });
+		  						if (hex == chosenColor) {
+		  							//alert("choosing same color escape");
+		  							showDropdown = true;
+		  						}
 				    			hex = chosenColor;
 				    		}
 				    	}}

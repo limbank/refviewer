@@ -8,6 +8,8 @@
 	import Palette from './tools/Palette.svelte';
 	import Background from './tools/Background.svelte';
 
+	import Dropout from './tools/Dropout.svelte';
+
 	const dispatch = createEventDispatcher();
 
 	export let fileSelected = false;
@@ -16,6 +18,7 @@
 	export let tips = false;
 	export let backdropColor = legacy ? "#111111" : "#2F2E33";
 	export let hex;
+	export let showDropdown = false;
 
 	let closeDropdowns = false;
 
@@ -29,13 +32,16 @@
 	}
 
 	function getSelectedText() {
-    var text = "";
-    if (typeof window.getSelection != "undefined") {
-        text = window.getSelection().toString();
-    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
-        text = document.selection.createRange().text;
-    }
-    return text;
+    	let text = "";
+
+    	if (typeof window.getSelection != "undefined") {
+        	text = window.getSelection().toString();
+    	} 
+    	else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+        	text = document.selection.createRange().text;
+    	}
+
+    	return text;
 	}
 
 	export const copyImage = () => {
@@ -112,6 +118,7 @@
 			{tips}
 			{legacy}
 			{closeDropdowns}
+			bind:showDropdown
 			bind:hex
 			on:pickColor={() => dispatch("pickColor")}
 		/>
@@ -145,6 +152,27 @@
 		>
 	    	<i class="fas fa-redo"></i>
 		</Tool>
+
+		<Dropout icon="fas fa-magic">
+			<Tool
+				{tips}
+				{legacy}
+				size="13px"
+				tiptext={"Flip image"}
+				on:click={() => editImage("flipHorizontal")}
+			>
+		    	<i class="fas fa-sync-alt"></i>
+			</Tool>
+			<Tool
+				{tips}
+				{legacy}
+				size="12px"
+				tiptext={"Rotate image"}
+				on:click={() => editImage("rotateRight")}
+			>
+		    	<i class="fas fa-redo"></i>
+			</Tool>
+		</Dropout>
 	{/if}
 </div>
 

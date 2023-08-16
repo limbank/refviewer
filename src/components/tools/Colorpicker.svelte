@@ -12,12 +12,12 @@
 
 	let hexIntermediate;
 
-	$: if(hexIntermediate) {
+	$: if (hexIntermediate) {
 		hex = hexIntermediate;
 	}
 	
 	function hexInput() {
-		if(tinycolor(hex).isValid()) {
+		if (tinycolor(hex).isValid()) {
 			//console.log("VALID HEX! ASSIGNING...");
 			hexIntermediate = hex;
 		}

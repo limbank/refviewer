@@ -4,49 +4,58 @@
 
 	import Tool from '../common/Tool.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
-	import Colorpicker from './Colorpicker.svelte';
 
 	const dispatch = createEventDispatcher();
 
-	const [dropdownRef, content] = createPopperActions({
+	const [dropdownRef, dropdownContent] = createPopperActions({
 	    placement: 'right-start',
 	    strategy: 'fixed',
 	});
 
-	export let showDropdown = false;
+	let showDropdown = false;
+
+	export let icon;
 	export let closeDropdowns = false;
-	export let hex;
 	export let tips = false;
 	export let legacy = false;
-
-	$: if (hex) showDropdown = true;
 	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Tool
-	tips={tips}
+	{tips}
+	{legacy}
 	size="12px"
-	legacy={legacy}
-	tiptext={"Pick a color"}
+	tiptext={"Image effects"}
 	on:click={e => {
-		dispatch('pickColor');
+		showDropdown = true;
 	}}
 >
-	<i class="fas fa-eye-dropper" use:dropdownRef></i>
+	<i class={icon} use:dropdownRef></i>
 </Tool>
 
 {#if showDropdown}
 	<Dropdown
-		{content}
-		on:close={e => { showDropdown = false; }}
+		content={dropdownContent}
+		on:close={e => {
+			showDropdown = false;
+		}}
 	>
-		<Colorpicker
-			bind:hex
-			alpha={false}
-			legacy={legacy}
-			tips={tips} />
+		<div class="dropout">
+			<slot></slot>
+		</div>
 	</Dropdown>
 {/if}
 
 <style lang="scss">
+	.dropout {
+		display: flex;
+		flex-direction: column;
+		padding: 5px 5px 0 5px;
+
+		:global(.control) {
+			&:last-child {
+				margin-bottom: 5px;
+			}
+		}
+	}
 </style>

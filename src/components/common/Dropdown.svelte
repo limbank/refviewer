@@ -54,11 +54,14 @@
 			box-sizing: border-box;
 			background: #171719;
 			border-radius: 3px;
+			position: relative;
+			z-index: 2;
 		}
 
-		.arrow:before {
+		&>.arrow:before {
 		    content: '';
 		    position: absolute;
+		    z-index: 1;
 		    width: 8px;
 		    height: 8px;
 		    top: 50%;
