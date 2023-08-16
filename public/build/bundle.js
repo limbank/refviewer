@@ -15897,10 +15897,6 @@ var app = (function () {
     	let palette;
     	let updating_fileSelected;
     	let t5;
-    	let tool3;
-    	let t6;
-    	let tool4;
-    	let t7;
     	let dropout;
     	let current;
 
@@ -16007,34 +16003,6 @@ var app = (function () {
     	palette = new Palette({ props: palette_props, $$inline: true });
     	binding_callbacks.push(() => bind(palette, 'fileSelected', palette_fileSelected_binding));
 
-    	tool3 = new Tool({
-    			props: {
-    				tips: /*tips*/ ctx[6],
-    				legacy: /*legacy*/ ctx[5],
-    				size: "13px",
-    				tiptext: "Flip image",
-    				$$slots: { default: [create_default_slot_4$1] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	tool3.$on("click", /*click_handler_2*/ ctx[25]);
-
-    	tool4 = new Tool({
-    			props: {
-    				tips: /*tips*/ ctx[6],
-    				legacy: /*legacy*/ ctx[5],
-    				size: "12px",
-    				tiptext: "Rotate image",
-    				$$slots: { default: [create_default_slot_3$1] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	tool4.$on("click", /*click_handler_3*/ ctx[26]);
-
     	dropout = new Dropout({
     			props: {
     				icon: "fas fa-magic",
@@ -16058,10 +16026,6 @@ var app = (function () {
     			t4 = space();
     			create_component(palette.$$.fragment);
     			t5 = space();
-    			create_component(tool3.$$.fragment);
-    			t6 = space();
-    			create_component(tool4.$$.fragment);
-    			t7 = space();
     			create_component(dropout.$$.fragment);
     		},
     		m: function mount(target, anchor) {
@@ -16077,10 +16041,6 @@ var app = (function () {
     			insert_dev(target, t4, anchor);
     			mount_component(palette, target, anchor);
     			insert_dev(target, t5, anchor);
-    			mount_component(tool3, target, anchor);
-    			insert_dev(target, t6, anchor);
-    			mount_component(tool4, target, anchor);
-    			insert_dev(target, t7, anchor);
     			mount_component(dropout, target, anchor);
     			current = true;
     		},
@@ -16154,24 +16114,6 @@ var app = (function () {
     			}
 
     			palette.$set(palette_changes);
-    			const tool3_changes = {};
-    			if (dirty & /*tips*/ 64) tool3_changes.tips = /*tips*/ ctx[6];
-    			if (dirty & /*legacy*/ 32) tool3_changes.legacy = /*legacy*/ ctx[5];
-
-    			if (dirty & /*$$scope*/ 536870912) {
-    				tool3_changes.$$scope = { dirty, ctx };
-    			}
-
-    			tool3.$set(tool3_changes);
-    			const tool4_changes = {};
-    			if (dirty & /*tips*/ 64) tool4_changes.tips = /*tips*/ ctx[6];
-    			if (dirty & /*legacy*/ 32) tool4_changes.legacy = /*legacy*/ ctx[5];
-
-    			if (dirty & /*$$scope*/ 536870912) {
-    				tool4_changes.$$scope = { dirty, ctx };
-    			}
-
-    			tool4.$set(tool4_changes);
     			const dropout_changes = {};
 
     			if (dirty & /*$$scope, tips, legacy*/ 536871008) {
@@ -16188,8 +16130,6 @@ var app = (function () {
     			transition_in(eyedropper.$$.fragment, local);
     			transition_in(background.$$.fragment, local);
     			transition_in(palette.$$.fragment, local);
-    			transition_in(tool3.$$.fragment, local);
-    			transition_in(tool4.$$.fragment, local);
     			transition_in(dropout.$$.fragment, local);
     			current = true;
     		},
@@ -16200,8 +16140,6 @@ var app = (function () {
     			transition_out(eyedropper.$$.fragment, local);
     			transition_out(background.$$.fragment, local);
     			transition_out(palette.$$.fragment, local);
-    			transition_out(tool3.$$.fragment, local);
-    			transition_out(tool4.$$.fragment, local);
     			transition_out(dropout.$$.fragment, local);
     			current = false;
     		},
@@ -16218,10 +16156,6 @@ var app = (function () {
     			if (detaching) detach_dev(t4);
     			destroy_component(palette, detaching);
     			if (detaching) detach_dev(t5);
-    			destroy_component(tool3, detaching);
-    			if (detaching) detach_dev(t6);
-    			destroy_component(tool4, detaching);
-    			if (detaching) detach_dev(t7);
     			destroy_component(dropout, detaching);
     		}
     	};
@@ -16329,7 +16263,7 @@ var app = (function () {
     	return block;
     }
 
-    // (137:2) <Tool     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={() => editImage("flipHorizontal")}    >
+    // (138:3) <Tool      {tips}      {legacy}      size="13px"      tiptext={"Flip image"}      on:click={() => editImage("flipHorizontal")}     >
     function create_default_slot_4$1(ctx) {
     	let i;
 
@@ -16337,7 +16271,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-sync-alt");
-    			add_location(i, file$x, 143, 6, 3362);
+    			add_location(i, file$x, 144, 7, 3403);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16352,14 +16286,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_4$1.name,
     		type: "slot",
-    		source: "(137:2) <Tool     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={() => editImage(\\\"flipHorizontal\\\")}    >",
+    		source: "(138:3) <Tool      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={\\\"Flip image\\\"}      on:click={() => editImage(\\\"flipHorizontal\\\")}     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (146:2) <Tool     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={() => editImage("rotateRight")}    >
+    // (147:3) <Tool      {tips}      {legacy}      size="12px"      tiptext={"Rotate image"}      on:click={() => editImage("rotateRight")}     >
     function create_default_slot_3$1(ctx) {
     	let i;
 
@@ -16367,7 +16301,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$x, 152, 6, 3541);
+    			add_location(i, file$x, 153, 7, 3591);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16382,14 +16316,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(146:2) <Tool     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={() => editImage(\\\"rotateRight\\\")}    >",
+    		source: "(147:3) <Tool      {tips}      {legacy}      size=\\\"12px\\\"      tiptext={\\\"Rotate image\\\"}      on:click={() => editImage(\\\"rotateRight\\\")}     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (157:3) <Tool      {tips}      {legacy}      size="13px"      tiptext={"Greyscale"}      on:click={() => editImage("greyImage")}     >
+    // (156:3) <Tool      {tips}      {legacy}      size="13px"      tiptext={"Greyscale"}      on:click={() => editImage("greyImage")}     >
     function create_default_slot_2$1(ctx) {
     	let i;
 
@@ -16397,7 +16331,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-adjust");
-    			add_location(i, file$x, 163, 7, 3754);
+    			add_location(i, file$x, 162, 7, 3770);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16412,14 +16346,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$1.name,
     		type: "slot",
-    		source: "(157:3) <Tool      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={\\\"Greyscale\\\"}      on:click={() => editImage(\\\"greyImage\\\")}     >",
+    		source: "(156:3) <Tool      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={\\\"Greyscale\\\"}      on:click={() => editImage(\\\"greyImage\\\")}     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (166:3) <Tool      {tips}      {legacy}      size="13px"      tiptext={"Negative"}      on:click={() => editImage("negateImage")}     >
+    // (165:3) <Tool      {tips}      {legacy}      size="13px"      tiptext={"Negative"}      on:click={() => editImage("negateImage")}     >
     function create_default_slot_1$2(ctx) {
     	let i;
 
@@ -16427,7 +16361,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-minus-circle");
-    			add_location(i, file$x, 172, 7, 3936);
+    			add_location(i, file$x, 171, 7, 3952);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16442,21 +16376,53 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(166:3) <Tool      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={\\\"Negative\\\"}      on:click={() => editImage(\\\"negateImage\\\")}     >",
+    		source: "(165:3) <Tool      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={\\\"Negative\\\"}      on:click={() => editImage(\\\"negateImage\\\")}     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (156:2) <Dropout icon="fas fa-magic">
+    // (137:2) <Dropout icon="fas fa-magic">
     function create_default_slot$2(ctx) {
     	let tool0;
-    	let t;
+    	let t0;
     	let tool1;
+    	let t1;
+    	let tool2;
+    	let t2;
+    	let tool3;
     	let current;
 
     	tool0 = new Tool({
+    			props: {
+    				tips: /*tips*/ ctx[6],
+    				legacy: /*legacy*/ ctx[5],
+    				size: "13px",
+    				tiptext: "Flip image",
+    				$$slots: { default: [create_default_slot_4$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	tool0.$on("click", /*click_handler_2*/ ctx[25]);
+
+    	tool1 = new Tool({
+    			props: {
+    				tips: /*tips*/ ctx[6],
+    				legacy: /*legacy*/ ctx[5],
+    				size: "12px",
+    				tiptext: "Rotate image",
+    				$$slots: { default: [create_default_slot_3$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	tool1.$on("click", /*click_handler_3*/ ctx[26]);
+
+    	tool2 = new Tool({
     			props: {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
@@ -16468,9 +16434,9 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool0.$on("click", /*click_handler_4*/ ctx[27]);
+    	tool2.$on("click", /*click_handler_4*/ ctx[27]);
 
-    	tool1 = new Tool({
+    	tool3 = new Tool({
     			props: {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
@@ -16482,18 +16448,26 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	tool1.$on("click", /*click_handler_5*/ ctx[28]);
+    	tool3.$on("click", /*click_handler_5*/ ctx[28]);
 
     	const block = {
     		c: function create() {
     			create_component(tool0.$$.fragment);
-    			t = space();
+    			t0 = space();
     			create_component(tool1.$$.fragment);
+    			t1 = space();
+    			create_component(tool2.$$.fragment);
+    			t2 = space();
+    			create_component(tool3.$$.fragment);
     		},
     		m: function mount(target, anchor) {
     			mount_component(tool0, target, anchor);
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t0, anchor);
     			mount_component(tool1, target, anchor);
+    			insert_dev(target, t1, anchor);
+    			mount_component(tool2, target, anchor);
+    			insert_dev(target, t2, anchor);
+    			mount_component(tool3, target, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -16515,22 +16489,48 @@ var app = (function () {
     			}
 
     			tool1.$set(tool1_changes);
+    			const tool2_changes = {};
+    			if (dirty & /*tips*/ 64) tool2_changes.tips = /*tips*/ ctx[6];
+    			if (dirty & /*legacy*/ 32) tool2_changes.legacy = /*legacy*/ ctx[5];
+
+    			if (dirty & /*$$scope*/ 536870912) {
+    				tool2_changes.$$scope = { dirty, ctx };
+    			}
+
+    			tool2.$set(tool2_changes);
+    			const tool3_changes = {};
+    			if (dirty & /*tips*/ 64) tool3_changes.tips = /*tips*/ ctx[6];
+    			if (dirty & /*legacy*/ 32) tool3_changes.legacy = /*legacy*/ ctx[5];
+
+    			if (dirty & /*$$scope*/ 536870912) {
+    				tool3_changes.$$scope = { dirty, ctx };
+    			}
+
+    			tool3.$set(tool3_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(tool0.$$.fragment, local);
     			transition_in(tool1.$$.fragment, local);
+    			transition_in(tool2.$$.fragment, local);
+    			transition_in(tool3.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(tool0.$$.fragment, local);
     			transition_out(tool1.$$.fragment, local);
+    			transition_out(tool2.$$.fragment, local);
+    			transition_out(tool3.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			destroy_component(tool0, detaching);
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t0);
     			destroy_component(tool1, detaching);
+    			if (detaching) detach_dev(t1);
+    			destroy_component(tool2, detaching);
+    			if (detaching) detach_dev(t2);
+    			destroy_component(tool3, detaching);
     		}
     	};
 
@@ -16538,7 +16538,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(156:2) <Dropout icon=\\\"fas fa-magic\\\">",
+    		source: "(137:2) <Dropout icon=\\\"fas fa-magic\\\">",
     		ctx
     	});
 

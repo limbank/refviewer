@@ -134,26 +134,25 @@
 			{closeDropdowns}
 			bind:fileSelected
 		/>
-		<Tool
-			{tips}
-			{legacy}
-			size="13px"
-			tiptext={"Flip image"}
-			on:click={() => editImage("flipHorizontal")}
-		>
-	    	<i class="fas fa-sync-alt"></i>
-		</Tool>
-		<Tool
-			{tips}
-			{legacy}
-			size="12px"
-			tiptext={"Rotate image"}
-			on:click={() => editImage("rotateRight")}
-		>
-	    	<i class="fas fa-redo"></i>
-		</Tool>
-
 		<Dropout icon="fas fa-magic">
+			<Tool
+				{tips}
+				{legacy}
+				size="13px"
+				tiptext={"Flip image"}
+				on:click={() => editImage("flipHorizontal")}
+			>
+		    	<i class="fas fa-sync-alt"></i>
+			</Tool>
+			<Tool
+				{tips}
+				{legacy}
+				size="12px"
+				tiptext={"Rotate image"}
+				on:click={() => editImage("rotateRight")}
+			>
+		    	<i class="fas fa-redo"></i>
+			</Tool>
 			<Tool
 				{tips}
 				{legacy}
