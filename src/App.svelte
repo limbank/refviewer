@@ -305,13 +305,20 @@
 		});
 	}
 
+	function mouseUpBlur() {
+		let active = document.activeElement;
+		let isInputText = active instanceof HTMLInputElement && active.type == 'number';
+
+		if (!isInputText) active.blur();
+	}
+
 	$: if (settingsOpen) {
 		croppingMode = false;
 		pickingMode = false;
 	}
 </script>
 
-<svelte:window on:paste={handlePaste} on:mouseup={() => document.activeElement.blur()} />
+<svelte:window on:paste={handlePaste} on:mouseup={mouseUpBlur} />
 
 <Backdrop legacy={settings.theme} />
 

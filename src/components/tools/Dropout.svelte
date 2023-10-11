@@ -25,7 +25,7 @@
 	{tips}
 	{legacy}
 	size="12px"
-	tiptext={"Image effects"}
+	tiptext={"Extras"}
 	on:click={e => {
 		showDropdown = true;
 		setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 100);

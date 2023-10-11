@@ -19,7 +19,24 @@ class imageEditor {
     }
     negateImage(file, coords, event, win) {
         sharp(this.dataToBuffer(file))
-            .negate()
+            .negate({ alpha: false })
+            .toBuffer()
+            .then(data => {
+                this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event, true);
+                win.show();
+            })
+            .catch( err => {
+                jack.log(err);
+                event.sender.send('action', "Failed to apply greyscale");
+            });
+    }
+    resizeImage(file, detail, event, win) {
+        console.log("resizing image...", detail);
+        
+        sharp(this.dataToBuffer(file))
+            .resize(detail.w, detail.h, {
+                fit: detail.r ? 'inside' : 'fill',
+            })
             .toBuffer()
             .then(data => {
                 this.fp.process(`data:image/png;base64,${data.toString('base64')}`, event, true);
@@ -159,6 +176,17 @@ class imageEditor {
             });
         });
     }
+    getSize(file, event, win) {
+        sharp(this.dataToBuffer(file))
+            .toBuffer((err, data, info) => {
+
+                console.log("buffer info", info);
+                event.sender.send('imagesize', {
+                    w: info.width,
+                    h: info.height
+                });
+            });
+    }
     edit(file, args = {}, type, event, win) {
         if (!file) return event.sender.send('action', "Select an image first");
 
@@ -178,11 +206,17 @@ class imageEditor {
             case "getPalette":
                 this.getPalette(file, event, win);
                 break;
+            case "getSize":
+                this.getSize(file, event, win);
+                break;
             case "save":
                 this.saveImage(file, event, win);
                 break;
             case "saveAuto":
                 this.saveImageAuto(file, args, event, win);
+                break;
+            case "resizeImage":
+                this.resizeImage(file, args, event, win);
                 break;
             case "greyImage":
                 this.greyImage(file, args, event, win);

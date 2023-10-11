@@ -6,6 +6,7 @@
 	import Tool from './common/Tool.svelte';
 	import Eyedropper from './tools/Eyedropper.svelte';
 	import Palette from './tools/Palette.svelte';
+	import Resizer from './tools/Resizer.svelte';
 	import Background from './tools/Background.svelte';
 
 	import Dropout from './tools/Dropout.svelte';
@@ -114,6 +115,24 @@
 		>
 	    	<i class="far fa-crop-alt" style=""></i>
 		</Tool>
+		<Tool
+			{tips}
+			{legacy}
+			size="13px"
+			tiptext={"Flip image"}
+			on:click={() => editImage("flipHorizontal")}
+		>
+	    	<i class="fas fa-sync-alt"></i>
+		</Tool>
+		<Tool
+			{tips}
+			{legacy}
+			size="12px"
+			tiptext={"Rotate image"}
+			on:click={() => editImage("rotateRight")}
+		>
+	    	<i class="fas fa-redo"></i>
+		</Tool>
 		<Eyedropper
 			{tips}
 			{legacy}
@@ -128,6 +147,12 @@
 			{closeDropdowns}
 			bind:backdropColor
 		/>
+		<Resizer
+			{tips}
+			{legacy}
+			{closeDropdowns}
+			bind:fileSelected
+		/>
 		<Palette
 			{tips}
 			{legacy}
@@ -135,24 +160,6 @@
 			bind:fileSelected
 		/>
 		<Dropout icon="fas fa-magic">
-			<Tool
-				{tips}
-				{legacy}
-				size="13px"
-				tiptext={"Flip image"}
-				on:click={() => editImage("flipHorizontal")}
-			>
-		    	<i class="fas fa-sync-alt"></i>
-			</Tool>
-			<Tool
-				{tips}
-				{legacy}
-				size="12px"
-				tiptext={"Rotate image"}
-				on:click={() => editImage("rotateRight")}
-			>
-		    	<i class="fas fa-redo"></i>
-			</Tool>
 			<Tool
 				{tips}
 				{legacy}

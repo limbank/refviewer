@@ -40,17 +40,16 @@
 		background: #3A3940;
 		border-radius: 3px;
 		border: 0;
-		margin: 0;
 		padding: 2px 0 0;
-		height: 20px;
 		cursor: pointer;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
 		width: 30px;
+		height: 20px;
 		transition: color 0.1s ease-out;
 		-webkit-app-region: no-drag;
-		margin-bottom: 5px;
+		margin: 0 0 5px;
 		font-size: 14px;
 
 		&:focus {
