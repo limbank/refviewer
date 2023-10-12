@@ -1,13 +1,4 @@
-const { dialog } = require("electron");
-const os = require('os');
-const path = require('path');
-const fs = require('fs-extra');
-const Lumberjack = require('./lumberjack.js');
-const fileFilter = require('./fileFilter.js');
-
-let sharp;
-
-const jack = new Lumberjack();
+let sharp, jack, path, fs;
 
 class imageEditor {
     constructor (args) {
@@ -115,6 +106,10 @@ class imageEditor {
         });
     }
     saveImage (file, event, win) {
+        //performance fix
+        const fileFilter = require('./fileFilter.js');
+        const { dialog } = require("electron");
+
         dialog.showSaveDialog(win, {
             title: "Save image",
             defaultPath: this.fp.name,
@@ -166,6 +161,8 @@ class imageEditor {
     getPalette(file, event, win) {
         if (this.fp.generatedPalette) return event.sender.send('palette', this.fp.generatedPalette);
 
+        //performance fix
+        const os = require('os');
         let filePath = path.join(os.tmpdir(), 'out.png');
         fs.writeFile(filePath, this.dataToBuffer(file), 'base64', err => {
             if (err) return jack.log(err);
@@ -193,6 +190,11 @@ class imageEditor {
     edit(file, args = {}, type, event, win) {
         //performance improvement attempt
         sharp = require('sharp');
+        path = require('path');
+        fs = require('fs-extra');
+        
+        const Lumberjack = require('./lumberjack.js');
+        jack = new Lumberjack();
 
         if (!file) return event.sender.send('action', "Select an image first");
 

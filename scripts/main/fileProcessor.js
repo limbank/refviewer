@@ -1,13 +1,4 @@
-const sharp = require('sharp');
-const imageDataURI = require('image-data-uri');
-const PSD = require('psd');
-const os = require('os');
-const path = require('path');
-const http = require("http");
-const fs = require('fs-extra');
-const bmp = require('bmpimagejs');
-const Lumberjack = require('./lumberjack.js');
-const jack = new Lumberjack();
+let sharp, jack;
 
 class fileProcessor {
     constructor (args) {
@@ -18,6 +9,9 @@ class fileProcessor {
     handleDefault(filePath, event, retain = false) {
         if (filePath.startsWith("http")) {
             if (!retain) this.name = "image";
+
+            //performance fix
+            const imageDataURI = require('image-data-uri');
 
             imageDataURI.encodeFromURL(filePath).then((response) => {
                 event.sender.send('deliver', response);
@@ -41,8 +35,14 @@ class fileProcessor {
         else this.handleConversion(filePath, event);
     }
     handleBMP(filePath, event) {
+        //performance fix
+        const fs = require('fs-extra');
+
         fs.readFile(filePath, function (err, data) {
             if (err) return console.log(err);
+
+            //performance fix
+            const bmp = require('bmpimagejs');
 
             let img = bmp.decode(data.buffer); 
             sharp(img.pixels, {
@@ -82,6 +82,11 @@ class fileProcessor {
             });
     }
     handlePSD (filePath, event) {
+        //performance fix
+        const PSD = require('psd');
+        const os = require('os');
+        const path = require('path');
+
         let psdPath = path.join(os.tmpdir(), 'out.png');
 
         PSD.open(filePath).then((psd) => {
@@ -100,6 +105,12 @@ class fileProcessor {
     }
     process(file, event, retain = false, history = true) {
         if (!file) return jack.log("Missing file");
+
+        //performance fix
+        sharp = require('sharp');
+
+        const Lumberjack = require('./lumberjack.js');
+        jack = new Lumberjack();
 
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 
