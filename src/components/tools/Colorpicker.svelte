@@ -7,6 +7,7 @@
 
 	export let legacy = false;
 	export let tips = false;
+	export let hashsign = true;
 	export let reset;
 	export let alpha = true;
 
@@ -17,10 +18,19 @@
 	}
 	
 	function hexInput() {
-		if (tinycolor(hex).isValid()) {
-			//console.log("VALID HEX! ASSIGNING...");
-			hexIntermediate = hex;
-		}
+		if (tinycolor(hex).isValid()) hexIntermediate = hex;
+	}
+
+	function copyClick() {
+		let tempHex = hex;
+
+		if (hashsign && tempHex.startsWith("#")) tempHex = tempHex.substring(1);
+
+		navigator.clipboard.writeText(tempHex).then(() => {
+		    ipcRenderer.send('action', "Color copied!");
+		}, () => {
+		    ipcRenderer.send('action', "Failed to copy color");
+		});
 	}
 
 	export let hex;
@@ -60,13 +70,7 @@
 						{legacy}
 						size="12px"
 						tiptext="Copy"
-						on:click={e => {
-				            navigator.clipboard.writeText(hex).then(() => {
-							    ipcRenderer.send('action', "Color copied!");
-							}, () => {
-							    ipcRenderer.send('action', "Failed to copy color");
-							});
-						}}
+						on:click={copyClick}
 					>
 						<i class="far fa-clipboard" style="transform: translateY(-1px);"></i>
 					</Control>

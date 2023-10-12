@@ -345,6 +345,7 @@
 		{settingsOpen}
 		{fileSelected}
 		{hex}
+		hashsign={settings.hashsign}
 		legacy={settings.theme}
 		tips={settings.tooltips}
 		bind:this={tbx}

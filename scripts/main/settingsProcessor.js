@@ -6,7 +6,7 @@ class settingsProcessor {
         this.home = data.home;
         this.filename = data.filename;
         this.file = path.join(this.home, this.filename);
-        this.settings = { zoom: 0.3 };
+        this.settings = { zoom: 0.3, hashsign: true };
 
         fs.ensureFile(this.file, err => {
             this.readSettings(data.ready);

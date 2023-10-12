@@ -1,11 +1,11 @@
 const { dialog } = require("electron");
-const sharp = require('sharp');
 const os = require('os');
 const path = require('path');
 const fs = require('fs-extra');
-const Vibrant = require('node-vibrant');
 const Lumberjack = require('./lumberjack.js');
 const fileFilter = require('./fileFilter.js');
+
+let sharp;
 
 const jack = new Lumberjack();
 
@@ -170,17 +170,20 @@ class imageEditor {
         fs.writeFile(filePath, this.dataToBuffer(file), 'base64', err => {
             if (err) return jack.log(err);
 
-            Vibrant.from(filePath).getPalette().then((palette) => {
-                this.fp.generatedPalette = palette;
-                event.sender.send('palette', palette);
-            });
+            //performance fix
+            const ColorThief = require('colorthief');
+            //first color is main
+            ColorThief.getPalette(filePath, 6)
+                .then(palette => {
+                    this.fp.generatedPalette = palette;
+                    event.sender.send('palette', palette);
+                })
+                .catch(err => { jack.log(err) });
         });
     }
     getSize(file, event, win) {
         sharp(this.dataToBuffer(file))
             .toBuffer((err, data, info) => {
-
-                console.log("buffer info", info);
                 event.sender.send('imagesize', {
                     w: info.width,
                     h: info.height
@@ -188,6 +191,9 @@ class imageEditor {
             });
     }
     edit(file, args = {}, type, event, win) {
+        //performance improvement attempt
+        sharp = require('sharp');
+
         if (!file) return event.sender.send('action', "Select an image first");
 
         switch (type) {

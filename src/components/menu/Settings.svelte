@@ -1,7 +1,7 @@
 <script>
 	const { ipcRenderer } = require('electron');
 
-	export let settings = { zoom: 0.3 };
+	export let settings = { zoom: 0.3, hashsign: true };
 
 	let timeout;
 
@@ -32,6 +32,7 @@
     	settings.autosave = false;
     	settings.savedir = false;
     	settings.devmode = false;
+    	settings.hashsign = true;
 
     	resetConfirmed = false;
     	resetText = "Reset";
@@ -69,6 +70,22 @@
 	</div>
 	<div class="setting-description">
 		Allow selecting a new image while another image is loaded.
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			Disable hashsign
+		</div>
+		<div class="setting-control">
+			<label class="switch">
+				<input type="checkbox" bind:checked={settings.hashsign}>
+				<span class="slider"></span>
+			</label>
+		</div>
+	</div>
+	<div class="setting-description">
+		Copy colors without the hashsign.
 	</div>
 </div>
 <div class="setting">

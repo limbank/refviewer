@@ -15,16 +15,29 @@
 	});
 
 	let showDropdown = false;
-	let palette = {};
+	let palette = [];
 
 	export let closeDropdowns = false;
 	export let fileSelected = false;
 	export let tips = false;
+	export let hashsign = true;
 	export let legacy = false;
 
 	ipcRenderer.on('palette', (event, arg) => {
 		palette = arg;
 	});
+
+	function paletteClick(hex) {
+		let tempHex = hex;
+
+		if (hashsign && tempHex.startsWith("#")) tempHex = tempHex.substring(1);
+		
+        navigator.clipboard.writeText(tempHex).then(() => {
+		    ipcRenderer.send('action', "Color copied!");
+		}, () => {
+		    ipcRenderer.send('action', "Failed to copy color");
+		});
+	}
 	
 	$: if (closeDropdowns) showDropdown = false;
 </script>
@@ -54,25 +67,22 @@
 		}}
 	>
 		<div class="palette">
-			{#each Object.entries(palette) as [color_name, color_number]}
+			{#each palette as color}
 				<div
-					on:click={e => {
-			            navigator.clipboard.writeText(tinycolor(`rgb(${palette[color_name]._rgb})`).toHexString()).then(() => {
-						    ipcRenderer.send('action', "Color copied!");
-						}, () => {
-						    ipcRenderer.send('action', "Failed to copy color");
-						});
+					on:click={() => {
+						let hex = tinycolor(`rgb(${color[0]}, ${color[1]}, ${color[2]})`).toHexString();
+						paletteClick(hex);
 					}}
 					class="item"
-					style="background: rgb({palette[color_name]._rgb});"
+					style="background: rgb({color[0]}, {color[1]}, {color[2]});"
 				>
 					<div class="item-detail">
-						{Math.floor(palette[color_name]._rgb[0])},
-						{Math.floor(palette[color_name]._rgb[1])},
-						{Math.floor(palette[color_name]._rgb[2])}
+						{color[0]},
+						{color[1]},
+						{color[2]}
 					</div>
 					<div class="item-detail">
-						{tinycolor(`rgb(${palette[color_name]._rgb})`).toHexString()}
+						{tinycolor(`rgb(${color[0]}, ${color[1]}, ${color[2]})`).toHexString()}
 					</div>
 				</div>
 			{/each}

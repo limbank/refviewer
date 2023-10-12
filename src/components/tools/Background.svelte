@@ -19,6 +19,7 @@
 
 	export let closeDropdowns = false;
 	export let tips = false;
+	export let hashsign = true;
 	export let legacy = false;
 	$: if (closeDropdowns) showDropdown = false;
 </script>
@@ -45,6 +46,7 @@
 		<Colorpicker
 			{tips}
 			{legacy}
+			{hashsign}
 			bind:hex={backdropColor}
 			reset={legacy ? "#111111" : "#2F2E33"}
 		/>

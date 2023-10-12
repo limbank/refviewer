@@ -1,10 +1,8 @@
-const { app, BrowserWindow, ipcMain, dialog, screen, globalShortcut } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, screen, globalShortcut, Menu } = require("electron");
 
 const os = require('os');
 const path = require('path');
 const fs = require('fs-extra');
-const screenshot = require('screenshot-desktop');
-const sharp = require('sharp');
 const fileFilter = require('./scripts/main/fileFilter.js');
 const recentsProcessor = require('./scripts/main/recentsProcessor.js');
 const settingsProcessor = require('./scripts/main/settingsProcessor.js');
@@ -93,7 +91,10 @@ function createWhenReady() {
 }
 
 if (!gotTheLock) app.quit();
-else app.on("ready", createWhenReady);
+else {
+    Menu.setApplicationMenu(null);
+    app.on("ready", createWhenReady);
+}
 
 app.on("window-all-closed", function () {
     if (process.platform !== "darwin") app.quit();
@@ -274,6 +275,9 @@ ipcMain.on('screenshot', (event, arg) => {
                 + currentDate.getSeconds();
 
     jack.log("Preparing to take a screenshot...");
+    
+    //moving screenshot here to improve performance
+    const screenshot = require('screenshot-desktop');
     screenshot.listDisplays().then((displays) => {
         jack.log("Listing displays...");
         screenshot({
@@ -305,6 +309,9 @@ ipcMain.on('screenshot', (event, arg) => {
             });
 
             newWin.once('ready-to-show', () => {
+                //moving sharp here to improve performance
+                const sharp = require('sharp');
+
                 newWin.show();
                 newWin.setFullScreen(true);
                 newWin.focus();

@@ -16,6 +16,7 @@
 	export let showDropdown = false;
 	export let closeDropdowns = false;
 	export let hex;
+	export let hashsign = true;
 	export let tips = false;
 	export let legacy = false;
 
@@ -43,8 +44,9 @@
 		<Colorpicker
 			bind:hex
 			alpha={false}
-			legacy={legacy}
-			tips={tips} />
+			{legacy}
+			{hashsign}
+			{tips} />
 	</Dropdown>
 {/if}
 

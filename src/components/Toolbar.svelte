@@ -17,6 +17,7 @@
 	export let settingsOpen = false;
 	export let legacy = false;
 	export let tips = false;
+	export let hashsign = true;
 	export let backdropColor = legacy ? "#111111" : "#2F2E33";
 	export let hex;
 	export let showDropdown = false;
@@ -137,6 +138,7 @@
 			{tips}
 			{legacy}
 			{closeDropdowns}
+			{hashsign}
 			bind:showDropdown
 			bind:hex
 			on:pickColor={() => dispatch("pickColor")}
@@ -144,6 +146,7 @@
 		<Background
 			{tips}
 			{legacy}
+			{hashsign}
 			{closeDropdowns}
 			bind:backdropColor
 		/>
@@ -153,13 +156,14 @@
 			{closeDropdowns}
 			bind:fileSelected
 		/>
-		<Palette
-			{tips}
-			{legacy}
-			{closeDropdowns}
-			bind:fileSelected
-		/>
 		<Dropout icon="fas fa-magic">
+			<Palette
+				{tips}
+				{legacy}
+				{hashsign}
+				{closeDropdowns}
+				bind:fileSelected
+			/>
 			<Tool
 				{tips}
 				{legacy}
