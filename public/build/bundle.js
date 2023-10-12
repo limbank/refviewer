@@ -6344,7 +6344,7 @@ var app = (function () {
     			if (!mounted) {
     				dispose = [
     					listen_dev(div, "dragover", dragover_handler, false, false, false),
-    					listen_dev(div, "drop", /*handleFilesSelect*/ ctx[2], false, false, false)
+    					listen_dev(div, "drop", prevent_default(/*handleFilesSelect*/ ctx[2]), false, true, false)
     				];
 
     				mounted = true;

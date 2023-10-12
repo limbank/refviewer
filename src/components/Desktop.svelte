@@ -94,7 +94,7 @@
 	class="desktop"
 	class:legacy
 	on:dragover={(e) => { e.preventDefault(); }}
-	on:drop={handleFilesSelect}
+	on:drop|preventDefault={handleFilesSelect}
 	style="background:{backdropColor};"
 >
 	<slot></slot>

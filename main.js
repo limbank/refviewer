@@ -1,8 +1,7 @@
-const { app, BrowserWindow, ipcMain, dialog, screen, globalShortcut, Menu } = require("electron");
-
+const { app, ipcMain, dialog, globalShortcut } = require("electron");
 const os = require('os');
 const path = require('path');
-const fs = require('fs-extra');
+
 const fileFilter = require('./scripts/main/fileFilter.js');
 const recentsProcessor = require('./scripts/main/recentsProcessor.js');
 const settingsProcessor = require('./scripts/main/settingsProcessor.js');
@@ -69,29 +68,33 @@ gotTheLock = app.requestSingleInstanceLock();
 
 function createWhenReady() {
     if (!wmReady) setTimeout(createWhenReady, 100);
-    else wm.createWindow();
+    else {
+        wm.createWindow();
 
-    // Register a 'CommandOrControl+X' shortcut listener.
-    const ret = globalShortcut.register('CommandOrControl+M', () => {
-        sp.settings.devmode ? jack.log('CommandOrControl+M is pressed') : '';
+        // Register a 'CommandOrControl+X' shortcut listener.
+        const ret = globalShortcut.register('CommandOrControl+M', () => {
+            sp.settings.devmode ? jack.log('CommandOrControl+M is pressed') : '';
 
-        for (var i = 0; i < lastActiveWindows.length; i++) {
-            lastActiveWindows[i].setIgnoreMouseEvents(false);
-            lastActiveWindows[i].setFocusable(true);
-            lastActiveWindows[i].show();
-            lastActiveWindows[i].focus();
-        }
+            for (var i = 0; i < lastActiveWindows.length; i++) {
+                lastActiveWindows[i].setIgnoreMouseEvents(false);
+                lastActiveWindows[i].setFocusable(true);
+                lastActiveWindows[i].show();
+                lastActiveWindows[i].focus();
+            }
 
-        lastActiveWindows = [];
-    });
+            lastActiveWindows = [];
+        });
 
-    // Check whether a shortcut is registered.
-    sp.settings.devmode ? 
-        jack.log("Registered shortcut?", globalShortcut.isRegistered('CommandOrControl+M')) : '';
+        // Check whether a shortcut is registered.
+        sp.settings.devmode ? 
+            jack.log("Registered shortcut?", globalShortcut.isRegistered('CommandOrControl+M')) : '';
+    }
 }
 
 if (!gotTheLock) app.quit();
 else {
+    //performance fix
+    const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
     app.on("ready", createWhenReady);
 }
@@ -252,6 +255,8 @@ ipcMain.on('screenshot', (event, arg) => {
     if (!activeWindow) return;
     let windowPOS = activeWindow.getPosition();
 
+    //performance fix
+    const { screen } = require("electron");
     let currentScreen = screen.getDisplayNearestPoint({
         x: windowPOS[0],
         y: windowPOS[1]
@@ -275,7 +280,7 @@ ipcMain.on('screenshot', (event, arg) => {
                 + currentDate.getSeconds();
 
     jack.log("Preparing to take a screenshot...");
-    
+
     //moving screenshot here to improve performance
     const screenshot = require('screenshot-desktop');
     screenshot.listDisplays().then((displays) => {
@@ -289,6 +294,8 @@ ipcMain.on('screenshot', (event, arg) => {
             clearTimeout(errTimeout);
             activeWindow.show();
             
+            //performance fix
+            const { BrowserWindow } = require("electron");
             newWin = new BrowserWindow({
                 x: currentScreen.bounds.x,
                 y: currentScreen.bounds.y,
