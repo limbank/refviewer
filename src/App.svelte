@@ -411,6 +411,8 @@
 					/>
 				{/if}
 
+				<Zoomslider {zoomscale} {instance} />
+
 				<Zoomscale {zoomscale} {instance} />
 
 				<div
