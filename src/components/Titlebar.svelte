@@ -1,7 +1,7 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 	import mousetrap from 'svelte-use-mousetrap';
-	import Control from './common/Control.svelte';
+	import Button from './common/Button.svelte';
 
 	const { ipcRenderer } = require('electron');
 
@@ -11,6 +11,7 @@
 	export let settingsOpen = false;
 	export let legacy = false;
 	export let tips = false;
+	export let devmode = false;
 	export let overwrite = false;
 	export let version;
 	let pinned = false;
@@ -31,19 +32,35 @@
 		dispatch('copy');
 		dispatch('clear');
 	}
+
+	function openDevTools() {
+		ipcRenderer.send('window', 'devtools');
+	}
+
+	function openNewWindow() {
+		ipcRenderer.send('window', 'new');
+	}
+
+	function maximize() {
+		ipcRenderer.send('window', 'maximize');
+	}
 </script>
 
 <svelte:window use:mousetrap={[
   ['command+o', 'ctrl+o', openImage],
   ['del', 'backspace', clearImage],
-  ['command+x', 'ctrl+x', cutImage]
+  ['command+x', 'ctrl+x', cutImage],
+  ['command+n', 'ctrl+n', openNewWindow],
+  ['f11', maximize],
+  ['shift+ctrl+i', 'shift+command+i', openDevTools]
 ]} />
 
 <div class="titlebar" class:legacy>
 	<div class="titlebar-group">
-		<Control
+		<Button
 			{tips}
 			{legacy}
+			context="control"
 			size="12px"
 			tiptext={settingsOpen ? "Close menu" : "Main menu"}
 			on:click={e => {
@@ -56,40 +73,43 @@
 			{:else}
     			<i class="fas fa-bars"></i>
 			{/if}
-		</Control>
+		</Button>
 
 		{#if !settingsOpen}
 			{#if !fileSelected || overwrite}
-				<Control
+				<Button
 					{tips}
 					{legacy}
+					context="control"
 					size="12px"
 					tiptext="Select file"
 					on:click={openImage}
 				>
 					<i class="fas fa-file-upload"></i>
-				</Control>
+				</Button>
 
-				<Control
+				<Button
 					{tips}
 					{legacy}
+					context="control"
 					size="12px"
 					tiptext="Screenshot"
 					on:click={e => { ipcRenderer.send('screenshot'); }}
 				>
 			    	<i class="fas fa-crosshairs"></i>
-				</Control>
+				</Button>
 			{/if}
 			{#if fileSelected}
-				<Control
+				<Button
 					{tips}
 					{legacy}
+					context="control"
 					size="12px"
 					tiptext="Clear"
 					on:click={clearImage}
 				>
 			    	<i class="fas fa-trash"></i>
-				</Control>
+				</Button>
 			{/if}
 		{/if}
 	</div>
@@ -97,58 +117,76 @@
 		{#if version}
 			<span class="version">v. {version}</span>
 		{/if}
-		<Control
+		{#if devmode}
+			<Button
+				{tips}
+				{legacy}
+				context="control"
+				size="12px"
+				tiptext="Make click-through"
+				 on:click={openDevTools}
+			>
+		    	<i class="fas fa-terminal"></i>
+			</Button>
+		{/if}
+		<Button
 			{tips}
 			{legacy}
+			context="control"
 			size="12px"
 			tiptext="Make click-through"
 			 on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}
 		>
 	    	<i class="fas fa-ghost"></i>
-		</Control>
-		<Control
+		</Button>
+		<Button
 			{tips}
 			{legacy}
+			context="control"
 			size="12px"
 			tiptext="New window"
-			 on:click={e => { ipcRenderer.send('window', 'new'); }}
+			 on:click={openNewWindow}
 		>
 	    	<i class="fas fa-window"></i>
-		</Control>
-		<Control
+		</Button>
+		<Button
 			{tips}
 			{legacy}
+			context="control"
 			size="13px"
 			tiptext="Pin to top"
 			 on:click={e => { ipcRenderer.send('window', 'pin'); }}
 		>
 	    	<i class="fas fa-thumbtack" class:pinned></i>
-		</Control>
-		<Control
+		</Button>
+		<Button
 			{tips}
 			{legacy}
+			context="control"
 			tiptext="Minimize"
 			on:click={e => { ipcRenderer.send('window', 'minimize'); }}
 		>
 	    	<i class="fas fa-minus"></i>
-		</Control>
-		<Control
+		</Button>
+		<Button
 			{tips}
 			{legacy}
+			context="control"
 			tiptext={maximized ? "Restore" : "Maximize"}
-			on:click={e => { ipcRenderer.send('window', 'maximize'); }}
+			on:click={maximize}
 		>
 			<i class="fas fa-plus"></i>
-		</Control>
-		<Control
+		</Button>
+		<Button
 			{tips}
 			{legacy}
+			context="control"
 			persistent={true}
 			tiptext="Close"
 			on:click={e => { ipcRenderer.send('window', 'close'); }}
 		>
 	    	<i class="fas fa-times"></i>
-		</Control>
+		</Button>
 	</div>
 
 </div>

@@ -11,6 +11,7 @@ class Lumberjack {
         this.logDir = path.join(this.home, "/logs");
         this.file = path.join(this.logDir, `log-${this.logDate}.txt`);
         this.logFile;
+        this.devmode = true;
 
         fs.ensureDir(this.logDir, err => {
             //do something with the errors?
@@ -47,9 +48,20 @@ class Lumberjack {
                         }]`
         );
     }
+    plog() {
+        console.log(`${this.time}`, ...arguments);
+
+        try {
+            this.logFile.write(
+                util.format.apply(null, [`${this.time}`, ...arguments]).replace(/\033\[[0-9;]*m/g,"") + '\n'
+            );
+        }
+        catch(e) { }
+    }
     log() {
         console.log(`${this.time}`, ...arguments);
 
+        if (!this.devmode) return;
         try {
             this.logFile.write(
                 util.format.apply(null, [`${this.time}`, ...arguments]).replace(/\033\[[0-9;]*m/g,"") + '\n'

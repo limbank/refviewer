@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { createPopperActions } from 'svelte-popperjs';
 
-	import Tool from '../common/Tool.svelte';
+	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 	import Colorpicker from './Colorpicker.svelte';
 
@@ -24,7 +24,7 @@
 	$: if (closeDropdowns) showDropdown = false;
 </script>
 
-<Tool
+<Button
 	{tips}
 	{legacy}
 	size="12px"
@@ -34,7 +34,7 @@
 	}}
 >
 	<i class="fas fa-fill" use:dropdownRef></i>
-</Tool>
+</Button>
 
 {#if showDropdown}
 	<Dropdown

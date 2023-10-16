@@ -3,7 +3,7 @@
 
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import tinycolor from 'tinycolor2';
-	import Control from '../common/Control.svelte';
+	import Button from '../common/Button.svelte';
 
 	export let legacy = false;
 	export let tips = false;
@@ -65,27 +65,29 @@
 				<label>
 					<span>HEX:</span>
 					<input placeholder="Hex" type="text" bind:value={hex} on:input={hexInput}>
-					<Control
+					<Button
 						{tips}
 						{legacy}
 						size="12px"
 						tiptext="Copy"
+						context="control"
 						on:click={copyClick}
 					>
 						<i class="far fa-clipboard" style="transform: translateY(-1px);"></i>
-					</Control>
+					</Button>
 					{#if reset}
-						<Control
+						<Button
 							{tips}
 							{legacy}
 							size="12px"
 							tiptext="Reset"
+							context="control"
 							on:click={e => {
 								hex = reset;
 							}}
 						>
 							<i class="fas fa-redo"></i>
-						</Control>
+						</Button>
 					{/if}
 				</label>
 			</div>

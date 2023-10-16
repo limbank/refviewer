@@ -3,7 +3,7 @@
 	import mousetrap from 'svelte-use-mousetrap';
 	const { ipcRenderer } = require('electron');
 
-	import Tool from './common/Tool.svelte';
+	import Button from './common/Button.svelte';
 	import Eyedropper from './tools/Eyedropper.svelte';
 	import Palette from './tools/Palette.svelte';
 	import Resizer from './tools/Resizer.svelte';
@@ -89,7 +89,7 @@
 	class="toolbox"
 >
 	{#if fileSelected && !settingsOpen}
-		<Tool
+		<Button
 			{tips}
 			{legacy}
 			size="13px"
@@ -97,8 +97,8 @@
 			on:click={() => editImage("save")}
 		>
 			<i class="far fa-save"></i>
-		</Tool>
-		<Tool
+		</Button>
+		<Button
 			{tips}
 			{legacy}
 			size="13px"
@@ -106,8 +106,8 @@
 			on:click={copyImage}
 		>
 	    	<i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
-		</Tool>
-		<Tool
+		</Button>
+		<Button
 			{tips}
 			{legacy}
 			size="13px"
@@ -115,8 +115,8 @@
 			on:click={() => dispatch("cropImage")}
 		>
 	    	<i class="far fa-crop-alt" style=""></i>
-		</Tool>
-		<Tool
+		</Button>
+		<Button
 			{tips}
 			{legacy}
 			size="13px"
@@ -124,8 +124,8 @@
 			on:click={() => editImage("flipHorizontal")}
 		>
 	    	<i class="fas fa-sync-alt"></i>
-		</Tool>
-		<Tool
+		</Button>
+		<Button
 			{tips}
 			{legacy}
 			size="12px"
@@ -133,7 +133,7 @@
 			on:click={() => editImage("rotateRight")}
 		>
 	    	<i class="fas fa-redo"></i>
-		</Tool>
+		</Button>
 		<Eyedropper
 			{tips}
 			{legacy}
@@ -156,7 +156,7 @@
 			{closeDropdowns}
 			bind:fileSelected
 		/>
-		<Dropout icon="fas fa-magic">
+		<Dropout icon="fas fa-magic" {legacy}>
 			<Palette
 				{tips}
 				{legacy}
@@ -164,7 +164,7 @@
 				{closeDropdowns}
 				bind:fileSelected
 			/>
-			<Tool
+			<Button
 				{tips}
 				{legacy}
 				size="13px"
@@ -172,8 +172,8 @@
 				on:click={() => editImage("greyImage")}
 			>
 		    	<i class="fas fa-adjust"></i>
-			</Tool>
-			<Tool
+			</Button>
+			<Button
 				{tips}
 				{legacy}
 				size="13px"
@@ -181,7 +181,7 @@
 				on:click={() => editImage("negateImage")}
 			>
 		    	<i class="fas fa-minus-circle"></i>
-			</Tool>
+			</Button>
 		</Dropout>
 	{/if}
 </div>

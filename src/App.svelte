@@ -10,9 +10,11 @@
 	import Cursor from './components/Cursor.svelte';
 	import Zoomscale from './components/Zoomscale.svelte';
 	import Zoomslider from './components/Zoomslider.svelte';
+
 	import tinycolor from 'tinycolor2';
 	import Panzoom from '@panzoom/panzoom';
 	import { Canvas, Layer, t } from "svelte-canvas";
+	//import mousetrap from 'svelte-use-mousetrap';
 
 	import Helper from './scripts/helper.js';
 
@@ -312,13 +314,20 @@
 		if (!isInputText) active.blur();
 	}
 
+	function openDevTools() {
+
+	}
+
 	$: if (settingsOpen) {
 		croppingMode = false;
 		pickingMode = false;
 	}
 </script>
 
-<svelte:window on:paste={handlePaste} on:mouseup={mouseUpBlur} />
+<svelte:window
+	on:paste={handlePaste}
+	on:mouseup={mouseUpBlur}
+/>
 
 <Backdrop legacy={settings.theme} />
 
@@ -329,6 +338,7 @@
 		{fileSelected}
 		overwrite={settings.overwrite}
 		legacy={settings.theme}
+		devmode={settings.devmode}
 		tips={settings.tooltips}
 		on:clear={e => {
 			fileSelected = false;

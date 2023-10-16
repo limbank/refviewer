@@ -21,7 +21,17 @@
         "build:electron": "npx electron-builder build --win portable"
     },
     "build": {
-        "appId": "starbrat.refviewer"
+        "appId": "com.electron.RefViewer",
+        "productName": "RefViewer",
+        "win": {
+          "target": "nsis",
+          "icon": "./public/favicon.png"
+        },
+        "nsis": {
+            "oneClick": false,
+            "perMachine": true,
+            "allowToChangeInstallationDirectory": true
+        }
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^17.0.0",

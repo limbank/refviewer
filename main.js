@@ -31,6 +31,8 @@ sp = new settingsProcessor({
     home:homeDir,
     filename: 'config.json',
     ready: () => {
+        jack.devmode = sp.settings.devmode;
+
         rp = new recentsProcessor({
             home: homeDir,
             filename: 'recents.json'
@@ -73,7 +75,7 @@ function createWhenReady() {
 
         // Register a 'CommandOrControl+X' shortcut listener.
         const ret = globalShortcut.register('CommandOrControl+M', () => {
-            sp.settings.devmode ? jack.log('CommandOrControl+M is pressed') : '';
+            jack.log('CommandOrControl+M is pressed');
 
             for (var i = 0; i < lastActiveWindows.length; i++) {
                 lastActiveWindows[i].setIgnoreMouseEvents(false);
@@ -86,8 +88,7 @@ function createWhenReady() {
         });
 
         // Check whether a shortcut is registered.
-        sp.settings.devmode ? 
-            jack.log("Registered shortcut?", globalShortcut.isRegistered('CommandOrControl+M')) : '';
+        jack.log("Registered shortcut?", globalShortcut.isRegistered('CommandOrControl+M'));
     }
 }
 
@@ -116,16 +117,16 @@ app.on('will-quit', () => {
 });
 
 ipcMain.on('settings:write', (event, arg) => {
-    //check autosave issue here
-    //jack.log("WRITING SETTINGS!");
+    jack.log('Writing settings to file...');
 
     if (arg.autosave && !arg.savedir) {
-        //jack.log("No savedir selected, setting default");
+        jack.log('No save directory set, writing to default...');
         let defScreenshotDir = path.join(sp.home, 'screenshots');
         arg.savedir = defScreenshotDir;
     }
 
     sp.writeSettings(arg, () => {
+        jack.log('Wrote settings! Sending to window...');
         event.sender.send('settings', sp.settings);
     });
 });
@@ -154,6 +155,9 @@ ipcMain.on('window', (event, arg) => {
             break;
         case "new":
             wm.createWindow();
+            break;
+        case "devtools":
+            activeWindow.webContents.openDevTools();
             break;
         case "clickthrough":
             activeWindow.setIgnoreMouseEvents(true);
