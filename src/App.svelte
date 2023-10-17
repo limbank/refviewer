@@ -411,7 +411,9 @@
 					/>
 				{/if}
 
-				<Zoomslider {zoomscale} {instance} />
+				{#if settings.zoomslider}
+					<Zoomslider {zoomscale} {instance} />
+				{/if}
 
 				<Zoomscale {zoomscale} {instance} />
 

@@ -33,6 +33,7 @@
     	settings.savedir = false;
     	settings.devmode = false;
     	settings.hashsign = true;
+    	settings.zoomslider = false;
 
     	resetConfirmed = false;
     	resetText = "Reset";
@@ -86,6 +87,19 @@
 	</div>
 	<div class="setting-description">
 		Copy colors without the hashsign.
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			Zoom slider
+		</div>
+		<div class="setting-control">
+			<label class="switch">
+				<input type="checkbox" bind:checked={settings.zoomslider}>
+				<span class="slider"></span>
+			</label>
+		</div>
 	</div>
 </div>
 <div class="setting">

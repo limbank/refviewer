@@ -104,13 +104,13 @@ class fileProcessor {
         return { path:s[1], file:s[2], name:s[3], ext:s[4] };
     }
     process(file, event, retain = false, history = true) {
+        const Lumberjack = require('./lumberjack.js');
+        jack = new Lumberjack();
+
         if (!file) return jack.log("Missing file");
 
         //performance fix
         sharp = require('sharp');
-
-        const Lumberjack = require('./lumberjack.js');
-        jack = new Lumberjack();
 
         let ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 
