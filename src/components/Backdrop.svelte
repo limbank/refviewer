@@ -1,8 +1,8 @@
 <script>
-	export let legacy = false;
+	import settings from '../scripts/newsettings.js';
 </script>
 
-<div class="backdrop" class:legacy>
+<div class="backdrop" class:legacy={$settings.theme}>
 	<div class="backdrop-bg backdrop-top"></div>
 	<div class="backdrop-bg backdrop-right"></div>
 	<div class="backdrop-bg backdrop-bottom"></div>

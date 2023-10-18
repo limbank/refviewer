@@ -26,8 +26,6 @@
 
 	export let closeDropdowns = false;
 	export let fileSelected = false;
-	export let tips = false;
-	export let legacy = false;
 
 	ipcRenderer.on('imagesize', (event, arg) => {
 		imageHeight = arg.h;
@@ -92,8 +90,6 @@
 </script>
 
 <Button
-	{tips}
-	{legacy}
 	size="12px"
 	tiptext={"Resize image"}
 	on:click={e => {

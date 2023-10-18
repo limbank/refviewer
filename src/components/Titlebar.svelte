@@ -3,6 +3,7 @@
 	import mousetrap from 'svelte-use-mousetrap';
 
 	import { tt, locale, locales } from "../scripts/i18n.js";
+	import settings from '../scripts/newsettings.js';
 
 	import Button from './common/Button.svelte';
 
@@ -12,10 +13,6 @@
 
 	export let fileSelected = false;
 	export let settingsOpen = false;
-	export let legacy = false;
-	export let tips = false;
-	export let devmode = false;
-	export let overwrite = false;
 	export let version;
 	let pinned = false;
 	let maximized = false;
@@ -58,11 +55,9 @@
   ['shift+ctrl+i', 'shift+command+i', openDevTools]
 ]} />
 
-<div class="titlebar" class:legacy>
+<div class="titlebar" class:legacy={$settings.theme}>
 	<div class="titlebar-group">
 		<Button
-			{tips}
-			{legacy}
 			context="control"
 			size="12px"
 			tiptext={settingsOpen ? $tt("titlebar.closemenu") : $tt("titlebar.mainmenu")}
@@ -79,10 +74,8 @@
 		</Button>
 
 		{#if !settingsOpen}
-			{#if !fileSelected || overwrite}
+			{#if !fileSelected || $settings.overwrite}
 				<Button
-					{tips}
-					{legacy}
 					context="control"
 					size="12px"
 					tiptext={$tt("titlebar.selectfile")}
@@ -92,8 +85,6 @@
 				</Button>
 
 				<Button
-					{tips}
-					{legacy}
 					context="control"
 					size="12px"
 					tiptext={$tt("titlebar.screenshot")}
@@ -104,8 +95,6 @@
 			{/if}
 			{#if fileSelected}
 				<Button
-					{tips}
-					{legacy}
 					context="control"
 					size="12px"
 					tiptext={$tt("titlebar.clear")}
@@ -120,10 +109,8 @@
 		{#if version}
 			<span class="version">{$tt("titlebar.versionshort")} {version}</span>
 		{/if}
-		{#if devmode}
+		{#if $settings.devmode}
 			<Button
-				{tips}
-				{legacy}
 				context="control"
 				size="12px"
 				tiptext={$tt("titlebar.devtools")}
@@ -133,8 +120,6 @@
 			</Button>
 		{/if}
 		<Button
-			{tips}
-			{legacy}
 			context="control"
 			size="12px"
 			tiptext={$tt("titlebar.clickthrough")}
@@ -143,8 +128,6 @@
 	    	<i class="fas fa-ghost"></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			context="control"
 			size="12px"
 			tiptext={$tt("titlebar.newwindow")}
@@ -153,8 +136,6 @@
 	    	<i class="fas fa-window"></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			context="control"
 			size="13px"
 			tiptext={$tt("titlebar.pintotop")}
@@ -163,8 +144,6 @@
 	    	<i class="fas fa-thumbtack" class:pinned></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			context="control"
 			tiptext={$tt("titlebar.minimize")}
 			on:click={e => { ipcRenderer.send('window', 'minimize'); }}
@@ -172,8 +151,6 @@
 	    	<i class="fas fa-minus"></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			context="control"
 			tiptext={maximized ? $tt("titlebar.restore") : $tt("titlebar.maximize")}
 			on:click={maximize}
@@ -181,8 +158,6 @@
 			<i class="fas fa-plus"></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			context="control"
 			persistent={true}
 			tiptext={$tt("titlebar.close")}

@@ -1,16 +1,7 @@
 <script>
 	const { ipcRenderer } = require('electron');
 
-	export let settings = { zoom: 0.3, hashsign: true };
-
-	let timeout;
-
-	$: {
-		clearTimeout(timeout);
-		timeout = setTimeout(()=> {
-        	ipcRenderer.send('settings:write', settings);
-		}, 500);
-    }
+  	import settings from '../../scripts/newsettings.js';
 
     let resetConfirmed = false;
     let resetText = "Reset";
@@ -22,25 +13,18 @@
     		return;
     	}
 
-    	//settings = { zoom: 0.3 };
-
-    	settings.zoom = 0.3;
-    	settings.overwrite = false;
-    	settings.theme = false;
-    	settings.tooltips = false;
-    	settings.transparency = false;
-    	settings.autosave = false;
-    	settings.savedir = false;
-    	settings.devmode = false;
-    	settings.hashsign = true;
-    	settings.zoomslider = false;
+    	$settings = {
+		    zoom: 0.3,
+		    hashsign: true,
+		    locale: 'en'
+		};
 
     	resetConfirmed = false;
     	resetText = "Reset";
     }
 
     ipcRenderer.on('getDirectory', (event, arg) => {
-    	settings.savedir = arg;
+    	$settings.savedir = arg;
 	});
 </script>
 
@@ -50,10 +34,10 @@
 			Zoom amount
 		</div>
 		<div class="setting-control">
-			<span class="setting-control-info">{settings.zoom}</span>
+			<span class="setting-control-info">{$settings.zoom}</span>
 		</div>
 		<div class="setting-control-large">
-			<input type="range" bind:value={settings.zoom} step="0.1" max="1" min="0.1">
+			<input type="range" bind:value={$settings.zoom} step="0.1" max="1" min="0.1">
 		</div>
 	</div>
 </div>
@@ -64,7 +48,7 @@
 		</div>
 		<div class="setting-control">
 			<label class="switch">
-				<input type="checkbox" bind:checked={settings.overwrite}>
+				<input type="checkbox" bind:checked={$settings.overwrite}>
 				<span class="slider"></span>
 			</label>
 		</div>
@@ -80,7 +64,7 @@
 		</div>
 		<div class="setting-control">
 			<label class="switch">
-				<input type="checkbox" bind:checked={settings.hashsign}>
+				<input type="checkbox" bind:checked={$settings.hashsign}>
 				<span class="slider"></span>
 			</label>
 		</div>
@@ -96,7 +80,7 @@
 		</div>
 		<div class="setting-control">
 			<label class="switch">
-				<input type="checkbox" bind:checked={settings.zoomslider}>
+				<input type="checkbox" bind:checked={$settings.zoomslider}>
 				<span class="slider"></span>
 			</label>
 		</div>
@@ -109,7 +93,7 @@
 		</div>
 		<div class="setting-control">
 			<label class="switch">
-				<input type="checkbox" bind:checked={settings.theme}>
+				<input type="checkbox" bind:checked={$settings.theme}>
 				<span class="slider"></span>
 			</label>
 		</div>
@@ -122,7 +106,7 @@
 		</div>
 		<div class="setting-control">
 			<label class="switch">
-				<input type="checkbox" bind:checked={settings.tooltips}>
+				<input type="checkbox" bind:checked={$settings.tooltips}>
 				<span class="slider"></span>
 			</label>
 		</div>
@@ -135,7 +119,7 @@
 		</div>
 		<div class="setting-control">
 			<label class="switch">
-				<input type="checkbox" bind:checked={settings.transparency}>
+				<input type="checkbox" bind:checked={$settings.transparency}>
 				<span class="slider"></span>
 			</label>
 		</div>
@@ -151,21 +135,21 @@
 		</div>
 		<div class="setting-control">
 			<label class="switch">
-				<input type="checkbox" bind:checked={settings.autosave}>
+				<input type="checkbox" bind:checked={$settings.autosave}>
 				<span class="slider"></span>
 			</label>
 		</div>
 	</div>
 </div>
-<div class="setting" class:disabled={!settings.autosave}>
+<div class="setting" class:disabled={!$settings.autosave}>
 	<div class="setting-inner">
 		<div class="setting-title">
 			Auto-save directory
 		</div>
 		<div class="setting-control">
-			<input type="hidden" bind:value={settings.savedir}>
+			<input type="hidden" bind:value={$settings.savedir}>
 			<button class="button" on:click={() => ipcRenderer.send('select:saveDirectory')}>
-				{settings.savedir ? "Change" : "Browse"}
+				{$settings.savedir ? "Change" : "Browse"}
 			</button>
 		</div>
 	</div>
@@ -180,7 +164,7 @@
 		</div>
 		<div class="setting-control">
 			<label class="switch">
-				<input type="checkbox" bind:checked={settings.devmode}>
+				<input type="checkbox" bind:checked={$settings.devmode}>
 				<span class="slider"></span>
 			</label>
 		</div>

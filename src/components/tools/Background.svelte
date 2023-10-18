@@ -3,6 +3,7 @@
 	import { createPopperActions } from 'svelte-popperjs';
 
 	import { tt, locale, locales } from "../../scripts/i18n.js";
+	import settings from '../../scripts/newsettings.js';
 
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
@@ -15,20 +16,15 @@
 	    strategy: 'fixed',
 	});
 
-	export let backdropColor = legacy ? "#111111" : "#2F2E33";
+	export let backdropColor = $settings.theme ? "#111111" : "#2F2E33";
 
 	let showDropdown = false;
 
 	export let closeDropdowns = false;
-	export let tips = false;
-	export let hashsign = true;
-	export let legacy = false;
 	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Button
-	{tips}
-	{legacy}
 	size="12px"
 	tiptext={$tt("toolbar.background")}
 	on:click={e => {
@@ -46,11 +42,8 @@
 		}}
 	>
 		<Colorpicker
-			{tips}
-			{legacy}
-			{hashsign}
 			bind:hex={backdropColor}
-			reset={legacy ? "#111111" : "#2F2E33"}
+			reset={$settings.theme ? "#111111" : "#2F2E33"}
 		/>
 	</Dropdown>
 {/if}

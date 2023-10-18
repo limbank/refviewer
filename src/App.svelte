@@ -17,6 +17,7 @@
 	//import mousetrap from 'svelte-use-mousetrap';
 
 	import Helper from './scripts/helper.js';
+	import settings from './scripts/newsettings.js';
 
 	const { ipcRenderer } = require('electron');
 	const { version } = require('../package.json');
@@ -27,8 +28,6 @@
 	let width;
 	let height;
 	let pixelated = false;
-	let settings = {};
-	let proxySettings;
 	let settingsOpen = false;
 	let pickingMode = false;
 	let croppingMode = false;
@@ -48,7 +47,7 @@
 
 	let tbx;
 
-	let backdropColor = settings.theme ? "#111111" : "#2F2E33";
+	let backdropColor = $settings.theme ? "#111111" : "#2F2E33";
 
   	let workAreaOpacity = 1;
 	let m = { x: 0, y: 0 };
@@ -65,19 +64,14 @@
 		loading = arg;
 	});
 
-	ipcRenderer.on('settings', (event, arg) => {
-		if (settings.zoom && settings.zoom != arg.zoom && instance) {
+	$: if ($settings) {
+		if ($settings.zoom && instance) {
 			element = document.querySelector('.canvas-container-inner');
-			initPan(arg.zoom);
+			initPan($settings.zoom);
 		}
 
-		settings = arg;
-		initUpdate++;
-
-		backdropColor = settings.theme ? "#111111" : "#2F2E33";
-
-		if (initUpdate < 2) proxySettings = settings;
-	});
+		backdropColor = $settings.theme ? "#111111" : "#2F2E33";
+	}
 
 	ipcRenderer.on('deliver', (event, arg) => {
 		img.src = arg;
@@ -124,7 +118,7 @@
 		// And pass it to panzoom
 		instance = Panzoom(element, {
 			maxScale: 10000,
-			step: customZoom || settings.zoom
+			step: customZoom || $settings.zoom
 		});
 		console.log("Adding listeners");
 		element.parentElement.addEventListener('wheel', wheelEvent);
@@ -142,7 +136,7 @@
   	};
 
   	$: {
-  		if(!settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb().a;
+  		if(!$settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb().a;
 		else workAreaOpacity = 1;
   	};
 
@@ -267,7 +261,7 @@
   	}
 
 	function handlePaste(event) {
-		if (!settings.overwrite && fileSelected || settingsOpen) return;
+		if (!$settings.overwrite && fileSelected || settingsOpen) return;
 
 		let text = event.clipboardData.getData('Text');
 		if (text != "") {
@@ -331,20 +325,15 @@
 	on:mouseup={mouseUpBlur}
 />
 
-<Backdrop legacy={settings.theme} />
+<Backdrop />
 
-<main class:legacy={settings.theme}>
+<main class:legacy={$settings.theme}>
 	<Titlebar
 		{settingsOpen}
 		{version}
 		{fileSelected}
-		overwrite={settings.overwrite}
-		legacy={settings.theme}
-		devmode={settings.devmode}
-		tips={settings.tooltips}
 		on:clear={e => {
 			fileSelected = false;
-	    	backdropColor = settings.theme ? "#111111" : "#2F2E33";
 	    	hex = undefined;
 			pickingMode = false;
 			croppingMode = false;
@@ -357,9 +346,6 @@
 		{settingsOpen}
 		{fileSelected}
 		{hex}
-		hashsign={settings.hashsign}
-		legacy={settings.theme}
-		tips={settings.tooltips}
 		bind:this={tbx}
 		bind:backdropColor
 		bind:showDropdown
@@ -380,14 +366,10 @@
 		{fileSelected}
 		{backdropColor}
 		{settingsOpen}
-		legacy={settings.theme}
-		settings={proxySettings}
 		bind:loading
 	>
 		{#if settingsOpen}
 			<Menu
-				settings={proxySettings}
-				legacy={settings.theme}
 				{version}
 				on:settingsOpen={e => { settingsOpen = e.detail; }}
 			/>
@@ -400,7 +382,7 @@
 		{#if fileSelected && !loading}
 			<div
 				class="canvas-container"
-				class:legacy={settings.theme}
+				class:legacy={$settings.theme}
 				class:pixelated
 				on:mousemove={handleCursor}
 			>
@@ -412,7 +394,7 @@
 					/>
 				{/if}
 
-				{#if settings.zoomslider}
+				{#if $settings.zoomslider}
 					<Zoomslider {zoomscale} {instance} />
 				{/if}
 
@@ -463,7 +445,7 @@
 		{/if}
 
 		{#if !fileSelected && !loading}
-			<Dropfield legacy={settings.theme} />
+			<Dropfield />
 		{/if}
 
 		<Actions />

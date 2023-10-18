@@ -2,10 +2,10 @@
 	import { createPopperActions } from 'svelte-popperjs';
 	import Tooltip from './Tooltip.svelte';
 
+	import settings from '../../scripts/newsettings.js';
+
 	let showTooltip = false;
 
-	export let tips = false;
-	export let legacy = false;
 	export let size = 14;
 	export let tiptext = false;
 	export let persistent = false;
@@ -18,19 +18,19 @@
 </script>
 
 <button
-	style='font-size:{legacy ? "14px" : size};'
+	style='font-size:{$settings.theme ? "14px" : size};'
 	use:popperRef
 	on:mouseenter={() => showTooltip = true}
 	on:mouseleave={() => showTooltip = false}
 	on:click
 	class={"button " + context}
-	class:legacy
+	class:legacy={$settings.theme}
 	class:persistent
 >
 	<slot></slot>
 </button>
 
-{#if showTooltip && !tips && tiptext}
+{#if showTooltip && !$settings.tooltips && tiptext}
 	<Tooltip content={popperContent}>
 		{tiptext}
 	</Tooltip>

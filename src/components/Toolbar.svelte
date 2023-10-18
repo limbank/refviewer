@@ -4,6 +4,7 @@
 	const { ipcRenderer } = require('electron');
 
 	import { tt, locale, locales } from "../scripts/i18n.js";
+	import settings from '../scripts/newsettings.js';
 
 	import Button from './common/Button.svelte';
 	import Eyedropper from './tools/Eyedropper.svelte';
@@ -17,10 +18,7 @@
 
 	export let fileSelected = false;
 	export let settingsOpen = false;
-	export let legacy = false;
-	export let tips = false;
-	export let hashsign = true;
-	export let backdropColor = legacy ? "#111111" : "#2F2E33";
+	export let backdropColor = $settings.theme ? "#111111" : "#2F2E33";
 	export let hex;
 	export let showDropdown = false;
 
@@ -87,13 +85,11 @@
 ]} />
 
 <div
-	class:legacy
+	class:legacy={$settings.theme}
 	class="toolbox"
 >
 	{#if fileSelected && !settingsOpen}
 		<Button
-			{tips}
-			{legacy}
 			size="13px"
 			tiptext={$tt("toolbar.save")}
 			on:click={() => editImage("save")}
@@ -101,8 +97,6 @@
 			<i class="far fa-save"></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			size="13px"
 			tiptext={$tt("toolbar.copy")}
 			on:click={copyImage}
@@ -110,8 +104,6 @@
 	    	<i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			size="13px"
 			tiptext={$tt("toolbar.crop")}
 			on:click={() => dispatch("cropImage")}
@@ -119,8 +111,6 @@
 	    	<i class="far fa-crop-alt" style=""></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			size="13px"
 			tiptext={$tt("toolbar.flip")}
 			on:click={() => editImage("flipHorizontal")}
@@ -128,8 +118,6 @@
 	    	<i class="fas fa-sync-alt"></i>
 		</Button>
 		<Button
-			{tips}
-			{legacy}
 			size="12px"
 			tiptext={$tt("toolbar.rotate")}
 			on:click={() => editImage("rotateRight")}
@@ -137,38 +125,25 @@
 	    	<i class="fas fa-redo"></i>
 		</Button>
 		<Eyedropper
-			{tips}
-			{legacy}
 			{closeDropdowns}
-			{hashsign}
 			bind:showDropdown
 			bind:hex
 			on:pickColor={() => dispatch("pickColor")}
 		/>
 		<Background
-			{tips}
-			{legacy}
-			{hashsign}
 			{closeDropdowns}
 			bind:backdropColor
 		/>
 		<Resizer
-			{tips}
-			{legacy}
 			{closeDropdowns}
 			bind:fileSelected
 		/>
-		<Dropout icon="fas fa-magic" {legacy}>
+		<Dropout icon="fas fa-magic">
 			<Palette
-				{tips}
-				{legacy}
-				{hashsign}
 				{closeDropdowns}
 				bind:fileSelected
 			/>
 			<Button
-				{tips}
-				{legacy}
 				size="13px"
 				tiptext={$tt("toolbar.greyscale")}
 				on:click={() => editImage("greyImage")}
@@ -176,8 +151,6 @@
 		    	<i class="fas fa-adjust"></i>
 			</Button>
 			<Button
-				{tips}
-				{legacy}
 				size="13px"
 				tiptext={$tt("toolbar.negative")}
 				on:click={() => editImage("negateImage")}

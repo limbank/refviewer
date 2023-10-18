@@ -2,8 +2,8 @@
 	const HTMLParser = require('node-html-parser');
 	const { ipcRenderer } = require('electron');
 
-	export let legacy = false;
-	export let settings = {};
+	import settings from '../scripts/newsettings.js';
+
 	export let loading = false;
 	export let backdropColor = "#2F2E33";
 	export let settingsOpen;
@@ -39,7 +39,7 @@
 	}
 
 	function handleFilesSelect(e) {
-		if (!settings.overwrite && fileSelected || settingsOpen) return;
+		if (!$settings.overwrite && fileSelected || settingsOpen) return;
 
 		loading = true;
 
@@ -111,8 +111,8 @@
 
 <div
 	class="desktop"
-	class:legacy
-	on:dragover={(e) => { e.preventDefault(); }}
+	class:legacy={$settings.theme}
+	on:dragover|preventDefault
 	on:drop|preventDefault={handleFilesSelect}
 	style="background:{backdropColor};"
 >

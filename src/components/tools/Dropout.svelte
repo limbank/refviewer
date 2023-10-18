@@ -16,14 +16,10 @@
 
 	export let icon;
 	export let closeDropdowns = false;
-	export let tips = false;
-	export let legacy = false;
 	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Button
-	{tips}
-	{legacy}
 	size="12px"
 	tiptext={"Extras"}
 	on:click={e => {

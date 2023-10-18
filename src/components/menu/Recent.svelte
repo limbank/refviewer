@@ -40,8 +40,7 @@
 					<a
 						class="recents-list-item"
 						href="{item}"
-				    	on:click={(e) => {
-				    		e.preventDefault();
+				    	on:click|preventDefault={() => {
 				    		ipcRenderer.send('file', item);
 							ipcRenderer.send('loading', true);
 				    		dispatch('settingsOpen', false);

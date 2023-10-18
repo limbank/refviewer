@@ -16,18 +16,13 @@
 	export let showDropdown = false;
 	export let closeDropdowns = false;
 	export let hex;
-	export let hashsign = true;
-	export let tips = false;
-	export let legacy = false;
 
 	$: if (hex) showDropdown = true;
 	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Button
-	tips={tips}
 	size="12px"
-	legacy={legacy}
 	tiptext={"Pick a color"}
 	on:click={e => {
 		dispatch('pickColor');
@@ -44,9 +39,7 @@
 		<Colorpicker
 			bind:hex
 			alpha={false}
-			{legacy}
-			{hashsign}
-			{tips} />
+		/>
 	</Dropdown>
 {/if}
 

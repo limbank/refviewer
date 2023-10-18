@@ -6,10 +6,8 @@
 	import Button from '../common/Button.svelte';
 
 	import { tt, locale, locales } from "../../scripts/i18n.js";
+	import settings from '../../scripts/newsettings.js';
 
-	export let legacy = false;
-	export let tips = false;
-	export let hashsign = true;
 	export let reset;
 	export let alpha = true;
 
@@ -26,7 +24,7 @@
 	function copyClick() {
 		let tempHex = hex;
 
-		if (hashsign && tempHex.startsWith("#")) tempHex = tempHex.substring(1);
+		if ($settings.hashsign && tempHex.startsWith("#")) tempHex = tempHex.substring(1);
 
 		navigator.clipboard.writeText(tempHex).then(() => {
 		    ipcRenderer.send('action', $tt("color.copied"));
@@ -68,8 +66,6 @@
 					<span>HEX:</span>
 					<input placeholder="Hex" type="text" bind:value={hex} on:input={hexInput}>
 					<Button
-						{tips}
-						{legacy}
 						size="12px"
 						tiptext={$tt("color.copy")}
 						context="control"
@@ -79,8 +75,6 @@
 					</Button>
 					{#if reset}
 						<Button
-							{tips}
-							{legacy}
 							size="12px"
 							tiptext={$tt("color.reset")}
 							context="control"

@@ -1,13 +1,12 @@
 <script>
 	import { tt, locale, locales } from "../scripts/i18n.js";
-
-	export let legacy = false;
+	import settings from '../scripts/newsettings.js';
 </script>
 
-<div class="dropfield" class:legacy={legacy}>
+<div class="dropfield" class:legacy={$settings.theme}>
 	<div class="dropfield-inner-wrapper">
 		<div class="dropfield-inner">
-			{#if !legacy}
+			{#if !$settings.theme}
 				<div class="dropfield-inner-icon">
 					<i class="fas fa-upload"></i>
 				</div>

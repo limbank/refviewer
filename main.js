@@ -116,6 +116,15 @@ app.on('will-quit', () => {
   globalShortcut.unregisterAll()
 });
 
+ipcMain.on('settings:read', (event) => {
+    jack.log('Reading settings from file...');
+
+    sp.readSettings(() => {
+        jack.log('Read settings! Sending to window...');
+        event.sender.send('settings', sp.settings);
+    });
+});
+
 ipcMain.on('settings:write', (event, arg) => {
     jack.log('Writing settings to file...');
 
@@ -126,8 +135,7 @@ ipcMain.on('settings:write', (event, arg) => {
     }
 
     sp.writeSettings(arg, () => {
-        jack.log('Wrote settings! Sending to window...');
-        event.sender.send('settings', sp.settings);
+        jack.log('Wrote settings!');
     });
 });
 

@@ -7,6 +7,8 @@
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 
+	import settings from '../../scripts/newsettings.js';
+
 	const dispatch = createEventDispatcher();
 
 	const [dropdownRef, dropdownContent] = createPopperActions({
@@ -19,9 +21,6 @@
 
 	export let closeDropdowns = false;
 	export let fileSelected = false;
-	export let tips = false;
-	export let hashsign = true;
-	export let legacy = false;
 
 	ipcRenderer.on('palette', (event, arg) => {
 		palette = arg;
@@ -30,7 +29,7 @@
 	function paletteClick(hex) {
 		let tempHex = hex;
 
-		if (hashsign && tempHex.startsWith("#")) tempHex = tempHex.substring(1);
+		if ($settings.hashsign && tempHex.startsWith("#")) tempHex = tempHex.substring(1);
 		
         navigator.clipboard.writeText(tempHex).then(() => {
 		    ipcRenderer.send('action', "Color copied!");
@@ -43,8 +42,6 @@
 </script>
 
 <Button
-	{tips}
-	{legacy}
 	size="12px"
 	tiptext={"Generate palette"}
 	on:click={e => {

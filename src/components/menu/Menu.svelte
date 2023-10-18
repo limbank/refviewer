@@ -10,7 +10,6 @@
 	let setWindow = "recent";
 
 	export let legacy = false;
-	export let settings;
 	export let version;
 
 	const fetchLatest = (async () => {
@@ -74,7 +73,7 @@
 			</div>
 		{:else if setWindow=="settings"}
 			<div class="settings-w-inner">
-				<Settings {settings} />
+				<Settings />
 			</div>
 		{:else if setWindow=="about"}
 			<div class="settings-w-inner">
