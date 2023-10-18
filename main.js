@@ -185,6 +185,7 @@ ipcMain.on('clearRecents', (event, arg) => {
 
 ipcMain.on('file', (event, arg) => {
     hp.flush();
+    //jack.log("Got file?", arg);
     fp.process(arg, event);
     if (newWin) newWin.close();
 });

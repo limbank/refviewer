@@ -3,6 +3,8 @@
 	import mousetrap from 'svelte-use-mousetrap';
 	const { ipcRenderer } = require('electron');
 
+	import { tt, locale, locales } from "../scripts/i18n.js";
+
 	import Button from './common/Button.svelte';
 	import Eyedropper from './tools/Eyedropper.svelte';
 	import Palette from './tools/Palette.svelte';
@@ -57,7 +59,7 @@
 				const item = new ClipboardItem({ "image/png": response });
 				navigator.clipboard.write([item]);
 
-				ipcRenderer.send('action', "Image copied!");
+				ipcRenderer.send('action', $tt("toolbar.copied"));
 			}
 			catch(e){ console.log(e); }
 		};
@@ -93,7 +95,7 @@
 			{tips}
 			{legacy}
 			size="13px"
-			tiptext={"Save image"}
+			tiptext={$tt("toolbar.save")}
 			on:click={() => editImage("save")}
 		>
 			<i class="far fa-save"></i>
@@ -102,7 +104,7 @@
 			{tips}
 			{legacy}
 			size="13px"
-			tiptext={"Copy image"}
+			tiptext={$tt("toolbar.copy")}
 			on:click={copyImage}
 		>
 	    	<i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
@@ -111,7 +113,7 @@
 			{tips}
 			{legacy}
 			size="13px"
-			tiptext={"Crop image"}
+			tiptext={$tt("toolbar.crop")}
 			on:click={() => dispatch("cropImage")}
 		>
 	    	<i class="far fa-crop-alt" style=""></i>
@@ -120,7 +122,7 @@
 			{tips}
 			{legacy}
 			size="13px"
-			tiptext={"Flip image"}
+			tiptext={$tt("toolbar.flip")}
 			on:click={() => editImage("flipHorizontal")}
 		>
 	    	<i class="fas fa-sync-alt"></i>
@@ -129,7 +131,7 @@
 			{tips}
 			{legacy}
 			size="12px"
-			tiptext={"Rotate image"}
+			tiptext={$tt("toolbar.rotate")}
 			on:click={() => editImage("rotateRight")}
 		>
 	    	<i class="fas fa-redo"></i>
@@ -168,7 +170,7 @@
 				{tips}
 				{legacy}
 				size="13px"
-				tiptext={"Greyscale"}
+				tiptext={$tt("toolbar.greyscale")}
 				on:click={() => editImage("greyImage")}
 			>
 		    	<i class="fas fa-adjust"></i>
@@ -177,7 +179,7 @@
 				{tips}
 				{legacy}
 				size="13px"
-				tiptext={"Negative"}
+				tiptext={$tt("toolbar.negative")}
 				on:click={() => editImage("negateImage")}
 			>
 		    	<i class="fas fa-minus-circle"></i>

@@ -1,0 +1,32 @@
+export default {
+  en: {
+    "dropfield.placeholder": "Drop image here",
+    "titlebar.closemenu": "Close menu",
+    "titlebar.mainmenu": "Main menu",
+    "titlebar.selectfile": "Select file",
+    "titlebar.screenshot": "Screenshot",
+    "titlebar.clear": "Clear",
+    "titlebar.versionshort": "v.",
+    "titlebar.devtools": "Open DevTools",
+    "titlebar.clickthrough": "Make click-through",
+    "titlebar.newwindow": "New window",
+    "titlebar.pintotop": "Pin to top",
+    "titlebar.minimize": "Minimize",
+    "titlebar.restore": "Restore",
+    "titlebar.maximize": "Maximize",
+    "titlebar.close": "Close",
+    "toolbar.save": "Save image",
+    "toolbar.copy": "Copy image",
+    "toolbar.crop": "Crop image",
+    "toolbar.copied": "Image copied!",
+    "toolbar.flip": "Flip image",
+    "toolbar.rotate": "Rotate image",
+    "toolbar.greyscale": "Greyscale",
+    "toolbar.negative": "Negative",
+    "toolbar.background": "Change background",
+    "color.copied": "Color copied!",
+    "color.failed": "Failed to copy color",
+    "color.copy": "Copy",
+    "color.reset": "Reset"
+  }
+};

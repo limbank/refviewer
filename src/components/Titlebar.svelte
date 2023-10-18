@@ -1,6 +1,9 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 	import mousetrap from 'svelte-use-mousetrap';
+
+	import { tt, locale, locales } from "../scripts/i18n.js";
+
 	import Button from './common/Button.svelte';
 
 	const { ipcRenderer } = require('electron');
@@ -62,7 +65,7 @@
 			{legacy}
 			context="control"
 			size="12px"
-			tiptext={settingsOpen ? "Close menu" : "Main menu"}
+			tiptext={settingsOpen ? $tt("titlebar.closemenu") : $tt("titlebar.mainmenu")}
 			on:click={e => {
 				settingsOpen = !settingsOpen;
 				dispatch('settingsOpen', settingsOpen);
@@ -82,7 +85,7 @@
 					{legacy}
 					context="control"
 					size="12px"
-					tiptext="Select file"
+					tiptext={$tt("titlebar.selectfile")}
 					on:click={openImage}
 				>
 					<i class="fas fa-file-upload"></i>
@@ -93,7 +96,7 @@
 					{legacy}
 					context="control"
 					size="12px"
-					tiptext="Screenshot"
+					tiptext={$tt("titlebar.screenshot")}
 					on:click={e => { ipcRenderer.send('screenshot'); }}
 				>
 			    	<i class="fas fa-crosshairs"></i>
@@ -105,7 +108,7 @@
 					{legacy}
 					context="control"
 					size="12px"
-					tiptext="Clear"
+					tiptext={$tt("titlebar.clear")}
 					on:click={clearImage}
 				>
 			    	<i class="fas fa-trash"></i>
@@ -115,7 +118,7 @@
 	</div>
 	<div class="titlebar-group">
 		{#if version}
-			<span class="version">v. {version}</span>
+			<span class="version">{$tt("titlebar.versionshort")} {version}</span>
 		{/if}
 		{#if devmode}
 			<Button
@@ -123,7 +126,7 @@
 				{legacy}
 				context="control"
 				size="12px"
-				tiptext="Make click-through"
+				tiptext={$tt("titlebar.devtools")}
 				 on:click={openDevTools}
 			>
 		    	<i class="fas fa-terminal"></i>
@@ -134,7 +137,7 @@
 			{legacy}
 			context="control"
 			size="12px"
-			tiptext="Make click-through"
+			tiptext={$tt("titlebar.clickthrough")}
 			 on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}
 		>
 	    	<i class="fas fa-ghost"></i>
@@ -144,7 +147,7 @@
 			{legacy}
 			context="control"
 			size="12px"
-			tiptext="New window"
+			tiptext={$tt("titlebar.newwindow")}
 			 on:click={openNewWindow}
 		>
 	    	<i class="fas fa-window"></i>
@@ -154,7 +157,7 @@
 			{legacy}
 			context="control"
 			size="13px"
-			tiptext="Pin to top"
+			tiptext={$tt("titlebar.pintotop")}
 			 on:click={e => { ipcRenderer.send('window', 'pin'); }}
 		>
 	    	<i class="fas fa-thumbtack" class:pinned></i>
@@ -163,7 +166,7 @@
 			{tips}
 			{legacy}
 			context="control"
-			tiptext="Minimize"
+			tiptext={$tt("titlebar.minimize")}
 			on:click={e => { ipcRenderer.send('window', 'minimize'); }}
 		>
 	    	<i class="fas fa-minus"></i>
@@ -172,7 +175,7 @@
 			{tips}
 			{legacy}
 			context="control"
-			tiptext={maximized ? "Restore" : "Maximize"}
+			tiptext={maximized ? $tt("titlebar.restore") : $tt("titlebar.maximize")}
 			on:click={maximize}
 		>
 			<i class="fas fa-plus"></i>
@@ -182,7 +185,7 @@
 			{legacy}
 			context="control"
 			persistent={true}
-			tiptext="Close"
+			tiptext={$tt("titlebar.close")}
 			on:click={e => { ipcRenderer.send('window', 'close'); }}
 		>
 	    	<i class="fas fa-times"></i>

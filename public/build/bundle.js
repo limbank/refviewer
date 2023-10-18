@@ -2386,6 +2386,163 @@ var app = (function () {
       return { update, destroy }
     }
 
+    const subscriber_queue = [];
+    /**
+     * Creates a `Readable` store that allows reading by subscription.
+     * @param value initial value
+     * @param {StartStopNotifier}start start and stop notifications for subscriptions
+     */
+    function readable(value, start) {
+        return {
+            subscribe: writable(value, start).subscribe
+        };
+    }
+    /**
+     * Create a `Writable` store that allows both updating and reading by subscription.
+     * @param {*=}value initial value
+     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+     */
+    function writable(value, start = noop$1) {
+        let stop;
+        const subscribers = new Set();
+        function set(new_value) {
+            if (safe_not_equal(value, new_value)) {
+                value = new_value;
+                if (stop) { // store is ready
+                    const run_queue = !subscriber_queue.length;
+                    for (const subscriber of subscribers) {
+                        subscriber[1]();
+                        subscriber_queue.push(subscriber, value);
+                    }
+                    if (run_queue) {
+                        for (let i = 0; i < subscriber_queue.length; i += 2) {
+                            subscriber_queue[i][0](subscriber_queue[i + 1]);
+                        }
+                        subscriber_queue.length = 0;
+                    }
+                }
+            }
+        }
+        function update(fn) {
+            set(fn(value));
+        }
+        function subscribe(run, invalidate = noop$1) {
+            const subscriber = [run, invalidate];
+            subscribers.add(subscriber);
+            if (subscribers.size === 1) {
+                stop = start(set) || noop$1;
+            }
+            run(value);
+            return () => {
+                subscribers.delete(subscriber);
+                if (subscribers.size === 0) {
+                    stop();
+                    stop = null;
+                }
+            };
+        }
+        return { set, update, subscribe };
+    }
+    function derived(stores, fn, initial_value) {
+        const single = !Array.isArray(stores);
+        const stores_array = single
+            ? [stores]
+            : stores;
+        const auto = fn.length < 2;
+        return readable(initial_value, (set) => {
+            let inited = false;
+            const values = [];
+            let pending = 0;
+            let cleanup = noop$1;
+            const sync = () => {
+                if (pending) {
+                    return;
+                }
+                cleanup();
+                const result = fn(single ? values[0] : values, set);
+                if (auto) {
+                    set(result);
+                }
+                else {
+                    cleanup = is_function(result) ? result : noop$1;
+                }
+            };
+            const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
+                values[i] = value;
+                pending &= ~(1 << i);
+                if (inited) {
+                    sync();
+                }
+            }, () => {
+                pending |= (1 << i);
+            }));
+            inited = true;
+            sync();
+            return function stop() {
+                run_all(unsubscribers);
+                cleanup();
+            };
+        });
+    }
+
+    var translations = {
+      en: {
+        "dropfield.placeholder": "Drop image here",
+        "titlebar.closemenu": "Close menu",
+        "titlebar.mainmenu": "Main menu",
+        "titlebar.selectfile": "Select file",
+        "titlebar.screenshot": "Screenshot",
+        "titlebar.clear": "Clear",
+        "titlebar.versionshort": "v.",
+        "titlebar.devtools": "Open DevTools",
+        "titlebar.clickthrough": "Make click-through",
+        "titlebar.newwindow": "New window",
+        "titlebar.pintotop": "Pin to top",
+        "titlebar.minimize": "Minimize",
+        "titlebar.restore": "Restore",
+        "titlebar.maximize": "Maximize",
+        "titlebar.close": "Close",
+        "toolbar.save": "Save image",
+        "toolbar.copy": "Copy image",
+        "toolbar.crop": "Crop image",
+        "toolbar.copied": "Image copied!",
+        "toolbar.flip": "Flip image",
+        "toolbar.rotate": "Rotate image",
+        "toolbar.greyscale": "Greyscale",
+        "toolbar.negative": "Negative",
+        "toolbar.background": "Change background",
+        "color.copied": "Color copied!",
+        "color.failed": "Failed to copy color",
+        "color.copy": "Copy",
+        "color.reset": "Reset"
+      }
+    };
+
+    const locale = writable("en");
+    const locales = Object.keys(translations);
+
+    function translate(locale, key, vars) {
+      if (!key) return "no key";
+      if (!locale) return key;
+
+      // Grab the translation from the translations object.
+      let text = translations[locale][key];
+
+      if (!text) return `${locale}.${key}`;
+
+      // Replace any passed in variables in the translation string.
+      Object.keys(vars).map((k) => {
+        const regex = new RegExp(`{{${k}}}`, "g");
+        text = text.replace(regex, vars[k]);
+      });
+
+      return text;
+    }
+
+    const tt = derived(locale, ($locale) => (key, vars = {}) =>
+      translate($locale, key, vars)
+    );
+
     var top = 'top';
     var bottom = 'bottom';
     var right = 'right';
@@ -4815,7 +4972,7 @@ var app = (function () {
     			attr_dev(button, "class", button_class_value = "" + (null_to_empty("button " + /*context*/ ctx[5]) + " svelte-eaoyex"));
     			toggle_class(button, "legacy", /*legacy*/ ctx[1]);
     			toggle_class(button, "persistent", /*persistent*/ ctx[4]);
-    			add_location(button, file$T, 19, 0, 442);
+    			add_location(button, file$T, 19, 0, 468);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4934,7 +5091,6 @@ var app = (function () {
     function instance$V($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Button', slots, ['default']);
-    	const [popperRef, popperContent] = createPopperActions({ placement: 'bottom', strategy: 'fixed' });
     	let showTooltip = false;
     	let { tips = false } = $$props;
     	let { legacy = false } = $$props;
@@ -4942,6 +5098,12 @@ var app = (function () {
     	let { tiptext = false } = $$props;
     	let { persistent = false } = $$props;
     	let { context = "" } = $$props;
+
+    	const [popperRef, popperContent] = createPopperActions({
+    		placement: context != "" ? 'bottom' : 'right',
+    		strategy: 'fixed'
+    	});
+
     	const writable_props = ['tips', 'legacy', 'size', 'tiptext', 'persistent', 'context'];
 
     	Object.keys($$props).forEach(key => {
@@ -4968,15 +5130,15 @@ var app = (function () {
     	$$self.$capture_state = () => ({
     		createPopperActions,
     		Tooltip,
-    		popperRef,
-    		popperContent,
     		showTooltip,
     		tips,
     		legacy,
     		size,
     		tiptext,
     		persistent,
-    		context
+    		context,
+    		popperRef,
+    		popperContent
     	});
 
     	$$self.$inject_state = $$props => {
@@ -5084,7 +5246,7 @@ var app = (function () {
     /* src\components\Titlebar.svelte generated by Svelte v3.49.0 */
     const file$S = "src\\components\\Titlebar.svelte";
 
-    // (73:3) {:else}
+    // (76:3) {:else}
     function create_else_block$6(ctx) {
     	let i;
 
@@ -5092,7 +5254,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-bars");
-    			add_location(i, file$S, 73, 7, 1726);
+    			add_location(i, file$S, 76, 7, 1816);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5106,14 +5268,14 @@ var app = (function () {
     		block,
     		id: create_else_block$6.name,
     		type: "else",
-    		source: "(73:3) {:else}",
+    		source: "(76:3) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (71:3) {#if settingsOpen}
+    // (74:3) {#if settingsOpen}
     function create_if_block_5$3(ctx) {
     	let i;
 
@@ -5121,7 +5283,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$S, 71, 7, 1677);
+    			add_location(i, file$S, 74, 7, 1767);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5135,14 +5297,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5$3.name,
     		type: "if",
-    		source: "(71:3) {#if settingsOpen}",
+    		source: "(74:3) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (60:2) <Button     {tips}     {legacy}     context="control"     size="12px"     tiptext={settingsOpen ? "Close menu" : "Main menu"}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >
+    // (63:2) <Button     {tips}     {legacy}     context="control"     size="12px"     tiptext={settingsOpen ? $tt("titlebar.closemenu") : $tt("titlebar.mainmenu")}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >
     function create_default_slot_10$1(ctx) {
     	let if_block_anchor;
 
@@ -5184,14 +5346,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_10$1.name,
     		type: "slot",
-    		source: "(60:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     size=\\\"12px\\\"     tiptext={settingsOpen ? \\\"Close menu\\\" : \\\"Main menu\\\"}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >",
+    		source: "(63:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     size=\\\"12px\\\"     tiptext={settingsOpen ? $tt(\\\"titlebar.closemenu\\\") : $tt(\\\"titlebar.mainmenu\\\")}     on:click={e => {      settingsOpen = !settingsOpen;      dispatch('settingsOpen', settingsOpen);     }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (78:2) {#if !settingsOpen}
+    // (81:2) {#if !settingsOpen}
     function create_if_block_2$5(ctx) {
     	let t;
     	let if_block1_anchor;
@@ -5283,14 +5445,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$5.name,
     		type: "if",
-    		source: "(78:2) {#if !settingsOpen}",
+    		source: "(81:2) {#if !settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (79:3) {#if !fileSelected || overwrite}
+    // (82:3) {#if !fileSelected || overwrite}
     function create_if_block_4$4(ctx) {
     	let button0;
     	let t;
@@ -5303,14 +5465,14 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				size: "12px",
-    				tiptext: "Select file",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.selectfile"),
     				$$slots: { default: [create_default_slot_9$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button0.$on("click", /*openImage*/ ctx[11]);
+    	button0.$on("click", /*openImage*/ ctx[12]);
 
     	button1 = new Button({
     			props: {
@@ -5318,14 +5480,14 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				size: "12px",
-    				tiptext: "Screenshot",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.screenshot"),
     				$$slots: { default: [create_default_slot_8$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button1.$on("click", /*click_handler_1*/ ctx[18]);
+    	button1.$on("click", /*click_handler_1*/ ctx[19]);
 
     	const block = {
     		c: function create() {
@@ -5343,8 +5505,9 @@ var app = (function () {
     			const button0_changes = {};
     			if (dirty & /*tips*/ 8) button0_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button0_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button0_changes.tiptext = /*$tt*/ ctx[9]("titlebar.selectfile");
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*$$scope*/ 16777216) {
     				button0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5352,8 +5515,9 @@ var app = (function () {
     			const button1_changes = {};
     			if (dirty & /*tips*/ 8) button1_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button1_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button1_changes.tiptext = /*$tt*/ ctx[9]("titlebar.screenshot");
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*$$scope*/ 16777216) {
     				button1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5381,14 +5545,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4$4.name,
     		type: "if",
-    		source: "(79:3) {#if !fileSelected || overwrite}",
+    		source: "(82:3) {#if !fileSelected || overwrite}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (80:4) <Button       {tips}       {legacy}       context="control"       size="12px"       tiptext="Select file"       on:click={openImage}      >
+    // (83:4) <Button       {tips}       {legacy}       context="control"       size="12px"       tiptext={$tt("titlebar.selectfile")}       on:click={openImage}      >
     function create_default_slot_9$1(ctx) {
     	let i;
 
@@ -5396,7 +5560,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-file-upload");
-    			add_location(i, file$S, 87, 5, 1990);
+    			add_location(i, file$S, 90, 5, 2095);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5411,14 +5575,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_9$1.name,
     		type: "slot",
-    		source: "(80:4) <Button       {tips}       {legacy}       context=\\\"control\\\"       size=\\\"12px\\\"       tiptext=\\\"Select file\\\"       on:click={openImage}      >",
+    		source: "(83:4) <Button       {tips}       {legacy}       context=\\\"control\\\"       size=\\\"12px\\\"       tiptext={$tt(\\\"titlebar.selectfile\\\")}       on:click={openImage}      >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (91:4) <Button       {tips}       {legacy}       context="control"       size="12px"       tiptext="Screenshot"       on:click={e => { ipcRenderer.send('screenshot'); }}      >
+    // (94:4) <Button       {tips}       {legacy}       context="control"       size="12px"       tiptext={$tt("titlebar.screenshot")}       on:click={e => { ipcRenderer.send('screenshot'); }}      >
     function create_default_slot_8$1(ctx) {
     	let i;
 
@@ -5426,7 +5590,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-crosshairs");
-    			add_location(i, file$S, 98, 8, 2226);
+    			add_location(i, file$S, 101, 8, 2347);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5441,14 +5605,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_8$1.name,
     		type: "slot",
-    		source: "(91:4) <Button       {tips}       {legacy}       context=\\\"control\\\"       size=\\\"12px\\\"       tiptext=\\\"Screenshot\\\"       on:click={e => { ipcRenderer.send('screenshot'); }}      >",
+    		source: "(94:4) <Button       {tips}       {legacy}       context=\\\"control\\\"       size=\\\"12px\\\"       tiptext={$tt(\\\"titlebar.screenshot\\\")}       on:click={e => { ipcRenderer.send('screenshot'); }}      >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (102:3) {#if fileSelected}
+    // (105:3) {#if fileSelected}
     function create_if_block_3$4(ctx) {
     	let button;
     	let current;
@@ -5459,14 +5623,14 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				size: "12px",
-    				tiptext: "Clear",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.clear"),
     				$$slots: { default: [create_default_slot_7$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button.$on("click", /*clearImage*/ ctx[12]);
+    	button.$on("click", /*clearImage*/ ctx[13]);
 
     	const block = {
     		c: function create() {
@@ -5480,8 +5644,9 @@ var app = (function () {
     			const button_changes = {};
     			if (dirty & /*tips*/ 8) button_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button_changes.tiptext = /*$tt*/ ctx[9]("titlebar.clear");
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*$$scope*/ 16777216) {
     				button_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5505,14 +5670,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3$4.name,
     		type: "if",
-    		source: "(102:3) {#if fileSelected}",
+    		source: "(105:3) {#if fileSelected}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (103:4) <Button       {tips}       {legacy}       context="control"       size="12px"       tiptext="Clear"       on:click={clearImage}      >
+    // (106:4) <Button       {tips}       {legacy}       context="control"       size="12px"       tiptext={$tt("titlebar.clear")}       on:click={clearImage}      >
     function create_default_slot_7$2(ctx) {
     	let i;
 
@@ -5520,7 +5685,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-trash");
-    			add_location(i, file$S, 110, 8, 2457);
+    			add_location(i, file$S, 113, 8, 2594);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5535,34 +5700,39 @@ var app = (function () {
     		block,
     		id: create_default_slot_7$2.name,
     		type: "slot",
-    		source: "(103:4) <Button       {tips}       {legacy}       context=\\\"control\\\"       size=\\\"12px\\\"       tiptext=\\\"Clear\\\"       on:click={clearImage}      >",
+    		source: "(106:4) <Button       {tips}       {legacy}       context=\\\"control\\\"       size=\\\"12px\\\"       tiptext={$tt(\\\"titlebar.clear\\\")}       on:click={clearImage}      >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (117:2) {#if version}
+    // (120:2) {#if version}
     function create_if_block_1$8(ctx) {
     	let span;
+    	let t0_value = /*$tt*/ ctx[9]("titlebar.versionshort") + "";
     	let t0;
     	let t1;
+    	let t2;
 
     	const block = {
     		c: function create() {
     			span = element("span");
-    			t0 = text("v. ");
-    			t1 = text(/*version*/ ctx[6]);
+    			t0 = text(t0_value);
+    			t1 = space();
+    			t2 = text(/*version*/ ctx[6]);
     			attr_dev(span, "class", "version svelte-1y8gu7w");
-    			add_location(span, file$S, 117, 3, 2581);
+    			add_location(span, file$S, 120, 3, 2718);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
     			append_dev(span, t0);
     			append_dev(span, t1);
+    			append_dev(span, t2);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*version*/ 64) set_data_dev(t1, /*version*/ ctx[6]);
+    			if (dirty & /*$tt*/ 512 && t0_value !== (t0_value = /*$tt*/ ctx[9]("titlebar.versionshort") + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*version*/ 64) set_data_dev(t2, /*version*/ ctx[6]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(span);
@@ -5573,14 +5743,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$8.name,
     		type: "if",
-    		source: "(117:2) {#if version}",
+    		source: "(120:2) {#if version}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (120:2) {#if devmode}
+    // (123:2) {#if devmode}
     function create_if_block$k(ctx) {
     	let button;
     	let current;
@@ -5591,14 +5761,14 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				size: "12px",
-    				tiptext: "Make click-through",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.devtools"),
     				$$slots: { default: [create_default_slot_6$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button.$on("click", /*openDevTools*/ ctx[14]);
+    	button.$on("click", /*openDevTools*/ ctx[15]);
 
     	const block = {
     		c: function create() {
@@ -5612,8 +5782,9 @@ var app = (function () {
     			const button_changes = {};
     			if (dirty & /*tips*/ 8) button_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button_changes.tiptext = /*$tt*/ ctx[9]("titlebar.devtools");
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*$$scope*/ 16777216) {
     				button_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5637,14 +5808,14 @@ var app = (function () {
     		block,
     		id: create_if_block$k.name,
     		type: "if",
-    		source: "(120:2) {#if devmode}",
+    		source: "(123:2) {#if devmode}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (121:3) <Button      {tips}      {legacy}      context="control"      size="12px"      tiptext="Make click-through"       on:click={openDevTools}     >
+    // (124:3) <Button      {tips}      {legacy}      context="control"      size="12px"      tiptext={$tt("titlebar.devtools")}       on:click={openDevTools}     >
     function create_default_slot_6$2(ctx) {
     	let i;
 
@@ -5652,7 +5823,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-terminal");
-    			add_location(i, file$S, 128, 7, 2805);
+    			add_location(i, file$S, 131, 7, 2976);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5667,14 +5838,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_6$2.name,
     		type: "slot",
-    		source: "(121:3) <Button      {tips}      {legacy}      context=\\\"control\\\"      size=\\\"12px\\\"      tiptext=\\\"Make click-through\\\"       on:click={openDevTools}     >",
+    		source: "(124:3) <Button      {tips}      {legacy}      context=\\\"control\\\"      size=\\\"12px\\\"      tiptext={$tt(\\\"titlebar.devtools\\\")}       on:click={openDevTools}     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (132:2) <Button     {tips}     {legacy}     context="control"     size="12px"     tiptext="Make click-through"      on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}    >
+    // (135:2) <Button     {tips}     {legacy}     context="control"     size="12px"     tiptext={$tt("titlebar.clickthrough")}      on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}    >
     function create_default_slot_5$2(ctx) {
     	let i;
 
@@ -5682,7 +5853,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-ghost");
-    			add_location(i, file$S, 139, 6, 3047);
+    			add_location(i, file$S, 142, 6, 3228);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5697,14 +5868,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_5$2.name,
     		type: "slot",
-    		source: "(132:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     size=\\\"12px\\\"     tiptext=\\\"Make click-through\\\"      on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}    >",
+    		source: "(135:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     size=\\\"12px\\\"     tiptext={$tt(\\\"titlebar.clickthrough\\\")}      on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (142:2) <Button     {tips}     {legacy}     context="control"     size="12px"     tiptext="New window"      on:click={openNewWindow}    >
+    // (145:2) <Button     {tips}     {legacy}     context="control"     size="12px"     tiptext={$tt("titlebar.newwindow")}      on:click={openNewWindow}    >
     function create_default_slot_4$2(ctx) {
     	let i;
 
@@ -5712,7 +5883,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-window");
-    			add_location(i, file$S, 149, 6, 3229);
+    			add_location(i, file$S, 152, 6, 3425);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5727,14 +5898,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_4$2.name,
     		type: "slot",
-    		source: "(142:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     size=\\\"12px\\\"     tiptext=\\\"New window\\\"      on:click={openNewWindow}    >",
+    		source: "(145:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     size=\\\"12px\\\"     tiptext={$tt(\\\"titlebar.newwindow\\\")}      on:click={openNewWindow}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (152:2) <Button     {tips}     {legacy}     context="control"     size="13px"     tiptext="Pin to top"      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >
+    // (155:2) <Button     {tips}     {legacy}     context="control"     size="13px"     tiptext={$tt("titlebar.pintotop")}      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >
     function create_default_slot_3$2(ctx) {
     	let i;
 
@@ -5743,7 +5914,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-thumbtack svelte-1y8gu7w");
     			toggle_class(i, "pinned", /*pinned*/ ctx[7]);
-    			add_location(i, file$S, 159, 6, 3442);
+    			add_location(i, file$S, 162, 6, 3652);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5762,14 +5933,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$2.name,
     		type: "slot",
-    		source: "(152:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     size=\\\"13px\\\"     tiptext=\\\"Pin to top\\\"      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >",
+    		source: "(155:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     size=\\\"13px\\\"     tiptext={$tt(\\\"titlebar.pintotop\\\")}      on:click={e => { ipcRenderer.send('window', 'pin'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (162:2) <Button     {tips}     {legacy}     context="control"     tiptext="Minimize"     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >
+    // (165:2) <Button     {tips}     {legacy}     context="control"     tiptext={$tt("titlebar.minimize")}     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >
     function create_default_slot_2$2(ctx) {
     	let i;
 
@@ -5777,7 +5948,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-minus");
-    			add_location(i, file$S, 168, 6, 3657);
+    			add_location(i, file$S, 171, 6, 3883);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5792,14 +5963,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$2.name,
     		type: "slot",
-    		source: "(162:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     tiptext=\\\"Minimize\\\"     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >",
+    		source: "(165:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     tiptext={$tt(\\\"titlebar.minimize\\\")}     on:click={e => { ipcRenderer.send('window', 'minimize'); }}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (171:2) <Button     {tips}     {legacy}     context="control"     tiptext={maximized ? "Restore" : "Maximize"}     on:click={maximize}    >
+    // (174:2) <Button     {tips}     {legacy}     context="control"     tiptext={maximized ? $tt("titlebar.restore") : $tt("titlebar.maximize")}     on:click={maximize}    >
     function create_default_slot_1$9(ctx) {
     	let i;
 
@@ -5807,7 +5978,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-plus");
-    			add_location(i, file$S, 177, 3, 3838);
+    			add_location(i, file$S, 180, 3, 4092);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5822,14 +5993,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$9.name,
     		type: "slot",
-    		source: "(171:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     tiptext={maximized ? \\\"Restore\\\" : \\\"Maximize\\\"}     on:click={maximize}    >",
+    		source: "(174:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     tiptext={maximized ? $tt(\\\"titlebar.restore\\\") : $tt(\\\"titlebar.maximize\\\")}     on:click={maximize}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (180:2) <Button     {tips}     {legacy}     context="control"     persistent={true}     tiptext="Close"     on:click={e => { ipcRenderer.send('window', 'close'); }}    >
+    // (183:2) <Button     {tips}     {legacy}     context="control"     persistent={true}     tiptext={$tt("titlebar.close")}     on:click={e => { ipcRenderer.send('window', 'close'); }}    >
     function create_default_slot$d(ctx) {
     	let i;
 
@@ -5837,7 +6008,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$S, 187, 6, 4051);
+    			add_location(i, file$S, 190, 6, 4321);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5852,7 +6023,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$d.name,
     		type: "slot",
-    		source: "(180:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     persistent={true}     tiptext=\\\"Close\\\"     on:click={e => { ipcRenderer.send('window', 'close'); }}    >",
+    		source: "(183:2) <Button     {tips}     {legacy}     context=\\\"control\\\"     persistent={true}     tiptext={$tt(\\\"titlebar.close\\\")}     on:click={e => { ipcRenderer.send('window', 'close'); }}    >",
     		ctx
     	});
 
@@ -5889,14 +6060,16 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				size: "12px",
-    				tiptext: /*settingsOpen*/ ctx[0] ? "Close menu" : "Main menu",
+    				tiptext: /*settingsOpen*/ ctx[0]
+    				? /*$tt*/ ctx[9]("titlebar.closemenu")
+    				: /*$tt*/ ctx[9]("titlebar.mainmenu"),
     				$$slots: { default: [create_default_slot_10$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button0.$on("click", /*click_handler*/ ctx[17]);
+    	button0.$on("click", /*click_handler*/ ctx[18]);
     	let if_block0 = !/*settingsOpen*/ ctx[0] && create_if_block_2$5(ctx);
     	let if_block1 = /*version*/ ctx[6] && create_if_block_1$8(ctx);
     	let if_block2 = /*devmode*/ ctx[4] && create_if_block$k(ctx);
@@ -5907,14 +6080,14 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				size: "12px",
-    				tiptext: "Make click-through",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.clickthrough"),
     				$$slots: { default: [create_default_slot_5$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button1.$on("click", /*click_handler_2*/ ctx[19]);
+    	button1.$on("click", /*click_handler_2*/ ctx[20]);
 
     	button2 = new Button({
     			props: {
@@ -5922,14 +6095,14 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				size: "12px",
-    				tiptext: "New window",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.newwindow"),
     				$$slots: { default: [create_default_slot_4$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button2.$on("click", /*openNewWindow*/ ctx[15]);
+    	button2.$on("click", /*openNewWindow*/ ctx[16]);
 
     	button3 = new Button({
     			props: {
@@ -5937,42 +6110,44 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				size: "13px",
-    				tiptext: "Pin to top",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.pintotop"),
     				$$slots: { default: [create_default_slot_3$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button3.$on("click", /*click_handler_3*/ ctx[20]);
+    	button3.$on("click", /*click_handler_3*/ ctx[21]);
 
     	button4 = new Button({
     			props: {
     				tips: /*tips*/ ctx[3],
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
-    				tiptext: "Minimize",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.minimize"),
     				$$slots: { default: [create_default_slot_2$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button4.$on("click", /*click_handler_4*/ ctx[21]);
+    	button4.$on("click", /*click_handler_4*/ ctx[22]);
 
     	button5 = new Button({
     			props: {
     				tips: /*tips*/ ctx[3],
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
-    				tiptext: /*maximized*/ ctx[8] ? "Restore" : "Maximize",
+    				tiptext: /*maximized*/ ctx[8]
+    				? /*$tt*/ ctx[9]("titlebar.restore")
+    				: /*$tt*/ ctx[9]("titlebar.maximize"),
     				$$slots: { default: [create_default_slot_1$9] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button5.$on("click", /*maximize*/ ctx[16]);
+    	button5.$on("click", /*maximize*/ ctx[17]);
 
     	button6 = new Button({
     			props: {
@@ -5980,14 +6155,14 @@ var app = (function () {
     				legacy: /*legacy*/ ctx[2],
     				context: "control",
     				persistent: true,
-    				tiptext: "Close",
+    				tiptext: /*$tt*/ ctx[9]("titlebar.close"),
     				$$slots: { default: [create_default_slot$d] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button6.$on("click", /*click_handler_5*/ ctx[22]);
+    	button6.$on("click", /*click_handler_5*/ ctx[23]);
 
     	const block = {
     		c: function create() {
@@ -6014,12 +6189,12 @@ var app = (function () {
     			t8 = space();
     			create_component(button6.$$.fragment);
     			attr_dev(div0, "class", "titlebar-group svelte-1y8gu7w");
-    			add_location(div0, file$S, 58, 1, 1375);
+    			add_location(div0, file$S, 61, 1, 1439);
     			attr_dev(div1, "class", "titlebar-group svelte-1y8gu7w");
-    			add_location(div1, file$S, 115, 1, 2531);
+    			add_location(div1, file$S, 118, 1, 2668);
     			attr_dev(div2, "class", "titlebar svelte-1y8gu7w");
     			toggle_class(div2, "legacy", /*legacy*/ ctx[2]);
-    			add_location(div2, file$S, 57, 0, 1337);
+    			add_location(div2, file$S, 60, 0, 1401);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6051,12 +6226,12 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = action_destroyer(use.call(null, window, [
-    					['command+o', 'ctrl+o', /*openImage*/ ctx[11]],
-    					['del', 'backspace', /*clearImage*/ ctx[12]],
-    					['command+x', 'ctrl+x', /*cutImage*/ ctx[13]],
-    					['command+n', 'ctrl+n', /*openNewWindow*/ ctx[15]],
-    					['f11', /*maximize*/ ctx[16]],
-    					['shift+ctrl+i', 'shift+command+i', /*openDevTools*/ ctx[14]]
+    					['command+o', 'ctrl+o', /*openImage*/ ctx[12]],
+    					['del', 'backspace', /*clearImage*/ ctx[13]],
+    					['command+x', 'ctrl+x', /*cutImage*/ ctx[14]],
+    					['command+n', 'ctrl+n', /*openNewWindow*/ ctx[16]],
+    					['f11', /*maximize*/ ctx[17]],
+    					['shift+ctrl+i', 'shift+command+i', /*openDevTools*/ ctx[15]]
     				]));
 
     				mounted = true;
@@ -6066,9 +6241,12 @@ var app = (function () {
     			const button0_changes = {};
     			if (dirty & /*tips*/ 8) button0_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button0_changes.legacy = /*legacy*/ ctx[2];
-    			if (dirty & /*settingsOpen*/ 1) button0_changes.tiptext = /*settingsOpen*/ ctx[0] ? "Close menu" : "Main menu";
 
-    			if (dirty & /*$$scope, settingsOpen*/ 8388609) {
+    			if (dirty & /*settingsOpen, $tt*/ 513) button0_changes.tiptext = /*settingsOpen*/ ctx[0]
+    			? /*$tt*/ ctx[9]("titlebar.closemenu")
+    			: /*$tt*/ ctx[9]("titlebar.mainmenu");
+
+    			if (dirty & /*$$scope, settingsOpen*/ 16777217) {
     				button0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6136,8 +6314,9 @@ var app = (function () {
     			const button1_changes = {};
     			if (dirty & /*tips*/ 8) button1_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button1_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button1_changes.tiptext = /*$tt*/ ctx[9]("titlebar.clickthrough");
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*$$scope*/ 16777216) {
     				button1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6145,8 +6324,9 @@ var app = (function () {
     			const button2_changes = {};
     			if (dirty & /*tips*/ 8) button2_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button2_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button2_changes.tiptext = /*$tt*/ ctx[9]("titlebar.newwindow");
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*$$scope*/ 16777216) {
     				button2_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6154,8 +6334,9 @@ var app = (function () {
     			const button3_changes = {};
     			if (dirty & /*tips*/ 8) button3_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button3_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button3_changes.tiptext = /*$tt*/ ctx[9]("titlebar.pintotop");
 
-    			if (dirty & /*$$scope, pinned*/ 8388736) {
+    			if (dirty & /*$$scope, pinned*/ 16777344) {
     				button3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6163,8 +6344,9 @@ var app = (function () {
     			const button4_changes = {};
     			if (dirty & /*tips*/ 8) button4_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button4_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button4_changes.tiptext = /*$tt*/ ctx[9]("titlebar.minimize");
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*$$scope*/ 16777216) {
     				button4_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6172,9 +6354,12 @@ var app = (function () {
     			const button5_changes = {};
     			if (dirty & /*tips*/ 8) button5_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button5_changes.legacy = /*legacy*/ ctx[2];
-    			if (dirty & /*maximized*/ 256) button5_changes.tiptext = /*maximized*/ ctx[8] ? "Restore" : "Maximize";
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*maximized, $tt*/ 768) button5_changes.tiptext = /*maximized*/ ctx[8]
+    			? /*$tt*/ ctx[9]("titlebar.restore")
+    			: /*$tt*/ ctx[9]("titlebar.maximize");
+
+    			if (dirty & /*$$scope*/ 16777216) {
     				button5_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6182,8 +6367,9 @@ var app = (function () {
     			const button6_changes = {};
     			if (dirty & /*tips*/ 8) button6_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button6_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 512) button6_changes.tiptext = /*$tt*/ ctx[9]("titlebar.close");
 
-    			if (dirty & /*$$scope*/ 8388608) {
+    			if (dirty & /*$$scope*/ 16777216) {
     				button6_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6247,6 +6433,9 @@ var app = (function () {
     }
 
     function instance$U($$self, $$props, $$invalidate) {
+    	let $tt;
+    	validate_store(tt, 'tt');
+    	component_subscribe($$self, tt, $$value => $$invalidate(9, $tt = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Titlebar', slots, []);
     	const { ipcRenderer } = require('electron');
@@ -6346,6 +6535,9 @@ var app = (function () {
     	$$self.$capture_state = () => ({
     		createEventDispatcher,
     		mousetrap: use,
+    		tt,
+    		locale,
+    		locales,
     		Button,
     		ipcRenderer,
     		dispatch,
@@ -6363,7 +6555,8 @@ var app = (function () {
     		cutImage,
     		openDevTools,
     		openNewWindow,
-    		maximize
+    		maximize,
+    		$tt
     	});
 
     	$$self.$inject_state = $$props => {
@@ -6392,6 +6585,7 @@ var app = (function () {
     		version,
     		pinned,
     		maximized,
+    		$tt,
     		ipcRenderer,
     		dispatch,
     		openImage,
@@ -6497,7 +6691,6 @@ var app = (function () {
 
     /* src\components\Desktop.svelte generated by Svelte v3.49.0 */
 
-    const { console: console_1$4 } = globals;
     const file$R = "src\\components\\Desktop.svelte";
 
     function create_fragment$W(ctx) {
@@ -6515,7 +6708,7 @@ var app = (function () {
     			attr_dev(div, "class", "desktop svelte-18danl4");
     			set_style(div, "background", /*backdropColor*/ ctx[1]);
     			toggle_class(div, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div, file$R, 92, 0, 3115);
+    			add_location(div, file$R, 111, 0, 3577);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6635,15 +6828,21 @@ var app = (function () {
     		const acceptedFiles = Array.from(e.dataTransfer.files);
     		const acceptedItems = Array.from(e.dataTransfer.items);
 
-    		if (acceptedFiles.length > 0) ipcRenderer.send('file', acceptedFiles[0].path); else if (acceptedItems.length > 0) {
+    		//console.log("Handling through desktop", e.dataTransfer.getData("text/html"));
+    		//sometimes, there's a file, but it has no path anyway
+    		if (acceptedFiles.length > 0 && acceptedFiles[0].path != "") {
+    			ipcRenderer.send('file', acceptedFiles[0].path);
+    		} else if (acceptedItems.length > 0) {
     			let testHTML = e.dataTransfer.getData("text/html");
 
     			if (testHTML) {
     				if (testHTML.startsWith("data") && testHTML.includes("image")) {
     					//gotten a plain data string
+    					//console.log("data");
     					ipcRenderer.send('file', testHTML);
     				} else if (testHTML.startsWith("http")) {
     					//gotten a plain url string
+    					//console.log("http");
     					ipcRenderer.send('file', decodeHTMLEntities(testHTML));
     				} else {
     					//gotten HTML, likely an IMG tag
@@ -6654,17 +6853,30 @@ var app = (function () {
 
     					if (image) {
     						let srctext = image.getAttribute('src');
-    						if (srctext.startsWith("data")) ipcRenderer.send('file', srctext); else if (srctext.startsWith("http")) ipcRenderer.send('file', srctext);
-    					} else if (url) ipcRenderer.send('file', url.getAttribute('href')); else {
+
+    						if (srctext.startsWith("data")) {
+    							//console.log("parsed data");
+    							ipcRenderer.send('file', srctext);
+    						} else if (srctext.startsWith("http")) {
+    							//console.log("parsed http");
+    							ipcRenderer.send('file', srctext);
+    						}
+    					} else if (url) {
+    						//console.log("parsed url");
+    						ipcRenderer.send('file', url.getAttribute('href'));
+    					} else {
     						$$invalidate(3, loading = false);
     						ipcRenderer.send('action', "Unrecognized format");
     					}
     				}
-    			} else ipcRenderer.send('file', e.dataTransfer.getData("text"));
+    			} else {
+    				//console.log("text");
+    				ipcRenderer.send('file', e.dataTransfer.getData("text"));
+    			}
     		} else {
-    			let text = e.dataTransfer.getData("text");
-    			console.log("gotten text", text);
-    		} //HANDLE URL, DATA, AND WHATEVER ERRORS HERE
+    			e.dataTransfer.getData("text");
+    		} //console.log("gotten text", text);
+    		//HANDLE URL, DATA, AND WHATEVER ERRORS HERE
     	}
 
     	const writable_props = [
@@ -6677,7 +6889,7 @@ var app = (function () {
     	];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$4.warn(`<Desktop> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Desktop> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$$set = $$props => {
@@ -6753,11 +6965,11 @@ var app = (function () {
     		const props = options.props || {};
 
     		if (/*settingsOpen*/ ctx[5] === undefined && !('settingsOpen' in props)) {
-    			console_1$4.warn("<Desktop> was created without expected prop 'settingsOpen'");
+    			console.warn("<Desktop> was created without expected prop 'settingsOpen'");
     		}
 
     		if (/*fileSelected*/ ctx[6] === undefined && !('fileSelected' in props)) {
-    			console_1$4.warn("<Desktop> was created without expected prop 'fileSelected'");
+    			console.warn("<Desktop> was created without expected prop 'fileSelected'");
     		}
     	}
 
@@ -7469,105 +7681,6 @@ var app = (function () {
     }));
 
     });
-
-    const subscriber_queue = [];
-    /**
-     * Creates a `Readable` store that allows reading by subscription.
-     * @param value initial value
-     * @param {StartStopNotifier}start start and stop notifications for subscriptions
-     */
-    function readable(value, start) {
-        return {
-            subscribe: writable(value, start).subscribe
-        };
-    }
-    /**
-     * Create a `Writable` store that allows both updating and reading by subscription.
-     * @param {*=}value initial value
-     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
-     */
-    function writable(value, start = noop$1) {
-        let stop;
-        const subscribers = new Set();
-        function set(new_value) {
-            if (safe_not_equal(value, new_value)) {
-                value = new_value;
-                if (stop) { // store is ready
-                    const run_queue = !subscriber_queue.length;
-                    for (const subscriber of subscribers) {
-                        subscriber[1]();
-                        subscriber_queue.push(subscriber, value);
-                    }
-                    if (run_queue) {
-                        for (let i = 0; i < subscriber_queue.length; i += 2) {
-                            subscriber_queue[i][0](subscriber_queue[i + 1]);
-                        }
-                        subscriber_queue.length = 0;
-                    }
-                }
-            }
-        }
-        function update(fn) {
-            set(fn(value));
-        }
-        function subscribe(run, invalidate = noop$1) {
-            const subscriber = [run, invalidate];
-            subscribers.add(subscriber);
-            if (subscribers.size === 1) {
-                stop = start(set) || noop$1;
-            }
-            run(value);
-            return () => {
-                subscribers.delete(subscriber);
-                if (subscribers.size === 0) {
-                    stop();
-                    stop = null;
-                }
-            };
-        }
-        return { set, update, subscribe };
-    }
-    function derived(stores, fn, initial_value) {
-        const single = !Array.isArray(stores);
-        const stores_array = single
-            ? [stores]
-            : stores;
-        const auto = fn.length < 2;
-        return readable(initial_value, (set) => {
-            let inited = false;
-            const values = [];
-            let pending = 0;
-            let cleanup = noop$1;
-            const sync = () => {
-                if (pending) {
-                    return;
-                }
-                cleanup();
-                const result = fn(single ? values[0] : values, set);
-                if (auto) {
-                    set(result);
-                }
-                else {
-                    cleanup = is_function(result) ? result : noop$1;
-                }
-            };
-            const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
-                values[i] = value;
-                pending &= ~(1 << i);
-                if (inited) {
-                    sync();
-                }
-            }, () => {
-                pending |= (1 << i);
-            }));
-            inited = true;
-            sync();
-            return function stop() {
-                run_all(unsubscribers);
-                cleanup();
-            };
-        });
-    }
 
     /**
      * Store that keeps track of the keys pressed, updated by the ArrowKeyHandler component
@@ -13199,7 +13312,7 @@ var app = (function () {
     /* src\components\tools\Colorpicker.svelte generated by Svelte v3.49.0 */
     const file$D = "src\\components\\tools\\Colorpicker.svelte";
 
-    // (57:4) {#if alpha}
+    // (59:4) {#if alpha}
     function create_if_block_1$5(ctx) {
     	let label;
     	let span;
@@ -13215,11 +13328,11 @@ var app = (function () {
     			span.textContent = "A:";
     			t1 = space();
     			input = element("input");
-    			add_location(span, file$D, 58, 6, 1521);
+    			add_location(span, file$D, 60, 6, 1587);
     			attr_dev(input, "placeholder", "A");
     			attr_dev(input, "type", "number");
-    			add_location(input, file$D, 59, 6, 1544);
-    			add_location(label, file$D, 57, 5, 1506);
+    			add_location(input, file$D, 61, 6, 1610);
+    			add_location(label, file$D, 59, 5, 1572);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -13229,7 +13342,7 @@ var app = (function () {
     			set_input_value(input, /*rgb*/ ctx[1].a);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[15]);
+    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[16]);
     				mounted = true;
     			}
     		},
@@ -13249,14 +13362,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$5.name,
     		type: "if",
-    		source: "(57:4) {#if alpha}",
+    		source: "(59:4) {#if alpha}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (68:5) <Button        {tips}        {legacy}        size="12px"        tiptext="Copy"        context="control"        on:click={copyClick}       >
+    // (70:5) <Button        {tips}        {legacy}        size="12px"        tiptext={$tt("color.copy")}        context="control"        on:click={copyClick}       >
     function create_default_slot_1$8(ctx) {
     	let i;
 
@@ -13265,7 +13378,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-1px)");
-    			add_location(i, file$D, 75, 6, 1947);
+    			add_location(i, file$D, 77, 6, 2026);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -13280,14 +13393,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$8.name,
     		type: "slot",
-    		source: "(68:5) <Button        {tips}        {legacy}        size=\\\"12px\\\"        tiptext=\\\"Copy\\\"        context=\\\"control\\\"        on:click={copyClick}       >",
+    		source: "(70:5) <Button        {tips}        {legacy}        size=\\\"12px\\\"        tiptext={$tt(\\\"color.copy\\\")}        context=\\\"control\\\"        on:click={copyClick}       >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (78:5) {#if reset}
+    // (80:5) {#if reset}
     function create_if_block$g(ctx) {
     	let button;
     	let current;
@@ -13297,7 +13410,7 @@ var app = (function () {
     				tips: /*tips*/ ctx[3],
     				legacy: /*legacy*/ ctx[2],
     				size: "12px",
-    				tiptext: "Reset",
+    				tiptext: /*$tt*/ ctx[7]("color.reset"),
     				context: "control",
     				$$slots: { default: [create_default_slot$8] },
     				$$scope: { ctx }
@@ -13305,7 +13418,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	button.$on("click", /*click_handler*/ ctx[17]);
+    	button.$on("click", /*click_handler*/ ctx[18]);
 
     	const block = {
     		c: function create() {
@@ -13319,8 +13432,9 @@ var app = (function () {
     			const button_changes = {};
     			if (dirty & /*tips*/ 8) button_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 128) button_changes.tiptext = /*$tt*/ ctx[7]("color.reset");
 
-    			if (dirty & /*$$scope*/ 524288) {
+    			if (dirty & /*$$scope*/ 1048576) {
     				button_changes.$$scope = { dirty, ctx };
     			}
 
@@ -13344,14 +13458,14 @@ var app = (function () {
     		block,
     		id: create_if_block$g.name,
     		type: "if",
-    		source: "(78:5) {#if reset}",
+    		source: "(80:5) {#if reset}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (79:6) <Button         {tips}         {legacy}         size="12px"         tiptext="Reset"         context="control"         on:click={e => {          hex = reset;         }}        >
+    // (81:6) <Button         {tips}         {legacy}         size="12px"         tiptext={$tt("color.reset")}         context="control"         on:click={e => {          hex = reset;         }}        >
     function create_default_slot$8(ctx) {
     	let i;
 
@@ -13359,7 +13473,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$D, 88, 7, 2243);
+    			add_location(i, file$D, 90, 7, 2335);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -13374,7 +13488,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$8.name,
     		type: "slot",
-    		source: "(79:6) <Button         {tips}         {legacy}         size=\\\"12px\\\"         tiptext=\\\"Reset\\\"         context=\\\"control\\\"         on:click={e => {          hex = reset;         }}        >",
+    		source: "(81:6) <Button         {tips}         {legacy}         size=\\\"12px\\\"         tiptext={$tt(\\\"color.reset\\\")}         context=\\\"control\\\"         on:click={e => {          hex = reset;         }}        >",
     		ctx
     	});
 
@@ -13419,11 +13533,11 @@ var app = (function () {
     	let dispose;
 
     	function colorpicker_rgb_binding(value) {
-    		/*colorpicker_rgb_binding*/ ctx[10](value);
+    		/*colorpicker_rgb_binding*/ ctx[11](value);
     	}
 
     	function colorpicker_hex_binding(value) {
-    		/*colorpicker_hex_binding*/ ctx[11](value);
+    		/*colorpicker_hex_binding*/ ctx[12](value);
     	}
 
     	let colorpicker_props = {
@@ -13451,7 +13565,7 @@ var app = (function () {
     				tips: /*tips*/ ctx[3],
     				legacy: /*legacy*/ ctx[2],
     				size: "12px",
-    				tiptext: "Copy",
+    				tiptext: /*$tt*/ ctx[7]("color.copy"),
     				context: "control",
     				$$slots: { default: [create_default_slot_1$8] },
     				$$scope: { ctx }
@@ -13459,7 +13573,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	button.$on("click", /*copyClick*/ ctx[8]);
+    	button.$on("click", /*copyClick*/ ctx[9]);
     	let if_block1 = /*reset*/ ctx[4] && create_if_block$g(ctx);
 
     	const block = {
@@ -13500,36 +13614,36 @@ var app = (function () {
     			create_component(button.$$.fragment);
     			t14 = space();
     			if (if_block1) if_block1.c();
-    			add_location(span0, file$D, 45, 5, 1166);
+    			add_location(span0, file$D, 47, 5, 1232);
     			attr_dev(input0, "placeholder", "R");
     			attr_dev(input0, "type", "number");
-    			add_location(input0, file$D, 46, 5, 1188);
-    			add_location(label0, file$D, 44, 4, 1152);
-    			add_location(span1, file$D, 49, 5, 1278);
+    			add_location(input0, file$D, 48, 5, 1254);
+    			add_location(label0, file$D, 46, 4, 1218);
+    			add_location(span1, file$D, 51, 5, 1344);
     			attr_dev(input1, "placeholder", "G");
     			attr_dev(input1, "type", "number");
-    			add_location(input1, file$D, 50, 5, 1300);
-    			add_location(label1, file$D, 48, 4, 1264);
-    			add_location(span2, file$D, 53, 5, 1390);
+    			add_location(input1, file$D, 52, 5, 1366);
+    			add_location(label1, file$D, 50, 4, 1330);
+    			add_location(span2, file$D, 55, 5, 1456);
     			attr_dev(input2, "placeholder", "B");
     			attr_dev(input2, "type", "number");
-    			add_location(input2, file$D, 54, 5, 1412);
-    			add_location(label2, file$D, 52, 4, 1376);
+    			add_location(input2, file$D, 56, 5, 1478);
+    			add_location(label2, file$D, 54, 4, 1442);
     			attr_dev(div0, "class", "picker-controls-row");
-    			add_location(div0, file$D, 43, 3, 1113);
-    			add_location(span3, file$D, 65, 5, 1695);
+    			add_location(div0, file$D, 45, 3, 1179);
+    			add_location(span3, file$D, 67, 5, 1761);
     			attr_dev(input3, "placeholder", "Hex");
     			attr_dev(input3, "type", "text");
-    			add_location(input3, file$D, 66, 5, 1719);
-    			add_location(label3, file$D, 64, 4, 1681);
+    			add_location(input3, file$D, 68, 5, 1785);
+    			add_location(label3, file$D, 66, 4, 1747);
     			attr_dev(div1, "class", "picker-controls-row");
-    			add_location(div1, file$D, 63, 3, 1642);
+    			add_location(div1, file$D, 65, 3, 1708);
     			attr_dev(div2, "class", "picker-controls");
-    			add_location(div2, file$D, 42, 2, 1079);
+    			add_location(div2, file$D, 44, 2, 1145);
     			attr_dev(div3, "class", "picker-split");
-    			add_location(div3, file$D, 41, 1, 1049);
+    			add_location(div3, file$D, 43, 1, 1115);
     			attr_dev(div4, "class", "picker-wrapper");
-    			add_location(div4, file$D, 39, 0, 905);
+    			add_location(div4, file$D, 41, 0, 971);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -13575,11 +13689,11 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[12]),
-    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[13]),
-    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[14]),
-    					listen_dev(input3, "input", /*input3_input_handler*/ ctx[16]),
-    					listen_dev(input3, "input", /*hexInput*/ ctx[7], false, false, false)
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[13]),
+    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[14]),
+    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[15]),
+    					listen_dev(input3, "input", /*input3_input_handler*/ ctx[17]),
+    					listen_dev(input3, "input", /*hexInput*/ ctx[8], false, false, false)
     				];
 
     				mounted = true;
@@ -13635,8 +13749,9 @@ var app = (function () {
     			const button_changes = {};
     			if (dirty & /*tips*/ 8) button_changes.tips = /*tips*/ ctx[3];
     			if (dirty & /*legacy*/ 4) button_changes.legacy = /*legacy*/ ctx[2];
+    			if (dirty & /*$tt*/ 128) button_changes.tiptext = /*$tt*/ ctx[7]("color.copy");
 
-    			if (dirty & /*$$scope*/ 524288) {
+    			if (dirty & /*$$scope*/ 1048576) {
     				button_changes.$$scope = { dirty, ctx };
     			}
 
@@ -13701,6 +13816,9 @@ var app = (function () {
     }
 
     function instance$E($$self, $$props, $$invalidate) {
+    	let $tt;
+    	validate_store(tt, 'tt');
+    	component_subscribe($$self, tt, $$value => $$invalidate(7, $tt = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Colorpicker', slots, []);
     	const { ipcRenderer } = require('electron');
@@ -13721,10 +13839,10 @@ var app = (function () {
 
     		navigator.clipboard.writeText(tempHex).then(
     			() => {
-    				ipcRenderer.send('action', "Color copied!");
+    				ipcRenderer.send('action', $tt("color.copied"));
     			},
     			() => {
-    				ipcRenderer.send('action', "Failed to copy color");
+    				ipcRenderer.send('action', $tt("color.failed"));
     			}
     		);
     	}
@@ -13779,7 +13897,7 @@ var app = (function () {
     	$$self.$$set = $$props => {
     		if ('legacy' in $$props) $$invalidate(2, legacy = $$props.legacy);
     		if ('tips' in $$props) $$invalidate(3, tips = $$props.tips);
-    		if ('hashsign' in $$props) $$invalidate(9, hashsign = $$props.hashsign);
+    		if ('hashsign' in $$props) $$invalidate(10, hashsign = $$props.hashsign);
     		if ('reset' in $$props) $$invalidate(4, reset = $$props.reset);
     		if ('alpha' in $$props) $$invalidate(5, alpha = $$props.alpha);
     		if ('hex' in $$props) $$invalidate(0, hex = $$props.hex);
@@ -13791,6 +13909,9 @@ var app = (function () {
     		ColorPicker,
     		tinycolor,
     		Button,
+    		tt,
+    		locale,
+    		locales,
     		legacy,
     		tips,
     		hashsign,
@@ -13800,13 +13921,14 @@ var app = (function () {
     		hexInput,
     		copyClick,
     		hex,
-    		rgb
+    		rgb,
+    		$tt
     	});
 
     	$$self.$inject_state = $$props => {
     		if ('legacy' in $$props) $$invalidate(2, legacy = $$props.legacy);
     		if ('tips' in $$props) $$invalidate(3, tips = $$props.tips);
-    		if ('hashsign' in $$props) $$invalidate(9, hashsign = $$props.hashsign);
+    		if ('hashsign' in $$props) $$invalidate(10, hashsign = $$props.hashsign);
     		if ('reset' in $$props) $$invalidate(4, reset = $$props.reset);
     		if ('alpha' in $$props) $$invalidate(5, alpha = $$props.alpha);
     		if ('hexIntermediate' in $$props) $$invalidate(6, hexIntermediate = $$props.hexIntermediate);
@@ -13834,6 +13956,7 @@ var app = (function () {
     		reset,
     		alpha,
     		hexIntermediate,
+    		$tt,
     		hexInput,
     		copyClick,
     		hashsign,
@@ -13855,7 +13978,7 @@ var app = (function () {
     		init(this, options, instance$E, create_fragment$H, safe_not_equal, {
     			legacy: 2,
     			tips: 3,
-    			hashsign: 9,
+    			hashsign: 10,
     			reset: 4,
     			alpha: 5,
     			hex: 0,
@@ -15578,7 +15701,7 @@ var app = (function () {
     /* src\components\tools\Background.svelte generated by Svelte v3.49.0 */
     const file$z = "src\\components\\tools\\Background.svelte";
 
-    // (27:0) <Button   {tips}   {legacy}   size="12px"   tiptext={"Change background"}   on:click={e => {    showDropdown = true;   }}  >
+    // (29:0) <Button   {tips}   {legacy}   size="12px"   tiptext={$tt("toolbar.background")}   on:click={e => {    showDropdown = true;   }}  >
     function create_default_slot_1$4(ctx) {
     	let i;
     	let mounted;
@@ -15588,13 +15711,13 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-fill");
-    			add_location(i, file$z, 35, 1, 848);
+    			add_location(i, file$z, 37, 1, 919);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
 
     			if (!mounted) {
-    				dispose = action_destroyer(/*dropdownRef*/ ctx[5].call(null, i));
+    				dispose = action_destroyer(/*dropdownRef*/ ctx[6].call(null, i));
     				mounted = true;
     			}
     		},
@@ -15610,28 +15733,28 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$4.name,
     		type: "slot",
-    		source: "(27:0) <Button   {tips}   {legacy}   size=\\\"12px\\\"   tiptext={\\\"Change background\\\"}   on:click={e => {    showDropdown = true;   }}  >",
+    		source: "(29:0) <Button   {tips}   {legacy}   size=\\\"12px\\\"   tiptext={$tt(\\\"toolbar.background\\\")}   on:click={e => {    showDropdown = true;   }}  >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (39:0) {#if showDropdown}
+    // (41:0) {#if showDropdown}
     function create_if_block$c(ctx) {
     	let dropdown;
     	let current;
 
     	dropdown = new Dropdown({
     			props: {
-    				content: /*dropdownContent*/ ctx[6],
+    				content: /*dropdownContent*/ ctx[7],
     				$$slots: { default: [create_default_slot$4] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	dropdown.$on("close", /*close_handler*/ ctx[10]);
+    	dropdown.$on("close", /*close_handler*/ ctx[11]);
 
     	const block = {
     		c: function create() {
@@ -15644,7 +15767,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const dropdown_changes = {};
 
-    			if (dirty & /*$$scope, tips, legacy, hashsign, backdropColor*/ 4111) {
+    			if (dirty & /*$$scope, tips, legacy, hashsign, backdropColor*/ 8207) {
     				dropdown_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15668,21 +15791,21 @@ var app = (function () {
     		block,
     		id: create_if_block$c.name,
     		type: "if",
-    		source: "(39:0) {#if showDropdown}",
+    		source: "(41:0) {#if showDropdown}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (40:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >
+    // (42:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >
     function create_default_slot$4(ctx) {
     	let colorpicker;
     	let updating_hex;
     	let current;
 
     	function colorpicker_hex_binding(value) {
-    		/*colorpicker_hex_binding*/ ctx[9](value);
+    		/*colorpicker_hex_binding*/ ctx[10](value);
     	}
 
     	let colorpicker_props = {
@@ -15740,7 +15863,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$4.name,
     		type: "slot",
-    		source: "(40:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >",
+    		source: "(42:1) <Dropdown    content={dropdownContent}    on:close={e => {     showDropdown = false;    }}   >",
     		ctx
     	});
 
@@ -15758,14 +15881,14 @@ var app = (function () {
     				tips: /*tips*/ ctx[1],
     				legacy: /*legacy*/ ctx[3],
     				size: "12px",
-    				tiptext: "Change background",
+    				tiptext: /*$tt*/ ctx[5]("toolbar.background"),
     				$$slots: { default: [create_default_slot_1$4] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button.$on("click", /*click_handler*/ ctx[8]);
+    	button.$on("click", /*click_handler*/ ctx[9]);
     	let if_block = /*showDropdown*/ ctx[4] && create_if_block$c(ctx);
 
     	const block = {
@@ -15789,8 +15912,9 @@ var app = (function () {
     			const button_changes = {};
     			if (dirty & /*tips*/ 2) button_changes.tips = /*tips*/ ctx[1];
     			if (dirty & /*legacy*/ 8) button_changes.legacy = /*legacy*/ ctx[3];
+    			if (dirty & /*$tt*/ 32) button_changes.tiptext = /*$tt*/ ctx[5]("toolbar.background");
 
-    			if (dirty & /*$$scope*/ 4096) {
+    			if (dirty & /*$$scope*/ 8192) {
     				button_changes.$$scope = { dirty, ctx };
     			}
 
@@ -15850,6 +15974,9 @@ var app = (function () {
     }
 
     function instance$A($$self, $$props, $$invalidate) {
+    	let $tt;
+    	validate_store(tt, 'tt');
+    	component_subscribe($$self, tt, $$value => $$invalidate(5, $tt = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Background', slots, []);
     	const dispatch = createEventDispatcher();
@@ -15886,7 +16013,7 @@ var app = (function () {
 
     	$$self.$$set = $$props => {
     		if ('backdropColor' in $$props) $$invalidate(0, backdropColor = $$props.backdropColor);
-    		if ('closeDropdowns' in $$props) $$invalidate(7, closeDropdowns = $$props.closeDropdowns);
+    		if ('closeDropdowns' in $$props) $$invalidate(8, closeDropdowns = $$props.closeDropdowns);
     		if ('tips' in $$props) $$invalidate(1, tips = $$props.tips);
     		if ('hashsign' in $$props) $$invalidate(2, hashsign = $$props.hashsign);
     		if ('legacy' in $$props) $$invalidate(3, legacy = $$props.legacy);
@@ -15895,6 +16022,9 @@ var app = (function () {
     	$$self.$capture_state = () => ({
     		createEventDispatcher,
     		createPopperActions,
+    		tt,
+    		locale,
+    		locales,
     		Button,
     		Dropdown,
     		Colorpicker,
@@ -15906,13 +16036,14 @@ var app = (function () {
     		closeDropdowns,
     		tips,
     		hashsign,
-    		legacy
+    		legacy,
+    		$tt
     	});
 
     	$$self.$inject_state = $$props => {
     		if ('backdropColor' in $$props) $$invalidate(0, backdropColor = $$props.backdropColor);
     		if ('showDropdown' in $$props) $$invalidate(4, showDropdown = $$props.showDropdown);
-    		if ('closeDropdowns' in $$props) $$invalidate(7, closeDropdowns = $$props.closeDropdowns);
+    		if ('closeDropdowns' in $$props) $$invalidate(8, closeDropdowns = $$props.closeDropdowns);
     		if ('tips' in $$props) $$invalidate(1, tips = $$props.tips);
     		if ('hashsign' in $$props) $$invalidate(2, hashsign = $$props.hashsign);
     		if ('legacy' in $$props) $$invalidate(3, legacy = $$props.legacy);
@@ -15923,7 +16054,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*closeDropdowns*/ 128) {
+    		if ($$self.$$.dirty & /*closeDropdowns*/ 256) {
     			if (closeDropdowns) $$invalidate(4, showDropdown = false);
     		}
     	};
@@ -15934,6 +16065,7 @@ var app = (function () {
     		hashsign,
     		legacy,
     		showDropdown,
+    		$tt,
     		dropdownRef,
     		dropdownContent,
     		closeDropdowns,
@@ -15949,7 +16081,7 @@ var app = (function () {
 
     		init(this, options, instance$A, create_fragment$D, safe_not_equal, {
     			backdropColor: 0,
-    			closeDropdowns: 7,
+    			closeDropdowns: 8,
     			tips: 1,
     			hashsign: 2,
     			legacy: 3
@@ -16432,7 +16564,7 @@ var app = (function () {
     const { console: console_1$2, window: window_1 } = globals;
     const file$x = "src\\components\\Toolbar.svelte";
 
-    // (91:1) {#if fileSelected && !settingsOpen}
+    // (93:1) {#if fileSelected && !settingsOpen}
     function create_if_block$a(ctx) {
     	let button0;
     	let t0;
@@ -16462,21 +16594,21 @@ var app = (function () {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
     				size: "13px",
-    				tiptext: "Save image",
+    				tiptext: /*$tt*/ ctx[10]("toolbar.save"),
     				$$slots: { default: [create_default_slot_7$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button0.$on("click", /*click_handler*/ ctx[19]);
+    	button0.$on("click", /*click_handler*/ ctx[20]);
 
     	button1 = new Button({
     			props: {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
     				size: "13px",
-    				tiptext: "Copy image",
+    				tiptext: /*$tt*/ ctx[10]("toolbar.copy"),
     				$$slots: { default: [create_default_slot_6$1] },
     				$$scope: { ctx }
     			},
@@ -16490,49 +16622,49 @@ var app = (function () {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
     				size: "13px",
-    				tiptext: "Crop image",
+    				tiptext: /*$tt*/ ctx[10]("toolbar.crop"),
     				$$slots: { default: [create_default_slot_5$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button2.$on("click", /*click_handler_1*/ ctx[20]);
+    	button2.$on("click", /*click_handler_1*/ ctx[21]);
 
     	button3 = new Button({
     			props: {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
     				size: "13px",
-    				tiptext: "Flip image",
+    				tiptext: /*$tt*/ ctx[10]("toolbar.flip"),
     				$$slots: { default: [create_default_slot_4$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button3.$on("click", /*click_handler_2*/ ctx[21]);
+    	button3.$on("click", /*click_handler_2*/ ctx[22]);
 
     	button4 = new Button({
     			props: {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
     				size: "12px",
-    				tiptext: "Rotate image",
+    				tiptext: /*$tt*/ ctx[10]("toolbar.rotate"),
     				$$slots: { default: [create_default_slot_3$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button4.$on("click", /*click_handler_3*/ ctx[22]);
+    	button4.$on("click", /*click_handler_3*/ ctx[23]);
 
     	function eyedropper_showDropdown_binding(value) {
-    		/*eyedropper_showDropdown_binding*/ ctx[23](value);
+    		/*eyedropper_showDropdown_binding*/ ctx[24](value);
     	}
 
     	function eyedropper_hex_binding(value) {
-    		/*eyedropper_hex_binding*/ ctx[24](value);
+    		/*eyedropper_hex_binding*/ ctx[25](value);
     	}
 
     	let eyedropper_props = {
@@ -16553,10 +16685,10 @@ var app = (function () {
     	eyedropper = new Eyedropper({ props: eyedropper_props, $$inline: true });
     	binding_callbacks.push(() => bind(eyedropper, 'showDropdown', eyedropper_showDropdown_binding));
     	binding_callbacks.push(() => bind(eyedropper, 'hex', eyedropper_hex_binding));
-    	eyedropper.$on("pickColor", /*pickColor_handler*/ ctx[25]);
+    	eyedropper.$on("pickColor", /*pickColor_handler*/ ctx[26]);
 
     	function background_backdropColor_binding(value) {
-    		/*background_backdropColor_binding*/ ctx[26](value);
+    		/*background_backdropColor_binding*/ ctx[27](value);
     	}
 
     	let background_props = {
@@ -16574,7 +16706,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(background, 'backdropColor', background_backdropColor_binding));
 
     	function resizer_fileSelected_binding(value) {
-    		/*resizer_fileSelected_binding*/ ctx[27](value);
+    		/*resizer_fileSelected_binding*/ ctx[28](value);
     	}
 
     	let resizer_props = {
@@ -16644,8 +16776,9 @@ var app = (function () {
     			const button0_changes = {};
     			if (dirty[0] & /*tips*/ 64) button0_changes.tips = /*tips*/ ctx[6];
     			if (dirty[0] & /*legacy*/ 32) button0_changes.legacy = /*legacy*/ ctx[5];
+    			if (dirty[0] & /*$tt*/ 1024) button0_changes.tiptext = /*$tt*/ ctx[10]("toolbar.save");
 
-    			if (dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[1] & /*$$scope*/ 2) {
     				button0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -16653,8 +16786,9 @@ var app = (function () {
     			const button1_changes = {};
     			if (dirty[0] & /*tips*/ 64) button1_changes.tips = /*tips*/ ctx[6];
     			if (dirty[0] & /*legacy*/ 32) button1_changes.legacy = /*legacy*/ ctx[5];
+    			if (dirty[0] & /*$tt*/ 1024) button1_changes.tiptext = /*$tt*/ ctx[10]("toolbar.copy");
 
-    			if (dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[1] & /*$$scope*/ 2) {
     				button1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -16662,8 +16796,9 @@ var app = (function () {
     			const button2_changes = {};
     			if (dirty[0] & /*tips*/ 64) button2_changes.tips = /*tips*/ ctx[6];
     			if (dirty[0] & /*legacy*/ 32) button2_changes.legacy = /*legacy*/ ctx[5];
+    			if (dirty[0] & /*$tt*/ 1024) button2_changes.tiptext = /*$tt*/ ctx[10]("toolbar.crop");
 
-    			if (dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[1] & /*$$scope*/ 2) {
     				button2_changes.$$scope = { dirty, ctx };
     			}
 
@@ -16671,8 +16806,9 @@ var app = (function () {
     			const button3_changes = {};
     			if (dirty[0] & /*tips*/ 64) button3_changes.tips = /*tips*/ ctx[6];
     			if (dirty[0] & /*legacy*/ 32) button3_changes.legacy = /*legacy*/ ctx[5];
+    			if (dirty[0] & /*$tt*/ 1024) button3_changes.tiptext = /*$tt*/ ctx[10]("toolbar.flip");
 
-    			if (dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[1] & /*$$scope*/ 2) {
     				button3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -16680,8 +16816,9 @@ var app = (function () {
     			const button4_changes = {};
     			if (dirty[0] & /*tips*/ 64) button4_changes.tips = /*tips*/ ctx[6];
     			if (dirty[0] & /*legacy*/ 32) button4_changes.legacy = /*legacy*/ ctx[5];
+    			if (dirty[0] & /*$tt*/ 1024) button4_changes.tiptext = /*$tt*/ ctx[10]("toolbar.rotate");
 
-    			if (dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[1] & /*$$scope*/ 2) {
     				button4_changes.$$scope = { dirty, ctx };
     			}
 
@@ -16733,7 +16870,7 @@ var app = (function () {
     			const dropout_changes = {};
     			if (dirty[0] & /*legacy*/ 32) dropout_changes.legacy = /*legacy*/ ctx[5];
 
-    			if (dirty[0] & /*tips, legacy, hashsign, closeDropdowns, fileSelected*/ 737 | dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[0] & /*tips, legacy, $tt, hashsign, closeDropdowns, fileSelected*/ 1761 | dirty[1] & /*$$scope*/ 2) {
     				dropout_changes.$$scope = { dirty, ctx };
     			}
 
@@ -16789,14 +16926,14 @@ var app = (function () {
     		block,
     		id: create_if_block$a.name,
     		type: "if",
-    		source: "(91:1) {#if fileSelected && !settingsOpen}",
+    		source: "(93:1) {#if fileSelected && !settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (92:2) <Button     {tips}     {legacy}     size="13px"     tiptext={"Save image"}     on:click={() => editImage("save")}    >
+    // (94:2) <Button     {tips}     {legacy}     size="13px"     tiptext={$tt("toolbar.save")}     on:click={() => editImage("save")}    >
     function create_default_slot_7$1(ctx) {
     	let i;
 
@@ -16804,7 +16941,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "far fa-save");
-    			add_location(i, file$x, 98, 3, 2571);
+    			add_location(i, file$x, 100, 3, 2646);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16819,14 +16956,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_7$1.name,
     		type: "slot",
-    		source: "(92:2) <Button     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Save image\\\"}     on:click={() => editImage(\\\"save\\\")}    >",
+    		source: "(94:2) <Button     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={$tt(\\\"toolbar.save\\\")}     on:click={() => editImage(\\\"save\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (101:2) <Button     {tips}     {legacy}     size="13px"     tiptext={"Copy image"}     on:click={copyImage}    >
+    // (103:2) <Button     {tips}     {legacy}     size="13px"     tiptext={$tt("toolbar.copy")}     on:click={copyImage}    >
     function create_default_slot_6$1(ctx) {
     	let i;
 
@@ -16835,7 +16972,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-2px)");
-    			add_location(i, file$x, 107, 6, 2727);
+    			add_location(i, file$x, 109, 6, 2809);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16850,14 +16987,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_6$1.name,
     		type: "slot",
-    		source: "(101:2) <Button     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Copy image\\\"}     on:click={copyImage}    >",
+    		source: "(103:2) <Button     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={$tt(\\\"toolbar.copy\\\")}     on:click={copyImage}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (110:2) <Button     {tips}     {legacy}     size="13px"     tiptext={"Crop image"}     on:click={() => dispatch("cropImage")}    >
+    // (112:2) <Button     {tips}     {legacy}     size="13px"     tiptext={$tt("toolbar.crop")}     on:click={() => dispatch("cropImage")}    >
     function create_default_slot_5$1(ctx) {
     	let i;
 
@@ -16866,7 +17003,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-crop-alt");
     			attr_dev(i, "style", "");
-    			add_location(i, file$x, 116, 6, 2943);
+    			add_location(i, file$x, 118, 6, 3032);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16881,14 +17018,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_5$1.name,
     		type: "slot",
-    		source: "(110:2) <Button     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Crop image\\\"}     on:click={() => dispatch(\\\"cropImage\\\")}    >",
+    		source: "(112:2) <Button     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={$tt(\\\"toolbar.crop\\\")}     on:click={() => dispatch(\\\"cropImage\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (119:2) <Button     {tips}     {legacy}     size="13px"     tiptext={"Flip image"}     on:click={() => editImage("flipHorizontal")}    >
+    // (121:2) <Button     {tips}     {legacy}     size="13px"     tiptext={$tt("toolbar.flip")}     on:click={() => editImage("flipHorizontal")}    >
     function create_default_slot_4$1(ctx) {
     	let i;
 
@@ -16896,7 +17033,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-sync-alt");
-    			add_location(i, file$x, 125, 6, 3136);
+    			add_location(i, file$x, 127, 6, 3232);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16911,14 +17048,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_4$1.name,
     		type: "slot",
-    		source: "(119:2) <Button     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={\\\"Flip image\\\"}     on:click={() => editImage(\\\"flipHorizontal\\\")}    >",
+    		source: "(121:2) <Button     {tips}     {legacy}     size=\\\"13px\\\"     tiptext={$tt(\\\"toolbar.flip\\\")}     on:click={() => editImage(\\\"flipHorizontal\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (128:2) <Button     {tips}     {legacy}     size="12px"     tiptext={"Rotate image"}     on:click={() => editImage("rotateRight")}    >
+    // (130:2) <Button     {tips}     {legacy}     size="12px"     tiptext={$tt("toolbar.rotate")}     on:click={() => editImage("rotateRight")}    >
     function create_default_slot_3$1(ctx) {
     	let i;
 
@@ -16926,7 +17063,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$x, 134, 6, 3319);
+    			add_location(i, file$x, 136, 6, 3422);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16941,14 +17078,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(128:2) <Button     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={\\\"Rotate image\\\"}     on:click={() => editImage(\\\"rotateRight\\\")}    >",
+    		source: "(130:2) <Button     {tips}     {legacy}     size=\\\"12px\\\"     tiptext={$tt(\\\"toolbar.rotate\\\")}     on:click={() => editImage(\\\"rotateRight\\\")}    >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (167:3) <Button      {tips}      {legacy}      size="13px"      tiptext={"Greyscale"}      on:click={() => editImage("greyImage")}     >
+    // (169:3) <Button      {tips}      {legacy}      size="13px"      tiptext={$tt("toolbar.greyscale")}      on:click={() => editImage("greyImage")}     >
     function create_default_slot_2$1(ctx) {
     	let i;
 
@@ -16956,7 +17093,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-adjust");
-    			add_location(i, file$x, 173, 7, 4002);
+    			add_location(i, file$x, 175, 7, 4118);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16971,14 +17108,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$1.name,
     		type: "slot",
-    		source: "(167:3) <Button      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={\\\"Greyscale\\\"}      on:click={() => editImage(\\\"greyImage\\\")}     >",
+    		source: "(169:3) <Button      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={$tt(\\\"toolbar.greyscale\\\")}      on:click={() => editImage(\\\"greyImage\\\")}     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (176:3) <Button      {tips}      {legacy}      size="13px"      tiptext={"Negative"}      on:click={() => editImage("negateImage")}     >
+    // (178:3) <Button      {tips}      {legacy}      size="13px"      tiptext={$tt("toolbar.negative")}      on:click={() => editImage("negateImage")}     >
     function create_default_slot_1$2(ctx) {
     	let i;
 
@@ -16986,7 +17123,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-minus-circle");
-    			add_location(i, file$x, 182, 7, 4188);
+    			add_location(i, file$x, 184, 7, 4317);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -17001,14 +17138,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(176:3) <Button      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={\\\"Negative\\\"}      on:click={() => editImage(\\\"negateImage\\\")}     >",
+    		source: "(178:3) <Button      {tips}      {legacy}      size=\\\"13px\\\"      tiptext={$tt(\\\"toolbar.negative\\\")}      on:click={() => editImage(\\\"negateImage\\\")}     >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (159:2) <Dropout icon="fas fa-magic" {legacy}>
+    // (161:2) <Dropout icon="fas fa-magic" {legacy}>
     function create_default_slot$2(ctx) {
     	let palette;
     	let updating_fileSelected;
@@ -17019,7 +17156,7 @@ var app = (function () {
     	let current;
 
     	function palette_fileSelected_binding(value) {
-    		/*palette_fileSelected_binding*/ ctx[28](value);
+    		/*palette_fileSelected_binding*/ ctx[29](value);
     	}
 
     	let palette_props = {
@@ -17041,28 +17178,28 @@ var app = (function () {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
     				size: "13px",
-    				tiptext: "Greyscale",
+    				tiptext: /*$tt*/ ctx[10]("toolbar.greyscale"),
     				$$slots: { default: [create_default_slot_2$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button0.$on("click", /*click_handler_4*/ ctx[29]);
+    	button0.$on("click", /*click_handler_4*/ ctx[30]);
 
     	button1 = new Button({
     			props: {
     				tips: /*tips*/ ctx[6],
     				legacy: /*legacy*/ ctx[5],
     				size: "13px",
-    				tiptext: "Negative",
+    				tiptext: /*$tt*/ ctx[10]("toolbar.negative"),
     				$$slots: { default: [create_default_slot_1$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	button1.$on("click", /*click_handler_5*/ ctx[30]);
+    	button1.$on("click", /*click_handler_5*/ ctx[31]);
 
     	const block = {
     		c: function create() {
@@ -17097,8 +17234,9 @@ var app = (function () {
     			const button0_changes = {};
     			if (dirty[0] & /*tips*/ 64) button0_changes.tips = /*tips*/ ctx[6];
     			if (dirty[0] & /*legacy*/ 32) button0_changes.legacy = /*legacy*/ ctx[5];
+    			if (dirty[0] & /*$tt*/ 1024) button0_changes.tiptext = /*$tt*/ ctx[10]("toolbar.greyscale");
 
-    			if (dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[1] & /*$$scope*/ 2) {
     				button0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -17106,8 +17244,9 @@ var app = (function () {
     			const button1_changes = {};
     			if (dirty[0] & /*tips*/ 64) button1_changes.tips = /*tips*/ ctx[6];
     			if (dirty[0] & /*legacy*/ 32) button1_changes.legacy = /*legacy*/ ctx[5];
+    			if (dirty[0] & /*$tt*/ 1024) button1_changes.tiptext = /*$tt*/ ctx[10]("toolbar.negative");
 
-    			if (dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[1] & /*$$scope*/ 2) {
     				button1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -17139,7 +17278,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(159:2) <Dropout icon=\\\"fas fa-magic\\\" {legacy}>",
+    		source: "(161:2) <Dropout icon=\\\"fas fa-magic\\\" {legacy}>",
     		ctx
     	});
 
@@ -17160,7 +17299,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-112dzzp");
     			toggle_class(div, "legacy", /*legacy*/ ctx[5]);
-    			add_location(div, file$x, 86, 0, 2366);
+    			add_location(div, file$x, 88, 0, 2434);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17172,13 +17311,13 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = action_destroyer(mousetrap_action = use.call(null, window_1, [
-    					['command+s', 'ctrl+s', /*mousetrap_function*/ ctx[13]],
+    					['command+s', 'ctrl+s', /*mousetrap_function*/ ctx[14]],
     					['command+c', 'ctrl+c', /*copyImage*/ ctx[8]],
-    					[']', /*mousetrap_function_1*/ ctx[14]],
-    					['[', /*mousetrap_function_2*/ ctx[15]],
-    					['.', /*mousetrap_function_3*/ ctx[16]],
-    					[',', /*mousetrap_function_4*/ ctx[17]],
-    					['command+z', 'ctrl+z', /*mousetrap_function_5*/ ctx[18]]
+    					[']', /*mousetrap_function_1*/ ctx[15]],
+    					['[', /*mousetrap_function_2*/ ctx[16]],
+    					['.', /*mousetrap_function_3*/ ctx[17]],
+    					[',', /*mousetrap_function_4*/ ctx[18]],
+    					['command+z', 'ctrl+z', /*mousetrap_function_5*/ ctx[19]]
     				]));
 
     				mounted = true;
@@ -17186,13 +17325,13 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (mousetrap_action && is_function(mousetrap_action.update) && dirty[0] & /*fileSelected*/ 1) mousetrap_action.update.call(null, [
-    				['command+s', 'ctrl+s', /*mousetrap_function*/ ctx[13]],
+    				['command+s', 'ctrl+s', /*mousetrap_function*/ ctx[14]],
     				['command+c', 'ctrl+c', /*copyImage*/ ctx[8]],
-    				[']', /*mousetrap_function_1*/ ctx[14]],
-    				['[', /*mousetrap_function_2*/ ctx[15]],
-    				['.', /*mousetrap_function_3*/ ctx[16]],
-    				[',', /*mousetrap_function_4*/ ctx[17]],
-    				['command+z', 'ctrl+z', /*mousetrap_function_5*/ ctx[18]]
+    				[']', /*mousetrap_function_1*/ ctx[15]],
+    				['[', /*mousetrap_function_2*/ ctx[16]],
+    				['.', /*mousetrap_function_3*/ ctx[17]],
+    				[',', /*mousetrap_function_4*/ ctx[18]],
+    				['command+z', 'ctrl+z', /*mousetrap_function_5*/ ctx[19]]
     			]);
 
     			if (/*fileSelected*/ ctx[0] && !/*settingsOpen*/ ctx[4]) {
@@ -17263,6 +17402,9 @@ var app = (function () {
     }
 
     function instance$y($$self, $$props, $$invalidate) {
+    	let $tt;
+    	validate_store(tt, 'tt');
+    	component_subscribe($$self, tt, $$value => $$invalidate(10, $tt = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Toolbar', slots, []);
     	const { ipcRenderer } = require('electron');
@@ -17291,7 +17433,7 @@ var app = (function () {
     				let response = xhr.response.slice(0, xhr.response.size, "image/png");
     				const item = new ClipboardItem({ "image/png": response });
     				navigator.clipboard.write([item]);
-    				ipcRenderer.send('action', "Image copied!");
+    				ipcRenderer.send('action', $tt("toolbar.copied"));
     			} catch(e) {
     				console.log(e);
     			}
@@ -17378,6 +17520,9 @@ var app = (function () {
     		createEventDispatcher,
     		mousetrap: use,
     		ipcRenderer,
+    		tt,
+    		locale,
+    		locales,
     		Button,
     		Eyedropper,
     		Palette,
@@ -17396,7 +17541,8 @@ var app = (function () {
     		closeDropdowns,
     		editImage,
     		getSelectedText,
-    		copyImage
+    		copyImage,
+    		$tt
     	});
 
     	$$self.$inject_state = $$props => {
@@ -17433,6 +17579,7 @@ var app = (function () {
     		hashsign,
     		copyImage,
     		closeDropdowns,
+    		$tt,
     		ipcRenderer,
     		dispatch,
     		editImage,
@@ -17807,10 +17954,9 @@ var app = (function () {
     }
 
     /* src\components\Dropfield.svelte generated by Svelte v3.49.0 */
-
     const file$v = "src\\components\\Dropfield.svelte";
 
-    // (8:3) {#if !legacy}
+    // (10:3) {#if !legacy}
     function create_if_block$9(ctx) {
     	let div;
     	let i;
@@ -17820,9 +17966,9 @@ var app = (function () {
     			div = element("div");
     			i = element("i");
     			attr_dev(i, "class", "fas fa-upload");
-    			add_location(i, file$v, 9, 5, 235);
+    			add_location(i, file$v, 11, 5, 297);
     			attr_dev(div, "class", "dropfield-inner-icon svelte-1imzacy");
-    			add_location(div, file$v, 8, 4, 194);
+    			add_location(div, file$v, 10, 4, 256);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -17837,7 +17983,7 @@ var app = (function () {
     		block,
     		id: create_if_block$9.name,
     		type: "if",
-    		source: "(8:3) {#if !legacy}",
+    		source: "(10:3) {#if !legacy}",
     		ctx
     	});
 
@@ -17851,6 +17997,8 @@ var app = (function () {
     	let t0;
     	let div1;
     	let div0;
+    	let t1_value = /*$tt*/ ctx[1]("dropfield.placeholder") + "";
+    	let t1;
     	let if_block = !/*legacy*/ ctx[0] && create_if_block$9(ctx);
 
     	const block = {
@@ -17862,18 +18010,18 @@ var app = (function () {
     			t0 = space();
     			div1 = element("div");
     			div0 = element("div");
-    			div0.textContent = "Drop image here";
+    			t1 = text(t1_value);
     			attr_dev(div0, "class", "dropfield-inner-text-line");
-    			add_location(div0, file$v, 13, 4, 331);
+    			add_location(div0, file$v, 15, 4, 393);
     			attr_dev(div1, "class", "dropfield-inner-text svelte-1imzacy");
-    			add_location(div1, file$v, 12, 3, 291);
+    			add_location(div1, file$v, 14, 3, 353);
     			attr_dev(div2, "class", "dropfield-inner svelte-1imzacy");
-    			add_location(div2, file$v, 6, 2, 141);
+    			add_location(div2, file$v, 8, 2, 203);
     			attr_dev(div3, "class", "dropfield-inner-wrapper svelte-1imzacy");
-    			add_location(div3, file$v, 5, 1, 100);
+    			add_location(div3, file$v, 7, 1, 162);
     			attr_dev(div4, "class", "dropfield svelte-1imzacy");
     			toggle_class(div4, "legacy", /*legacy*/ ctx[0]);
-    			add_location(div4, file$v, 4, 0, 52);
+    			add_location(div4, file$v, 6, 0, 114);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17886,6 +18034,7 @@ var app = (function () {
     			append_dev(div2, t0);
     			append_dev(div2, div1);
     			append_dev(div1, div0);
+    			append_dev(div0, t1);
     		},
     		p: function update(ctx, [dirty]) {
     			if (!/*legacy*/ ctx[0]) {
@@ -17898,6 +18047,8 @@ var app = (function () {
     				if_block.d(1);
     				if_block = null;
     			}
+
+    			if (dirty & /*$tt*/ 2 && t1_value !== (t1_value = /*$tt*/ ctx[1]("dropfield.placeholder") + "")) set_data_dev(t1, t1_value);
 
     			if (dirty & /*legacy*/ 1) {
     				toggle_class(div4, "legacy", /*legacy*/ ctx[0]);
@@ -17923,6 +18074,9 @@ var app = (function () {
     }
 
     function instance$w($$self, $$props, $$invalidate) {
+    	let $tt;
+    	validate_store(tt, 'tt');
+    	component_subscribe($$self, tt, $$value => $$invalidate(1, $tt = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Dropfield', slots, []);
     	let { legacy = false } = $$props;
@@ -17936,7 +18090,7 @@ var app = (function () {
     		if ('legacy' in $$props) $$invalidate(0, legacy = $$props.legacy);
     	};
 
-    	$$self.$capture_state = () => ({ legacy });
+    	$$self.$capture_state = () => ({ tt, locale, locales, legacy, $tt });
 
     	$$self.$inject_state = $$props => {
     		if ('legacy' in $$props) $$invalidate(0, legacy = $$props.legacy);
@@ -17946,7 +18100,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [legacy];
+    	return [legacy, $tt];
     }
 
     class Dropfield extends SvelteComponentDev {
@@ -31034,7 +31188,7 @@ var app = (function () {
 
     class Helper {
     	constructor() {
-    		console.log("working");
+    		//console.log("working");
     	}
     	getMousePos(canvas, evt, rect) {
     		return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
@@ -31058,7 +31212,7 @@ var app = (function () {
 
     const file = "src\\App.svelte";
 
-    // (386:2) {#if settingsOpen}
+    // (387:2) {#if settingsOpen}
     function create_if_block_6(ctx) {
     	let menu;
     	let current;
@@ -31106,14 +31260,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(386:2) {#if settingsOpen}",
+    		source: "(387:2) {#if settingsOpen}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (395:2) {#if loading}
+    // (396:2) {#if loading}
     function create_if_block_5(ctx) {
     	let loader;
     	let current;
@@ -31145,14 +31299,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(395:2) {#if loading}",
+    		source: "(396:2) {#if loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (399:2) {#if fileSelected && !loading}
+    // (400:2) {#if fileSelected && !loading}
     function create_if_block_1(ctx) {
     	let div1;
     	let t0;
@@ -31207,11 +31361,11 @@ var app = (function () {
     			set_style(div0, "opacity", /*workAreaOpacity*/ ctx[17]);
     			toggle_class(div0, "pickingMode", /*pickingMode*/ ctx[8]);
     			toggle_class(div0, "croppingMode", /*croppingMode*/ ctx[9]);
-    			add_location(div0, file, 419, 4, 10677);
+    			add_location(div0, file, 420, 4, 10743);
     			attr_dev(div1, "class", "canvas-container svelte-nv5cfc");
     			toggle_class(div1, "legacy", /*settings*/ ctx[2].theme);
     			toggle_class(div1, "pixelated", /*pixelated*/ ctx[6]);
-    			add_location(div1, file, 399, 3, 10283);
+    			add_location(div1, file, 400, 3, 10349);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -31345,14 +31499,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(399:2) {#if fileSelected && !loading}",
+    		source: "(400:2) {#if fileSelected && !loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (406:4) {#if pickingMode && mouseincanvas}
+    // (407:4) {#if pickingMode && mouseincanvas}
     function create_if_block_4(ctx) {
     	let cursor;
     	let current;
@@ -31399,14 +31553,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(406:4) {#if pickingMode && mouseincanvas}",
+    		source: "(407:4) {#if pickingMode && mouseincanvas}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (414:4) {#if settings.zoomslider}
+    // (415:4) {#if settings.zoomslider}
     function create_if_block_3(ctx) {
     	let zoomslider;
     	let current;
@@ -31451,14 +31605,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(414:4) {#if settings.zoomslider}",
+    		source: "(415:4) {#if settings.zoomslider}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (456:6) {#if croppingMode}
+    // (457:6) {#if croppingMode}
     function create_if_block_2(ctx) {
     	let layer;
     	let current;
@@ -31499,14 +31653,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(456:6) {#if croppingMode}",
+    		source: "(457:6) {#if croppingMode}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (434:8) <Canvas           width={width}           height={height}           on:mousedown={handleMouseDown}           on:mouseup={handleMouseUp}           on:mousemove={handleMouseMove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingMode) {             pickingMode = false;            instance.setOptions({ disablePan: false });            if (hex == chosenColor) {             //alert("choosing same color escape");             showDropdown = true;            }             hex = chosenColor;            }           }}          >
+    // (435:8) <Canvas           width={width}           height={height}           on:mousedown={handleMouseDown}           on:mouseup={handleMouseUp}           on:mousemove={handleMouseMove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingMode) {             pickingMode = false;            instance.setOptions({ disablePan: false });            if (hex == chosenColor) {             //alert("choosing same color escape");             showDropdown = true;            }             hex = chosenColor;            }           }}          >
     function create_default_slot_1(ctx) {
     	let layer;
     	let t_1;
@@ -31585,14 +31739,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(434:8) <Canvas           width={width}           height={height}           on:mousedown={handleMouseDown}           on:mouseup={handleMouseUp}           on:mousemove={handleMouseMove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingMode) {             pickingMode = false;            instance.setOptions({ disablePan: false });            if (hex == chosenColor) {             //alert(\\\"choosing same color escape\\\");             showDropdown = true;            }             hex = chosenColor;            }           }}          >",
+    		source: "(435:8) <Canvas           width={width}           height={height}           on:mousedown={handleMouseDown}           on:mouseup={handleMouseUp}           on:mousemove={handleMouseMove}           on:mouseenter={() => { mouseincanvas = true; }}           on:mouseleave={() => { mouseincanvas = false; }}           on:click={() => {            if (pickingMode) {             pickingMode = false;            instance.setOptions({ disablePan: false });            if (hex == chosenColor) {             //alert(\\\"choosing same color escape\\\");             showDropdown = true;            }             hex = chosenColor;            }           }}          >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (464:2) {#if !fileSelected && !loading}
+    // (465:2) {#if !fileSelected && !loading}
     function create_if_block(ctx) {
     	let dropfield;
     	let current;
@@ -31633,14 +31787,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(464:2) {#if !fileSelected && !loading}",
+    		source: "(465:2) {#if !fileSelected && !loading}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (378:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >
+    // (379:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >
     function create_default_slot(ctx) {
     	let t0;
     	let t1;
@@ -31803,7 +31957,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(378:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >",
+    		source: "(379:1) <Desktop    {fileSelected}    {backdropColor}    {settingsOpen}    legacy={settings.theme}    settings={proxySettings}    bind:loading   >",
     		ctx
     	});
 
@@ -31917,7 +32071,7 @@ var app = (function () {
     			create_component(desktop.$$.fragment);
     			attr_dev(main, "class", "svelte-nv5cfc");
     			toggle_class(main, "legacy", /*settings*/ ctx[2].theme);
-    			add_location(main, file, 333, 0, 8795);
+    			add_location(main, file, 335, 0, 8892);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -32157,8 +32311,9 @@ var app = (function () {
     	let pixelWidth = 0;
 
     	function handleMouseDown(e) {
-    		console.log("Canvas mousedown");
+    		//console.log("Canvas mousedown");
     		let canvas = e.srcElement;
+
     		let positionInfo = canvas.getBoundingClientRect();
     		let mousePos = helper.getMousePos(canvas, e, positionInfo);
     		let biggerSideTrue = height > width ? height : width;
@@ -32220,14 +32375,15 @@ var app = (function () {
 
     		if (text != "") {
     			if (text.startsWith("data") && text.includes("image")) {
+    				//console.log("not text, sending stuff");
     				//text is a data string, try to process it
     				return ipcRenderer.send('file', text);
     			} else if (text.startsWith("http")) {
+    				//console.log("not text, sending http");
     				//text is a url string, try to process it
     				return ipcRenderer.send('file', text);
-    			} else {
-    				console.log("text pasted! text:", text);
-    			} //account for pastes of other types of text?
+    			} else ; //console.log("text pasted! text:", text);
+    			//account for pastes of other types of text?
     		}
 
     		let items = (event.clipboardData || event.originalEvent.clipboardData).items;
@@ -32290,7 +32446,6 @@ var app = (function () {
     		$$invalidate(9, croppingMode = true);
     		instance.zoom(1, { animate: false });
     		instance.pan(0, 0);
-    		console.log("reached");
     		instance.setOptions({ disablePan: true });
     	};
 

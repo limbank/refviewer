@@ -5,6 +5,8 @@
 	import tinycolor from 'tinycolor2';
 	import Button from '../common/Button.svelte';
 
+	import { tt, locale, locales } from "../../scripts/i18n.js";
+
 	export let legacy = false;
 	export let tips = false;
 	export let hashsign = true;
@@ -27,9 +29,9 @@
 		if (hashsign && tempHex.startsWith("#")) tempHex = tempHex.substring(1);
 
 		navigator.clipboard.writeText(tempHex).then(() => {
-		    ipcRenderer.send('action', "Color copied!");
+		    ipcRenderer.send('action', $tt("color.copied"));
 		}, () => {
-		    ipcRenderer.send('action', "Failed to copy color");
+		    ipcRenderer.send('action', $tt("color.failed"));
 		});
 	}
 
@@ -69,7 +71,7 @@
 						{tips}
 						{legacy}
 						size="12px"
-						tiptext="Copy"
+						tiptext={$tt("color.copy")}
 						context="control"
 						on:click={copyClick}
 					>
@@ -80,7 +82,7 @@
 							{tips}
 							{legacy}
 							size="12px"
-							tiptext="Reset"
+							tiptext={$tt("color.reset")}
 							context="control"
 							on:click={e => {
 								hex = reset;

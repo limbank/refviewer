@@ -46,17 +46,24 @@
 	    const acceptedFiles = Array.from(e.dataTransfer.files);
 	    const acceptedItems = Array.from(e.dataTransfer.items);
 
-	    if (acceptedFiles.length > 0) ipcRenderer.send('file', acceptedFiles[0].path);
+		//console.log("Handling through desktop", e.dataTransfer.getData("text/html"));
+
+	    //sometimes, there's a file, but it has no path anyway
+	    if (acceptedFiles.length > 0 && acceptedFiles[0].path != "") {
+	    	ipcRenderer.send('file', acceptedFiles[0].path);
+	    }
 	    else if (acceptedItems.length > 0) {
 			let testHTML = e.dataTransfer.getData("text/html");
 
 			if (testHTML) {
 				if (testHTML.startsWith("data") && testHTML.includes("image")) {
 					//gotten a plain data string
+					//console.log("data");
 					ipcRenderer.send('file', testHTML);
 				}
 				else if (testHTML.startsWith("http")) {
 					//gotten a plain url string
+					//console.log("http");
 					ipcRenderer.send('file', decodeHTMLEntities(testHTML));
 				}
 				else {
@@ -69,21 +76,33 @@
 					if (image) {
 						let srctext = image.getAttribute('src');
 
-						if (srctext.startsWith("data")) ipcRenderer.send('file', srctext);
-						else if (srctext.startsWith("http")) ipcRenderer.send('file', srctext);
+						if (srctext.startsWith("data")) {
+							//console.log("parsed data");
+							ipcRenderer.send('file', srctext);
+						}
+						else if (srctext.startsWith("http")) {
+							//console.log("parsed http");
+							ipcRenderer.send('file', srctext);
+						}
 					}
-					else if (url) ipcRenderer.send('file', url.getAttribute('href'));
+					else if (url) {
+						//console.log("parsed url");
+						ipcRenderer.send('file', url.getAttribute('href'));
+					}
 					else {
 						loading = false;
 						ipcRenderer.send('action', "Unrecognized format");
 					}
 				}
 			}
-			else ipcRenderer.send('file', e.dataTransfer.getData("text"));
+			else {
+				//console.log("text");
+				ipcRenderer.send('file', e.dataTransfer.getData("text"));
+			}
 	    }
 	    else {
 		    let text = e.dataTransfer.getData("text");
-		    console.log("gotten text", text);
+		    //console.log("gotten text", text);
 
 		    //HANDLE URL, DATA, AND WHATEVER ERRORS HERE
 	    }

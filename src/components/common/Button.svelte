@@ -2,11 +2,6 @@
 	import { createPopperActions } from 'svelte-popperjs';
 	import Tooltip from './Tooltip.svelte';
 
-	const [popperRef, popperContent] = createPopperActions({
-	    placement: 'bottom',
-	    strategy: 'fixed',
-	});
-
 	let showTooltip = false;
 
 	export let tips = false;
@@ -15,6 +10,11 @@
 	export let tiptext = false;
 	export let persistent = false;
 	export let context = "";
+
+	const [popperRef, popperContent] = createPopperActions({
+	    placement: context != "" ? 'bottom' : 'right',
+	    strategy: 'fixed',
+	});
 </script>
 
 <button

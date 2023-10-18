@@ -2,6 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import { createPopperActions } from 'svelte-popperjs';
 
+	import { tt, locale, locales } from "../../scripts/i18n.js";
+
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 	import Colorpicker from './Colorpicker.svelte';
@@ -28,7 +30,7 @@
 	{tips}
 	{legacy}
 	size="12px"
-	tiptext={"Change background"}
+	tiptext={$tt("toolbar.background")}
 	on:click={e => {
 		showDropdown = true;
 	}}

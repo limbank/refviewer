@@ -107,7 +107,11 @@ class fileProcessor {
         const Lumberjack = require('./lumberjack.js');
         jack = new Lumberjack();
 
-        if (!file) return jack.log("Missing file");
+        if (!file) {
+            event.sender.send('loading', false);
+            event.sender.send('action', "Failed to open image");
+            return jack.log("Missing file");
+        }
 
         //performance fix
         sharp = require('sharp');

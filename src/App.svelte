@@ -195,7 +195,7 @@
   	};
 
   	function handleMouseDown(e) {
-  		console.log("Canvas mousedown");
+  		//console.log("Canvas mousedown");
   		let canvas = e.srcElement;
         let positionInfo = canvas.getBoundingClientRect();
         let mousePos = helper.getMousePos(canvas, e, positionInfo);
@@ -272,15 +272,17 @@
 		let text = event.clipboardData.getData('Text');
 		if (text != "") {
 			if (text.startsWith("data") && text.includes("image")) {
+				//console.log("not text, sending stuff");
 				//text is a data string, try to process it
 				return ipcRenderer.send('file', text);
 			}
 			else if (text.startsWith("http")) {
+				//console.log("not text, sending http");
 				//text is a url string, try to process it
 				return ipcRenderer.send('file', text);
 			}
 			else {
-				console.log("text pasted! text:", text);
+				//console.log("text pasted! text:", text);
 				//account for pastes of other types of text?
 			}
 		}
@@ -366,7 +368,6 @@
 			croppingMode = true;
 	  		instance.zoom(1, { animate: false });
     		instance.pan(0, 0);
-    		console.log("reached");
 	  		instance.setOptions({ disablePan: true});
 		}}
 		on:pickColor={e => {

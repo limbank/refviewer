@@ -1,6 +1,6 @@
 class Helper {
 	constructor() {
-		console.log("working");
+		//console.log("working");
 	}
 	getMousePos(canvas, evt, rect) {
 		return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };

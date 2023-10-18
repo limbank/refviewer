@@ -1,4 +1,6 @@
 <script>
+	import { tt, locale, locales } from "../scripts/i18n.js";
+
 	export let legacy = false;
 </script>
 
@@ -12,7 +14,7 @@
 			{/if}
 			<div class="dropfield-inner-text">
 				<div class="dropfield-inner-text-line">
-					Drop image here
+					{$tt("dropfield.placeholder")}
 				</div>
 			</div>
 		</div>
