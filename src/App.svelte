@@ -17,7 +17,7 @@
 	//import mousetrap from 'svelte-use-mousetrap';
 
 	import Helper from './scripts/helper.js';
-	import settings from './scripts/newsettings.js';
+	import settings from './stores/settings.js';
 
 	const { ipcRenderer } = require('electron');
 	const { version } = require('../package.json');

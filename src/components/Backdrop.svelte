@@ -1,5 +1,5 @@
 <script>
-	import settings from '../scripts/newsettings.js';
+	import settings from '../stores/settings.js';
 </script>
 
 <div class="backdrop" class:legacy={$settings.theme}>

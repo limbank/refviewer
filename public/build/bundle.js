@@ -5019,7 +5019,7 @@ var app = (function () {
     			attr_dev(button, "class", button_class_value = "" + (null_to_empty("button " + /*context*/ ctx[3]) + " svelte-eaoyex"));
     			toggle_class(button, "legacy", /*$settings*/ ctx[5].theme);
     			toggle_class(button, "persistent", /*persistent*/ ctx[2]);
-    			add_location(button, file$T, 19, 0, 469);
+    			add_location(button, file$T, 19, 0, 465);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5279,7 +5279,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-bars");
-    			add_location(i, file$S, 71, 7, 1744);
+    			add_location(i, file$S, 71, 7, 1739);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5308,7 +5308,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$S, 69, 7, 1695);
+    			add_location(i, file$S, 69, 7, 1690);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5577,7 +5577,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-file-upload");
-    			add_location(i, file$S, 83, 5, 2005);
+    			add_location(i, file$S, 83, 5, 2000);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5607,7 +5607,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-crosshairs");
-    			add_location(i, file$S, 92, 8, 2229);
+    			add_location(i, file$S, 92, 8, 2224);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5698,7 +5698,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-trash");
-    			add_location(i, file$S, 102, 8, 2448);
+    			add_location(i, file$S, 102, 8, 2443);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5735,7 +5735,7 @@ var app = (function () {
     			t1 = space();
     			t2 = text(/*version*/ ctx[2]);
     			attr_dev(span, "class", "version svelte-1y8gu7w");
-    			add_location(span, file$S, 109, 3, 2572);
+    			add_location(span, file$S, 109, 3, 2567);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -5832,7 +5832,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-terminal");
-    			add_location(i, file$S, 118, 7, 2814);
+    			add_location(i, file$S, 118, 7, 2809);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5862,7 +5862,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-ghost");
-    			add_location(i, file$S, 127, 6, 3042);
+    			add_location(i, file$S, 127, 6, 3037);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5892,7 +5892,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-window");
-    			add_location(i, file$S, 135, 6, 3215);
+    			add_location(i, file$S, 135, 6, 3210);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5923,7 +5923,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-thumbtack svelte-1y8gu7w");
     			toggle_class(i, "pinned", /*pinned*/ ctx[3]);
-    			add_location(i, file$S, 143, 6, 3418);
+    			add_location(i, file$S, 143, 6, 3413);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5957,7 +5957,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-minus");
-    			add_location(i, file$S, 150, 6, 3625);
+    			add_location(i, file$S, 150, 6, 3620);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -5987,7 +5987,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-plus");
-    			add_location(i, file$S, 157, 3, 3810);
+    			add_location(i, file$S, 157, 3, 3805);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -6017,7 +6017,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-times");
-    			add_location(i, file$S, 165, 6, 4015);
+    			add_location(i, file$S, 165, 6, 4010);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -6184,12 +6184,12 @@ var app = (function () {
     			t8 = space();
     			create_component(button6.$$.fragment);
     			attr_dev(div0, "class", "titlebar-group svelte-1y8gu7w");
-    			add_location(div0, file$S, 58, 1, 1391);
+    			add_location(div0, file$S, 58, 1, 1386);
     			attr_dev(div1, "class", "titlebar-group svelte-1y8gu7w");
-    			add_location(div1, file$S, 107, 1, 2522);
+    			add_location(div1, file$S, 107, 1, 2517);
     			attr_dev(div2, "class", "titlebar svelte-1y8gu7w");
     			toggle_class(div2, "legacy", /*$settings*/ ctx[5].theme);
-    			add_location(div2, file$S, 57, 0, 1335);
+    			add_location(div2, file$S, 57, 0, 1330);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6630,7 +6630,7 @@ var app = (function () {
     			attr_dev(div, "class", "desktop svelte-18danl4");
     			set_style(div, "background", /*backdropColor*/ ctx[0]);
     			toggle_class(div, "legacy", /*$settings*/ ctx[1].theme);
-    			add_location(div, file$R, 111, 0, 3575);
+    			add_location(div, file$R, 111, 0, 3571);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6940,16 +6940,16 @@ var app = (function () {
     			t2 = space();
     			div3 = element("div");
     			attr_dev(div0, "class", "backdrop-bg backdrop-top svelte-3u4xdv");
-    			add_location(div0, file$Q, 5, 1, 131);
+    			add_location(div0, file$Q, 5, 1, 127);
     			attr_dev(div1, "class", "backdrop-bg backdrop-right svelte-3u4xdv");
-    			add_location(div1, file$Q, 6, 1, 178);
+    			add_location(div1, file$Q, 6, 1, 174);
     			attr_dev(div2, "class", "backdrop-bg backdrop-bottom svelte-3u4xdv");
-    			add_location(div2, file$Q, 7, 1, 227);
+    			add_location(div2, file$Q, 7, 1, 223);
     			attr_dev(div3, "class", "backdrop-bg backdrop-left svelte-3u4xdv");
-    			add_location(div3, file$Q, 8, 1, 277);
+    			add_location(div3, file$Q, 8, 1, 273);
     			attr_dev(div4, "class", "backdrop svelte-3u4xdv");
     			toggle_class(div4, "legacy", /*$settings*/ ctx[0].theme);
-    			add_location(div4, file$Q, 4, 0, 75);
+    			add_location(div4, file$Q, 4, 0, 71);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -13202,11 +13202,11 @@ var app = (function () {
     			span.textContent = "A:";
     			t1 = space();
     			input = element("input");
-    			add_location(span, file$D, 58, 6, 1566);
+    			add_location(span, file$D, 58, 6, 1561);
     			attr_dev(input, "placeholder", "A");
     			attr_dev(input, "type", "number");
-    			add_location(input, file$D, 59, 6, 1589);
-    			add_location(label, file$D, 57, 5, 1551);
+    			add_location(input, file$D, 59, 6, 1584);
+    			add_location(label, file$D, 57, 5, 1546);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -13252,7 +13252,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-1px)");
-    			add_location(i, file$D, 73, 6, 1975);
+    			add_location(i, file$D, 73, 6, 1970);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -13343,7 +13343,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$D, 84, 7, 2252);
+    			add_location(i, file$D, 84, 7, 2247);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -13482,36 +13482,36 @@ var app = (function () {
     			create_component(button.$$.fragment);
     			t14 = space();
     			if (if_block1) if_block1.c();
-    			add_location(span0, file$D, 45, 5, 1211);
+    			add_location(span0, file$D, 45, 5, 1206);
     			attr_dev(input0, "placeholder", "R");
     			attr_dev(input0, "type", "number");
-    			add_location(input0, file$D, 46, 5, 1233);
-    			add_location(label0, file$D, 44, 4, 1197);
-    			add_location(span1, file$D, 49, 5, 1323);
+    			add_location(input0, file$D, 46, 5, 1228);
+    			add_location(label0, file$D, 44, 4, 1192);
+    			add_location(span1, file$D, 49, 5, 1318);
     			attr_dev(input1, "placeholder", "G");
     			attr_dev(input1, "type", "number");
-    			add_location(input1, file$D, 50, 5, 1345);
-    			add_location(label1, file$D, 48, 4, 1309);
-    			add_location(span2, file$D, 53, 5, 1435);
+    			add_location(input1, file$D, 50, 5, 1340);
+    			add_location(label1, file$D, 48, 4, 1304);
+    			add_location(span2, file$D, 53, 5, 1430);
     			attr_dev(input2, "placeholder", "B");
     			attr_dev(input2, "type", "number");
-    			add_location(input2, file$D, 54, 5, 1457);
-    			add_location(label2, file$D, 52, 4, 1421);
+    			add_location(input2, file$D, 54, 5, 1452);
+    			add_location(label2, file$D, 52, 4, 1416);
     			attr_dev(div0, "class", "picker-controls-row");
-    			add_location(div0, file$D, 43, 3, 1158);
-    			add_location(span3, file$D, 65, 5, 1740);
+    			add_location(div0, file$D, 43, 3, 1153);
+    			add_location(span3, file$D, 65, 5, 1735);
     			attr_dev(input3, "placeholder", "Hex");
     			attr_dev(input3, "type", "text");
-    			add_location(input3, file$D, 66, 5, 1764);
-    			add_location(label3, file$D, 64, 4, 1726);
+    			add_location(input3, file$D, 66, 5, 1759);
+    			add_location(label3, file$D, 64, 4, 1721);
     			attr_dev(div1, "class", "picker-controls-row");
-    			add_location(div1, file$D, 63, 3, 1687);
+    			add_location(div1, file$D, 63, 3, 1682);
     			attr_dev(div2, "class", "picker-controls");
-    			add_location(div2, file$D, 42, 2, 1124);
+    			add_location(div2, file$D, 42, 2, 1119);
     			attr_dev(div3, "class", "picker-split");
-    			add_location(div3, file$D, 41, 1, 1094);
+    			add_location(div3, file$D, 41, 1, 1089);
     			attr_dev(div4, "class", "picker-wrapper");
-    			add_location(div4, file$D, 39, 0, 950);
+    			add_location(div4, file$D, 39, 0, 945);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -14299,7 +14299,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-palette");
-    			add_location(i, file$B, 55, 1, 1342);
+    			add_location(i, file$B, 55, 1, 1338);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -14424,12 +14424,12 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = space();
     			attr_dev(div0, "class", "item-detail svelte-t9gqwf");
-    			add_location(div0, file$B, 75, 5, 1829);
+    			add_location(div0, file$B, 75, 5, 1825);
     			attr_dev(div1, "class", "item-detail svelte-t9gqwf");
-    			add_location(div1, file$B, 80, 5, 1930);
+    			add_location(div1, file$B, 80, 5, 1926);
     			attr_dev(div2, "class", "item svelte-t9gqwf");
     			set_style(div2, "background", "rgb(" + /*color*/ ctx[14][0] + ", " + /*color*/ ctx[14][1] + ", " + /*color*/ ctx[14][2] + ")");
-    			add_location(div2, file$B, 67, 4, 1578);
+    			add_location(div2, file$B, 67, 4, 1574);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -14498,7 +14498,7 @@ var app = (function () {
     			}
 
     			attr_dev(div, "class", "palette svelte-t9gqwf");
-    			add_location(div, file$B, 65, 2, 1522);
+    			add_location(div, file$B, 65, 2, 1518);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -15399,7 +15399,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-fill");
-    			add_location(i, file$z, 33, 1, 877);
+    			add_location(i, file$z, 33, 1, 872);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16505,7 +16505,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "far fa-save");
-    			add_location(i, file$x, 96, 3, 2615);
+    			add_location(i, file$x, 96, 3, 2610);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16536,7 +16536,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-clipboard");
     			set_style(i, "transform", "translateY(-2px)");
-    			add_location(i, file$x, 103, 6, 2754);
+    			add_location(i, file$x, 103, 6, 2749);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16567,7 +16567,7 @@ var app = (function () {
     			i = element("i");
     			attr_dev(i, "class", "far fa-crop-alt");
     			attr_dev(i, "style", "");
-    			add_location(i, file$x, 110, 6, 2953);
+    			add_location(i, file$x, 110, 6, 2948);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16597,7 +16597,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-sync-alt");
-    			add_location(i, file$x, 117, 6, 3129);
+    			add_location(i, file$x, 117, 6, 3124);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16627,7 +16627,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-redo");
-    			add_location(i, file$x, 124, 6, 3295);
+    			add_location(i, file$x, 124, 6, 3290);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16657,7 +16657,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-adjust");
-    			add_location(i, file$x, 150, 7, 3812);
+    			add_location(i, file$x, 150, 7, 3807);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16687,7 +16687,7 @@ var app = (function () {
     		c: function create() {
     			i = element("i");
     			attr_dev(i, "class", "fas fa-minus-circle");
-    			add_location(i, file$x, 157, 7, 3985);
+    			add_location(i, file$x, 157, 7, 3980);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -16849,7 +16849,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "toolbox svelte-112dzzp");
     			toggle_class(div, "legacy", /*$settings*/ ctx[8].theme);
-    			add_location(div, file$x, 86, 0, 2409);
+    			add_location(div, file$x, 86, 0, 2404);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17462,9 +17462,9 @@ var app = (function () {
     			div = element("div");
     			i = element("i");
     			attr_dev(i, "class", "fas fa-upload");
-    			add_location(i, file$v, 10, 5, 336);
+    			add_location(i, file$v, 10, 5, 331);
     			attr_dev(div, "class", "dropfield-inner-icon svelte-1imzacy");
-    			add_location(div, file$v, 9, 4, 295);
+    			add_location(div, file$v, 9, 4, 290);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -17508,16 +17508,16 @@ var app = (function () {
     			div0 = element("div");
     			t1 = text(t1_value);
     			attr_dev(div0, "class", "dropfield-inner-text-line");
-    			add_location(div0, file$v, 14, 4, 432);
+    			add_location(div0, file$v, 14, 4, 427);
     			attr_dev(div1, "class", "dropfield-inner-text svelte-1imzacy");
-    			add_location(div1, file$v, 13, 3, 392);
+    			add_location(div1, file$v, 13, 3, 387);
     			attr_dev(div2, "class", "dropfield-inner svelte-1imzacy");
-    			add_location(div2, file$v, 7, 2, 233);
+    			add_location(div2, file$v, 7, 2, 228);
     			attr_dev(div3, "class", "dropfield-inner-wrapper svelte-1imzacy");
-    			add_location(div3, file$v, 6, 1, 192);
+    			add_location(div3, file$v, 6, 1, 187);
     			attr_dev(div4, "class", "dropfield svelte-1imzacy");
     			toggle_class(div4, "legacy", /*$settings*/ ctx[0].theme);
-    			add_location(div4, file$v, 5, 0, 135);
+    			add_location(div4, file$v, 5, 0, 130);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -17879,178 +17879,178 @@ var app = (function () {
     			div49 = element("div");
     			div49.textContent = "Reset the settings back to their defaults";
     			attr_dev(div0, "class", "setting-title svelte-1pmyr72");
-    			add_location(div0, file$u, 32, 2, 647);
+    			add_location(div0, file$u, 32, 2, 643);
     			attr_dev(span0, "class", "setting-control-info svelte-1pmyr72");
-    			add_location(span0, file$u, 36, 3, 738);
+    			add_location(span0, file$u, 36, 3, 734);
     			attr_dev(div1, "class", "setting-control svelte-1pmyr72");
-    			add_location(div1, file$u, 35, 2, 704);
+    			add_location(div1, file$u, 35, 2, 700);
     			attr_dev(input0, "type", "range");
     			attr_dev(input0, "step", "0.1");
     			attr_dev(input0, "max", "1");
     			attr_dev(input0, "min", "0.1");
     			attr_dev(input0, "class", "svelte-1pmyr72");
-    			add_location(input0, file$u, 39, 3, 850);
+    			add_location(input0, file$u, 39, 3, 846);
     			attr_dev(div2, "class", "setting-control-large svelte-1pmyr72");
-    			add_location(div2, file$u, 38, 2, 810);
+    			add_location(div2, file$u, 38, 2, 806);
     			attr_dev(div3, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div3, file$u, 31, 1, 616);
+    			add_location(div3, file$u, 31, 1, 612);
     			attr_dev(div4, "class", "setting svelte-1pmyr72");
-    			add_location(div4, file$u, 30, 0, 592);
+    			add_location(div4, file$u, 30, 0, 588);
     			attr_dev(div5, "class", "setting-title svelte-1pmyr72");
-    			add_location(div5, file$u, 45, 2, 1011);
+    			add_location(div5, file$u, 45, 2, 1007);
     			attr_dev(input1, "type", "checkbox");
     			attr_dev(input1, "class", "svelte-1pmyr72");
-    			add_location(input1, file$u, 50, 4, 1134);
+    			add_location(input1, file$u, 50, 4, 1130);
     			attr_dev(span1, "class", "slider svelte-1pmyr72");
-    			add_location(span1, file$u, 51, 4, 1198);
+    			add_location(span1, file$u, 51, 4, 1194);
     			attr_dev(label0, "class", "switch svelte-1pmyr72");
-    			add_location(label0, file$u, 49, 3, 1106);
+    			add_location(label0, file$u, 49, 3, 1102);
     			attr_dev(div6, "class", "setting-control svelte-1pmyr72");
-    			add_location(div6, file$u, 48, 2, 1072);
+    			add_location(div6, file$u, 48, 2, 1068);
     			attr_dev(div7, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div7, file$u, 44, 1, 980);
+    			add_location(div7, file$u, 44, 1, 976);
     			attr_dev(div8, "class", "setting-description svelte-1pmyr72");
-    			add_location(div8, file$u, 55, 1, 1261);
+    			add_location(div8, file$u, 55, 1, 1257);
     			attr_dev(div9, "class", "setting svelte-1pmyr72");
-    			add_location(div9, file$u, 43, 0, 956);
+    			add_location(div9, file$u, 43, 0, 952);
     			attr_dev(div10, "class", "setting-title svelte-1pmyr72");
-    			add_location(div10, file$u, 61, 2, 1430);
+    			add_location(div10, file$u, 61, 2, 1426);
     			attr_dev(input2, "type", "checkbox");
     			attr_dev(input2, "class", "svelte-1pmyr72");
-    			add_location(input2, file$u, 66, 4, 1554);
+    			add_location(input2, file$u, 66, 4, 1550);
     			attr_dev(span2, "class", "slider svelte-1pmyr72");
-    			add_location(span2, file$u, 67, 4, 1617);
+    			add_location(span2, file$u, 67, 4, 1613);
     			attr_dev(label1, "class", "switch svelte-1pmyr72");
-    			add_location(label1, file$u, 65, 3, 1526);
+    			add_location(label1, file$u, 65, 3, 1522);
     			attr_dev(div11, "class", "setting-control svelte-1pmyr72");
-    			add_location(div11, file$u, 64, 2, 1492);
+    			add_location(div11, file$u, 64, 2, 1488);
     			attr_dev(div12, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div12, file$u, 60, 1, 1399);
+    			add_location(div12, file$u, 60, 1, 1395);
     			attr_dev(div13, "class", "setting-description svelte-1pmyr72");
-    			add_location(div13, file$u, 71, 1, 1680);
+    			add_location(div13, file$u, 71, 1, 1676);
     			attr_dev(div14, "class", "setting svelte-1pmyr72");
-    			add_location(div14, file$u, 59, 0, 1375);
+    			add_location(div14, file$u, 59, 0, 1371);
     			attr_dev(div15, "class", "setting-title svelte-1pmyr72");
-    			add_location(div15, file$u, 77, 2, 1824);
+    			add_location(div15, file$u, 77, 2, 1820);
     			attr_dev(input3, "type", "checkbox");
     			attr_dev(input3, "class", "svelte-1pmyr72");
-    			add_location(input3, file$u, 82, 4, 1943);
+    			add_location(input3, file$u, 82, 4, 1939);
     			attr_dev(span3, "class", "slider svelte-1pmyr72");
-    			add_location(span3, file$u, 83, 4, 2008);
+    			add_location(span3, file$u, 83, 4, 2004);
     			attr_dev(label2, "class", "switch svelte-1pmyr72");
-    			add_location(label2, file$u, 81, 3, 1915);
+    			add_location(label2, file$u, 81, 3, 1911);
     			attr_dev(div16, "class", "setting-control svelte-1pmyr72");
-    			add_location(div16, file$u, 80, 2, 1881);
+    			add_location(div16, file$u, 80, 2, 1877);
     			attr_dev(div17, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div17, file$u, 76, 1, 1793);
+    			add_location(div17, file$u, 76, 1, 1789);
     			attr_dev(div18, "class", "setting svelte-1pmyr72");
-    			add_location(div18, file$u, 75, 0, 1769);
+    			add_location(div18, file$u, 75, 0, 1765);
     			attr_dev(div19, "class", "setting-title svelte-1pmyr72");
-    			add_location(div19, file$u, 90, 2, 2133);
+    			add_location(div19, file$u, 90, 2, 2129);
     			attr_dev(input4, "type", "checkbox");
     			attr_dev(input4, "class", "svelte-1pmyr72");
-    			add_location(input4, file$u, 95, 4, 2253);
+    			add_location(input4, file$u, 95, 4, 2249);
     			attr_dev(span4, "class", "slider svelte-1pmyr72");
-    			add_location(span4, file$u, 96, 4, 2313);
+    			add_location(span4, file$u, 96, 4, 2309);
     			attr_dev(label3, "class", "switch svelte-1pmyr72");
-    			add_location(label3, file$u, 94, 3, 2225);
+    			add_location(label3, file$u, 94, 3, 2221);
     			attr_dev(div20, "class", "setting-control svelte-1pmyr72");
-    			add_location(div20, file$u, 93, 2, 2191);
+    			add_location(div20, file$u, 93, 2, 2187);
     			attr_dev(div21, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div21, file$u, 89, 1, 2102);
+    			add_location(div21, file$u, 89, 1, 2098);
     			attr_dev(div22, "class", "setting svelte-1pmyr72");
-    			add_location(div22, file$u, 88, 0, 2078);
+    			add_location(div22, file$u, 88, 0, 2074);
     			attr_dev(div23, "class", "setting-title svelte-1pmyr72");
-    			add_location(div23, file$u, 103, 2, 2438);
+    			add_location(div23, file$u, 103, 2, 2434);
     			attr_dev(input5, "type", "checkbox");
     			attr_dev(input5, "class", "svelte-1pmyr72");
-    			add_location(input5, file$u, 108, 4, 2562);
+    			add_location(input5, file$u, 108, 4, 2558);
     			attr_dev(span5, "class", "slider svelte-1pmyr72");
-    			add_location(span5, file$u, 109, 4, 2625);
+    			add_location(span5, file$u, 109, 4, 2621);
     			attr_dev(label4, "class", "switch svelte-1pmyr72");
-    			add_location(label4, file$u, 107, 3, 2534);
+    			add_location(label4, file$u, 107, 3, 2530);
     			attr_dev(div24, "class", "setting-control svelte-1pmyr72");
-    			add_location(div24, file$u, 106, 2, 2500);
+    			add_location(div24, file$u, 106, 2, 2496);
     			attr_dev(div25, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div25, file$u, 102, 1, 2407);
+    			add_location(div25, file$u, 102, 1, 2403);
     			attr_dev(div26, "class", "setting svelte-1pmyr72");
-    			add_location(div26, file$u, 101, 0, 2383);
+    			add_location(div26, file$u, 101, 0, 2379);
     			attr_dev(div27, "class", "setting-title svelte-1pmyr72");
-    			add_location(div27, file$u, 116, 2, 2750);
+    			add_location(div27, file$u, 116, 2, 2746);
     			attr_dev(input6, "type", "checkbox");
     			attr_dev(input6, "class", "svelte-1pmyr72");
-    			add_location(input6, file$u, 121, 4, 2877);
+    			add_location(input6, file$u, 121, 4, 2873);
     			attr_dev(span6, "class", "slider svelte-1pmyr72");
-    			add_location(span6, file$u, 122, 4, 2944);
+    			add_location(span6, file$u, 122, 4, 2940);
     			attr_dev(label5, "class", "switch svelte-1pmyr72");
-    			add_location(label5, file$u, 120, 3, 2849);
+    			add_location(label5, file$u, 120, 3, 2845);
     			attr_dev(div28, "class", "setting-control svelte-1pmyr72");
-    			add_location(div28, file$u, 119, 2, 2815);
+    			add_location(div28, file$u, 119, 2, 2811);
     			attr_dev(div29, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div29, file$u, 115, 1, 2719);
+    			add_location(div29, file$u, 115, 1, 2715);
     			attr_dev(div30, "class", "setting-description svelte-1pmyr72");
-    			add_location(div30, file$u, 126, 1, 3007);
+    			add_location(div30, file$u, 126, 1, 3003);
     			attr_dev(div31, "class", "setting svelte-1pmyr72");
-    			add_location(div31, file$u, 114, 0, 2695);
+    			add_location(div31, file$u, 114, 0, 2691);
     			attr_dev(div32, "class", "setting-title svelte-1pmyr72");
-    			add_location(div32, file$u, 132, 2, 3180);
+    			add_location(div32, file$u, 132, 2, 3176);
     			attr_dev(input7, "type", "checkbox");
     			attr_dev(input7, "class", "svelte-1pmyr72");
-    			add_location(input7, file$u, 137, 4, 3309);
+    			add_location(input7, file$u, 137, 4, 3305);
     			attr_dev(span7, "class", "slider svelte-1pmyr72");
-    			add_location(span7, file$u, 138, 4, 3372);
+    			add_location(span7, file$u, 138, 4, 3368);
     			attr_dev(label6, "class", "switch svelte-1pmyr72");
-    			add_location(label6, file$u, 136, 3, 3281);
+    			add_location(label6, file$u, 136, 3, 3277);
     			attr_dev(div33, "class", "setting-control svelte-1pmyr72");
-    			add_location(div33, file$u, 135, 2, 3247);
+    			add_location(div33, file$u, 135, 2, 3243);
     			attr_dev(div34, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div34, file$u, 131, 1, 3149);
+    			add_location(div34, file$u, 131, 1, 3145);
     			attr_dev(div35, "class", "setting svelte-1pmyr72");
-    			add_location(div35, file$u, 130, 0, 3125);
+    			add_location(div35, file$u, 130, 0, 3121);
     			attr_dev(div36, "class", "setting-title svelte-1pmyr72");
-    			add_location(div36, file$u, 145, 2, 3534);
+    			add_location(div36, file$u, 145, 2, 3530);
     			attr_dev(input8, "type", "hidden");
-    			add_location(input8, file$u, 149, 3, 3633);
+    			add_location(input8, file$u, 149, 3, 3629);
     			attr_dev(button0, "class", "button svelte-1pmyr72");
-    			add_location(button0, file$u, 150, 3, 3690);
+    			add_location(button0, file$u, 150, 3, 3686);
     			attr_dev(div37, "class", "setting-control svelte-1pmyr72");
-    			add_location(div37, file$u, 148, 2, 3599);
+    			add_location(div37, file$u, 148, 2, 3595);
     			attr_dev(div38, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div38, file$u, 144, 1, 3503);
+    			add_location(div38, file$u, 144, 1, 3499);
     			attr_dev(div39, "class", "setting-description svelte-1pmyr72");
-    			add_location(div39, file$u, 155, 1, 3854);
+    			add_location(div39, file$u, 155, 1, 3850);
     			attr_dev(div40, "class", "setting svelte-1pmyr72");
     			toggle_class(div40, "disabled", !/*$settings*/ ctx[1].autosave);
-    			add_location(div40, file$u, 143, 0, 3442);
+    			add_location(div40, file$u, 143, 0, 3438);
     			attr_dev(div41, "class", "setting-title svelte-1pmyr72");
-    			add_location(div41, file$u, 161, 2, 4011);
+    			add_location(div41, file$u, 161, 2, 4007);
     			attr_dev(input9, "type", "checkbox");
     			attr_dev(input9, "class", "svelte-1pmyr72");
-    			add_location(input9, file$u, 166, 4, 4133);
+    			add_location(input9, file$u, 166, 4, 4129);
     			attr_dev(span8, "class", "slider svelte-1pmyr72");
-    			add_location(span8, file$u, 167, 4, 4195);
+    			add_location(span8, file$u, 167, 4, 4191);
     			attr_dev(label7, "class", "switch svelte-1pmyr72");
-    			add_location(label7, file$u, 165, 3, 4105);
+    			add_location(label7, file$u, 165, 3, 4101);
     			attr_dev(div42, "class", "setting-control svelte-1pmyr72");
-    			add_location(div42, file$u, 164, 2, 4071);
+    			add_location(div42, file$u, 164, 2, 4067);
     			attr_dev(div43, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div43, file$u, 160, 1, 3980);
+    			add_location(div43, file$u, 160, 1, 3976);
     			attr_dev(div44, "class", "setting-description svelte-1pmyr72");
-    			add_location(div44, file$u, 171, 1, 4258);
+    			add_location(div44, file$u, 171, 1, 4254);
     			attr_dev(div45, "class", "setting svelte-1pmyr72");
-    			add_location(div45, file$u, 159, 0, 3956);
+    			add_location(div45, file$u, 159, 0, 3952);
     			attr_dev(div46, "class", "setting-title svelte-1pmyr72");
-    			add_location(div46, file$u, 177, 2, 4405);
+    			add_location(div46, file$u, 177, 2, 4401);
     			attr_dev(button1, "class", "button svelte-1pmyr72");
-    			add_location(button1, file$u, 181, 3, 4499);
+    			add_location(button1, file$u, 181, 3, 4495);
     			attr_dev(div47, "class", "setting-control svelte-1pmyr72");
-    			add_location(div47, file$u, 180, 2, 4465);
+    			add_location(div47, file$u, 180, 2, 4461);
     			attr_dev(div48, "class", "setting-inner svelte-1pmyr72");
-    			add_location(div48, file$u, 176, 1, 4374);
+    			add_location(div48, file$u, 176, 1, 4370);
     			attr_dev(div49, "class", "setting-description svelte-1pmyr72");
-    			add_location(div49, file$u, 184, 1, 4587);
+    			add_location(div49, file$u, 184, 1, 4583);
     			attr_dev(div50, "class", "setting svelte-1pmyr72");
-    			add_location(div50, file$u, 175, 0, 4350);
+    			add_location(div50, file$u, 175, 0, 4346);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -18523,7 +18523,7 @@ var app = (function () {
     			if (if_block) if_block.c();
     			t0 = space();
     			div0 = element("div");
-    			div0.textContent = "limbank.org © 2018-2022";
+    			div0.textContent = "limbank.org © 2018-2023";
     			t2 = space();
     			div1 = element("div");
     			div1.textContent = "Special thanks to:";
@@ -18591,19 +18591,19 @@ var app = (function () {
     			attr_dev(li0, "class", "about-list-icon svelte-fc0wla");
     			add_location(li0, file$t, 35, 2, 566);
     			attr_dev(i1, "class", "fab fa-github-square");
-    			add_location(i1, file$t, 39, 50, 775);
-    			attr_dev(a1, "href", "https://limbank.github.io/refviewer/");
+    			add_location(i1, file$t, 39, 51, 776);
+    			attr_dev(a1, "href", "https://github.com/limbank/refviewer/");
     			attr_dev(a1, "class", "svelte-fc0wla");
     			add_location(a1, file$t, 39, 3, 728);
     			attr_dev(li1, "class", "about-list-icon svelte-fc0wla");
     			add_location(li1, file$t, 38, 2, 695);
     			attr_dev(i2, "class", "fas fa-home");
-    			add_location(i2, file$t, 42, 32, 890);
-    			attr_dev(a2, "href", "http://limbank.org");
+    			add_location(i2, file$t, 42, 50, 909);
+    			attr_dev(a2, "href", "https://limbank.github.io/refviewer/");
     			attr_dev(a2, "class", "svelte-fc0wla");
-    			add_location(a2, file$t, 42, 3, 861);
+    			add_location(a2, file$t, 42, 3, 862);
     			attr_dev(li2, "class", "about-list-icon svelte-fc0wla");
-    			add_location(li2, file$t, 41, 2, 828);
+    			add_location(li2, file$t, 41, 2, 829);
     			attr_dev(ul, "class", "about-list svelte-fc0wla");
     			add_location(ul, file$t, 34, 1, 539);
     			attr_dev(div6, "class", "about-text svelte-fc0wla");
@@ -30769,11 +30769,11 @@ var app = (function () {
     			set_style(div0, "opacity", /*workAreaOpacity*/ ctx[16]);
     			toggle_class(div0, "pickingMode", /*pickingMode*/ ctx[8]);
     			toggle_class(div0, "croppingMode", /*croppingMode*/ ctx[9]);
-    			add_location(div0, file, 402, 4, 10215);
+    			add_location(div0, file, 402, 4, 10211);
     			attr_dev(div1, "class", "canvas-container svelte-nv5cfc");
     			toggle_class(div1, "legacy", /*$settings*/ ctx[5].theme);
     			toggle_class(div1, "pixelated", /*pixelated*/ ctx[7]);
-    			add_location(div1, file, 382, 3, 9819);
+    			add_location(div1, file, 382, 3, 9815);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -31455,7 +31455,7 @@ var app = (function () {
     			create_component(desktop.$$.fragment);
     			attr_dev(main, "class", "svelte-nv5cfc");
     			toggle_class(main, "legacy", /*$settings*/ ctx[5].theme);
-    			add_location(main, file, 329, 0, 8744);
+    			add_location(main, file, 329, 0, 8740);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

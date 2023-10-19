@@ -2,7 +2,7 @@
 	import { createPopperActions } from 'svelte-popperjs';
 	import Tooltip from './Tooltip.svelte';
 
-	import settings from '../../scripts/newsettings.js';
+	import settings from '../../stores/settings.js';
 
 	let showTooltip = false;
 

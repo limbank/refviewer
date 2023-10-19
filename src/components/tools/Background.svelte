@@ -2,8 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import { createPopperActions } from 'svelte-popperjs';
 
-	import { tt, locale, locales } from "../../scripts/i18n.js";
-	import settings from '../../scripts/newsettings.js';
+	import { tt, locale, locales } from "../../stores/i18n.js";
+	import settings from '../../stores/settings.js';
 
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';

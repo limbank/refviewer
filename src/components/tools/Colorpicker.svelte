@@ -5,8 +5,8 @@
 	import tinycolor from 'tinycolor2';
 	import Button from '../common/Button.svelte';
 
-	import { tt, locale, locales } from "../../scripts/i18n.js";
-	import settings from '../../scripts/newsettings.js';
+	import { tt, locale, locales } from "../../stores/i18n.js";
+	import settings from '../../stores/settings.js';
 
 	export let reset;
 	export let alpha = true;

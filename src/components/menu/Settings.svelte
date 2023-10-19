@@ -1,7 +1,7 @@
 <script>
 	const { ipcRenderer } = require('electron');
 
-  	import settings from '../../scripts/newsettings.js';
+  	import settings from '../../stores/settings.js';
 
     let resetConfirmed = false;
     let resetText = "Reset";

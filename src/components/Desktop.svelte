@@ -2,7 +2,7 @@
 	const HTMLParser = require('node-html-parser');
 	const { ipcRenderer } = require('electron');
 
-	import settings from '../scripts/newsettings.js';
+	import settings from '../stores/settings.js';
 
 	export let loading = false;
 	export let backdropColor = "#2F2E33";

@@ -1,6 +1,6 @@
 <script>
-	import { tt, locale, locales } from "../scripts/i18n.js";
-	import settings from '../scripts/newsettings.js';
+	import { tt, locale, locales } from "../stores/i18n.js";
+	import settings from '../stores/settings.js';
 </script>
 
 <div class="dropfield" class:legacy={$settings.theme}>

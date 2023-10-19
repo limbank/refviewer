@@ -3,8 +3,8 @@
 	import mousetrap from 'svelte-use-mousetrap';
 	const { ipcRenderer } = require('electron');
 
-	import { tt, locale, locales } from "../scripts/i18n.js";
-	import settings from '../scripts/newsettings.js';
+	import { tt, locale, locales } from "../stores/i18n.js";
+	import settings from '../stores/settings.js';
 
 	import Button from './common/Button.svelte';
 	import Eyedropper from './tools/Eyedropper.svelte';

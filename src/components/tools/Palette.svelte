@@ -7,7 +7,7 @@
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 
-	import settings from '../../scripts/newsettings.js';
+	import settings from '../../stores/settings.js';
 
 	const dispatch = createEventDispatcher();
 
