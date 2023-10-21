@@ -1,0 +1,85 @@
+main#legacy .backdrop {
+  border-radius: 0px;
+}
+main#legacy .backdrop-bg {
+  background: #111111;
+}
+main#legacy .backdrop-top {
+  height: 47px;
+}
+main#legacy .backdrop-bottom {
+  height: 12px;
+}
+main#legacy .backdrop-right {
+  width: 12px;
+}
+main#legacy .backdrop-left {
+  width: 47px;
+}
+main#legacy .content {
+  border-radius: 0PX;
+  padding: 35px 10px 10px;
+}
+main#legacy .content .desktop {
+  margin-top: 10px;
+}
+main#legacy .content .desktop .dropfield-inner-wrapper {
+  padding: 0;
+}
+main#legacy .content .desktop .dropfield-inner {
+  color: #3F3F3F;
+}
+main#legacy .content .desktop .canvas-container {
+  padding: 20px;
+  border-radius: 3px;
+  border: 2px dashed #3A3940;
+  box-sizing: border-box;
+}
+main#legacy .content .desktop .canvas-container .zoomscale {
+  top: 55px;
+  right: 20px;
+  border: 2px solid #3F3F3F;
+  background: #111111;
+  color: #3F3F3F;
+}
+main#legacy .content .desktop .canvas-container .zoomscale:hover {
+  border-color: black;
+  color: #000;
+  background-color: #3F3F3F;
+}
+main#legacy .content .toolbar {
+  padding: 10px 10px 10px 0;
+}
+main#legacy .content .titlebar {
+  border-bottom: 2px solid #3F3F3F;
+  padding: 0 10px 10px;
+  height: 35px;
+}
+main#legacy .content .titlebar .version {
+  height: 25px;
+  color: #3F3F3F;
+}
+main#legacy .content .button {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 10px;
+  border: 2px solid #3F3F3F;
+  background: transparent;
+  color: #3F3F3F;
+  font-size: 14px;
+}
+main#legacy .content .button:hover {
+  border-color: black;
+  color: black;
+  background-color: #3F3F3F;
+}
+main#legacy .content .button.control {
+  width: 40px;
+  border-top: unset;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  line-height: 25px;
+  text-align: center;
+}

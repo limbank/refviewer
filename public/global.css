@@ -1,3 +1,7 @@
+:root {
+    font-family: 'Open Sans';
+}
+
 html, body {
 	position: relative;
 	width: 100%;
@@ -6,29 +10,26 @@ html, body {
 
 body {
 	margin: 0;
-	overflow: hidden;
-	background: transparent;
-    font-family: 'Open Sans';
-}
-
-/* width */
-::-webkit-scrollbar {
-	width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-	border-radius: 3px;
-	background: #3A3940;
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-	border-radius: 3px;
-	background: #2F2E33;
 }
 
 ::selection {
 	background: #FAA916;
 	color: #171719;
+}
+
+/* scrollbar width */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+/* scrollbar track */
+::-webkit-scrollbar-track {
+	border-radius: 3px;
+	background: #3A3940;
+}
+ 
+/* scrollbar handle */
+::-webkit-scrollbar-thumb {
+	border-radius: 3px;
+	background: #2F2E33;
 }

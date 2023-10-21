@@ -325,150 +325,151 @@
 	on:mouseup={mouseUpBlur}
 />
 
-<Backdrop />
+<main id={$settings.theme ? "legacy" : "default"}>
+	<Backdrop />
 
-<main class:legacy={$settings.theme}>
-	<Titlebar
-		{settingsOpen}
-		{version}
-		{fileSelected}
-		on:clear={e => {
-			fileSelected = false;
-	    	hex = undefined;
-			pickingMode = false;
-			croppingMode = false;
-		    delInstance();
-		}}
-		on:copy={tbx.copyImage}
-		on:settingsOpen={e => { settingsOpen = e.detail; }}
-	/>
-	<Toolbar
-		{settingsOpen}
-		{fileSelected}
-		{hex}
-		bind:this={tbx}
-		bind:backdropColor
-		bind:showDropdown
-		on:cropImage={e => {
-			pickingMode = false;
-			croppingMode = true;
-	  		instance.zoom(1, { animate: false });
-    		instance.pan(0, 0);
-	  		instance.setOptions({ disablePan: true});
-		}}
-		on:pickColor={e => {
-			croppingMode = false;
-			pickingMode = true;
-	  		instance.setOptions({ disablePan: true });
-		}}
-	/>
-	<Desktop
-		{fileSelected}
-		{backdropColor}
-		{settingsOpen}
-		bind:loading
-	>
-		{#if settingsOpen}
-			<Menu
-				{version}
-				on:settingsOpen={e => { settingsOpen = e.detail; }}
-			/>
-		{/if}
+	<div class="content">
+		<Titlebar
+			{settingsOpen}
+			{version}
+			{fileSelected}
+			on:clear={e => {
+				fileSelected = false;
+		    	hex = undefined;
+				pickingMode = false;
+				croppingMode = false;
+			    delInstance();
+			}}
+			on:copy={tbx.copyImage}
+			on:settingsOpen={e => { settingsOpen = e.detail; }}
+		/>
+		<Toolbar
+			{settingsOpen}
+			{fileSelected}
+			{hex}
+			bind:this={tbx}
+			bind:backdropColor
+			bind:showDropdown
+			on:cropImage={e => {
+				pickingMode = false;
+				croppingMode = true;
+		  		instance.zoom(1, { animate: false });
+	    		instance.pan(0, 0);
+		  		instance.setOptions({ disablePan: true});
+			}}
+			on:pickColor={e => {
+				croppingMode = false;
+				pickingMode = true;
+		  		instance.setOptions({ disablePan: true });
+			}}
+		/>
+		<Desktop
+			{fileSelected}
+			{backdropColor}
+			{settingsOpen}
+			bind:loading
+		>
+			{#if settingsOpen}
+				<Menu
+					{version}
+					on:settingsOpen={e => { settingsOpen = e.detail; }}
+				/>
+			{/if}
 
-		{#if loading}
-			<Loader />
-		{/if}
+			{#if loading}
+				<Loader />
+			{/if}
 
-		{#if fileSelected && !loading}
-			<div
-				class="canvas-container"
-				class:legacy={$settings.theme}
-				class:pixelated
-				on:mousemove={handleCursor}
-			>
-				{#if pickingMode && mouseincanvas}
-					<Cursor
-						x={m.x}
-						y={m.y}
-						{chosenColor}
-					/>
-				{/if}
-
-				{#if $settings.zoomslider}
-					<Zoomslider {zoomscale} {instance} />
-				{/if}
-
-				<Zoomscale {zoomscale} {instance} />
-
+			{#if fileSelected && !loading}
 				<div
-					class="canvas-container-inner"
-			    	style="opacity: {workAreaOpacity}"
-					class:pickingMode
-					class:croppingMode
-			    	on:click={() => {
-			    		setTimeout(() => {
-				    		if (pickingMode) {
-				    			pickingMode = false;
-		  						instance.setOptions({ disablePan: false });
-				    		}
-			    		}, 100);
-			    	}}
+					class="canvas-container"
+					class:pixelated
+					on:mousemove={handleCursor}
 				>
-				    <Canvas
-				    	width={width}
-				    	height={height}
-				    	on:mousedown={handleMouseDown}
-				    	on:mouseup={handleMouseUp}
-				    	on:mousemove={handleMouseMove}
-				    	on:mouseenter={() => { mouseincanvas = true; }}
-				    	on:mouseleave={() => { mouseincanvas = false; }}
+					{#if pickingMode && mouseincanvas}
+						<Cursor
+							x={m.x}
+							y={m.y}
+							{chosenColor}
+						/>
+					{/if}
+
+					{#if $settings.zoomslider}
+						<Zoomslider {zoomscale} {instance} />
+					{/if}
+
+					<Zoomscale {zoomscale} {instance} />
+
+					<div
+						class="canvas-container-inner"
+				    	style="opacity: {workAreaOpacity}"
+						class:pickingMode
+						class:croppingMode
 				    	on:click={() => {
-				    		if (pickingMode) {
-				    			pickingMode = false;
-		  						instance.setOptions({ disablePan: false });
-		  						if (hex == chosenColor) {
-		  							//alert("choosing same color escape");
-		  							showDropdown = true;
-		  						}
-				    			hex = chosenColor;
-				    		}
+				    		setTimeout(() => {
+					    		if (pickingMode) {
+					    			pickingMode = false;
+			  						instance.setOptions({ disablePan: false });
+					    		}
+				    		}, 100);
 				    	}}
-				    >
-						<Layer {render} />
+					>
+					    <Canvas
+					    	width={width}
+					    	height={height}
+					    	on:mousedown={handleMouseDown}
+					    	on:mouseup={handleMouseUp}
+					    	on:mousemove={handleMouseMove}
+					    	on:mouseenter={() => { mouseincanvas = true; }}
+					    	on:mouseleave={() => { mouseincanvas = false; }}
+					    	on:click={() => {
+					    		if (pickingMode) {
+					    			pickingMode = false;
+			  						instance.setOptions({ disablePan: false });
+			  						if (hex == chosenColor) {
+			  							//alert("choosing same color escape");
+			  							showDropdown = true;
+			  						}
+					    			hex = chosenColor;
+					    		}
+					    	}}
+					    >
+							<Layer {render} />
 
-						{#if croppingMode}
-							<Layer render={testRender} />
-						{/if}
-					</Canvas>
+							{#if croppingMode}
+								<Layer render={testRender} />
+							{/if}
+						</Canvas>
+					</div>
 				</div>
-			</div>
-		{/if}
+			{/if}
 
-		{#if !fileSelected && !loading}
-			<Dropfield />
-		{/if}
+			{#if !fileSelected && !loading}
+				<Dropfield />
+			{/if}
 
-		<Actions />
-	</Desktop>
+			<Actions />
+		</Desktop>
+	</div>
 </main>
 
 <style lang="scss">
 	main {
-		position: fixed;
-		box-sizing: border-box;
-		z-index: 2;
-		left: 0;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		border-radius: 5px;
 		overflow: hidden;
-		display: flex;
-		padding: 30px 5px 5px;
+		background: transparent;
 
-		&.legacy {
-			border-radius: 0PX;
-			padding: 35px 10px 10px;
+		.content {
+			position: fixed;
+			box-sizing: border-box;
+			z-index: 2;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			border-radius: 5px;
+			overflow: hidden;
+			display: flex;
+			padding: 30px 5px 5px;
 		}
 	}
 
@@ -477,13 +478,6 @@
 		width: 100%;
 		height: 100%;
 		position: relative;
-
-		&.legacy {
-			padding: 20px;
-			border-radius: 3px;
-			border:2px dashed #3A3940;
-			box-sizing: border-box;
-		}
 
 		&-inner {
 			overflow: hidden;
@@ -515,9 +509,6 @@
 			&.pickingMode :global(canvas) {
 				cursor: none;
 			}
-		}
-
-		&.legacy &-inner {
 		}
 	}
 

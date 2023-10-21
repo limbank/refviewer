@@ -27,5 +27,11 @@
 		right: 10px;
 		text-align: center;
 		padding: 3px 5px;
+
+		&:hover {
+			background: #FAA916;
+			color: #FAA916;
+			color: #171719;
+		}
 	}
 </style>

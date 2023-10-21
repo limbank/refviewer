@@ -9,7 +9,6 @@
 
 	let setWindow = "recent";
 
-	export let legacy = false;
 	export let version;
 
 	const fetchLatest = (async () => {
@@ -20,10 +19,7 @@
 	})();
 </script>
 
-<div
-	class:legacy
-	class="settings-container"
->
+<div class="settings-container">
 	<div class="settings-container-sidebar">
 		<ul class="settings-container-menu">
 			<li
@@ -137,13 +133,6 @@
 					background: #3A3940;
 				}
 			}
-		}
-
-		&.legacy {
-			box-sizing: border-box;
-			background: #111111;
-			overflow-y: hidden;
-			border-radius: 3px;
 		}
 	}
 

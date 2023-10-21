@@ -55,7 +55,7 @@
   ['shift+ctrl+i', 'shift+command+i', openDevTools]
 ]} />
 
-<div class="titlebar" class:legacy={$settings.theme}>
+<div class="titlebar">
 	<div class="titlebar-group">
 		<Button
 			context="control"
@@ -184,12 +184,6 @@
 		-webkit-app-region: drag;
 		padding: 5px;
 		box-sizing: border-box;
-
-   		&.legacy {
-   			border-bottom: 2px solid #3F3F3F;
-   			padding: 0 10px 10px;
-   			height: 35px;
-   		}
 
    		&-group {
    			display: flex;

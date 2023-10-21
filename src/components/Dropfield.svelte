@@ -3,7 +3,7 @@
 	import settings from '../stores/settings.js';
 </script>
 
-<div class="dropfield" class:legacy={$settings.theme}>
+<div class="dropfield">
 	<div class="dropfield-inner-wrapper">
 		<div class="dropfield-inner">
 			{#if !$settings.theme}
@@ -23,14 +23,6 @@
 <style lang="scss">
 	.dropfield {
 		flex-grow:1;
-
-		&.legacy &-inner-wrapper {
-			padding: 0;
-		}
-
-		&.legacy &-inner {
-			color: #3F3F3F;
-		}
 
 		&-inner {
 			border:2px dashed #3A3940;

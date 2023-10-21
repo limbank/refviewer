@@ -111,7 +111,6 @@
 
 <div
 	class="desktop"
-	class:legacy={$settings.theme}
 	on:dragover|preventDefault
 	on:drop|preventDefault={handleFilesSelect}
 	style="background:{backdropColor};"
@@ -127,9 +126,5 @@
 		display: flex;
 		overflow: hidden;
 		position: relative;
-
-		&.legacy {
-			margin-top: 10px;
-		}
 	}
 </style>

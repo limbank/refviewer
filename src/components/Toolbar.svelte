@@ -84,10 +84,7 @@
   }]
 ]} />
 
-<div
-	class:legacy={$settings.theme}
-	class="toolbox"
->
+<div class="toolbar">
 	{#if fileSelected && !settingsOpen}
 		<Button
 			size="13px"
@@ -162,21 +159,17 @@
 </div>
 
 <style lang="scss">
-	.toolbox {
+	.toolbar {
 		width: 35px;
 		min-width: 35px;
 		flex-shrink: 0;
 		box-sizing: border-box;
 		margin-top: -1px;
 		-webkit-app-region: drag;
-
-		&.legacy {
-			padding: 10px 10px 10px 0;
-		}
 	}
 
 	@media only screen and (max-width: 300px) {
-		.toolbox {
+		.toolbar {
 			display: none;
 		}
 	}

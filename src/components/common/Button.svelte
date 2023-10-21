@@ -24,7 +24,6 @@
 	on:mouseleave={() => showTooltip = false}
 	on:click
 	class={"button " + context}
-	class:legacy={$settings.theme}
 	class:persistent
 >
 	<slot></slot>
@@ -55,34 +54,8 @@
 		margin: 0 0 5px;
 		font-size: 14px;
 
-		&.legacy {
-			width: 25px;
-			height: 25px;
-			margin-bottom: 10px;
-			border: 2px solid #3F3F3F;
-			background: transparent;
-			color: #3F3F3F;
-
-		    &:hover {
-		    	border-color: black;
-			    color: black;
-			    background-color: #3F3F3F;
-		    }
-		}
-
 		&.control {
 			margin: 0 0 0 5px;
-
-			&.legacy {
-			    width: 40px;
-			    border-top: unset;
-			    border-top-left-radius: 0px;
-			    border-top-right-radius: 0px;
-			    border-bottom-left-radius: 4px;
-			    border-bottom-right-radius: 4px;
-			    line-height: 25px;
-			    text-align: center;
-			}
 		}
 
 		&:focus {

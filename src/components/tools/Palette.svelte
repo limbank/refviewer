@@ -23,7 +23,13 @@
 	export let fileSelected = false;
 
 	ipcRenderer.on('palette', (event, arg) => {
-		palette = arg;
+		if (arg && arg.length > 0) {
+			palette = arg;
+			showDropdown = true;
+		}
+		else {
+			console.log("Palette returned nothing...");
+		}
 	});
 
 	function paletteClick(hex) {
@@ -49,8 +55,6 @@
 			type: 'getPalette',
 			image: fileSelected
 		});
-
-		showDropdown = true;
 	}}
 >	
 	<i class="fas fa-palette" use:dropdownRef></i>

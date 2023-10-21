@@ -172,8 +172,13 @@ class imageEditor {
             //first color is main
             ColorThief.getPalette(filePath, 6)
                 .then(palette => {
-                    this.fp.generatedPalette = palette;
-                    event.sender.send('palette', palette);
+                    if (palette && palette.length > 0) {
+                        this.fp.generatedPalette = palette;
+                        event.sender.send('palette', palette);
+                    }
+                    else {
+                        event.sender.send('action', "Couldn't generate palette");
+                    }
                 })
                 .catch(err => { jack.log(err) });
         });
