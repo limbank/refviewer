@@ -6,9 +6,15 @@ class settingsProcessor {
         this.home = data.home;
         this.filename = data.filename;
         this.file = path.join(this.home, this.filename);
-        this.settings = { zoom: 0.3, hashsign: true, locale: 'en' };
+        this.settings = {
+            zoom: 0.3,
+            hashsign: true,
+            locale: 'en',
+            theme: 'default'
+        };
 
         fs.ensureFile(this.file, err => {
+            //do we need this nested callback?
             this.readSettings(data.ready);
         });
     }

@@ -22,7 +22,6 @@
 </script>
 
 <Button
-	size="12px"
 	tiptext={"Pick a color"}
 	on:click={e => {
 		dispatch('pickColor');

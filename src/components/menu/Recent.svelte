@@ -81,12 +81,12 @@
 		}
 
 		&-item {
-			background: #2F2E33;
+			background: var(--secondary-bg-color);
 			border-radius: 3px;
 			padding: 6px 10px;
 			margin-bottom: 6px;
 			text-decoration: none;
-			color: #B7B9BC;
+			color: var(--main-txt-color);
 			font-size: 12px;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -99,7 +99,7 @@
 			display: inline-flex;
 			width: 100%;
 			text-align: center;
-			color: #B7B9BC;
+			color: var(--main-txt-color);
 			font-size: 12px;
 			padding: 15px;
 			justify-content: center;
@@ -113,19 +113,19 @@
 			button {
 				min-height: 25px;
 				border-radius: 3px;
-				background-color: #2F2E33;
+				background-color: var(--secondary-bg-color);
 				cursor: pointer;
 				border: 0;
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
 				padding: 5px 10px;
-			    color: #B7B9BC;
+			    color: var(--main-txt-color);
 			    font-size: 12px;
 			    font-weight: 600;
 
 			    &:hover {
-		  			background-color: #FAA916;
+		  			background-color: var(--main-accent-color);
 		  			color: #171719;
 			    }
 			}

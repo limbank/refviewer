@@ -47,14 +47,14 @@
 
 <style lang="scss">
 	.about-text {
-		color: #B7B9BC;
+		color: var(--main-txt-color);
 		font-size: 12px;
 		margin-bottom: 10px;
 
 		&-title {
 			font-size: 14px;
-			color: #B7B9BC;
-			border-bottom: 1px solid #2F2E33;
+			color: var(--main-txt-color);
+			border-bottom: 1px solid var(--secondary-bg-color);
 		    padding: 5px 0;
 		    margin-bottom: 8px;
 		}
@@ -72,7 +72,7 @@
 
 			a {
 				display: inline-flex;
-				color: #B7B9BC;
+				color: var(--main-txt-color);
 				text-decoration: none;
 				font-size: 20px;
 			}

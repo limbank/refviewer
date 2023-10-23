@@ -18,6 +18,7 @@
 
 	import Helper from './scripts/helper.js';
 	import settings from './stores/settings.js';
+	import backdrop from './stores/backdrop.js';
 
 	const { ipcRenderer } = require('electron');
 	const { version } = require('../package.json');
@@ -31,9 +32,9 @@
 	let settingsOpen = false;
 	let pickingMode = false;
 	let croppingMode = false;
-
 	let initUpdate = 0;
 	let instance;
+	let mainElement;
 
 	let loading = false;
 
@@ -46,8 +47,6 @@
 	let zoomscale = 1;
 
 	let tbx;
-
-	let backdropColor = $settings.theme ? "#111111" : "#2F2E33";
 
   	let workAreaOpacity = 1;
 	let m = { x: 0, y: 0 };
@@ -64,13 +63,43 @@
 		loading = arg;
 	});
 
+	function getBackcolor() {
+		return getComputedStyle(mainElement)
+    		.getPropertyValue('--secondary-bg-color') || "#2F2E33";
+	}
+
+	let mainIDInterval;
+	let cachedMainID;
+
+	function changeMainBackdrop() {
+		if (mainElement) {
+			cachedMainID = mainElement.id;
+
+			clearInterval(mainIDInterval);
+			mainIDInterval = setInterval(() => {
+				let newID = mainElement.id;
+				if (newID != cachedMainID) {
+					$backdrop = getBackcolor();
+
+					clearInterval(mainIDInterval);
+				}
+			});
+		}
+	}
+
 	$: if ($settings) {
+		//console.log("got settings");
+
 		if ($settings.zoom && instance) {
 			element = document.querySelector('.canvas-container-inner');
 			initPan($settings.zoom);
 		}
 
-		backdropColor = $settings.theme ? "#111111" : "#2F2E33";
+		changeMainBackdrop();
+	}
+
+	$: if (mainElement) {
+		changeMainBackdrop();
 	}
 
 	ipcRenderer.on('deliver', (event, arg) => {
@@ -136,7 +165,7 @@
   	};
 
   	$: {
-  		if(!$settings.transparency) workAreaOpacity = tinycolor(backdropColor).toRgb().a;
+  		if(!$settings.transparency) workAreaOpacity = tinycolor($backdrop).toRgb().a;
 		else workAreaOpacity = 1;
   	};
 
@@ -306,12 +335,17 @@
 	function mouseUpBlur() {
 		let active = document.activeElement;
 		let isInputText = active instanceof HTMLInputElement && active.type == 'number';
+		let isSelect = active instanceof HTMLSelectElement;
 
-		if (!isInputText) active.blur();
+		if (!isInputText && !isSelect) active.blur();
 	}
 
-	function openDevTools() {
-
+	function normalizeTheme(theme) {
+		if (theme && typeof theme == "string") return theme.toLowerCase();
+		else if (theme && typeof theme == "boolean") {
+			$settings.theme = "Legacy";
+		}
+		else return "default";
 	}
 
 	$: if (settingsOpen) {
@@ -325,7 +359,7 @@
 	on:mouseup={mouseUpBlur}
 />
 
-<main id={$settings.theme ? "legacy" : "default"}>
+<main bind:this={mainElement} id={normalizeTheme($settings.theme)}>
 	<Backdrop />
 
 	<div class="content">
@@ -348,7 +382,6 @@
 			{fileSelected}
 			{hex}
 			bind:this={tbx}
-			bind:backdropColor
 			bind:showDropdown
 			on:cropImage={e => {
 				pickingMode = false;
@@ -365,7 +398,6 @@
 		/>
 		<Desktop
 			{fileSelected}
-			{backdropColor}
 			{settingsOpen}
 			bind:loading
 		>
@@ -451,6 +483,8 @@
 			<Actions />
 		</Desktop>
 	</div>
+
+	<div class="test"></div>
 </main>
 
 <style lang="scss">

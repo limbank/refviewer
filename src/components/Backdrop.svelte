@@ -20,7 +20,7 @@
 		pointer-events: none;
 
 		&-bg {
-			background: #111111;
+			background: var(--main-bg-color);
 			position: absolute;
 		}
 

@@ -59,7 +59,6 @@
 	<div class="titlebar-group">
 		<Button
 			context="control"
-			size="12px"
 			tiptext={settingsOpen ? $tt("titlebar.closemenu") : $tt("titlebar.mainmenu")}
 			on:click={e => {
 				settingsOpen = !settingsOpen;
@@ -77,7 +76,6 @@
 			{#if !fileSelected || $settings.overwrite}
 				<Button
 					context="control"
-					size="12px"
 					tiptext={$tt("titlebar.selectfile")}
 					on:click={openImage}
 				>
@@ -86,7 +84,6 @@
 
 				<Button
 					context="control"
-					size="12px"
 					tiptext={$tt("titlebar.screenshot")}
 					on:click={e => { ipcRenderer.send('screenshot'); }}
 				>
@@ -96,7 +93,6 @@
 			{#if fileSelected}
 				<Button
 					context="control"
-					size="12px"
 					tiptext={$tt("titlebar.clear")}
 					on:click={clearImage}
 				>
@@ -112,7 +108,6 @@
 		{#if $settings.devmode}
 			<Button
 				context="control"
-				size="12px"
 				tiptext={$tt("titlebar.devtools")}
 				 on:click={openDevTools}
 			>
@@ -121,7 +116,6 @@
 		{/if}
 		<Button
 			context="control"
-			size="12px"
 			tiptext={$tt("titlebar.clickthrough")}
 			 on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}
 		>
@@ -129,7 +123,6 @@
 		</Button>
 		<Button
 			context="control"
-			size="12px"
 			tiptext={$tt("titlebar.newwindow")}
 			 on:click={openNewWindow}
 		>
@@ -137,7 +130,6 @@
 		</Button>
 		<Button
 			context="control"
-			size="13px"
 			tiptext={$tt("titlebar.pintotop")}
 			 on:click={e => { ipcRenderer.send('window', 'pin'); }}
 		>
@@ -191,15 +183,15 @@
    		}
 
    		.version {
-   			color: #2F2E33;
+   			color: var(--secondary-bg-color);
    			font-size: 10px;
    			font-weight: bold;
    			margin-right: 2px;
    			display: inline-flex;
    			align-items: center;
    			justify-content: center;
-			height: 20px;
-			pointer-events: none;
+				height: 20px;
+				pointer-events: none;
    		}
 	}
 

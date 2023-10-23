@@ -3,9 +3,9 @@
 	const { ipcRenderer } = require('electron');
 
 	import settings from '../stores/settings.js';
+	import backdrop from '../stores/backdrop.js';
 
 	export let loading = false;
-	export let backdropColor = "#2F2E33";
 	export let settingsOpen;
 	export let fileSelected;
 
@@ -113,14 +113,14 @@
 	class="desktop"
 	on:dragover|preventDefault
 	on:drop|preventDefault={handleFilesSelect}
-	style="background:{backdropColor};"
+	style="background:{$backdrop};"
 >
 	<slot></slot>
 </div>
 
 <style lang="scss">
 	.desktop {
-		background: rgba(47, 46, 51, 1);
+		background: var(--secondary-bg-color);
 		flex-grow: 1;
 		border-radius: 3px;
 		display: flex;

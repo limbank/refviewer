@@ -87,35 +87,30 @@
 <div class="toolbar">
 	{#if fileSelected && !settingsOpen}
 		<Button
-			size="13px"
 			tiptext={$tt("toolbar.save")}
 			on:click={() => editImage("save")}
 		>
 			<i class="far fa-save"></i>
 		</Button>
 		<Button
-			size="13px"
 			tiptext={$tt("toolbar.copy")}
 			on:click={copyImage}
 		>
 	    	<i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
 		</Button>
 		<Button
-			size="13px"
 			tiptext={$tt("toolbar.crop")}
 			on:click={() => dispatch("cropImage")}
 		>
 	    	<i class="far fa-crop-alt" style=""></i>
 		</Button>
 		<Button
-			size="13px"
 			tiptext={$tt("toolbar.flip")}
 			on:click={() => editImage("flipHorizontal")}
 		>
 	    	<i class="fas fa-sync-alt"></i>
 		</Button>
 		<Button
-			size="12px"
 			tiptext={$tt("toolbar.rotate")}
 			on:click={() => editImage("rotateRight")}
 		>
@@ -141,14 +136,12 @@
 				bind:fileSelected
 			/>
 			<Button
-				size="13px"
 				tiptext={$tt("toolbar.greyscale")}
 				on:click={() => editImage("greyImage")}
 			>
 		    	<i class="fas fa-adjust"></i>
 			</Button>
 			<Button
-				size="13px"
 				tiptext={$tt("toolbar.negative")}
 				on:click={() => editImage("negateImage")}
 			>

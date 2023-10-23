@@ -91,18 +91,18 @@
 		top: 0;
 		right: 0;
 		bottom: 0;
-		background: #2F2E33;
+		background: var(--secondary-bg-color);
 		display: flex;
 
 		&-sidebar {
 			flex-shrink: 0;
 			width: 150px;
-			background: #2F2E33;
+			background: var(--secondary-bg-color);
 		}
 
 		&-main {
 			flex-grow: 1;
-			background: #3A3940;
+			background: var(--main-fg-color);
 			overflow-y: auto;
 		}
 
@@ -117,7 +117,7 @@
 			li {
 				display: inline-flex;
 				font-weight: 500;
-				color: #B7B9BC;
+				color: var(--main-txt-color);
 				padding: 5px 8px;
 				font-size: 14px;
 				margin-bottom: 2px;
@@ -126,11 +126,11 @@
 				user-select: none;
 
 				&.active {
-					background: #3A3940;
+					background: var(--main-fg-color);
 				}
 
 				&:hover {
-					background: #3A3940;
+					background: var(--main-fg-color);
 				}
 			}
 		}

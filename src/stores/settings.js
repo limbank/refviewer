@@ -6,11 +6,7 @@ let received = false;
 let booted = false;
 
 const store = () => {
-  const state = {
-    zoom: 0.3,
-    hashsign: true,
-    locale: 'en'
-  };
+  const state = {};
 
   const { subscribe, set, update } = writable(state);
 

@@ -1,4 +1,11 @@
 main#legacy {
+    --main-bg-color: #111111;
+    --secondary-bg-color: #111111;
+    --main-fg-color: #3A3940;
+    --main-txt-color: #B7B9BC;
+    --secondary-txt-color: #171719;
+    --main-accent-color: #FAA916;
+
 	.backdrop {
 		border-radius: 0px;
 
@@ -103,5 +110,26 @@ main#legacy {
 			    text-align: center;
 			}
 		}
+
+		.picker-controls-row {
+			.button {
+				border-top: 2px solid #3F3F3F;
+			    border-top-left-radius: 4px;
+			    border-top-right-radius: 4px;
+			}
+		}
 	}
+}
+
+main#light {
+    --main-bg-color: #D8D8D8;
+    --secondary-bg-color: #ECECEC;
+    --main-fg-color: #C7C7C7;
+    --main-txt-color: #40444D;
+    --secondary-txt-color: #575757;
+    --main-accent-color: #FAA916;
+
+    .version {
+    	color: var(--secondary-txt-color);
+    }
 }

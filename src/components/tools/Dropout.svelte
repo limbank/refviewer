@@ -20,11 +20,10 @@
 </script>
 
 <Button
-	size="12px"
 	tiptext={"Extras"}
 	on:click={e => {
 		showDropdown = true;
-		setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 100);
+		setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 50);
 	}}
 >
 	<i class={icon} use:dropdownRef></i>

@@ -4,6 +4,7 @@
 
 	import { tt, locale, locales } from "../../stores/i18n.js";
 	import settings from '../../stores/settings.js';
+	import backdrop from '../../stores/backdrop.js';
 
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
@@ -16,16 +17,18 @@
 	    strategy: 'fixed',
 	});
 
-	export let backdropColor = $settings.theme ? "#111111" : "#2F2E33";
-
 	let showDropdown = false;
+
+	function getBackcolor() {
+		return getComputedStyle(document.getElementsByTagName("main")[0])
+    		.getPropertyValue('--secondary-bg-color') || "#2F2E33";
+	}
 
 	export let closeDropdowns = false;
 	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Button
-	size="12px"
 	tiptext={$tt("toolbar.background")}
 	on:click={e => {
 		showDropdown = true;
@@ -42,8 +45,8 @@
 		}}
 	>
 		<Colorpicker
-			bind:hex={backdropColor}
-			reset={$settings.theme ? "#111111" : "#2F2E33"}
+			bind:hex={$backdrop}
+			reset={getBackcolor()}
 		/>
 	</Dropdown>
 {/if}

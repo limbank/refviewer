@@ -66,7 +66,6 @@
 					<span>HEX:</span>
 					<input placeholder="Hex" type="text" bind:value={hex} on:input={hexInput}>
 					<Button
-						size="12px"
 						tiptext={$tt("color.copy")}
 						context="control"
 						on:click={copyClick}
@@ -75,11 +74,10 @@
 					</Button>
 					{#if reset}
 						<Button
-							size="12px"
 							tiptext={$tt("color.reset")}
 							context="control"
 							on:click={e => {
-								hex = reset;
+								hexIntermediate = reset;
 							}}
 						>
 							<i class="fas fa-redo"></i>
@@ -100,7 +98,7 @@
 
 			user-select: none;
 
-			background: #171719;
+			background: var(--secondary-txt-color);
 			display: flex;
 			flex-direction: column;
 			border-radius: 3px;
@@ -160,7 +158,7 @@
 
 			    span {
 					display: inline-flex;
-					color: #B7B9BC;
+					color: var(--main-txt-color);
 					font-weight: 600;
 				    font-size: 11px;
 				    padding: 2px 3px;
@@ -172,8 +170,8 @@
 
 				input {
 					width: 60px;
-				    background-color: #2F2E33;
-				    color: #B7B9BC;
+				    background-color: var(--secondary-bg-color);
+				    color: var(--main-txt-color);
 				    font-size: 11px;
 				    border-radius: 3px;
 				    height: 20px;

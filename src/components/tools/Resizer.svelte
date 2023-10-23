@@ -90,7 +90,6 @@
 </script>
 
 <Button
-	size="12px"
 	tiptext={"Resize image"}
 	on:click={e => {
 		ipcRenderer.send('editImage', {

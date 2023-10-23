@@ -1,5 +1,12 @@
 :root {
     font-family: 'Open Sans';
+
+    --main-bg-color: #111111;
+    --secondary-bg-color: #2F2E33;
+    --main-fg-color: #3A3940;
+    --main-txt-color: #B7B9BC;
+    --secondary-txt-color: #171719;
+    --main-accent-color: #FAA916;
 }
 
 html, body {
@@ -13,8 +20,8 @@ body {
 }
 
 ::selection {
-	background: #FAA916;
-	color: #171719;
+	background: var(--main-accent-color);
+	color: var(--secondary-txt-color);
 }
 
 /* scrollbar width */
@@ -25,11 +32,11 @@ body {
 /* scrollbar track */
 ::-webkit-scrollbar-track {
 	border-radius: 3px;
-	background: #3A3940;
+	background: var(--main-fg-color);
 }
  
 /* scrollbar handle */
 ::-webkit-scrollbar-thumb {
 	border-radius: 3px;
-	background: #2F2E33;
+	background: var(--secondary-bg-color);
 }

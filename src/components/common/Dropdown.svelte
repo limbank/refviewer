@@ -2,6 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+
 	import { clickOutside } from '../../scripts/clickOutside.js'
 
 	const dispatch = createEventDispatcher();
@@ -15,10 +16,6 @@
 		      options: {
 		        offset: ({ placement, reference, popper }) => {
 		        	if (popper.y > 0) {
-		        		return [12, 15];
-		        	}
-		        	else if (popper.y < -80) {
-		        		//this clause gets hit in the nested dropdown
 		        		return [12, 15];
 		        	}
 		        	else {
@@ -35,11 +32,6 @@
 
 	onMount(async () => {
 		show = true;
-
-		//temporary hack to fix the ugly offset
-		setTimeout(() => {
-			window.dispatchEvent(new Event('resize'));
-		}, 10)
 	});
 </script>
 
@@ -74,7 +66,7 @@
 
 		&-content {
 			box-sizing: border-box;
-			background: #171719;
+			background: var(--secondary-txt-color);
 			border-radius: 3px;
 			position: relative;
 			z-index: 2;
@@ -89,7 +81,7 @@
 		    top: 50%;
 		    left: 50%;
 		    transform: translate(-50%, -50%) rotate(45deg);
-			background: #171719;
+			background: var(--secondary-txt-color);
 		}
 
 

@@ -48,7 +48,6 @@
 </script>
 
 <Button
-	size="12px"
 	tiptext={"Generate palette"}
 	on:click={e => {
 		ipcRenderer.send('editImage', {

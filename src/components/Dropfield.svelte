@@ -6,7 +6,7 @@
 <div class="dropfield">
 	<div class="dropfield-inner-wrapper">
 		<div class="dropfield-inner">
-			{#if !$settings.theme}
+			{#if $settings.theme != "Legacy"}
 				<div class="dropfield-inner-icon">
 					<i class="fas fa-upload"></i>
 				</div>
@@ -25,7 +25,8 @@
 		flex-grow:1;
 
 		&-inner {
-			border:2px dashed #3A3940;
+			border:2px dashed var(--main-fg-color);
+			color: VAR(--main-fg-color);
 			box-sizing: border-box;
 			border-radius: 3px;
 			width: 100%;
@@ -34,7 +35,6 @@
 			justify-content: center;
 			align-items: center;
 			flex-direction: column;
-			color: #3A3940;
 			user-select: none;
 
 			&-icon {

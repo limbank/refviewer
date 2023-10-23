@@ -27,7 +27,7 @@
 	.changelog-wrapper {
 		height: auto;
 		font-size: 14px;
-		color: #B7B9BC;
+		color: var(--main-txt-color);
 		padding: 5px 0;
 		box-sizing: border-box;
 
@@ -36,11 +36,11 @@
 		}
 
 		:global(a) {
-			color: #B7B9BC;
+			color: var(--main-txt-color);
 			font-weight: 600;
 
 			&:hover {
-				color: #FAA916;
+				color: var(--main-accent-color);
 			}
 		}
 
@@ -48,7 +48,7 @@
 			padding: 2px 4px;
 			margin: 0;
 			font-size: 85%;
-			background-color: #2F2E33;
+			background-color: var(--secondary-bg-color);
 			border-radius: 3px;
 		}
 	}

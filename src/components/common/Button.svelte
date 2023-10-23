@@ -18,7 +18,6 @@
 </script>
 
 <button
-	style='font-size:{$settings.theme ? "14px" : size};'
 	use:popperRef
 	on:mouseenter={() => showTooltip = true}
 	on:mouseleave={() => showTooltip = false}
@@ -38,8 +37,8 @@
 <style lang="scss">
 	.button {
 		box-sizing: border-box;
-		color: #171719;
-		background: #3A3940;
+		color: var(--secondary-txt-color);
+		background: var(--main-fg-color);
 		border-radius: 3px;
 		border: 0;
 		padding: 2px 0 0;
@@ -52,16 +51,17 @@
 		transition: color 0.1s ease-out;
 		-webkit-app-region: no-drag;
 		margin: 0 0 5px;
-		font-size: 14px;
+		font-size: 13px;
 
 		&.control {
 			margin: 0 0 0 5px;
+			font-size: 12px;
 		}
 
 		&:focus {
 			box-shadow: none;
 			outline: none;
-			border: 1px solid #FAA916;
+			border: 1px solid var(--main-accent-color);
 		}
 
 		&:first-child {
@@ -73,7 +73,7 @@
 		}
 
 		&:hover {
-			background: #FAA916;
+			background: var(--main-accent-color);
 		}
 	}
 
