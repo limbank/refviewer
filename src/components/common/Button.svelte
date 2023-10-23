@@ -6,7 +6,6 @@
 
 	let showTooltip = false;
 
-	export let size = 14;
 	export let tiptext = false;
 	export let persistent = false;
 	export let context = "";

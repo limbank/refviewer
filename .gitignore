@@ -107,3 +107,4 @@ dist
 build.sh
 ReleaseChangelog.txt
 run.sh
+public/build
