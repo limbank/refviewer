@@ -20,7 +20,6 @@ class windowManager {
             minHeight: 238,
             frame: false,
             transparent: true,
-            titleBarStyle : "hidden",
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false

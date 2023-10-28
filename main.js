@@ -97,6 +97,7 @@ else {
     //performance fix
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
+    app.disableHardwareAcceleration(false);
     app.on("ready", createWhenReady);
 }
 
