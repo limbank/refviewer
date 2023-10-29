@@ -97,6 +97,7 @@
 				<option selected>Default</option>
 				<option>Legacy</option>
 				<option>Light</option>
+				<option>Amoled</option>
 			</select>
 		</div>
 	</div>

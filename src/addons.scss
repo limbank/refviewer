@@ -133,3 +133,28 @@ main#light {
     	color: var(--secondary-txt-color);
     }
 }
+
+main#amoled {
+	--main-bg-color: #020202;
+    --secondary-bg-color: #111113;
+    --main-fg-color: #0C0C0D;
+    --main-txt-color: #A5ABB3;
+    --secondary-txt-color: #A5ABB3;
+
+	.content {
+		.desktop {
+			.dropfield {
+				&-inner {
+					color: var(--main-txt-color);
+					border-color: var(--main-txt-color);
+				}
+			}
+		}
+
+		.button {
+		    &:hover {
+		    	color: var(--main-bg-color);
+		    }
+		}
+	}
+}
