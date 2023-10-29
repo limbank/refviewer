@@ -63,6 +63,17 @@
 		loading = arg;
 	});
 
+	ipcRenderer.on('argv', (event, arg) => {
+		console.log("Got argv", arg);
+
+		console.log("argv1", arg[1]);
+
+		if (arg[1] && arg[1] != "." && arg[1] != "") {
+			console.log("Sending file...");
+			ipcRenderer.send('file', arg[1]);
+		}
+	});
+
 	function getBackcolor() {
 		return getComputedStyle(mainElement)
     		.getPropertyValue('--secondary-bg-color') || "#2F2E33";
