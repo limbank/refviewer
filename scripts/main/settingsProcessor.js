@@ -10,7 +10,8 @@ class settingsProcessor {
             zoom: 0.3,
             hashsign: true,
             locale: 'en',
-            theme: 'default'
+            theme: 'default',
+            acceleration: true
         };
 
         fs.ensureFile(this.file, err => {

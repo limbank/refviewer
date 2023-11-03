@@ -47,7 +47,7 @@
 				Changelog
 			</li>
 			{#await fetchLatest then data}
-				{#if data[0].tag_name != 'v' + version}
+				{#if data[0] && data[0].tag_name != 'v' + version}
 					<li
 						on:click={e => {
 							window.location.href = data[0].html_url;

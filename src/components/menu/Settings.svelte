@@ -17,7 +17,8 @@
 		    zoom: 0.3,
 		    hashsign: true,
 		    locale: 'en',
-    		theme: 'default'
+    		theme: 'default',
+            acceleration: true
 		};
 
     	resetConfirmed = false;
@@ -94,10 +95,10 @@
 		</div>
 		<div class="setting-control">
 			<select class="select" bind:value={$settings.theme}>
-				<option selected>Default</option>
-				<option>Legacy</option>
-				<option>Light</option>
-				<option>Amoled</option>
+				<option value="default" selected>Default</option>
+				<option value="legacy">Legacy</option>
+				<option value="light">Light</option>
+				<option value="amoled">Amoled</option>
 			</select>
 		</div>
 	</div>
@@ -158,6 +159,19 @@
 	</div>
 	<div class="setting-description">
 		Choose the directory where to save screenshots
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			Hardware acceleration
+		</div>
+		<div class="setting-control">
+			<label class="switch">
+				<input type="checkbox" bind:checked={$settings.acceleration}>
+				<span class="slider"></span>
+			</label>
+		</div>
 	</div>
 </div>
 <div class="setting">

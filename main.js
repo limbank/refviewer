@@ -97,7 +97,8 @@ else {
     //performance fix
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
-    app.disableHardwareAcceleration(false);
+    jack.log("Settings software acceleration to", sp.settings.acceleration);
+    app.disableHardwareAcceleration(!sp.settings.acceleration);
     app.on("ready", createWhenReady);
 }
 
