@@ -25,8 +25,15 @@ export default {
     "toolbar.negative": "Negative",
     "toolbar.background": "Change background",
     "color.copied": "Color copied!",
-    "color.failed": "Failed to copy color",
+    "color.failed": "Failed to copy color!",
     "color.copy": "Copy",
-    "color.reset": "Reset"
+    "color.reset": "Reset",
+    "desktop.unrecognized": "Unrecognized format",
+    "resizer.width": "Width",
+    "resizer.height": "Height",
+    "resizer.resize": "Resize",
+    "palette.invalid": "Invalid palette",
+    "eyedropper.pickcolor": "Pick a color",
+    "dropout.extras": "Extras"
   }
 };

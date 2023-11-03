@@ -7,6 +7,7 @@
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 
+	import { tt, locale, locales } from "../stores/i18n.js";
 	import settings from '../../stores/settings.js';
 
 	const dispatch = createEventDispatcher();
@@ -27,9 +28,7 @@
 			palette = arg;
 			showDropdown = true;
 		}
-		else {
-			console.log("Palette returned nothing...");
-		}
+		else ipcRenderer.send('action', $tt("palette.invalid"));
 	});
 
 	function paletteClick(hex) {
@@ -38,9 +37,9 @@
 		if ($settings.hashsign && tempHex.startsWith("#")) tempHex = tempHex.substring(1);
 		
         navigator.clipboard.writeText(tempHex).then(() => {
-		    ipcRenderer.send('action', "Color copied!");
+		    ipcRenderer.send('action', $tt("color.copied"));
 		}, () => {
-		    ipcRenderer.send('action', "Failed to copy color");
+		    ipcRenderer.send('action', $tt("color.failed"));
 		});
 	}
 	

@@ -4,6 +4,8 @@
 	import { createPopperActions } from 'svelte-popperjs';
 	const tinycolor = require("tinycolor2");
 
+	import { tt, locale, locales } from "../stores/i18n.js";
+
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 
@@ -51,7 +53,6 @@
 	}
 
 	function setRatio(side) {
-		console.log("Setting ratio");
 		switch(side) {
 			case "w" :
 				imageWidth = Math.round(imageHeight * aspectRatio);
@@ -121,11 +122,11 @@
 				</div>
 				<div class="resize-options">
 					<div class="resize-option">
-						<span class="resize-option-title">Width:</span>
+						<span class="resize-option-title">{$tt("resizer.width")}:</span>
 						<input class="resize-option-input" type="number" bind:value={imageWidth} on:input={wInput} />
 					</div>
 					<div class="resize-option">
-						<span class="resize-option-title">Height:</span>
+						<span class="resize-option-title">{$tt("resizer.height")}:</span>
 						<input class="resize-option-input" type="number" bind:value={imageHeight} on:input={hInput} />
 					</div>
 				</div>
@@ -134,7 +135,7 @@
 				<button class="button" on:click={resizeUndo}>
 					<i class="fas fa-undo"></i>
 				</button>
-				<button class="button fit-button" on:click={resizeImage}>Resize</button>
+				<button class="button fit-button" on:click={resizeImage}>{$tt("resizer.resize")}</button>
 			</div>
 		</div>
 	</Dropdown>

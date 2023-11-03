@@ -1,7 +1,7 @@
 <script>
 	import Titlebar from './components/Titlebar.svelte';
 	import Desktop from './components/Desktop.svelte';
-	import Backdrop from './components/Backdrop.svelte';
+	import Backframe from './components/Backframe.svelte';
 	import Toolbar from './components/Toolbar.svelte';
 	import Actions from './components/Actions.svelte';
 	import Dropfield from './components/Dropfield.svelte';
@@ -371,7 +371,7 @@
 />
 
 <main bind:this={mainElement} id={normalizeTheme($settings.theme)}>
-	<Backdrop />
+	<Backframe />
 
 	<div class="content">
 		<Titlebar

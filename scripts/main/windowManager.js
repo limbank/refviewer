@@ -35,6 +35,20 @@ class windowManager {
             jack.log("WINDOW CLOSED!");
             this.windows.splice(this.windows.indexOf(w), 1);
             w = null;
+            jack.log("Windows remaining:", this.windows.length);
+
+            if (this.windows.length < 1) {
+                //clean up temporary out file
+                const fs = require('fs-extra')
+                const os = require('os');
+                const path = require('path');
+
+                let psdPath = path.join(os.tmpdir(), 'out.png');
+                fs.remove(psdPath, err => {
+                  if (err) return jack.error(err);
+                  jack.log('Removed temp PSD file');
+                });
+            }
         });
 
         w.webContents.on('will-navigate', function (e, url) {

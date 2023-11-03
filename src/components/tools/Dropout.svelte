@@ -2,6 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import { createPopperActions } from 'svelte-popperjs';
 
+	import { tt, locale, locales } from "../stores/i18n.js";
+
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 
@@ -16,11 +18,12 @@
 
 	export let icon;
 	export let closeDropdowns = false;
+	
 	$: if (closeDropdowns) showDropdown = false;
 </script>
 
 <Button
-	tiptext={"Extras"}
+	tiptext={$tt("dropout.extrasa")}
 	on:click={e => {
 		showDropdown = true;
 		setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 50);

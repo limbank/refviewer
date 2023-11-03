@@ -2,6 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import { createPopperActions } from 'svelte-popperjs';
 
+	import { tt, locale, locales } from "../stores/i18n.js";
+
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 	import Colorpicker from './Colorpicker.svelte';
@@ -22,7 +24,7 @@
 </script>
 
 <Button
-	tiptext={"Pick a color"}
+	tiptext={$tt("eyedropper.pickcolor")}
 	on:click={e => {
 		dispatch('pickColor');
 	}}
@@ -35,12 +37,6 @@
 		{content}
 		on:close={e => { showDropdown = false; }}
 	>
-		<Colorpicker
-			bind:hex
-			alpha={false}
-		/>
+		<Colorpicker bind:hex alpha={false} />
 	</Dropdown>
 {/if}
-
-<style lang="scss">
-</style>

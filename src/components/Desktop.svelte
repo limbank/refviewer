@@ -2,6 +2,7 @@
 	const HTMLParser = require('node-html-parser');
 	const { ipcRenderer } = require('electron');
 
+	import { tt, locale, locales } from "../stores/i18n.js";
 	import settings from '../stores/settings.js';
 	import backdrop from '../stores/backdrop.js';
 
@@ -91,7 +92,7 @@
 					}
 					else {
 						loading = false;
-						ipcRenderer.send('action', "Unrecognized format");
+						ipcRenderer.send('action', $tt("desktop.unrecognized"));
 					}
 				}
 			}

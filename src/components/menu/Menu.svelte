@@ -3,7 +3,6 @@
 	import Settings from './Settings.svelte';
 	import About from './About.svelte';
 	import Recent from './Recent.svelte';
-	import Changelog from './Changelog.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -40,12 +39,6 @@
 			>
 				About
 			</li>
-			<li
-				class:active={setWindow=="changelog"}
-				on:click={e => { setWindow="changelog"; }}
-			>
-				Changelog
-			</li>
 			{#await fetchLatest then data}
 				{#if data[0] && data[0].tag_name != 'v' + version}
 					<li
@@ -74,10 +67,6 @@
 		{:else if setWindow=="about"}
 			<div class="settings-w-inner">
 				<About {version} />
-			</div>
-		{:else if setWindow=="changelog"}
-			<div class="settings-w-inner">
-				<Changelog {version} />
 			</div>
 		{/if}
 	</div>
