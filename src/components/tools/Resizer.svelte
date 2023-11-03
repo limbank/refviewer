@@ -4,7 +4,7 @@
 	import { createPopperActions } from 'svelte-popperjs';
 	const tinycolor = require("tinycolor2");
 
-	import { tt, locale, locales } from "../stores/i18n.js";
+	import { tt, locale, locales } from "../../stores/i18n.js";
 
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';

@@ -7,7 +7,7 @@
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
 
-	import { tt, locale, locales } from "../stores/i18n.js";
+	import { tt, locale, locales } from "../../stores/i18n.js";
 	import settings from '../../stores/settings.js';
 
 	const dispatch = createEventDispatcher();
