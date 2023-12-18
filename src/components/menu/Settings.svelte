@@ -26,6 +26,11 @@
     	resetText = $tt("settings.reset");
     }
 
+    let localeNames = {
+    	"en": "English",
+    	"ua": "Українська"
+    };
+
     ipcRenderer.on('getDirectory', (event, arg) => {
     	$settings.savedir = arg;
 	});
@@ -107,12 +112,12 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Language
+			{$tt("settings.language")}
 		</div>
 		<div class="setting-control">
 			<select class="select" bind:value={$settings.locale}>
 				{#each locales as locale}
-					<option value={locale}>{locale}</option>
+					<option value={locale}>{localeNames[locale]}</option>
 				{/each}
 			</select>
 		</div>
