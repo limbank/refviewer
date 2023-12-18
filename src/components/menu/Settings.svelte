@@ -28,7 +28,9 @@
 
     let localeNames = {
     	"en": "English",
-    	"ua": "Українська"
+    	"ua": "Українська",
+    	"br": "Português (Brasil)"
+
     };
 
     ipcRenderer.on('getDirectory', (event, arg) => {
@@ -117,7 +119,7 @@
 		<div class="setting-control">
 			<select class="select" bind:value={$settings.locale}>
 				{#each locales as locale}
-					<option value={locale}>{localeNames[locale]}</option>
+					<option value={locale}>{localeNames[locale] || "Unknown"}</option>
 				{/each}
 			</select>
 		</div>

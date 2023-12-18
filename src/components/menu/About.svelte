@@ -59,6 +59,7 @@
 	{$tt("about.translation")}:
 </div>
 <div class="about-text">
+	Charalian
 </div>
 
 <style lang="scss">
