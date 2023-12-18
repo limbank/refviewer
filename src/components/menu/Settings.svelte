@@ -1,14 +1,15 @@
 <script>
 	const { ipcRenderer } = require('electron');
 
+	import { tt, locale, locales } from "../../stores/i18n.js";
   	import settings from '../../stores/settings.js';
 
     let resetConfirmed = false;
-    let resetText = "Reset";
+    let resetText = $tt("settings.reset");
 
     function handleReset() {
     	if (!resetConfirmed) {
-    		resetText = "Are you sure?";
+    		resetText = $tt("settings.confirm");
     		resetConfirmed = true;
     		return;
     	}
@@ -22,7 +23,7 @@
 		};
 
     	resetConfirmed = false;
-    	resetText = "Reset";
+    	resetText = $tt("settings.reset");
     }
 
     ipcRenderer.on('getDirectory', (event, arg) => {
@@ -33,7 +34,7 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Zoom amount
+			{$tt("settings.zoom")}
 		</div>
 		<div class="setting-control">
 			<span class="setting-control-info">{$settings.zoom}</span>
@@ -46,7 +47,7 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Allow overwrite
+			{$tt("settings.overwrite")}
 		</div>
 		<div class="setting-control">
 			<label class="switch">
@@ -56,13 +57,13 @@
 		</div>
 	</div>
 	<div class="setting-description">
-		Allow selecting a new image while another image is loaded.
+		{$tt("settings.overwritedesc")}
 	</div>
 </div>
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Disable hashsign
+			{$tt("settings.hashsign")}
 		</div>
 		<div class="setting-control">
 			<label class="switch">
@@ -72,13 +73,13 @@
 		</div>
 	</div>
 	<div class="setting-description">
-		Copy colors without the hashsign.
+		{$tt("settings.hashsigndesc")}
 	</div>
 </div>
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Zoom slider
+			{$tt("settings.slider")}
 		</div>
 		<div class="setting-control">
 			<label class="switch">
@@ -91,14 +92,14 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Theme
+			{$tt("settings.theme")}
 		</div>
 		<div class="setting-control">
 			<select class="select" bind:value={$settings.theme}>
-				<option value="default" selected>Default</option>
-				<option value="legacy">Legacy</option>
-				<option value="light">Light</option>
-				<option value="amoled">Amoled</option>
+				<option value="default" selected>{$tt("settings.themedefault")}</option>
+				<option value="legacy">{$tt("settings.themelegacy")}</option>
+				<option value="light">{$tt("settings.themelight")}</option>
+				<option value="amoled">{$tt("settings.themeamoled")}</option>
 			</select>
 		</div>
 	</div>
@@ -106,7 +107,7 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Disable tooltips
+			{$tt("settings.tooltips")}
 		</div>
 		<div class="setting-control">
 			<label class="switch">
@@ -119,7 +120,7 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Ignore transparency
+			{$tt("settings.transparency")}
 		</div>
 		<div class="setting-control">
 			<label class="switch">
@@ -129,13 +130,13 @@
 		</div>
 	</div>
 	<div class="setting-description">
-		Make the image ignore background transparency and stay opaque.
+		{$tt("settings.transparencydesc")}
 	</div>
 </div>
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Auto-save screenshots
+			{$tt("settings.screenshots")}
 		</div>
 		<div class="setting-control">
 			<label class="switch">
@@ -148,23 +149,23 @@
 <div class="setting" class:disabled={!$settings.autosave}>
 	<div class="setting-inner">
 		<div class="setting-title">
-			Auto-save directory
+			{$tt("settings.autosave")}
 		</div>
 		<div class="setting-control">
 			<input type="hidden" bind:value={$settings.savedir}>
 			<button class="button" on:click={() => ipcRenderer.send('select:saveDirectory')}>
-				{$settings.savedir ? "Change" : "Browse"}
+				{$settings.savedir ? $tt("settings.change") : $tt("settings.browse")}
 			</button>
 		</div>
 	</div>
 	<div class="setting-description">
-		Choose the directory where to save screenshots
+		{$tt("settings.autosavedesc")}
 	</div>
 </div>
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Hardware acceleration
+			{$tt("settings.acceleration")}
 		</div>
 		<div class="setting-control">
 			<label class="switch">
@@ -177,7 +178,7 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Developer mode
+			{$tt("settings.devmode")}
 		</div>
 		<div class="setting-control">
 			<label class="switch">
@@ -187,20 +188,20 @@
 		</div>
 	</div>
 	<div class="setting-description">
-		Enable additional debugging features
+		{$tt("settings.devmodedesc")}
 	</div>
 </div>
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			Reset settings
+			{$tt("settings.resetsettings")}
 		</div>
 		<div class="setting-control">
 			<button class="button" on:click={handleReset}>{resetText}</button>
 		</div>
 	</div>
 	<div class="setting-description">
-		Reset the settings back to their defaults
+		{$tt("settings.resetdesc")}
 	</div>
 </div>
 

@@ -64,12 +64,7 @@
 	});
 
 	ipcRenderer.on('argv', (event, arg) => {
-		console.log("Got argv", arg);
-
-		console.log("argv1", arg[1]);
-
 		if (arg[1] && arg[1] != "." && arg[1] != "") {
-			console.log("Sending file...");
 			ipcRenderer.send('file', arg[1]);
 		}
 	});
@@ -91,7 +86,6 @@
 				let newID = mainElement.id;
 				if (newID != cachedMainID) {
 					$backdrop = getBackcolor();
-
 					clearInterval(mainIDInterval);
 				}
 			});
@@ -160,7 +154,7 @@
 			maxScale: 10000,
 			step: customZoom || $settings.zoom
 		});
-		console.log("Adding listeners");
+
 		element.parentElement.addEventListener('wheel', wheelEvent);
 		element.addEventListener('panzoomchange', changeEvent);
 	};
@@ -222,8 +216,6 @@
 				cropHeight - cropStartingPointY
 			);
 			context.stroke();
-
-			console.log("Ran square render");
   		}
 	    catch(e) { console.log("err", e); }
   	};
@@ -354,7 +346,7 @@
 	function normalizeTheme(theme) {
 		if (theme && typeof theme == "string") return theme.toLowerCase();
 		else if (theme && typeof theme == "boolean") {
-			$settings.theme = "Legacy";
+			$settings.theme = "legacy";
 		}
 		else return "default";
 	}

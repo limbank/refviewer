@@ -3,16 +3,18 @@
 	const { ipcRenderer } = require('electron');
 	import Loader from '../common/Loader.svelte';
 
+	import { tt, locale, locales } from "../../stores/i18n.js";
+
 	const dispatch = createEventDispatcher();
 
 	let recents;
 
     let resetConfirmed = false;
-    let resetText = "Clear";
+    let resetText = $tt("recent.reset");
 
     function handleReset() {
     	if (!resetConfirmed) {
-    		resetText = "Are you sure?";
+    		resetText = $tt("settings.confirm");
     		resetConfirmed = true;
     		return;
     	}
@@ -20,7 +22,7 @@
     	ipcRenderer.send('clearRecents');
 
     	resetConfirmed = false;
-    	resetText = "Clear";
+    	resetText = $tt("recent.reset");
     }
 
 	ipcRenderer.on('recents', (event, arg) => {
@@ -54,7 +56,7 @@
 			</li>
 		{:else}
 			<span class="recents-list-fallback">
-				No recent files found yet!
+				{tt("recent.notfound")}
 			</span>
 		{/if}
 	{:else}

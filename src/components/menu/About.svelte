@@ -1,5 +1,7 @@
 <script>
 	export let version;
+
+	import { tt, locale, locales } from "../../stores/i18n.js";
 </script>
 
 {#if version}
@@ -11,7 +13,7 @@
 	limbank.org &copy; 2018-2023
 </div>
 <div class="about-text-title">
-	Special thanks to:
+	{$tt("about.thanks")}
 </div>
 <div class="about-text">
 	GHOST<br>
@@ -21,7 +23,7 @@
 	Charalian
 </div>
 <div class="about-text-title">
-	Made with:
+	{$tt("about.madewith")}
 </div>
 <div class="about-text">
 	Electron<br>
@@ -29,7 +31,7 @@
 	Sharp
 </div>
 <div class="about-text-title">
-	Links:
+	{$tt("about.links")}
 </div>
 <div class="about-text">
 	<ul class="about-list">

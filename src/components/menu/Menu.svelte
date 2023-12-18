@@ -4,6 +4,8 @@
 	import About from './About.svelte';
 	import Recent from './Recent.svelte';
 
+	import { tt, locale, locales } from "../../stores/i18n.js";
+
 	const dispatch = createEventDispatcher();
 
 	let setWindow = "recent";
@@ -25,19 +27,19 @@
 				class:active={setWindow=="recent"}
 				on:click={e => { setWindow="recent"; }}
 			>
-				Recent
+				{$tt("menu.recent")}
 			</li>
 			<li
 				class:active={setWindow=="settings"}
 				on:click={e => { setWindow="settings"; }}
 			>
-				Settings
+				{$tt("menu.settings")}
 			</li>
 			<li
 				class:active={setWindow=="about"}
 				on:click={e => { setWindow="about"; }}
 			>
-				About
+				{$tt("menu.about")}
 			</li>
 			{#await fetchLatest then data}
 				{#if data[0] && data[0].tag_name != 'v' + version}
@@ -46,7 +48,7 @@
 							window.location.href = data[0].html_url;
 						}}
 					>
-						Update
+						{$tt("menu.update")}
 					</li>
 
 				{/if}
