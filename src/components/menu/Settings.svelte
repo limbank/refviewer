@@ -107,6 +107,20 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
+			Language
+		</div>
+		<div class="setting-control">
+			<select class="select" bind:value={$settings.locale}>
+				{#each locales as locale}
+					<option value={locale}>{locale}</option>
+				{/each}
+			</select>
+		</div>
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
 			{$tt("settings.tooltips")}
 		</div>
 		<div class="setting-control">

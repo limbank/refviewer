@@ -1,5 +1,8 @@
 import { derived, writable } from "svelte/store";
+const { ipcRenderer } = require('electron');
 import translations from "./locales";
+
+import settings from './settings.js';
 
 export const locale = writable("en");
 export const locales = Object.keys(translations);
@@ -26,3 +29,7 @@ function translate(locale, key, vars) {
 export const tt = derived(locale, ($locale) => (key, vars = {}) =>
   translate($locale, key, vars)
 );
+
+settings.subscribe((arg) => {
+  locale.set(arg.locale);
+});
