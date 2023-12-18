@@ -6,7 +6,6 @@ export default {
     "titlebar.selectfile": "Select file",
     "titlebar.screenshot": "Screenshot",
     "titlebar.clear": "Clear",
-    "titlebar.versionshort": "v.",
     "titlebar.devtools": "Open DevTools",
     "titlebar.clickthrough": "Make click-through",
     "titlebar.newwindow": "New window",
@@ -67,8 +66,8 @@ export default {
     "menu.settings": "Settings",
     "menu.about": "About",
     "menu.update": "Update",
-    "about.thanks": "Special thanks to:",
-    "about.madewith": "Made with:",
-    "about.links": "Links:"
+    "about.thanks": "Special thanks to",
+    "about.madewith": "Made with",
+    "about.translation": "Translation credits"
   }
 };

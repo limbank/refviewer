@@ -103,7 +103,7 @@
 	</div>
 	<div class="titlebar-group">
 		{#if version}
-			<span class="version">{$tt("titlebar.versionshort")} {version}</span>
+			<span class="version">v. {version}</span>
 		{/if}
 		{#if $settings.devmode}
 			<Button
