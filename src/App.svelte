@@ -17,6 +17,8 @@
 	//import mousetrap from 'svelte-use-mousetrap';
 
 	import Helper from './scripts/helper.js';
+
+	import { tt, locale, locales } from "./stores/i18n.js";
 	import settings from './stores/settings.js';
 	import backdrop from './stores/backdrop.js';
 	import fileSelected from './stores/fileSelected.js';
@@ -130,13 +132,13 @@
 	}
 
 	function delInstance() {
-	    try {
-	    	instance.destroy();
-	    	console.log("Removing listeners");
+		try {
+			instance.destroy();
+			console.log("Removing listeners");
 			element.parentElement.removeEventListener('wheel', wheelEvent);
 			element.removeEventListener('panzoomchange', changeEvent);
-	    }
-	    catch(e) {/*console.log("errrrr", e);*/}
+		}
+		catch(e) {/*console.log("errrrr", e);*/}
 	}
 
 	function initPan(customZoom = false) {
@@ -158,13 +160,13 @@
 	};
 
   	$: render = ({ context }) => {
-  		try {
-		    context.drawImage(img, 0, 0);
+		try {
+			context.drawImage(img, 0, 0);
 
 			element = document.querySelector('.canvas-container-inner');
-		    initPan();
-  		}
-	    catch(e) { console.log("err", e); }
+			initPan();
+		}
+		catch(e) { console.log("err", e); }
   	};
 
   	$: {
@@ -180,59 +182,61 @@
   	let pixelWidth = 0;
 
   	$: cropRender = ({ context, width, height }) => {
-  		try {
-  			if (!cropping) return;
+		try {
+			if (!cropping) return;
 
-  			context.globalAlpha = 1.0;
+			context.globalAlpha = 1.0;
 			context.fillStyle = "#171719";
-  			context.fillRect(0, 0, width, height);
+			context.fillRect(0, 0, width, height);
 
-  			context.globalAlpha = 0.5;
-		    context.drawImage(img, 0, 0);
-  			context.globalAlpha = 1.0;
+			context.globalAlpha = 0.5;
+			context.drawImage(img, 0, 0);
+			context.globalAlpha = 1.0;
 
-        	context.drawImage(
-        		img,
-        		cropStartingPointX,
+			context.drawImage(
+				img,
+				cropStartingPointX,
 				cropStartingPointY,
 				cropWidth - cropStartingPointX,
 				cropHeight - cropStartingPointY,
-        		cropStartingPointX,
+				cropStartingPointX,
 				cropStartingPointY,
 				cropWidth - cropStartingPointX,
 				cropHeight - cropStartingPointY
-        	);
-        
-  			context.strokeStyle = "#FAA916";
-		    context.beginPath();
-		    context.lineWidth = pixelWidth*2;
-		    context.setLineDash([pixelWidth * 6, pixelWidth * 3]);
+			);
+
+			context.strokeStyle = "#FAA916";
+			context.beginPath();
+			context.lineWidth = pixelWidth*2;
+			context.setLineDash([pixelWidth * 6, pixelWidth * 3]);
+
 			context.rect(
 				cropStartingPointX,
 				cropStartingPointY,
 				cropWidth - cropStartingPointX,
 				cropHeight - cropStartingPointY
 			);
+
 			context.stroke();
-  		}
-	    catch(e) { console.log("err", e); }
+		}
+		catch(e) { console.log("err", e); }
   	};
 
   	function handleMouseDown(e) {
-  		//console.log("Canvas mousedown");
-  		let canvas = e.srcElement;
-        let positionInfo = canvas.getBoundingClientRect();
-        let mousePos = helper.getMousePos(canvas, e, positionInfo);
+		//console.log("Canvas mousedown");
+		let canvas = e.srcElement;
+		let positionInfo = canvas.getBoundingClientRect();
+		let mousePos = helper.getMousePos(canvas, e, positionInfo);
 
-        let biggerSideTrue = height > width ? height : width;
-        let biggerSideVirt = positionInfo.height > positionInfo.width ? positionInfo.height : positionInfo.width;
+		let biggerSideTrue = height > width ? height : width;
+		let biggerSideVirt = positionInfo.height > positionInfo.width ? positionInfo.height : positionInfo.width;
 
-        pixelWidth = Math.round(biggerSideTrue / biggerSideVirt);
+		pixelWidth = Math.round(biggerSideTrue / biggerSideVirt);
 
-        cropStartingPointX = helper.scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
-        cropStartingPointY = helper.scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
+		cropStartingPointX = helper.scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
+		cropStartingPointY = helper.scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
 
-        cropping = true;
+		cropping = true;
   	}
 
   	function handleMouseUp(e) {
@@ -266,28 +270,28 @@
   	}
 
   	function handleMouseMove(e) {
-  		mouseincanvas = true;
+		mouseincanvas = true;
 
-        let canvas = e.srcElement;
-        let ctx = canvas.getContext('2d');
+		let canvas = e.srcElement;
+		let ctx = canvas.getContext('2d');
 
-        let positionInfo = canvas.getBoundingClientRect();
-        let mousePos = helper.getMousePos(canvas, e, positionInfo);
+		let positionInfo = canvas.getBoundingClientRect();
+		let mousePos = helper.getMousePos(canvas, e, positionInfo);
 
-        let newWidth = helper.scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
-        let newHeight = helper.scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
+		let newWidth = helper.scaleNumber(mousePos.x, [0, positionInfo.width], [0, width]);
+		let newHeight = helper.scaleNumber(mousePos.y, [0, positionInfo.height], [0, height]);
 
-        if (pickingMode) {
-	        let imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
-	        let pixel = imageData.data;
-	        let pixelColor = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${pixel[3]})`;
+		if (pickingMode) {
+			let imageData = ctx.getImageData(newWidth, newHeight, 1, 1);
+			let pixel = imageData.data;
+			let pixelColor = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${pixel[3]})`;
 
-	        chosenColor = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2] }).toHexString();
-        }
-        else if (croppingMode) {
-        	cropWidth = newWidth;
-        	cropHeight = newHeight;
-        }
+			chosenColor = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2] }).toHexString();
+		}
+		else if (croppingMode) {
+			cropWidth = newWidth;
+			cropHeight = newHeight;
+		}
   	}
 
 	function handlePaste(event) {
@@ -317,7 +321,14 @@
 		for (let i = 0; i < items.length; i++) {
 			if (items[i].type.indexOf("image") === 0) blob = items[i].getAsFile();
 			else{
-				//afaik you can't really paste PSD here
+				let unknownwFilePath = items[i].getAsFile().path;
+
+				if (unknownwFilePath.endsWith(".psd")) {
+					ipcRenderer.send('file', unknownwFilePath);
+				}
+				else {
+					ipcRenderer.send('action', $tt("desktop.unrecognized"));
+				}
 			}
 		}
 		if (blob == null) return console.log("null blob");
@@ -351,10 +362,10 @@
 
 	function clearImage() {
 		$fileSelected = false;
-    	hex = undefined;
+		hex = undefined;
 		pickingMode = false;
 		croppingMode = false;
-	    delInstance();
+		delInstance();
 	}
 
 	$: if ($settingsOpen) {
