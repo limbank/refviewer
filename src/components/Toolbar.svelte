@@ -32,7 +32,6 @@
 			image: $fileSelected
 		});
 	}
-
 	function getSelectedText() {
     	let text = "";
 
@@ -46,7 +45,7 @@
     	return text;
 	}
 
-	export const copyImage = () => {
+	function copyImage() {
 		if (!$fileSelected || getSelectedText() != "") return;
 
 		let xhr = new XMLHttpRequest();
@@ -67,6 +66,15 @@
 		xhr.send();
 	}
 
+	function clearImage() {
+		dispatch('clear');
+	}
+
+	function cutImage() {
+		copyImage();
+		clearImage();
+	}
+
 	//close all dropdowns when settings open
 	$: if ($settingsOpen) closeDropdowns = true;
 </script>
@@ -74,6 +82,8 @@
 <svelte:window use:mousetrap={[
   ['command+s', 'ctrl+s', () => editImage("save")],
   ['command+c', 'ctrl+c', copyImage],
+  ['command+x', 'ctrl+x', cutImage],
+  ['del', 'backspace', clearImage],
   [']', () => editImage("rotateRight")],
   ['[', () => editImage("rotateLeft")],
   ['.', () => editImage("flipHorizontal")],
@@ -96,25 +106,25 @@
 			tiptext={$tt("toolbar.copy")}
 			on:click={copyImage}
 		>
-	    	<i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
+	    <i class="far fa-clipboard" style="transform: translateY(-2px);"></i>
 		</Button>
 		<Button
 			tiptext={$tt("toolbar.crop")}
 			on:click={() => dispatch("cropImage")}
 		>
-	    	<i class="far fa-crop-alt" style=""></i>
+	    <i class="far fa-crop-alt" style=""></i>
 		</Button>
 		<Button
 			tiptext={$tt("toolbar.flip")}
 			on:click={() => editImage("flipHorizontal")}
 		>
-	    	<i class="fas fa-sync-alt"></i>
+	    <i class="fas fa-sync-alt"></i>
 		</Button>
 		<Button
 			tiptext={$tt("toolbar.rotate")}
 			on:click={() => editImage("rotateRight")}
 		>
-	    	<i class="fas fa-redo"></i>
+	    <i class="fas fa-redo"></i>
 		</Button>
 		<Eyedropper
 			{closeDropdowns}
@@ -137,13 +147,13 @@
 				tiptext={$tt("toolbar.greyscale")}
 				on:click={() => editImage("greyImage")}
 			>
-		    	<i class="fas fa-adjust"></i>
+		    <i class="fas fa-adjust"></i>
 			</Button>
 			<Button
 				tiptext={$tt("toolbar.negative")}
 				on:click={() => editImage("negateImage")}
 			>
-		    	<i class="fas fa-minus-circle"></i>
+		    <i class="fas fa-minus-circle"></i>
 			</Button>
 		</Dropout>
 	{/if}

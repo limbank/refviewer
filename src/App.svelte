@@ -44,8 +44,6 @@
 
 	let zoomscale = 1;
 
-	let tbx;
-
   	let workAreaOpacity = 1;
 	let m = { x: 0, y: 0 };
 
@@ -351,6 +349,14 @@
 		else return "default";
 	}
 
+	function clearImage() {
+		$fileSelected = false;
+    	hex = undefined;
+		pickingMode = false;
+		croppingMode = false;
+	    delInstance();
+	}
+
 	$: if ($settingsOpen) {
 		croppingMode = false;
 		pickingMode = false;
@@ -368,19 +374,12 @@
 	<div class="content">
 		<Titlebar
 			{version}
-			on:clear={e => {
-				$fileSelected = false;
-		    	hex = undefined;
-				pickingMode = false;
-				croppingMode = false;
-			    delInstance();
-			}}
-			on:copy={tbx.copyImage}
+			on:clear={clearImage}
 		/>
 		<Toolbar
 			{hex}
-			bind:this={tbx}
 			bind:showDropdown
+			on:clear={clearImage}
 			on:cropImage={e => {
 				pickingMode = false;
 				croppingMode = true;

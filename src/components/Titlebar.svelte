@@ -28,11 +28,6 @@
 		dispatch('clear');
 	}
 
-	function cutImage() {
-		dispatch('copy');
-		dispatch('clear');
-	}
-
 	function openDevTools() {
 		ipcRenderer.send('window', 'devtools');
 	}
@@ -48,8 +43,6 @@
 
 <svelte:window use:mousetrap={[
   ['command+o', 'ctrl+o', openImage],
-  ['del', 'backspace', clearImage],
-  ['command+x', 'ctrl+x', cutImage],
   ['command+n', 'ctrl+n', openNewWindow],
   ['f11', maximize],
   ['shift+ctrl+i', 'shift+command+i', openDevTools]
