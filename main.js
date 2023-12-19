@@ -8,11 +8,12 @@ const settingsProcessor = require('./scripts/main/settingsProcessor.js');
 const windowManager = require('./scripts/main/windowManager.js');
 const fileProcessor = require('./scripts/main/fileProcessor.js');
 const historyProcessor = require('./scripts/main/historyProcessor.js');
+const localeProcessor = require('./scripts/main/localeProcessor.js');
 const imageEditor = require('./scripts/main/imageEditor.js');
 const Lumberjack = require('./scripts/main/lumberjack.js');
 
 let mainWindow, newWin;
-let sp, rp, wm, fp, ie, hp;
+let sp, rp, wm, fp, ie, hp, lp;
 let processorsReady = false;
 
 let gotTheLock;
@@ -58,6 +59,10 @@ sp = new settingsProcessor({
         ie = new imageEditor({
             fp: fp,
             rp: rp
+        });
+
+        lp = new localeProcessor({
+            sp: sp
         });
     }
 });
@@ -172,9 +177,11 @@ ipcMain.on('window', (event, arg) => {
         case "clickthrough":
             activeWindow.setIgnoreMouseEvents(true);
             activeWindow.setFocusable(false);
+            activeWindow.setVisibleOnAllWorkspaces(true);
+            activeWindow.show();
 
-            event.sender.send('action', "Enabled click-through mode!");
-            event.sender.send('action', "Use CTRL or CMD + M to exit");
+            event.sender.send('action', lp.tt("main.ctenabled"));
+            event.sender.send('action', lp.tt("main.cthint"));
 
             lastActiveWindows.push(activeWindow);
         default: break;
@@ -227,7 +234,7 @@ ipcMain.on('select:saveDirectory', (event, arg) => {
             let files = result.filePaths;
 
             event.sender.send('getDirectory', files[0]);
-            event.sender.send('action', "Selected a directory");
+            event.sender.send('action', lp.tt("main.dirselected"));
         }
     }).catch(err => {
         jack.log("Error selecting directory: ", err);
@@ -389,7 +396,7 @@ ipcMain.on('screenshot', (event, arg) => {
             activeWindow.show();
 
             jack.log("Error screenshotting: ", error);
-            event.sender.send('action', "Failed to take a screenshot");
+            event.sender.send('action', lp.tt("main.shotfailed"));
         });
     });
 });

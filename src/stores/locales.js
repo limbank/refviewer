@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   en: {
     "dropfield.placeholder": "Drop image here",
     "titlebar.closemenu": "Close menu",
@@ -69,7 +69,11 @@ export default {
     "menu.update": "Update",
     "about.thanks": "Special thanks to",
     "about.madewith": "Made with",
-    "about.translation": "Translation credits"
+    "about.translation": "Translation credits",
+    "main.ctenabled": "Enabled click-through mode!",
+    "main.cthint": "Use CTRL or CMD + M to exit",
+    "main.dirselected": "Selected a directory",
+    "main.shotfailed": "Failed to take a screenshot"
   },
   ua: {
     "dropfield.placeholder": "Перетягніть сюди зображення",
@@ -141,7 +145,11 @@ export default {
     "menu.update": "Оновлення",
     "about.thanks": "Подяки",
     "about.madewith": "Зроблено з",
-    "about.translation": "Подяка за переклади"
+    "about.translation": "Подяка за переклади",
+    "main.ctenabled": "Вікно зроблено неклікабельним!",
+    "main.cthint": "Натисніть CTRL або CMD + M щоб повернутися",
+    "main.dirselected": "Обрано директорію",
+    "main.shotfailed": "Не вдалося зробити знимок екрану"
   },
   br: {
     "dropfield.placeholder": "Arraste e solte alguma imagem aqui",
@@ -213,6 +221,10 @@ export default {
     "menu.update": "Atualizar",
     "about.thanks": "Agradecimentos",
     "about.madewith": "Software criado com",
-    "about.translation": "Traduções por"
+    "about.translation": "Traduções por",
+    "main.ctenabled": "Enabled click-through mode!",
+    "main.cthint": "Use CTRL or CMD + M to exit",
+    "main.dirselected": "Selected a directory",
+    "main.shotfailed": "Failed to take a screenshot"
   }
 };
