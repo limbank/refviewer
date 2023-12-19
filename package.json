@@ -18,7 +18,11 @@
         "dev": "concurrently \"npm run dev:electron\" \"npm run dev:svelte\"",
         "start": "concurrently \"npm run dev:electron\" \"npm run start:svelte\"",
         "postinstall": "patch-package",
-        "build:electron": "npx electron-builder build --win portable"
+        "build:electron": "npx electron-builder build"
+    },
+    "publish": {
+        "provider": "github",
+        "releaseType": "release"
     },
     "build": {
         "appId": "com.electron.RefViewer",
