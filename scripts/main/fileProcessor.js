@@ -65,6 +65,9 @@ class fileProcessor {
         });
     }
     handleConversion (filePath, event, writeRP = true) {
+        //rewrite later to optimize
+        sharp.cache({ files : 0 });
+
         sharp(filePath)
             .png()
             .toBuffer()

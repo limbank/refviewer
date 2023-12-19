@@ -166,7 +166,11 @@
 			element = document.querySelector('.canvas-container-inner');
 			initPan();
 		}
-		catch(e) { console.log("err", e); }
+		catch(e) { 
+			ipcRenderer.send('action', $tt("desktop.unrecognized"));
+			clearImage();
+			//console.log("err", e); 
+		}
   	};
 
   	$: {
@@ -300,17 +304,16 @@
 		let text = event.clipboardData.getData('Text');
 		if (text != "") {
 			if (text.startsWith("data") && text.includes("image")) {
-				//console.log("not text, sending stuff");
 				//text is a data string, try to process it
 				return ipcRenderer.send('file', text);
 			}
 			else if (text.startsWith("http")) {
-				//console.log("not text, sending http");
 				//text is a url string, try to process it
 				return ipcRenderer.send('file', text);
 			}
 			else {
 				//console.log("text pasted! text:", text);
+				return ipcRenderer.send('action', $tt("desktop.unrecognized"));
 				//account for pastes of other types of text?
 			}
 		}
@@ -324,14 +327,15 @@
 				let unknownwFilePath = items[i].getAsFile().path;
 
 				if (unknownwFilePath.endsWith(".psd")) {
-					ipcRenderer.send('file', unknownwFilePath);
-				}
-				else {
-					ipcRenderer.send('action', $tt("desktop.unrecognized"));
+					return ipcRenderer.send('file', unknownwFilePath);
 				}
 			}
 		}
-		if (blob == null) return console.log("null blob");
+
+		if (blob == null) {
+			ipcRenderer.send('action', $tt("desktop.unrecognized"));
+			return console.log("null blob");
+		}
 
 		/*
 			Electron doesn't want us sending blob objects via ipc
