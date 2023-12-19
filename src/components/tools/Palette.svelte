@@ -9,6 +9,7 @@
 
 	import { tt, locale, locales } from "../../stores/i18n.js";
 	import settings from '../../stores/settings.js';
+	import fileSelected from '../../stores/fileSelected.js';
 
 	const dispatch = createEventDispatcher();
 
@@ -21,7 +22,6 @@
 	let palette = [];
 
 	export let closeDropdowns = false;
-	export let fileSelected = false;
 
 	ipcRenderer.on('palette', (event, arg) => {
 		if (arg && arg.length > 0) {
@@ -51,7 +51,7 @@
 	on:click={e => {
 		ipcRenderer.send('editImage', {
 			type: 'getPalette',
-			image: fileSelected
+			image: $fileSelected
 		});
 	}}
 >	

@@ -19,17 +19,15 @@
 	import Helper from './scripts/helper.js';
 	import settings from './stores/settings.js';
 	import backdrop from './stores/backdrop.js';
+	import fileSelected from './stores/fileSelected.js';
+	import settingsOpen from './stores/settingsOpen.js';
 
 	const { ipcRenderer } = require('electron');
 	const { version } = require('../package.json');
 
 	const helper = new Helper();
 
-	let fileSelected = false;
-	let width;
-	let height;
 	let pixelated = false;
-	let settingsOpen = false;
 	let pickingMode = false;
 	let croppingMode = false;
 	let initUpdate = 0;
@@ -53,6 +51,8 @@
 
 	let showDropdown = false;
 
+	let width;
+	let height;
 	let img = new Image();
 	img.onload = function(){
 	  	width = img.width;
@@ -110,7 +110,7 @@
 	ipcRenderer.on('deliver', (event, arg) => {
 		img.src = arg;
 		loading = false;
-		fileSelected = arg;
+		$fileSelected = arg;
 	});
 
 	function handleCursor(event) {
@@ -181,7 +181,7 @@
   	let cropping = false;
   	let pixelWidth = 0;
 
-  	$: testRender = ({ context, width, height }) => {
+  	$: cropRender = ({ context, width, height }) => {
   		try {
   			if (!cropping) return;
 
@@ -250,7 +250,7 @@
 		if (croppingMode) {
 	  		ipcRenderer.send('editImage', {
 				type: "crop",
-				image: fileSelected,
+				image: $fileSelected,
 				args: args
 			});
 
@@ -293,7 +293,7 @@
   	}
 
 	function handlePaste(event) {
-		if (!$settings.overwrite && fileSelected || settingsOpen) return;
+		if (!$settings.overwrite && $fileSelected || $settingsOpen) return;
 
 		let text = event.clipboardData.getData('Text');
 		if (text != "") {
@@ -331,7 +331,7 @@
 
 		helper.getIMG(blob, (result) => {
 			img.src = result;
-			fileSelected = result;
+			$fileSelected = result;
 		});
 	}
 
@@ -351,7 +351,7 @@
 		else return "default";
 	}
 
-	$: if (settingsOpen) {
+	$: if ($settingsOpen) {
 		croppingMode = false;
 		pickingMode = false;
 	}
@@ -367,22 +367,17 @@
 
 	<div class="content">
 		<Titlebar
-			{settingsOpen}
 			{version}
-			{fileSelected}
 			on:clear={e => {
-				fileSelected = false;
+				$fileSelected = false;
 		    	hex = undefined;
 				pickingMode = false;
 				croppingMode = false;
 			    delInstance();
 			}}
 			on:copy={tbx.copyImage}
-			on:settingsOpen={e => { settingsOpen = e.detail; }}
 		/>
 		<Toolbar
-			{settingsOpen}
-			{fileSelected}
 			{hex}
 			bind:this={tbx}
 			bind:showDropdown
@@ -399,23 +394,16 @@
 		  		instance.setOptions({ disablePan: true });
 			}}
 		/>
-		<Desktop
-			{fileSelected}
-			{settingsOpen}
-			bind:loading
-		>
-			{#if settingsOpen}
-				<Menu
-					{version}
-					on:settingsOpen={e => { settingsOpen = e.detail; }}
-				/>
+		<Desktop bind:loading>
+			{#if $settingsOpen}
+				<Menu {version}/>
 			{/if}
 
 			{#if loading}
 				<Loader />
 			{/if}
 
-			{#if fileSelected && !loading}
+			{#if $fileSelected && !loading}
 				<div
 					class="canvas-container"
 					class:pixelated
@@ -472,14 +460,14 @@
 							<Layer {render} />
 
 							{#if croppingMode}
-								<Layer render={testRender} />
+								<Layer render={cropRender} />
 							{/if}
 						</Canvas>
 					</div>
 				</div>
 			{/if}
 
-			{#if !fileSelected && !loading}
+			{#if !$fileSelected && !loading}
 				<Dropfield />
 			{/if}
 

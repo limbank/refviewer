@@ -5,6 +5,7 @@
 	const tinycolor = require("tinycolor2");
 
 	import { tt, locale, locales } from "../../stores/i18n.js";
+	import fileSelected from '../../stores/fileSelected.js';
 
 	import Button from '../common/Button.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
@@ -27,7 +28,6 @@
 	let aspectRatio = 0;
 
 	export let closeDropdowns = false;
-	export let fileSelected = false;
 
 	ipcRenderer.on('imagesize', (event, arg) => {
 		imageHeight = arg.h;
@@ -39,7 +39,7 @@
 	function resizeImage() {
 		ipcRenderer.send('editImage', {
 			type: 'resizeImage',
-			image: fileSelected,
+			image: $fileSelected,
 			args: {
 				w: imageWidth,
 				h: imageHeight,
@@ -95,7 +95,7 @@
 	on:click={e => {
 		ipcRenderer.send('editImage', {
 			type: 'getSize',
-			image: fileSelected
+			image: $fileSelected
 		});
 
 		showDropdown = true;

@@ -1,11 +1,10 @@
 <script>
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	const { ipcRenderer } = require('electron');
 	import Loader from '../common/Loader.svelte';
 
 	import { tt, locale, locales } from "../../stores/i18n.js";
-
-	const dispatch = createEventDispatcher();
+	import settingsOpen from '../../stores/settingsOpen.js';
 
 	let recents;
 
@@ -45,7 +44,7 @@
 				    	on:click|preventDefault={() => {
 				    		ipcRenderer.send('file', item);
 							ipcRenderer.send('loading', true);
-				    		dispatch('settingsOpen', false);
+							$settingsOpen = false;
 				    	}}
 					>{item}</a>
 				</li>

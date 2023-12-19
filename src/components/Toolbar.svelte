@@ -5,6 +5,8 @@
 
 	import { tt, locale, locales } from "../stores/i18n.js";
 	import settings from '../stores/settings.js';
+	import fileSelected from '../stores/fileSelected.js';
+	import settingsOpen from '../stores/settingsOpen.js';
 
 	import Button from './common/Button.svelte';
 	import Eyedropper from './tools/Eyedropper.svelte';
@@ -16,8 +18,6 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let fileSelected = false;
-	export let settingsOpen = false;
 	export let backdropColor = $settings.theme ? "#111111" : "#2F2E33";
 	export let hex;
 	export let showDropdown = false;
@@ -25,11 +25,11 @@
 	let closeDropdowns = false;
 
 	function editImage(type) {
-		if (!fileSelected) return;
+		if (!$fileSelected) return;
 
 		ipcRenderer.send('editImage', {
 			type: type,
-			image: fileSelected
+			image: $fileSelected
 		});
 	}
 
@@ -47,7 +47,7 @@
 	}
 
 	export const copyImage = () => {
-		if (!fileSelected || getSelectedText() != "") return;
+		if (!$fileSelected || getSelectedText() != "") return;
 
 		let xhr = new XMLHttpRequest();
 
@@ -62,13 +62,13 @@
 			catch(e){ console.log(e); }
 		};
 
-		xhr.open('GET', fileSelected);
+		xhr.open('GET', $fileSelected);
 		xhr.responseType = 'blob';
 		xhr.send();
 	}
 
 	//close all dropdowns when settings open
-	$: if (settingsOpen) closeDropdowns = true;
+	$: if ($settingsOpen) closeDropdowns = true;
 </script>
 
 <svelte:window use:mousetrap={[
@@ -79,13 +79,13 @@
   ['.', () => editImage("flipHorizontal")],
   [',', () => editImage("flipVertical")],
   ['command+z', 'ctrl+z', () => {
-  	if (!fileSelected) return;
-  	ipcRenderer.send('undo', fileSelected);
+  	if (!$fileSelected) return;
+  	ipcRenderer.send('undo', $fileSelected);
   }]
 ]} />
 
 <div class="toolbar">
-	{#if fileSelected && !settingsOpen}
+	{#if $fileSelected && !$settingsOpen}
 		<Button
 			tiptext={$tt("toolbar.save")}
 			on:click={() => editImage("save")}
@@ -128,12 +128,10 @@
 		/>
 		<Resizer
 			{closeDropdowns}
-			bind:fileSelected
 		/>
 		<Dropout icon="fas fa-magic">
 			<Palette
 				{closeDropdowns}
-				bind:fileSelected
 			/>
 			<Button
 				tiptext={$tt("toolbar.greyscale")}

@@ -4,6 +4,8 @@
 
 	import { tt, locale, locales } from "../stores/i18n.js";
 	import settings from '../stores/settings.js';
+	import fileSelected from '../stores/fileSelected.js';
+	import settingsOpen from '../stores/settingsOpen.js';
 
 	import Button from './common/Button.svelte';
 
@@ -11,8 +13,6 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let fileSelected = false;
-	export let settingsOpen = false;
 	export let version;
 	let pinned = false;
 	let maximized = false;
@@ -59,21 +59,20 @@
 	<div class="titlebar-group">
 		<Button
 			context="control"
-			tiptext={settingsOpen ? $tt("titlebar.closemenu") : $tt("titlebar.mainmenu")}
+			tiptext={$settingsOpen ? $tt("titlebar.closemenu") : $tt("titlebar.mainmenu")}
 			on:click={e => {
-				settingsOpen = !settingsOpen;
-				dispatch('settingsOpen', settingsOpen);
+				$settingsOpen = !$settingsOpen;
 			}}
 		>
-			{#if settingsOpen}
-    			<i class="fas fa-times"></i>
+			{#if $settingsOpen}
+    		<i class="fas fa-times"></i>
 			{:else}
-    			<i class="fas fa-bars"></i>
+    		<i class="fas fa-bars"></i>
 			{/if}
 		</Button>
 
-		{#if !settingsOpen}
-			{#if !fileSelected || $settings.overwrite}
+		{#if !$settingsOpen}
+			{#if !$fileSelected || $settings.overwrite}
 				<Button
 					context="control"
 					tiptext={$tt("titlebar.selectfile")}
@@ -90,7 +89,7 @@
 			    	<i class="fas fa-crosshairs"></i>
 				</Button>
 			{/if}
-			{#if fileSelected}
+			{#if $fileSelected}
 				<Button
 					context="control"
 					tiptext={$tt("titlebar.clear")}

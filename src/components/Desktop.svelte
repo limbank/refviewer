@@ -5,10 +5,10 @@
 	import { tt, locale, locales } from "../stores/i18n.js";
 	import settings from '../stores/settings.js';
 	import backdrop from '../stores/backdrop.js';
+	import fileSelected from '../stores/fileSelected.js';
+	import settingsOpen from '../stores/settingsOpen.js';
 
 	export let loading = false;
-	export let settingsOpen;
-	export let fileSelected;
 
 	const decodeHTMLEntities = text => {
 	    // Create a new element or use one from cache, to save some element creation overhead
@@ -40,7 +40,7 @@
 	}
 
 	function handleFilesSelect(e) {
-		if (!$settings.overwrite && fileSelected || settingsOpen) return;
+		if (!$settings.overwrite && $fileSelected || $settingsOpen) return;
 
 		loading = true;
 
