@@ -30,7 +30,6 @@
     	"en": "English",
     	"ua": "Українська",
     	"br": "Português (Brasil)"
-
     };
 
     ipcRenderer.on('getDirectory', (event, arg) => {
@@ -41,6 +40,35 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
+			{$tt("settings.language")}
+		</div>
+		<div class="setting-control">
+			<select class="select" bind:value={$settings.locale}>
+				{#each locales as locale}
+					<option value={locale}>{localeNames[locale] || "Unknown"}</option>
+				{/each}
+			</select>
+		</div>
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			{$tt("settings.theme")}
+		</div>
+		<div class="setting-control">
+			<select class="select" bind:value={$settings.theme}>
+				<option value="default" selected>{$tt("settings.themedefault")}</option>
+				<option value="legacy">{$tt("settings.themelegacy")}</option>
+				<option value="light">{$tt("settings.themelight")}</option>
+				<option value="amoled">{$tt("settings.themeamoled")}</option>
+			</select>
+		</div>
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
 			{$tt("settings.zoom")}
 		</div>
 		<div class="setting-control">
@@ -48,6 +76,19 @@
 		</div>
 		<div class="setting-control-large">
 			<input type="range" bind:value={$settings.zoom} step="0.1" max="1" min="0.1">
+		</div>
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			{$tt("settings.slider")}
+		</div>
+		<div class="setting-control">
+			<label class="switch">
+				<input type="checkbox" bind:checked={$settings.zoomslider}>
+				<span class="slider"></span>
+			</label>
 		</div>
 	</div>
 </div>
@@ -70,6 +111,22 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
+			{$tt("settings.transparency")}
+		</div>
+		<div class="setting-control">
+			<label class="switch">
+				<input type="checkbox" bind:checked={$settings.transparency}>
+				<span class="slider"></span>
+			</label>
+		</div>
+	</div>
+	<div class="setting-description">
+		{$tt("settings.transparencydesc")}
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
 			{$tt("settings.hashsign")}
 		</div>
 		<div class="setting-control">
@@ -86,48 +143,6 @@
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
-			{$tt("settings.slider")}
-		</div>
-		<div class="setting-control">
-			<label class="switch">
-				<input type="checkbox" bind:checked={$settings.zoomslider}>
-				<span class="slider"></span>
-			</label>
-		</div>
-	</div>
-</div>
-<div class="setting">
-	<div class="setting-inner">
-		<div class="setting-title">
-			{$tt("settings.theme")}
-		</div>
-		<div class="setting-control">
-			<select class="select" bind:value={$settings.theme}>
-				<option value="default" selected>{$tt("settings.themedefault")}</option>
-				<option value="legacy">{$tt("settings.themelegacy")}</option>
-				<option value="light">{$tt("settings.themelight")}</option>
-				<option value="amoled">{$tt("settings.themeamoled")}</option>
-			</select>
-		</div>
-	</div>
-</div>
-<div class="setting">
-	<div class="setting-inner">
-		<div class="setting-title">
-			{$tt("settings.language")}
-		</div>
-		<div class="setting-control">
-			<select class="select" bind:value={$settings.locale}>
-				{#each locales as locale}
-					<option value={locale}>{localeNames[locale] || "Unknown"}</option>
-				{/each}
-			</select>
-		</div>
-	</div>
-</div>
-<div class="setting">
-	<div class="setting-inner">
-		<div class="setting-title">
 			{$tt("settings.tooltips")}
 		</div>
 		<div class="setting-control">
@@ -136,22 +151,6 @@
 				<span class="slider"></span>
 			</label>
 		</div>
-	</div>
-</div>
-<div class="setting">
-	<div class="setting-inner">
-		<div class="setting-title">
-			{$tt("settings.transparency")}
-		</div>
-		<div class="setting-control">
-			<label class="switch">
-				<input type="checkbox" bind:checked={$settings.transparency}>
-				<span class="slider"></span>
-			</label>
-		</div>
-	</div>
-	<div class="setting-description">
-		{$tt("settings.transparencydesc")}
 	</div>
 </div>
 <div class="setting">

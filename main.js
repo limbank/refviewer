@@ -400,3 +400,51 @@ ipcMain.on('screenshot', (event, arg) => {
         });
     });
 });
+/*
+let tempupdid;
+const { autoUpdater, AppUpdater } = require("electron-updater");
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
+
+ipcMain.on('checkUpdate', (event, arg) => {
+    tempupdid = event.sender.id;
+    autoUpdater.checkForUpdates();
+    jack.log(`Checking for updates. Current version ${app.getVersion()}`);
+    event.sender.send('action', `Checking for updates. Current version ${app.getVersion()}`);
+});
+
+//Global exception handler
+process.on("uncaughtException", function (err) {
+    let activeWindow = wm.getWindowByID(tempupdid);
+    activeWindow.send('action', "Uncaught exception");
+    jack.log("Uncaught exception:", err);
+});
+
+//New Update Available
+autoUpdater.on("update-available", (info) => {
+    let activeWindow = wm.getWindowByID(tempupdid);
+    activeWindow.send('action', `Update available. Current version ${app.getVersion()}`);
+    jack.log(`Update available. Current version ${app.getVersion()}`);
+    let pth = autoUpdater.downloadUpdate();
+    jack.log(pth);
+});
+
+autoUpdater.on("update-not-available", (info) => {
+    let activeWindow = wm.getWindowByID(tempupdid);
+    activeWindow.send('action', `No update available. Current version ${app.getVersion()}`);
+    jack.log(`No update available. Current version ${app.getVersion()}`);
+});
+
+//Download Completion Message
+autoUpdater.on("update-downloaded", (info) => {
+    let activeWindow = wm.getWindowByID(tempupdid);
+    activeWindow.send('action', `Update downloaded. Current version ${app.getVersion()}`);
+    jack.log(`Update downloaded. Current version ${app.getVersion()}`);
+});
+
+autoUpdater.on("error", (info) => {
+    let activeWindow = wm.getWindowByID(tempupdid);
+    activeWindow.send('action', info);
+    jack.log(info);
+});
+*/

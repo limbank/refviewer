@@ -41,7 +41,7 @@
 			Sade<br>
 			Ennoriel<br>
 			hrfn<br>
-			Charalian
+			Chawldol
 		</div>
 	</div>
 	<div class="about-split-item">
@@ -59,7 +59,7 @@
 	{$tt("about.translation")}:
 </div>
 <div class="about-text">
-	Charalian
+	Chawldol
 </div>
 
 <style lang="scss">

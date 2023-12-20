@@ -489,13 +489,26 @@
 		</Desktop>
 	</div>
 
-	<div class="test"></div>
+	<div class="test">
+		<button on:click={() => {
+			ipcRenderer.send('checkUpdate');
+		}}>Check updates</button>
+	</div>
 </main>
 
 <style lang="scss">
 	main {
 		overflow: hidden;
 		background: transparent;
+
+		.test {
+			display: none;
+			pointer-events: none;
+			position: fixed;
+			z-index: 999;
+			bottom: 10px;
+			left: 10px;
+		}
 
 		.content {
 			position: fixed;

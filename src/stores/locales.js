@@ -222,9 +222,9 @@ module.exports = {
     "about.thanks": "Agradecimentos",
     "about.madewith": "Software criado com",
     "about.translation": "Traduções por",
-    "main.ctenabled": "Enabled click-through mode!",
-    "main.cthint": "Use CTRL or CMD + M to exit",
-    "main.dirselected": "Selected a directory",
-    "main.shotfailed": "Failed to take a screenshot"
+    "main.ctenabled": "Clicar através da janela foi ativado!",
+    "main.cthint": "Use CTRL ou CMD + M para sair",
+    "main.dirselected": "Diretório selecionado",
+    "main.shotfailed": "Não foi possível capturar a tela"
   }
 };
