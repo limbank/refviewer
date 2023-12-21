@@ -23,7 +23,7 @@
 </script>
 
 <Button
-	tiptext={$tt("dropout.extrasa")}
+	tiptext={$tt("dropout.extras")}
 	on:click={e => {
 		showDropdown = true;
 		setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 50);
