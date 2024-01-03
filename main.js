@@ -29,7 +29,7 @@ const jack = new Lumberjack({
 let lastActiveWindows = [];
 
 sp = new settingsProcessor({
-    home:homeDir,
+    home: homeDir,
     filename: 'config.json',
     ready: () => {
         jack.devmode = sp.settings.devmode;
@@ -50,7 +50,7 @@ sp = new settingsProcessor({
         hp = new historyProcessor({
             limit: 15
         });
-        
+
         fp = new fileProcessor({
             rp: rp,
             hp: hp
@@ -69,7 +69,7 @@ sp = new settingsProcessor({
 
 try {
     require("electron-reloader")(module);
-} catch (_) {}
+} catch (_) { }
 
 gotTheLock = app.requestSingleInstanceLock();
 
@@ -116,11 +116,11 @@ app.on("activate", function () {
 });
 
 app.on('will-quit', () => {
-  // Unregister a shortcut.
-  globalShortcut.unregister('CommandOrControl+X')
+    // Unregister a shortcut.
+    globalShortcut.unregister('CommandOrControl+X')
 
-  // Unregister all shortcuts.
-  globalShortcut.unregisterAll()
+    // Unregister all shortcuts.
+    globalShortcut.unregisterAll()
 });
 
 ipcMain.on('settings:read', (event) => {
@@ -224,7 +224,7 @@ ipcMain.on('undo', (event, arg) => {
 ipcMain.on('select:saveDirectory', (event, arg) => {
     let senderID = event.sender.id;
     let activeWindow = wm.getWindowByID(senderID);
-    
+
     if (!activeWindow) return;
     dialog.showOpenDialog(activeWindow, {
         title: "Select screenshot directory",
@@ -243,7 +243,7 @@ ipcMain.on('select:saveDirectory', (event, arg) => {
 
 ipcMain.on('editImage', (event, arg) => {
     let activeWindow = wm.getWindowByID(event.sender.id);
-    
+
     if (!activeWindow) return;
     if (!arg.image) return;
 
@@ -255,7 +255,7 @@ ipcMain.on('editImage', (event, arg) => {
 ipcMain.on('selectfile', (event, arg) => {
     let senderID = event.sender.id;
     let activeWindow = wm.getWindowByID(senderID);
-    
+
     if (!activeWindow) return;
     dialog.showOpenDialog(activeWindow, {
         title: "Open image",
@@ -273,7 +273,7 @@ ipcMain.on('selectfile', (event, arg) => {
 ipcMain.on('screenshot', (event, arg) => {
     let senderID = event.sender.id;
     let activeWindow = wm.getWindowByID(senderID);
-    
+
     if (!activeWindow) return;
     let windowPOS = activeWindow.getPosition();
 
@@ -293,13 +293,13 @@ ipcMain.on('screenshot', (event, arg) => {
         activeWindow.show();
     }, 5000);
 
-    let currentDate = new Date(); 
+    let currentDate = new Date();
     let timestamp = currentDate.getDate() + ""
-                + (currentDate.getMonth()+1)
-                + currentDate.getFullYear() + "-"
-                + currentDate.getHours()
-                + currentDate.getMinutes()
-                + currentDate.getSeconds();
+        + (currentDate.getMonth() + 1)
+        + currentDate.getFullYear() + "-"
+        + currentDate.getHours()
+        + currentDate.getMinutes()
+        + currentDate.getSeconds();
 
     jack.log("Preparing to take a screenshot...");
 
@@ -315,7 +315,7 @@ ipcMain.on('screenshot', (event, arg) => {
 
             clearTimeout(errTimeout);
             activeWindow.show();
-            
+
             //performance fix
             const { BrowserWindow } = require("electron");
             newWin = new BrowserWindow({
@@ -327,7 +327,7 @@ ipcMain.on('screenshot', (event, arg) => {
                     nodeIntegration: true,
                     contextIsolation: false
                 },
-                frame:false,
+                frame: false,
                 show: false
             });
 
@@ -385,7 +385,7 @@ ipcMain.on('screenshot', (event, arg) => {
                                 }, "saveAuto", event, activeWindow);
                             }
                         })
-                        .catch( err => {
+                        .catch(err => {
                             jack.log("Error processing screenshot: ", err);
                         });
                 });
