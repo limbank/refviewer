@@ -59,7 +59,8 @@
 	{$tt("about.translation")}:
 </div>
 <div class="about-text">
-	Chawldol
+	Chawldol<br>
+	Bjarne V&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;
 </div>
 
 <style lang="scss">

@@ -29,7 +29,8 @@
     let localeNames = {
     	"en": "English",
     	"ua": "Українська",
-    	"br": "Português (Brasil)"
+    	"br": "Português (Brasil)",
+    	"nl": "Nederlands"
     };
 
     ipcRenderer.on('getDirectory', (event, arg) => {
