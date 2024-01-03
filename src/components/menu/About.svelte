@@ -41,7 +41,8 @@
 			Sade<br>
 			Ennoriel<br>
 			hrfn<br>
-			Chawldol
+			Chawldol<br>
+			Bjarne V
 		</div>
 	</div>
 	<div class="about-split-item">
