@@ -12,10 +12,10 @@ function translate(locale, key, vars) {
   if (!locale) return key;
 
   // Grab the translation from the translations object.
-  let text = translations[locale][key];
+  let text = translations[locale] ? translations[locale][key] : translations['en'][key];
 
-  //show default en version instead of key name?
-  if (!text) return `${locale}.${key}`;
+  if (!text) text = translations['en'][key];
+  //if (!text) return `${locale}.${key}`;
 
   // Replace any passed in variables in the translation string.
   Object.keys(vars).map((k) => {
