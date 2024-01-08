@@ -55,7 +55,7 @@
 			</li>
 		{:else}
 			<span class="recents-list-fallback">
-				{tt("recent.notfound")}
+				{$tt("recent.notfound")}
 			</span>
 		{/if}
 	{:else}
