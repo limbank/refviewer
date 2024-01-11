@@ -63,6 +63,7 @@
 				<option value="legacy">{$tt("settings.themelegacy")}</option>
 				<option value="light">{$tt("settings.themelight")}</option>
 				<option value="amoled">{$tt("settings.themeamoled")}</option>
+				<option value="pink">{$tt("settings.themepink")}</option>
 			</select>
 		</div>
 	</div>

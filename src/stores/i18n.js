@@ -15,7 +15,7 @@ function translate(locale, key, vars) {
   let text = translations[locale] ? translations[locale][key] : translations['en'][key];
 
   if (!text) text = translations['en'][key];
-  //if (!text) return `${locale}.${key}`;
+  if (!text) return `${locale}.${key}`;
 
   // Replace any passed in variables in the translation string.
   Object.keys(vars).map((k) => {
