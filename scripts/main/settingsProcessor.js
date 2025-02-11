@@ -11,6 +11,7 @@ class settingsProcessor {
             hashsign: true,
             locale: 'en',
             theme: 'default',
+            overwrite: true,
             acceleration: true
         };
 
