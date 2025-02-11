@@ -16,9 +16,14 @@
 	export let version;
 	let pinned = false;
 	let maximized = false;
+	let filename = false;
 
 	ipcRenderer.on('pin', (event, arg) => { pinned = arg; });
 	ipcRenderer.on('max', (event, arg) => { maximized = arg; });
+	ipcRenderer.on('filename', (event, arg) => {
+		console.log("filename received", arg);
+		filename = arg;
+	});
 
 	function openImage() {
 		ipcRenderer.send('selectfile');
@@ -26,6 +31,7 @@
 
 	function clearImage() {
 		dispatch('clear');
+		filename = false;
 	}
 
 	function openDevTools() {
@@ -93,6 +99,13 @@
 			{/if}
 		{/if}
 	</div>
+	<div class="titlebar-title">
+		{#if !$settingsOpen && filename}
+			<div class="titlebar-title-inner">
+				{filename}
+			</div>
+		{/if}
+	</div>
 	<div class="titlebar-group">
 		{#if version}
 			<span class="version">v. {version}</span>
@@ -150,7 +163,6 @@
 	    	<i class="fas fa-times"></i>
 		</Button>
 	</div>
-
 </div>
 
 <style lang="scss">
@@ -161,30 +173,56 @@
 		right: 0;
 		left: 0;
 		height: 30px;
-		display: flex;
-		justify-content: space-between;
 		user-select: none;
 		-webkit-user-select: none;
 		-webkit-app-region: drag;
 		padding: 5px;
 		box-sizing: border-box;
+		overflow: hidden;
+		display: inline-grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		column-gap: 6px;
 
-   		&-group {
-   			display: flex;
+		&-title,
+		.version {
+ 			color: var(--secondary-bg-color);
+ 			font-size: 10px;
+ 			font-weight: bold;
+ 			align-items: center;
+			height: 20px;
+			flex-shrink: 0;
+		}
+
+		&-title {
+			display: flex;
+ 			justify-content: start;
+ 			width: 100%;
+ 			box-sizing: border-box;
+
+ 			&-inner {
+ 				display: block;
+	 			overflow: hidden;
+	 			text-overflow: ellipsis;
+	 			white-space: nowrap;
+ 			}
+		}
+
+ 		&-group {
+ 			display: flex;
 			justify-content: flex-end;
-   		}
+			flex-shrink: 0;
 
-   		.version {
-   			color: var(--secondary-bg-color);
-   			font-size: 10px;
-   			font-weight: bold;
-   			margin-right: 2px;
-   			display: inline-flex;
-   			align-items: center;
-   			justify-content: center;
-				height: 20px;
-				pointer-events: none;
-   		}
+			&:last-child {
+				margin-right: 0;
+			}
+ 		}
+
+ 		.version {
+ 			justify-content: center;
+ 			margin-right: 2px;
+ 			display: inline-flex;
+			pointer-events: none;
+ 		}
 	}
 
 	i.pinned {

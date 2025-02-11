@@ -42,7 +42,9 @@
 			Ennoriel<br>
 			hrfn<br>
 			Chawldol<br>
-			Bjarne V
+			Bjarne V<br>
+			Reanon<br>
+			Arkasha
 		</div>
 	</div>
 	<div class="about-split-item">

@@ -8,13 +8,14 @@ class fileProcessor {
     }
     handleDefault(filePath, event, retain = false) {
         if (filePath.startsWith("http")) {
-            if (!retain) this.name = "image";
+            if (!retain) this.name = "untitled";
 
             //performance fix
             const imageDataURI = require('image-data-uri');
 
             imageDataURI.encodeFromURL(filePath).then((response) => {
                 event.sender.send('deliver', response);
+                event.sender.send('filename', this.name);
                 
                 this.rp.writeRecent(filePath, (recents) => {
                     event.sender.send('recents', recents);
@@ -31,6 +32,7 @@ class fileProcessor {
         else if (filePath.startsWith("data")) {
             if (!retain) this.name = "image";
             event.sender.send('deliver', filePath);
+            event.sender.send('filename', this.name);
         }
         else this.handleConversion(filePath, event);
     }
@@ -56,6 +58,7 @@ class fileProcessor {
                 .toBuffer()
                 .then(data => {
                     event.sender.send('deliver', `data:image/png;base64,${data.toString('base64')}`);
+                    event.sender.send('filename', this.name);
                 })
                 .catch(err => {
                     jack.log(err);
@@ -77,6 +80,7 @@ class fileProcessor {
                 });
 
                 event.sender.send('deliver', `data:image/png;base64,${data.toString('base64')}`);
+                event.sender.send('filename', this.name);
             })
             .catch(err => {
                 jack.log(err);
@@ -123,8 +127,9 @@ class fileProcessor {
 
         event.sender.send('loading', true);
 
+        //retain flag retains previously existing file name.
         this.generatedPalette = null;
-        this.name = retain ? this.name : (this.pathInfo(file).name || "image");
+        this.name = retain ? this.name : (this.pathInfo(file).name || "untitled");
 
         //temp fix to handle non default image URLs
         if (file.startsWith('http')) return this.handleDefault(file, event);

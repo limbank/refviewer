@@ -15,7 +15,7 @@
 	onMount(async () => {
 		setTimeout(() => {
 			show = true;
-		}, 1200);
+		}, 600);
 	});
 </script>
 
