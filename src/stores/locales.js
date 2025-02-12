@@ -82,7 +82,7 @@ module.exports = {
     "titlebar.mainmenu": "Головне меню",
     "titlebar.selectfile": "Обрати файл",
     "titlebar.screenshot": "Знімок екрану",
-    "titlebar.clear": "Очистити",
+    "titlebar.clear": "Прибрати",
     "titlebar.devtools": "Засоби розробника",
     "titlebar.clickthrough": "Зробити неклікабельним",
     "titlebar.newwindow": "Нове вікно",

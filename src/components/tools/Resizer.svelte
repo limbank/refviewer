@@ -91,7 +91,7 @@
 </script>
 
 <Button
-	tiptext={"Resize image"}
+	tiptext={$tt("resizer.resize")}
 	on:click={e => {
 		ipcRenderer.send('editImage', {
 			type: 'getSize',
