@@ -4,6 +4,14 @@
 	import { tt, locale, locales } from "../../stores/i18n.js";
   	import settings from '../../stores/settings.js';
 
+	import { createPopperActions } from 'svelte-popperjs';
+	import Tooltip from '../common/Tooltip.svelte';
+	let showTooltip = false;
+	const [popperRef, popperContent] = createPopperActions({
+	    placement: 'top',
+	    strategy: 'fixed',
+	});
+
     let resetConfirmed = false;
     let resetText = $tt("settings.reset");
 
@@ -171,6 +179,37 @@
 		</div>
 	</div>
 </div>
+<div class="setting" class:disabled={!$settings.autosave}>
+	<div class="setting-inner">
+		<div class="setting-title">
+			{$tt("settings.autosave")}
+		</div>
+		<div class="setting-control">
+			<button
+				class="button button-tooltip"
+				use:popperRef
+				on:mouseenter={() => showTooltip = true}
+				on:mouseleave={() => showTooltip = false}
+			>
+				<i class="fas fa-question"></i>
+			</button>
+
+			{#if showTooltip && !$settings.tooltips}
+				<Tooltip content={popperContent}>
+					{$settings.savedir}
+				</Tooltip>
+			{/if}
+
+			<input type="hidden" bind:value={$settings.savedir}>
+			<button class="button" on:click={() => ipcRenderer.send('select:saveDirectory')}>
+				{$settings.savedir ? $tt("settings.change") : $tt("settings.browse")}
+			</button>
+		</div>
+	</div>
+	<div class="setting-description">
+		{$tt("settings.autosavedesc")}
+	</div>
+</div>
 <div class="setting">
 	<div class="setting-inner">
 		<div class="setting-title">
@@ -195,22 +234,6 @@
 		<div class="setting-control-large">
 			<input type="range" bind:value={$settings.quality} step="1" max="100" min="1">
 		</div>
-	</div>
-</div>
-<div class="setting" class:disabled={!$settings.autosave}>
-	<div class="setting-inner">
-		<div class="setting-title">
-			{$tt("settings.autosave")}
-		</div>
-		<div class="setting-control">
-			<input type="hidden" bind:value={$settings.savedir}>
-			<button class="button" on:click={() => ipcRenderer.send('select:saveDirectory')}>
-				{$settings.savedir ? $tt("settings.change") : $tt("settings.browse")}
-			</button>
-		</div>
-	</div>
-	<div class="setting-description">
-		{$tt("settings.autosavedesc")}
 	</div>
 </div>
 <div class="setting">
@@ -324,19 +347,28 @@
 		min-height: 25px;
 		border-radius: 3px;
 		background-color: var(--secondary-bg-color);
+	    color: var(--main-txt-color);
 		cursor: pointer;
 		border: 0;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		padding: 5px 10px;
-	    color: var(--main-txt-color);
 	    font-size: 12px;
 	    font-weight: 500;
 
 	    &:hover {
   			background-color: var(--main-accent-color);
   			color: var(--secondary-txt-color);
+	    }
+
+	    &-tooltip {
+	    	margin-right: 5px;
+
+	    	&:hover {
+				background-color: var(--secondary-bg-color);
+			    color: var(--main-txt-color);
+	    	}
 	    }
 	}
 
