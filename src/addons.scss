@@ -166,12 +166,12 @@ main#amoled {
 }
 
 main#pink {
-    --main-bg-color: #FC97B7;
-    --secondary-bg-color: #FFBCD1;
-    --main-fg-color: #FF679D;
-    --main-txt-color: #FF1E68;
-    --secondary-txt-color: #FFBCD1;
-    --main-accent-color: #FEC8D6;
+    --main-bg-color: #ffc0cb;
+    --secondary-bg-color: #ffe0e9;
+    --main-fg-color: #ffc0cb;
+    --main-txt-color:#b38693;
+    --secondary-txt-color: #b38693;
+    --main-accent-color: #ffffff;
 
     .version {
     	color: var(--secondary-txt-color);
