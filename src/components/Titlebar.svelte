@@ -118,14 +118,14 @@
 			>
 		    	<i class="fas fa-terminal"></i>
 			</Button>
+			<Button
+				context="control"
+				tiptext={$tt("titlebar.clickthrough")}
+				 on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}
+			>
+		    	<i class="fas fa-ghost"></i>
+			</Button>
 		{/if}
-		<Button
-			context="control"
-			tiptext={$tt("titlebar.clickthrough")}
-			 on:click={e => { ipcRenderer.send('window', 'clickthrough'); }}
-		>
-	    	<i class="fas fa-ghost"></i>
-		</Button>
 		<Button
 			context="control"
 			tiptext={$tt("titlebar.newwindow")}
