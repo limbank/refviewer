@@ -15,10 +15,13 @@
     	}
 
     	$settings = {
-		    zoom: 0.3,
-		    hashsign: true,
-		    locale: 'en',
-    		theme: 'default',
+            zoom: 0.3,
+            compression: 9,
+            quality: 80,
+            hashsign: true,
+            locale: 'en',
+            theme: 'default',
+            overwrite: true,
             acceleration: true
 		};
 
@@ -165,6 +168,32 @@
 				<input type="checkbox" bind:checked={$settings.autosave}>
 				<span class="slider"></span>
 			</label>
+		</div>
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			{$tt("settings.compression")}
+		</div>
+		<div class="setting-control">
+			<span class="setting-control-info">{$settings.compression}</span>
+		</div>
+		<div class="setting-control-large">
+			<input type="range" bind:value={$settings.compression} step="1" max="9" min="0">
+		</div>
+	</div>
+</div>
+<div class="setting">
+	<div class="setting-inner">
+		<div class="setting-title">
+			{$tt("settings.quality")}
+		</div>
+		<div class="setting-control">
+			<span class="setting-control-info">{$settings.quality}</span>
+		</div>
+		<div class="setting-control-large">
+			<input type="range" bind:value={$settings.quality} step="1" max="100" min="1">
 		</div>
 	</div>
 </div>

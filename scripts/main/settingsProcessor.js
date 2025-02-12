@@ -8,6 +8,8 @@ class settingsProcessor {
         this.file = path.join(this.home, this.filename);
         this.settings = {
             zoom: 0.3,
+            compression: 9,
+            quality: 80,
             hashsign: true,
             locale: 'en',
             theme: 'default',

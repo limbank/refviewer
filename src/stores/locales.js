@@ -62,6 +62,8 @@ module.exports = {
     "settings.reset": "Reset",
     "settings.confirm": "Are you sure?",
     "settings.language": "Language",
+    "settings.compression" : "Compression level",
+    "settings.quality" : "Image quality",
     "recent.reset": "Clear",
     "recent.notfound": "No recent files found yet!",
     "menu.recent": "Recent",

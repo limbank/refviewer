@@ -58,7 +58,8 @@ sp = new settingsProcessor({
 
         ie = new imageEditor({
             fp: fp,
-            rp: rp
+            rp: rp,
+            sp: sp
         });
 
         lp = new localeProcessor({

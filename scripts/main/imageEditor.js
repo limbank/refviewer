@@ -4,6 +4,7 @@ class imageEditor {
     constructor (args) {
         this.fp = args.fp;
         this.rp = args.rp;
+        this.sp = args.sp;
     }
     dataToBuffer(dataURI) {
         return new Buffer.from(dataURI.split(",")[1], 'base64');
@@ -84,12 +85,23 @@ class imageEditor {
         fs.ensureDir(args.dir, err => {
             if (err) return jack.log("Error creating screenshot directory", err); 
 
+            jack.log("Compression level: ", this.sp.settings.compression);
+            jack.log("Quality level: ", this.sp.settings.quality);
+
             sharp(this.dataToBuffer(file))
+                    .png({
+                        progressive: true,
+                        compressionLevel: this.sp.settings.compression,
+                        force: false
+                    })
+                    .jpeg({
+                        progressive: true,
+                        quality: this.sp.settings.quality,
+                        force: false
+                    })
                     .toFormat("png")
                     .toFile(filePath, {
                         adaptiveFiltering: true,
-                        compressionLevel: 9,
-                        progressive: true,
                         force: true
                     })
                     .then(info => {
@@ -122,12 +134,24 @@ class imageEditor {
 
             if (!ext) ext = "png";
 
+            jack.log("Compression level: ", this.sp.settings.compression);
+            jack.log("Quality level: ", this.sp.settings.quality);
+
+            //Add image quality for jpeg
             sharp(this.dataToBuffer(file))
+                .png({
+                    progressive: true,
+                    compressionLevel: this.sp.settings.compression,
+                    force: false
+                })
+                .jpeg({
+                    progressive: true,
+                    quality: this.sp.settings.quality,
+                    force: false
+                })
                 .toFormat(ext)
                 .toFile(filePath, {
                     adaptiveFiltering: true,
-                    compressionLevel: 9,
-                    progressive: true,
                     force: true
                 })
                 .then(info => {
