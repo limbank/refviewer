@@ -45,11 +45,21 @@
 	function maximize() {
 		ipcRenderer.send('window', 'maximize');
 	}
+
+	function pinWindow() {
+		ipcRenderer.send('window', 'pin');
+	}
+
+	function takeScreenshot() {
+		ipcRenderer.send('screenshot');
+	}
 </script>
 
 <svelte:window use:mousetrap={[
   ['command+o', 'ctrl+o', openImage],
   ['command+n', 'ctrl+n', openNewWindow],
+  ['command+p', 'ctrl+p', pinWindow],
+  ['command+shift+s', 'ctrl+shift+s', takeScreenshot],
   ['f11', maximize],
   ['shift+ctrl+i', 'shift+command+i', openDevTools]
 ]} />
