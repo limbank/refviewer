@@ -60,6 +60,14 @@ class windowManager {
             w.webContents.send('settings', this.sp.settings);
             w.webContents.send('recents', this.rp.recents);
             w.webContents.send('argv', process.argv);
+
+            //Attempted fix for persistent image
+            try {
+                delete process.argv;
+            }
+            catch(e) {
+                console.log(e);
+            }
         });
     }
     getWindowByID(id) {
