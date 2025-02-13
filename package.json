@@ -1,6 +1,6 @@
 {
     "name": "refviewer",
-    "version": "4.2.14",
+    "version": "4.2.15",
     "description": "RefViewer is an image viewer designed to aid artists and developers alike in their creative process.",
     "author": "limbank",
     "main": "main.js",
