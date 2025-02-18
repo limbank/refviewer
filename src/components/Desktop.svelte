@@ -1,6 +1,6 @@
 <script>
 	const HTMLParser = require('node-html-parser');
-	const { ipcRenderer } = require('electron');
+	const { ipcRenderer, webUtils } = require('electron');
 
 	import { tt, locale, locales } from "../stores/i18n.js";
 	import settings from '../stores/settings.js';
@@ -47,13 +47,11 @@
 	    const acceptedFiles = Array.from(e.dataTransfer.files);
 	    const acceptedItems = Array.from(e.dataTransfer.items);
 
-		//console.log("Handling through desktop", e.dataTransfer.getData("text/html"));
+		// THIS IS HOW WE GET FILE PATHS NOW
+		const attemptPath = webUtils.getPathForFile(acceptedFiles[0])
 
-		console.log("HELLO WERE HERE!", acceptedFiles, acceptedItems)
-
-	    //sometimes, there's a file, but it has no path anyway
-	    if (acceptedFiles.length > 0 && acceptedFiles[0].path != "") {
-	    	ipcRenderer.send('file', acceptedFiles[0].path);
+	    if (acceptedFiles.length > 0 && attemptPath != "") {
+	    	ipcRenderer.send('file', attemptPath);
 	    }
 	    else if (acceptedItems.length > 0) {
 			let testHTML = e.dataTransfer.getData("text/html");

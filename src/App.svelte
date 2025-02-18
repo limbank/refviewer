@@ -322,6 +322,8 @@
 
 		let blob = null;
 		for (let i = 0; i < items.length; i++) {
+			console.log("This is what we see:", items[i]);
+			
 			if (items[i].type.indexOf("image") === 0) blob = items[i].getAsFile();
 			else{
 				let unknownwFilePath = items[i].getAsFile().path;
