@@ -64,6 +64,8 @@
 	});
 
 	ipcRenderer.on('argv', (event, arg) => {
+		if (!arg) return console.log("Reloaded with no args...");
+		
 		if (arg[1] && arg[1] != "." && arg[1] != "") {
 			ipcRenderer.send('file', arg[1]);
 		}
@@ -329,7 +331,7 @@
 		}
 		else {
 			// Legacy handling of filesystem pastes until bugfix for 'text/uri-list'
-			
+
 			let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
 			let blob = null;
 

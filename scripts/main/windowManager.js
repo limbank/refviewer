@@ -60,6 +60,7 @@ class windowManager {
             w.webContents.send('settings', this.sp.settings);
             w.webContents.send('recents', this.rp.recents);
             w.webContents.send('argv', process.argv);
+            //w.webContents.openDevTools();
 
             //Attempted fix for persistent image
             try {
