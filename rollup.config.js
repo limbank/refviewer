@@ -7,6 +7,8 @@ import css from "rollup-plugin-css-only";
 import scss from 'rollup-plugin-scss';
 import sveltePreprocess from "svelte-preprocess";
 
+import * as child from 'child_process';
+
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {
@@ -19,7 +21,7 @@ function serve() {
     return {
         writeBundle() {
             if (server) return;
-            server = require("child_process").spawn("npm", ["run", "start", "--", "--dev"], {
+            server = child.spawn("npm", ["run", "start", "--", "--dev"], {
                 stdio: ["ignore", "inherit", "inherit"],
                 shell: true,
             });
@@ -49,7 +51,7 @@ export default {
         // we'll extract any component CSS out into
         // a separate file - better for performance
         css({ output: "bundle.css" }),
-        scss({ fileName: 'addons.css' }),
+        scss({fileName: 'addons.css' }),
 
         // If you have external dependencies installed from
         // npm, you'll most likely need these plugins. In
