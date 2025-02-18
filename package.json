@@ -1,6 +1,6 @@
 {
     "name": "refviewer",
-    "version": "4.2.15",
+    "version": "4.3.0",
     "description": "RefViewer is an image viewer designed to aid artists and developers alike in their creative process.",
     "author": "limbank",
     "main": "main.js",
@@ -41,7 +41,7 @@
         "@rollup/plugin-commonjs": "^17.0.0",
         "@rollup/plugin-node-resolve": "^11.0.0",
         "concurrently": "^6.2.0",
-        "electron": "^22.0.0",
+        "electron": "^34.2.0",
         "electron-reloader": "^1.2.1",
         "postcss": "^8.3.5",
         "postcss-import": "^14.0.2",
@@ -55,12 +55,13 @@
         "svelte": "^3.49.0",
         "svelte-awesome-color-picker": "^1.2.3",
         "svelte-popperjs": "^1.3.2",
-        "svelte-preprocess": "^4.7.4"
+        "svelte-preprocess": "^6.0.3"
     },
     "dependencies": {
         "@panzoom/panzoom": "^4.4.4",
         "bmpimagejs": "^1.0.4",
         "colorthief": "^2.4.0",
+        "electron-builder": "^25.1.8",
         "electron-updater": "^6.1.7",
         "fs-extra": "^10.1.0",
         "image-data-uri": "^2.0.1",
@@ -69,9 +70,9 @@
         "psd": "^3.4.0",
         "rollup-plugin-scss": "^4.0.0",
         "screenshot-desktop": "^1.12.7",
-        "sharp": "^0.31.3",
+        "sharp": "^0.33.5",
         "svelte-canvas": "^0.7.1",
-        "svelte-markdown": "^0.2.2",
+        "svelte-markdown": "^0.4.1",
         "svelte-use-mousetrap": "^1.0.1",
         "tinycolor2": "^1.4.2"
     }

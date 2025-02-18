@@ -49,6 +49,8 @@
 
 		//console.log("Handling through desktop", e.dataTransfer.getData("text/html"));
 
+		console.log("HELLO WERE HERE!", acceptedFiles, acceptedItems)
+
 	    //sometimes, there's a file, but it has no path anyway
 	    if (acceptedFiles.length > 0 && acceptedFiles[0].path != "") {
 	    	ipcRenderer.send('file', acceptedFiles[0].path);
