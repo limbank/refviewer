@@ -24,7 +24,7 @@
 	import fileSelected from './stores/fileSelected.js';
 	import settingsOpen from './stores/settingsOpen.js';
 
-	const { ipcRenderer } = require('electron');
+	const { ipcRenderer, clipboard } = require('electron');
 	const { version } = require('../package.json');
 
 	const helper = new Helper();
@@ -312,42 +312,50 @@
 				return ipcRenderer.send('file', text);
 			}
 			else {
-				//console.log("text pasted! text:", text);
+				console.log("text pasted! text:", text);
 				return ipcRenderer.send('action', $tt("desktop.unrecognized"));
 				//account for pastes of other types of text?
 			}
 		}
 
-		let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
+		// THIS FIXES PASTING FROM BROWSERS!!
+		// These are available formats for data currently stored in clipboard
+		let availableFormats = clipboard.availableFormats("clipboard");
+		// Check if we can paste more formats like gifs, etc.
+		// Copying from the filesystem returns 'text/uri-list' as available format.
 
-		let blob = null;
-		for (let i = 0; i < items.length; i++) {
-			console.log("This is what we see:", items[i]);
+		if (availableFormats.includes("image/png") || availableFormats.includes("image/jpeg")) {
+		    return ipcRenderer.send('file', clipboard.readImage("clipboard").toDataURL());
+		}
+		else {
+			// Legacy handling of filesystem pastes until bugfix for 'text/uri-list'
 			
-			if (items[i].type.indexOf("image") === 0) blob = items[i].getAsFile();
+			let items = (event.clipboardData  || event.originalEvent.clipboardData).items;
+			let blob = null;
+
+			if (items[0].type.indexOf("image") === 0) blob = items[0].getAsFile();
 			else{
-				let unknownwFilePath = items[i].getAsFile().path;
+				let unknownwFilePath = items[0].getAsFile().path;
 
 				if (unknownwFilePath.endsWith(".psd")) {
 					return ipcRenderer.send('file', unknownwFilePath);
 				}
 			}
+
+			if (blob == null) {
+				ipcRenderer.send('action', $tt("desktop.unrecognized"));
+				return console.log("null blob");
+			}
+			else {
+				//Electron doesn't want us sending blob objects via ipc
+				//so we'll handle it in-house instead.
+
+				helper.getIMG(blob, (result) => {
+					img.src = result;
+					$fileSelected = result;
+				});
+			}
 		}
-
-		if (blob == null) {
-			ipcRenderer.send('action', $tt("desktop.unrecognized"));
-			return console.log("null blob");
-		}
-
-		/*
-			Electron doesn't want us sending blob objects via ipc
-			so we'll handle it in-house instead.
-		*/
-
-		helper.getIMG(blob, (result) => {
-			img.src = result;
-			$fileSelected = result;
-		});
 	}
 
 	function mouseUpBlur() {
